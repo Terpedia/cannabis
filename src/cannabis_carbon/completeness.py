@@ -41,7 +41,7 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
         crosswalk = json.loads(crosswalk_path.read_text())
         matched_ids = {row["cannabisdb"]["cannabisdb_id"] for row in crosswalk["matches"]}
         matched_carbons = sum(c["carbon_atom_count"] for c in compounds if c["id"] in matched_ids)
-        result["cannabisdb"].update(compounds_with_exact_terpedia_identity=len(matched_ids), compounds_with_ambiguous_identity=crosswalk["ambiguous"], compounds_without_exact_terpedia_identity=crosswalk["unmatched"], crosswalk_matched_carbon_atoms=matched_carbons, compound_to_terpedia_identity_crosswalk="exact-inchikey")
+        result["cannabisdb"].update(compounds_with_exact_terpedia_identity=len(matched_ids), compounds_with_ambiguous_identity=crosswalk["ambiguous"], compounds_without_exact_terpedia_identity=crosswalk.get("cannabisdb_unmatched", crosswalk["unmatched"]), crosswalk_matched_carbon_atoms=matched_carbons, compound_to_terpedia_identity_crosswalk="exact-inchikey")
     if mapping_path and mapping_path.exists():
         mapping = json.loads(mapping_path.read_text())
         mapped = mapping["carbon_counts"]["mapped_carbon_atoms"]

@@ -18,3 +18,5 @@ def test_crosswalk_matches_exact_inchikey(tmp_path):
     result = build_crosswalk(sdf, network_path, output)
     assert result["exact_matches"] == 1
     assert result["unmatched"] == 0
+    assert result["cannabisdb_unmatched"] == 0
+    assert result["terpedia_unmatched"] == 0
