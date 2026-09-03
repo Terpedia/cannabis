@@ -1,0 +1,14 @@
+{
+  "reaction_id": "rhea:example",
+  "protein_id": "cs10:example-protein",
+  "identity": 0.62,
+  "coverage": 0.91,
+  "profile_score": 0.78,
+  "catalytic_motif": true,
+  "complete_domains": true,
+  "localization_support": false,
+  "expression_support": true,
+  "source_urls": [
+    "https://plants.ensembl.org/Cannabis_sativa_female/Info/Index"
+  ]
+}

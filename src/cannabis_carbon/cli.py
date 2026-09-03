@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from rdkit import Chem
+from .candidates import CandidateEvidence, rank_candidate
 
 DOWNLOADS = {
     "compounds.sdf": "https://cannabisdatabase.ca/simple/download_compound_as_sdf",
@@ -44,6 +45,21 @@ def inspect_sdf(path: Path) -> None:
     print(json.dumps({"file": str(path), "records": count, "valid_structures": valid, "carbon_atoms": carbon}, indent=2))
 
 
+def rank_candidates(path: Path) -> None:
+    record = json.loads(path.read_text())
+    candidate = CandidateEvidence(
+        protein_id=record["protein_id"], reaction_id=record["reaction_id"],
+        identity=record.get("identity"), coverage=record.get("coverage"),
+        profile_score=record.get("profile_score"),
+        catalytic_motif=record.get("catalytic_motif", False),
+        complete_domains=record.get("complete_domains", False),
+        localization_support=record.get("localization_support", False),
+        expression_support=record.get("expression_support", False),
+        source_urls=tuple(record.get("source_urls", [])),
+    )
+    print(json.dumps(rank_candidate(candidate), indent=2))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -52,8 +68,12 @@ def main() -> None:
     p_download.add_argument("--insecure-download", action="store_true", help="Allow the current CannabisDB expired TLS certificate")
     p_inspect = sub.add_parser("inspect-sdf")
     p_inspect.add_argument("path", type=Path)
+    p_rank = sub.add_parser("rank-candidate")
+    p_rank.add_argument("path", type=Path)
     args = parser.parse_args()
     if args.command == "download":
         download(args.out, args.insecure_download)
     elif args.command == "inspect-sdf":
         inspect_sdf(args.path)
+    elif args.command == "rank-candidate":
+        rank_candidates(args.path)
