@@ -1,0 +1,34 @@
+{
+  "retrieved_at": "2026-09-03",
+  "sources": [
+    {
+      "id": "cannabisdb",
+      "role": "compound structures, names, spectra, proteins",
+      "url": "https://cannabisdatabase.ca",
+      "bulk_exports": [
+        "https://cannabisdatabase.ca/simple/download_compound_as_sdf",
+        "https://cannabisdatabase.ca/simple/download_compound_as_xml",
+        "https://cannabisdatabase.ca/simple/download_protein_as_xml"
+      ],
+      "api_status": "not_available; bulk downloads used"
+    },
+    {
+      "id": "terpedia_kb",
+      "role": "Terpedia biochemical knowledge base, RHEA reaction mappings, EC context",
+      "repository": "https://github.com/Terpedia/kb",
+      "api": "http://kb.terpedia.com:8000",
+      "api_status": "configured but unreachable from this build environment"
+    },
+    {
+      "id": "terpedia_cannabisdatabase_source",
+      "role": "CannabisDB application source and schema reference",
+      "repository": "https://github.com/Terpedia/cannabisdatabase"
+    },
+    {
+      "id": "cannabis_reference_proteins",
+      "role": "genome-derived candidate protein translations",
+      "url": "https://plants.ensembl.org/Cannabis_sativa_female/Info/Index",
+      "assembly": "cs10"
+    }
+  ]
+}

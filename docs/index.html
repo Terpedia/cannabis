@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Terpedia Cannabis Carbon Map</title>
+  <script src="https://unpkg.com/cytoscape@3.31.2/dist/cytoscape.min.js"></script>
+  <style>
+    :root { color-scheme: dark; --bg:#0b1220; --panel:#121c2d; --line:#263650; --text:#e8eef8; --muted:#9aabc5; --green:#65d6a0; --amber:#f2bd65; --red:#ef7f88; }
+    * { box-sizing:border-box } body { margin:0; background:var(--bg); color:var(--text); font:16px/1.45 system-ui,sans-serif }
+    header { padding:20px 24px 14px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; gap:20px; align-items:end }
+    h1 { margin:0; font-size:clamp(1.25rem,2.5vw,1.8rem) } header p { margin:4px 0 0; color:var(--muted) }
+    main { display:grid; grid-template-columns:minmax(0,1fr) 310px; height:calc(100vh - 91px) }
+    #cy { min-height:420px; background:radial-gradient(circle at 50% 45%,#15243a 0,#0b1220 62%) }
+    aside { border-left:1px solid var(--line); background:var(--panel); padding:20px; overflow:auto }
+    label { display:block; color:var(--muted); font-size:.86rem; margin-bottom:6px } input { width:100%; padding:10px; border:1px solid var(--line); border-radius:6px; background:#0b1220; color:var(--text); font:inherit }
+    .legend { margin:22px 0; display:grid; gap:9px; color:var(--muted); font-size:.9rem } .dot { display:inline-block; width:11px; height:11px; border-radius:50%; margin-right:7px }
+    #details { border-top:1px solid var(--line); padding-top:16px; color:var(--muted) } #details h2 { color:var(--text); font-size:1rem; margin:0 0 8px } #details p { margin:7px 0 }
+    .note { color:var(--amber); font-size:.86rem } a { color:var(--green) }
+    @media (max-width:760px) { main { grid-template-columns:1fr; height:auto } #cy { height:65vh } aside { border-left:0; border-top:1px solid var(--line) } header { align-items:start; flex-direction:column } }
+  </style>
+</head>
+<body>
+<header><div><h1>Terpedia · Cannabis carbon map</h1><p>Compounds are nodes; reactions and enzymes are edges.</p></div><div id="count" aria-live="polite"></div></header>
+<main><div id="cy" role="img" aria-label="Interactive cannabis metabolic network"></div><aside>
+  <label for="search">Find a compound or reaction</label><input id="search" placeholder="e.g. CBGA, THCA synthase" autocomplete="off">
+  <div class="legend"><div><span class="dot" style="background:var(--green)"></span>supported / observed</div><div><span class="dot" style="background:var(--amber)"></span>candidate / inferred</div><div><span class="dot" style="background:var(--red)"></span>unresolved carbon origin</div></div>
+  <div id="details"><h2>Select a node or edge</h2><p>This is a provisional, source-linked view while Terpedia reactions and CannabisDB structures are being ingested.</p><p class="note">A connected graph is not proof of in-vivo flux.</p></div>
+</aside></main>
+<script>
+const elements = [
+  { data:{id:'co2',label:'CO₂',kind:'compound',status:'supported',formula:'CO₂'} },
+  { data:{id:'acetyl-coa',label:'Acetyl-CoA',kind:'compound',status:'candidate'} },
+  { data:{id:'hexanoyl-coa',label:'Hexanoyl-CoA',kind:'compound',status:'supported'} },
+  { data:{id:'olivetolic-acid',label:'Olivetolic acid',kind:'compound',status:'supported'} },
+  { data:{id:'gpp',label:'Geranyl diphosphate',kind:'compound',status:'candidate'} },
+  { data:{id:'cbga',label:'CBGA',kind:'compound',status:'supported'} },
+  { data:{id:'thca',label:'THCA',kind:'compound',status:'supported'} },
+  { data:{id:'cbda',label:'CBDA',kind:'compound',status:'supported'} },
+  { data:{id:'e1',source:'co2',target:'acetyl-coa',label:'carbon fixation · enzyme unresolved',kind:'reaction',status:'unresolved',evidence:'structural placeholder'} },
+  { data:{id:'e2',source:'acetyl-coa',target:'hexanoyl-coa',label:'hexanoyl-CoA formation · AAE',kind:'reaction',status:'candidate',evidence:'known reaction; cannabis producer search pending'} },
+  { data:{id:'e3',source:'hexanoyl-coa',target:'olivetolic-acid',label:'polyketide assembly · TKS/OAC',kind:'reaction',status:'supported',evidence:'cannabis pathway literature'} },
+  { data:{id:'e4',source:'olivetolic-acid',target:'cbga',label:'prenyl transfer · GGPPS',kind:'reaction',status:'supported',evidence:'known reaction; atom mapping pending'} },
+  { data:{id:'e5',source:'gpp',target:'cbga',label:'prenyl donor contribution',kind:'reaction',status:'candidate',evidence:'candidate carbon branch'} },
+  { data:{id:'e6',source:'cbga',target:'thca',label:'THCA synthase',kind:'reaction',status:'supported',evidence:'directly characterized enzyme family'} },
+  { data:{id:'e7',source:'cbga',target:'cbda',label:'CBDA synthase',kind:'reaction',status:'supported',evidence:'directly characterized enzyme family'} }
+];
+const cy = cytoscape({container:document.getElementById('cy'),elements,style:[
+ {selector:'node',style:{'background-color':'#65d6a0','label':'data(label)','color':'#e8eef8','font-size':12,'text-wrap':'wrap','text-max-width':100,'text-valign':'center','text-halign':'center','width':54,'height':54,'border-width':2,'border-color':'#b8f5d9'}},
+ {selector:'node[status="candidate"]',style:{'background-color':'#f2bd65','border-color':'#ffe0a1'}}, {selector:'node[status="unresolved"]',style:{'background-color':'#ef7f88','border-color':'#ffc2c7'}},
+ {selector:'edge',style:{'line-color':'#7186a8','target-arrow-color':'#7186a8','target-arrow-shape':'triangle','curve-style':'bezier','width':2,'label':'data(label)','font-size':10,'color':'#b8c5d8','text-background-color':'#0b1220','text-background-opacity':.9,'text-wrap':'wrap','text-max-width':130}},
+ {selector:'edge[status="candidate"]',style:{'line-color':'#f2bd65','target-arrow-color':'#f2bd65','line-style':'dashed'}}, {selector:'edge[status="unresolved"]',style:{'line-color':'#ef7f88','target-arrow-color':'#ef7f88','line-style':'dotted'}},
+ {selector:'.faded',style:{'opacity':.16}}, {selector:'.selected',style:{'border-width':5,'line-color':'#fff','target-arrow-color':'#fff'}}
+],layout:{name:'cose',animate:false,padding:35}});
+document.getElementById('count').textContent = `${cy.nodes().length} compounds · ${cy.edges().length} reactions`;
+function show(ele){ const d=ele.data(); document.getElementById('details').innerHTML = `<h2>${d.label||d.id}</h2><p><strong>Type:</strong> ${d.kind}</p><p><strong>Status:</strong> ${d.status||'—'}</p><p><strong>Evidence:</strong> ${d.evidence||'structure record'}</p>`; }
+cy.on('tap','node,edge',e=>{cy.elements().removeClass('selected');e.target.addClass('selected');show(e.target)});
+document.getElementById('search').addEventListener('input',e=>{const q=e.target.value.toLowerCase();cy.elements().removeClass('faded');if(!q)return;cy.elements().forEach(x=>{const d=x.data();if(!`${d.label||''} ${d.id}`.toLowerCase().includes(q))x.addClass('faded')})});
+</script>
+</body></html>

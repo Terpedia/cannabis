@@ -48,6 +48,13 @@ CannabisDB currently provides bulk downloads rather than a public API:
 
 `https://cannabisdatabase.ca/simple/download_protein_as_xml`
 
+Terpedia sources and known gaps are tracked in
+[`data/terpedia-sources.json`](data/terpedia-sources.json) and
+[`data/reaction-gaps.json`](data/reaction-gaps.json). The current Terpedia KB
+contains reaction-oriented tooling, but the public KB API was not reachable in
+the deployment environment; the next ingestion step must export or expose its
+RHEA/EC reaction records to this project.
+
 ## Quick start
 
 ```bash

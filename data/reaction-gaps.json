@@ -1,0 +1,23 @@
+{
+  "purpose": "Explicit inventory of missing evidence; absence is not treated as biological absence.",
+  "gaps": [
+    {
+      "id": "co2-to-central-carbon",
+      "scope": "CO2 fixation and primary metabolism",
+      "missing": ["reaction structures", "directional evidence", "cannabis enzyme assignments", "atom maps"],
+      "next_action": "ingest Terpedia RHEA reactions and expand from carbon-fixation metabolites"
+    },
+    {
+      "id": "cannabisdb-reactions",
+      "scope": "CannabisDB",
+      "missing": ["public reaction API", "complete biosynthetic reaction catalog"],
+      "next_action": "join CannabisDB compounds/proteins to Terpedia KB RHEA/EC records"
+    },
+    {
+      "id": "uncharacterized-producers",
+      "scope": "all reactions lacking cannabis enzymes",
+      "missing": ["pinned cannabis protein FASTA", "profile-HMM hits", "catalytic-residue checks", "expression evidence"],
+      "next_action": "run genome-wide candidate discovery and preserve ranked candidates as non-confirmed edges"
+    }
+  ]
+}
