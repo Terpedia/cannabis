@@ -196,8 +196,8 @@
     "co2_lineage": {
       "target_summary": {
         "supported": 1,
-        "candidate": 0,
-        "unresolved": 6219
+        "candidate": 8,
+        "unresolved": 6211
       },
       "reachable_carbon_nodes": 31,
       "resolved_carbon_edges": 99986,

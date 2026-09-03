@@ -134,10 +134,12 @@ are not promoted to confirmed provenance. This uses 22 explicit Terpedia
 physiological direction assertions plus source-backed Rubisco and Calvin-cycle
 direction records. There are 633 carbon-containing reactant entities outside
 that lineage and therefore reported as external-carbon-source blockers. The
-current target summary is 1 supported, 0 candidate, and 6,219 unresolved
+current target summary is 1 supported, 8 candidate, and 6,211 unresolved
 CannabisDB compounds. The one supported target is the CannabisDB CO₂ record
-itself; no downstream CannabisDB metabolite has yet received a complete CO₂
-lineage. This indicates that the imported reaction network is
+itself; eight additional targets have candidate connectivity identities and
+partial or complete CO₂-reachable carbon atoms. The other 241 connectivity
+identity candidates remain unresolved because they are not yet reachable from
+CO₂. This indicates that the imported reaction network is
 missing CO₂-assimilation and/or structure-resolved links needed to establish
 the plant-wide carbon path; it is not evidence that Cannabis uses another
 carbon source.

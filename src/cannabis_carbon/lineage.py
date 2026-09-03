@@ -147,25 +147,36 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
                 carbon_reactant_entities.add(entity_id)
     external_carbon_inputs = sorted(entity_id for entity_id in carbon_reactant_entities if entity_id != co2_id and not any(node[0] == entity_id for node in reachable))
 
-    compounds_by_id = {c["id"]: c for c in compounds}
-    exact = {row["terpedia_id"]: row for row in crosswalk["matches"]}
+    exact_by_cdb = {row["cannabisdb"]["cannabisdb_id"]: row for row in crosswalk["matches"]}
+    candidate_by_cdb = defaultdict(list)
+    for row in crosswalk.get("candidate_matches", []):
+        candidate_by_cdb[row["cannabisdb"]["cannabisdb_id"]].append(row)
     targets = []
     for compound in compounds:
-        match = next((row for row in crosswalk["matches"] if row["cannabisdb"]["cannabisdb_id"] == compound["id"]), None)
+        match = exact_by_cdb.get(compound["id"])
         if match is None:
-            targets.append({"cannabisdb_id": compound["id"], "status": "unresolved", "reason": "no-exact-terpedia-identity", "carbon_atom_count": compound["carbon_atom_count"], "reachable_carbon_atoms": 0})
-            continue
+            identity_candidates = candidate_by_cdb.get(compound["id"], [])
+            if len(identity_candidates) != 1:
+                targets.append({"cannabisdb_id": compound["id"], "status": "unresolved", "reason": "ambiguous-connectivity-identity" if len(identity_candidates) > 1 else "no-terpedia-identity", "identity_candidates": [{"terpedia_id": row["terpedia_id"], "label": row.get("terpedia_label"), "method": row.get("method")} for row in identity_candidates], "carbon_atom_count": compound["carbon_atom_count"], "reachable_carbon_atoms": 0})
+                continue
+            match = identity_candidates[0]
+            identity_status = "candidate"
+        else:
+            identity_status = "exact"
         entity_id = match["terpedia_id"]
         entity_smiles = entities.get(entity_id, {}).get("attributes", {}).get("canonicalSmiles")
         product_nodes = {(entity_id, i) for i in _carbon_atom_indices(entity_smiles)}
         reachable_count = len(product_nodes & reachable)
-        if reachable_count == len(product_nodes) and reachable_count and not (product_nodes & candidate_reachable):
+        if identity_status == "candidate":
+            status = "candidate" if reachable_count else "unresolved"
+            reason = "candidate-connectivity-identity-and-all-entity-product-carbons-reachable-from-CO2" if reachable_count == len(product_nodes) and reachable_count else "candidate-connectivity-identity-with-partial-co2-lineage" if reachable_count else "candidate-connectivity-identity-not-reachable-from-co2"
+        elif reachable_count == len(product_nodes) and reachable_count and not (product_nodes & candidate_reachable):
             status, reason = "supported", "all-entity-product-carbons-reachable-from-CO2"
         elif reachable_count:
             status, reason = "candidate", "partial-entity-product-carbon-reachability"
         else:
             status, reason = "unresolved", "entity-not-reachable-from-CO2-through-inferred-carbon-edges"
-        targets.append({"cannabisdb_id": compound["id"], "terpedia_id": entity_id, "status": status, "reason": reason, "carbon_atom_count": compound["carbon_atom_count"], "entity_product_carbon_atoms": len(product_nodes), "reachable_carbon_atoms": reachable_count})
+        targets.append({"cannabisdb_id": compound["id"], "terpedia_id": entity_id, "identity_status": identity_status, "status": status, "reason": reason, "carbon_atom_count": compound["carbon_atom_count"], "entity_product_carbon_atoms": len(product_nodes), "reachable_carbon_atoms": reachable_count})
     report = {"schema": "cannabis-carbon.carbon-lineage.v1", "source": str(network_path), "direction_overrides": directions, "direction_conflicts": direction_conflicts, "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2.", "co2_entity_id": co2_id, "resolved_carbon_edges": len(edges), "inferred_carbon_edges": sum(e["status"] == "inferred" for e in edges), "candidate_carbon_edges": sum(e["status"] == "candidate" for e in edges), "reachable_carbon_nodes": len(reachable), "reachable_carbon_entity_ids": sorted({node[0] for node in reachable}), "external_carbon_input_entity_count": len(external_carbon_inputs), "external_carbon_input_entity_ids": external_carbon_inputs, "edge_block_counts": dict(edge_blocks), "target_summary": {status: sum(t["status"] == status for t in targets) for status in ("supported", "candidate", "unresolved")}, "carbon_edges": edges, "targets": targets, "claim_boundary": "Reachability is based on one-to-one structural RDKit mappings and exact identity crosswalks. It is not isotope tracing, enzyme validation, or proof of in-vivo biosynthesis; all unresolved reasons are retained."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")

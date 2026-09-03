@@ -47,3 +47,13 @@ def test_lineage_uses_rdkit_carbon_atom_indices_for_targets(tmp_path):
     (tmp_path / "compounds.json").write_text(json.dumps({"compounds": [{"id": "CDB1", "carbon_atom_count": 1}]}))
     result = build_carbon_lineage(network_path, tmp_path / "mapping.json", tmp_path / "crosswalk.json", tmp_path / "compounds.json", tmp_path / "out.json")
     assert result["target_summary"] == {"supported": 1, "candidate": 0, "unresolved": 0}
+
+
+def test_lineage_marks_reachable_connectivity_identity_as_candidate(tmp_path):
+    network = {"entities": [{"id": "chebi:16526", "type": "metabolite", "attributes": {"canonicalSmiles": "O=C=O"}}], "statements": []}
+    network_path = tmp_path / "network.json.gz"
+    with gzip.open(network_path, "wt") as handle: json.dump(network, handle)
+    for name, value in (("mapping.json", {"reactions": []}), ("crosswalk.json", {"matches": [], "candidate_matches": [{"terpedia_id": "chebi:16526", "terpedia_label": "CO2", "method": "connectivity-inchikey-candidate", "cannabisdb": {"cannabisdb_id": "CDB1"}}]}), ("compounds.json", {"compounds": [{"id": "CDB1", "carbon_atom_count": 1}]})):
+        (tmp_path / name).write_text(json.dumps(value))
+    result = build_carbon_lineage(network_path, tmp_path / "mapping.json", tmp_path / "crosswalk.json", tmp_path / "compounds.json", tmp_path / "out.json")
+    assert result["target_summary"] == {"supported": 0, "candidate": 1, "unresolved": 0}
