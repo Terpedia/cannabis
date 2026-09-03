@@ -14,6 +14,7 @@ from .ingest import ingest_sdf
 from .terpedia import cytoscape_elements, load_network
 from .reaction_report import build_reaction_report
 from .completeness import compute_completeness
+from .hypotheses import build_candidate_queue
 
 DOWNLOADS = {
     "compounds.sdf": "https://cannabisdatabase.ca/simple/download_compound_as_sdf",
@@ -89,6 +90,9 @@ def main() -> None:
     p_complete.add_argument("compounds", type=Path, default=Path("docs/data/compounds.json"), nargs="?")
     p_complete.add_argument("--mapping", type=Path)
     p_complete.add_argument("--out", type=Path, default=Path("data/reports/completeness.json"))
+    p_queue = sub.add_parser("candidate-queue")
+    p_queue.add_argument("source", type=Path)
+    p_queue.add_argument("--out", type=Path, default=Path("data/reports/candidate-work-queue.json"))
     args = parser.parse_args()
     if args.command == "download":
         download(args.out, args.insecure_download)
@@ -110,6 +114,8 @@ def main() -> None:
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(json.dumps(result, indent=2) + "\n")
         print(json.dumps(result, indent=2))
+    elif args.command == "candidate-queue":
+        print(json.dumps(build_candidate_queue(args.source, args.out), indent=2))
 
 
 if __name__ == "__main__":
