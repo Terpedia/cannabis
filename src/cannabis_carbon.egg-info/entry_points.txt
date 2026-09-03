@@ -1,2 +1,0 @@
-[console_scripts]
-cannabis-carbon = cannabis_carbon.cli:main

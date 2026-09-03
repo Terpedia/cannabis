@@ -1,6 +1,0 @@
-Metadata-Version: 2.4
-Name: cannabis-carbon
-Version: 0.1.0
-Summary: RDKit-based carbon provenance for the Cannabis metabolome
-Requires-Python: >=3.10
-Requires-Dist: rdkit>=2023.9
