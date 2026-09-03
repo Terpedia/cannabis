@@ -107,13 +107,15 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
         product_ids = _resolve_molecules(products, _participant_ids(network, reaction_id, product_predicate), entities)
         mappings = map_reaction_smiles(reaction_smiles)["mappings"] if direction.get("orientation") == "reverse_master" else row["mappings"]
         for mapping in mappings:
-            if mapping.get("status") not in ("inferred", "candidate"):
+            if mapping.get("status") not in ("inferred", "candidate", "ambiguous"):
                 continue
-            ri, pi = mapping["reactant_index"], mapping["product_index"]
-            if ri >= len(reactant_ids) or pi >= len(product_ids) or not reactant_ids[ri] or not product_ids[pi]:
-                edge_blocks["participant-structure-unresolved"] += 1
-                continue
-            edges.append({"reaction_id": reaction_id, "reactant_entity_id": reactant_ids[ri], "reactant_atom": mapping["reactant_atom"], "product_entity_id": product_ids[pi], "product_atom": mapping["product_atom"], "status": mapping["status"], "provenance": direction.get("source") or row.get("rhea_url"), "directional_rhea_id": direction.get("directional_rhea_id")})
+            alternatives = mapping.get("alternatives") or [{"reactant_index": mapping.get("reactant_index"), "reactant_atom": mapping.get("reactant_atom")}]
+            for alternative in alternatives:
+                ri, pi = alternative["reactant_index"], mapping["product_index"]
+                if ri is None or ri >= len(reactant_ids) or pi >= len(product_ids) or not reactant_ids[ri] or not product_ids[pi]:
+                    edge_blocks["participant-structure-unresolved"] += 1
+                    continue
+                edges.append({"reaction_id": reaction_id, "reactant_entity_id": reactant_ids[ri], "reactant_atom": alternative["reactant_atom"], "product_entity_id": product_ids[pi], "product_atom": mapping["product_atom"], "status": "candidate" if mapping["status"] == "ambiguous" else mapping["status"], "provenance": direction.get("source") or row.get("rhea_url"), "directional_rhea_id": direction.get("directional_rhea_id"), "mapping_reason": mapping.get("reason")})
 
     forward = defaultdict(set)
     for edge in edges:
@@ -159,7 +161,7 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
         else:
             status, reason = "unresolved", "entity-not-reachable-from-CO2-through-inferred-carbon-edges"
         targets.append({"cannabisdb_id": compound["id"], "terpedia_id": entity_id, "status": status, "reason": reason, "carbon_atom_count": compound["carbon_atom_count"], "entity_product_carbon_atoms": len(product_nodes), "reachable_carbon_atoms": reachable_count})
-    report = {"schema": "cannabis-carbon.carbon-lineage.v1", "source": str(network_path), "direction_overrides": directions, "direction_conflicts": direction_conflicts, "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2.", "co2_entity_id": co2_id, "resolved_carbon_edges": len(edges), "inferred_carbon_edges": sum(e["status"] == "inferred" for e in edges), "candidate_carbon_edges": sum(e["status"] == "candidate" for e in edges), "reachable_carbon_nodes": len(reachable), "external_carbon_input_entity_count": len(external_carbon_inputs), "external_carbon_input_entity_ids": external_carbon_inputs, "edge_block_counts": dict(edge_blocks), "target_summary": {status: sum(t["status"] == status for t in targets) for status in ("supported", "candidate", "unresolved")}, "targets": targets, "claim_boundary": "Reachability is based on one-to-one structural RDKit mappings and exact identity crosswalks. It is not isotope tracing, enzyme validation, or proof of in-vivo biosynthesis; all unresolved reasons are retained."}
+    report = {"schema": "cannabis-carbon.carbon-lineage.v1", "source": str(network_path), "direction_overrides": directions, "direction_conflicts": direction_conflicts, "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2.", "co2_entity_id": co2_id, "resolved_carbon_edges": len(edges), "inferred_carbon_edges": sum(e["status"] == "inferred" for e in edges), "candidate_carbon_edges": sum(e["status"] == "candidate" for e in edges), "reachable_carbon_nodes": len(reachable), "reachable_carbon_entity_ids": sorted({node[0] for node in reachable}), "external_carbon_input_entity_count": len(external_carbon_inputs), "external_carbon_input_entity_ids": external_carbon_inputs, "edge_block_counts": dict(edge_blocks), "target_summary": {status: sum(t["status"] == status for t in targets) for status in ("supported", "candidate", "unresolved")}, "carbon_edges": edges, "targets": targets, "claim_boundary": "Reachability is based on one-to-one structural RDKit mappings and exact identity crosswalks. It is not isotope tracing, enzyme validation, or proof of in-vivo biosynthesis; all unresolved reasons are retained."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
     return {"resolved_carbon_edges": len(edges), "inferred_carbon_edges": sum(e["status"] == "inferred" for e in edges), "candidate_carbon_edges": sum(e["status"] == "candidate" for e in edges), "reachable_carbon_nodes": len(reachable), "target_summary": report["target_summary"]}
