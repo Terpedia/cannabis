@@ -16,6 +16,7 @@ from .reaction_report import build_reaction_report
 from .completeness import compute_completeness
 from .hypotheses import build_candidate_queue
 from .crosswalk import build_crosswalk
+from .balance import audit_balances
 
 DOWNLOADS = {
     "compounds.sdf": "https://cannabisdatabase.ca/simple/download_compound_as_sdf",
@@ -99,6 +100,9 @@ def main() -> None:
     p_crosswalk.add_argument("cannabisdb_sdf", type=Path)
     p_crosswalk.add_argument("terpedia_network", type=Path)
     p_crosswalk.add_argument("--out", type=Path, default=Path("data/reports/identity-crosswalk.json"))
+    p_balance = sub.add_parser("balance-audit")
+    p_balance.add_argument("network", type=Path)
+    p_balance.add_argument("--out", type=Path, default=Path("data/reports/phase1-balance-audit.json"))
     args = parser.parse_args()
     if args.command == "download":
         download(args.out, args.insecure_download)
@@ -124,6 +128,8 @@ def main() -> None:
         print(json.dumps(build_candidate_queue(args.source, args.out), indent=2))
     elif args.command == "crosswalk":
         print(json.dumps(build_crosswalk(args.cannabisdb_sdf, args.terpedia_network, args.out), indent=2))
+    elif args.command == "balance-audit":
+        print(json.dumps(audit_balances(args.network, args.out), indent=2))
 
 
 if __name__ == "__main__":
