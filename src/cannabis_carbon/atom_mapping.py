@@ -40,7 +40,9 @@ def _mcs_carbon_candidates_cached(reactant_smiles: str, product_smiles: str, pro
     result = rdFMCS.FindMCS(
         [reactant, product],
         atomCompare=rdFMCS.AtomCompare.CompareElements,
-        bondCompare=rdFMCS.BondCompare.CompareOrder,
+        # Bond order may change in redox and isomerization reactions; element
+        # and connectivity conservation remain the constraints here.
+        bondCompare=rdFMCS.BondCompare.CompareAny,
         ringMatchesRingOnly=False,
         completeRingsOnly=False,
         timeout=1,
@@ -112,7 +114,7 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
         if len(available) == 1:
             ri, ra = next(iter(available))
             used_reactant_carbons.add((ri, ra))
-            mapping.update({"reactant_index": ri, "reactant_atom": ra, "status": "inferred", "method": "rdkit-mcs-carbon-conservation"})
+            mapping.update({"reactant_index": ri, "reactant_atom": ra, "status": "inferred", "method": "rdkit-mcs-carbon-conservation-relaxed-bond"})
             mapping.pop("reason", None)
             mapping.pop("alternatives", None)
     # CO2 fixation creates a carbon whose local neighborhood is not conserved.
