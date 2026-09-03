@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cannabis-carbon"
+version = "0.1.0"
+description = "RDKit-based carbon provenance for the Cannabis metabolome"
+requires-python = ">=3.10"
+dependencies = ["rdkit>=2023.9"]
+
+[project.scripts]
+cannabis-carbon = "cannabis_carbon.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
