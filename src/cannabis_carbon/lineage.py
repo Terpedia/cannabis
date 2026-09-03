@@ -125,6 +125,7 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
     co2_atoms = [(co2_id, i) for i in _carbon_atom_indices(co2_smiles)]
     reachable = set(co2_atoms)
     candidate_reachable = set()
+    seen_states = {(node, False) for node in co2_atoms}
     queue = deque((node, False) for node in co2_atoms)
     while queue:
         node, has_candidate = queue.popleft()
@@ -132,7 +133,10 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
             child_has_candidate = has_candidate or edge_status == "candidate"
             if child not in reachable:
                 reachable.add(child)
-                queue.append((child, child_has_candidate))
+            child_state = (child, child_has_candidate)
+            if child_state not in seen_states:
+                seen_states.add(child_state)
+                queue.append(child_state)
             if child_has_candidate:
                 candidate_reachable.add(child)
 
@@ -152,7 +156,8 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
             targets.append({"cannabisdb_id": compound["id"], "status": "unresolved", "reason": "no-exact-terpedia-identity", "carbon_atom_count": compound["carbon_atom_count"], "reachable_carbon_atoms": 0})
             continue
         entity_id = match["terpedia_id"]
-        product_nodes = {(entity_id, i) for i in range(_carbon_count(entities.get(entity_id, {}).get("attributes", {}).get("canonicalSmiles")))}
+        entity_smiles = entities.get(entity_id, {}).get("attributes", {}).get("canonicalSmiles")
+        product_nodes = {(entity_id, i) for i in _carbon_atom_indices(entity_smiles)}
         reachable_count = len(product_nodes & reachable)
         if reachable_count == len(product_nodes) and reachable_count and not (product_nodes & candidate_reachable):
             status, reason = "supported", "all-entity-product-carbons-reachable-from-CO2"
