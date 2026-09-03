@@ -145,9 +145,9 @@ all reaction participants and stoichiometric coefficients, enzyme associations,
 source URLs, and the 136 exact CannabisDB–Terpedia identity links. The two
 namespaces remain separate so an identity match cannot silently collapse distinct
 source records; links are explicit in `identity_links` and `identity_link`.
-It also carries 2,236 candidate hypotheses and 3,518 deduplicated candidate
-protein records; 756 reaction records have one or more attached candidate
-proteins. All 3,518 candidate proteins are present in the 30,304-protein
+It also carries 2,236 candidate hypotheses and 4,042 deduplicated candidate
+protein records; 934 reaction records have one or more attached candidate
+proteins. All 4,042 candidate proteins are present in the 30,304-protein
 UP000583929 reference-proteome FASTA and have sequence length/hash evidence in
 `data/reports/genome-candidate-search.json`. This is proteome membership and
 annotation evidence, not a homology score or confirmation of enzyme function.

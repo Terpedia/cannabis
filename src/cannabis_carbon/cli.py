@@ -120,6 +120,7 @@ def main() -> None:
     p_networkdb.add_argument("crosswalk", type=Path)
     p_networkdb.add_argument("--hypotheses", type=Path, default=Path("data/reports/candidate-work-queue.json"))
     p_networkdb.add_argument("--genome-search", type=Path, default=Path("data/reports/genome-candidate-search.json"))
+    p_networkdb.add_argument("--genome-fasta", type=Path, default=Path("data/raw/UP000583929.fasta"))
     p_networkdb.add_argument("--out", type=Path, default=Path("docs/data/networkdb.json"))
     p_genome = sub.add_parser("genome-search")
     p_genome.add_argument("queue", type=Path)
@@ -157,7 +158,7 @@ def main() -> None:
     elif args.command == "carbon-lineage":
         print(json.dumps(build_carbon_lineage(args.network, args.mapping, args.crosswalk, args.compounds, args.out, args.directions), indent=2))
     elif args.command == "networkdb":
-        print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out, args.hypotheses, args.genome_search), indent=2))
+        print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out, args.hypotheses, args.genome_search, args.genome_fasta), indent=2))
     elif args.command == "genome-search":
         print(json.dumps(build_genome_search(args.queue, args.fasta, args.out, args.diamond_hits, args.reference_tsv), indent=2))
 
