@@ -20,3 +20,4 @@ def test_networkdb_contains_all_source_records(tmp_path):
     assert coverage["terpedia_reactions"] == 1
     assert len(result["compounds"]) == 2
     assert len(result["reactions"]) == 1
+    assert result["reactions"][0]["carbon_mapping"]["status"] == "unavailable"

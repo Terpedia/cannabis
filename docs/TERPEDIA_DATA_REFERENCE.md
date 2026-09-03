@@ -159,6 +159,10 @@ namespaces remain separate so an identity match cannot silently collapse distinc
 source records; links are explicit in `identity_links` and `identity_link`.
 NetworkDB also carries 249 connectivity-level candidate identity links and 40
 ambiguous candidate groups as reviewable, non-exact alternatives.
+Every one of the 1,086 reaction records also carries a carbon-mapping summary
+from the RDKit report: 109 reactions are fully inferred, 415 retain ambiguous
+carbon mappings, and 562 retain unresolved mappings. These statuses are
+independent of enzyme status and are exposed as a separate Cytoscape filter.
 It also carries 2,236 candidate hypotheses and 4,042 deduplicated candidate
 protein records; 934 reaction records have one or more attached candidate
 proteins. All 4,042 candidate proteins are present in the 30,304-protein
