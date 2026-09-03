@@ -18,6 +18,7 @@ from .hypotheses import build_candidate_queue
 from .crosswalk import build_crosswalk
 from .balance import audit_balances
 from .lineage import build_carbon_lineage
+from .networkdb import build_networkdb
 
 DOWNLOADS = {
     "compounds.sdf": "https://cannabisdatabase.ca/simple/download_compound_as_sdf",
@@ -110,7 +111,13 @@ def main() -> None:
     p_lineage.add_argument("mapping", type=Path)
     p_lineage.add_argument("crosswalk", type=Path)
     p_lineage.add_argument("compounds", type=Path)
+    p_lineage.add_argument("--directions", type=Path, default=Path("data/terpedia/directional-reaction-overrides.json"))
     p_lineage.add_argument("--out", type=Path, default=Path("data/reports/carbon-lineage.json"))
+    p_networkdb = sub.add_parser("networkdb")
+    p_networkdb.add_argument("network", type=Path)
+    p_networkdb.add_argument("compounds", type=Path)
+    p_networkdb.add_argument("crosswalk", type=Path)
+    p_networkdb.add_argument("--out", type=Path, default=Path("docs/data/networkdb.json"))
     args = parser.parse_args()
     if args.command == "download":
         download(args.out, args.insecure_download)
@@ -139,7 +146,9 @@ def main() -> None:
     elif args.command == "balance-audit":
         print(json.dumps(audit_balances(args.network, args.out), indent=2))
     elif args.command == "carbon-lineage":
-        print(json.dumps(build_carbon_lineage(args.network, args.mapping, args.crosswalk, args.compounds, args.out), indent=2))
+        print(json.dumps(build_carbon_lineage(args.network, args.mapping, args.crosswalk, args.compounds, args.out, args.directions), indent=2))
+    elif args.command == "networkdb":
+        print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out), indent=2))
 
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@ from pathlib import Path
 from rdkit import Chem
 from rdkit import RDLogger
 
-from .atom_mapping import _molecules
+from .atom_mapping import _molecules, map_reaction_smiles
 from .terpedia import load_network
 
 RDLogger.DisableLog("rdApp.*")
@@ -58,11 +58,12 @@ def _carbon_atom_indices(smiles: str | None) -> list[int]:
     return [atom.GetIdx() for atom in mol.GetAtoms() if atom.GetAtomicNum() == 6] if mol is not None else []
 
 
-def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path: Path, compounds_path: Path, output: Path) -> dict:
+def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path: Path, compounds_path: Path, output: Path, directions_path: Path | None = None) -> dict:
     network = load_network(network_path)
     mapping_report = json.loads(mapping_path.read_text())
     crosswalk = json.loads(crosswalk_path.read_text())
     compounds = json.loads(compounds_path.read_text())["compounds"]
+    directions = json.loads(directions_path.read_text()) if directions_path and directions_path.exists() else {}
     entities = {e["id"]: e for e in network["entities"]}
     edges = []
     edge_blocks = defaultdict(int)
@@ -70,19 +71,27 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
         if not row.get("reaction_smiles"):
             edge_blocks["missing-reaction-smiles"] += 1
             continue
-        left, right = row["reaction_smiles"].split(">>", 1)
+        direction = directions.get(row["reaction_id"], {})
+        reaction_smiles = row["reaction_smiles"]
+        reactant_predicate, product_predicate = "has_reactant", "has_product"
+        if direction.get("orientation") == "reverse_master":
+            left, right = reaction_smiles.split(">>", 1)
+            reaction_smiles = f"{right}>>{left}"
+            reactant_predicate, product_predicate = "has_product", "has_reactant"
+        left, right = reaction_smiles.split(">>", 1)
         reactants, products = _molecules(left), _molecules(right)
         reaction_id = row["reaction_id"]
-        reactant_ids = _resolve_molecules(reactants, _participant_ids(network, reaction_id, "has_reactant"), entities)
-        product_ids = _resolve_molecules(products, _participant_ids(network, reaction_id, "has_product"), entities)
-        for mapping in row["mappings"]:
+        reactant_ids = _resolve_molecules(reactants, _participant_ids(network, reaction_id, reactant_predicate), entities)
+        product_ids = _resolve_molecules(products, _participant_ids(network, reaction_id, product_predicate), entities)
+        mappings = map_reaction_smiles(reaction_smiles)["mappings"] if direction.get("orientation") == "reverse_master" else row["mappings"]
+        for mapping in mappings:
             if mapping.get("status") not in ("inferred", "candidate"):
                 continue
             ri, pi = mapping["reactant_index"], mapping["product_index"]
             if ri >= len(reactant_ids) or pi >= len(product_ids) or not reactant_ids[ri] or not product_ids[pi]:
                 edge_blocks["participant-structure-unresolved"] += 1
                 continue
-            edges.append({"reaction_id": reaction_id, "reactant_entity_id": reactant_ids[ri], "reactant_atom": mapping["reactant_atom"], "product_entity_id": product_ids[pi], "product_atom": mapping["product_atom"], "status": mapping["status"], "provenance": row.get("rhea_url")})
+            edges.append({"reaction_id": reaction_id, "reactant_entity_id": reactant_ids[ri], "reactant_atom": mapping["reactant_atom"], "product_entity_id": product_ids[pi], "product_atom": mapping["product_atom"], "status": mapping["status"], "provenance": direction.get("source") or row.get("rhea_url"), "directional_rhea_id": direction.get("directional_rhea_id")})
 
     forward = defaultdict(set)
     for edge in edges:
@@ -128,7 +137,7 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
         else:
             status, reason = "unresolved", "entity-not-reachable-from-CO2-through-inferred-carbon-edges"
         targets.append({"cannabisdb_id": compound["id"], "terpedia_id": entity_id, "status": status, "reason": reason, "carbon_atom_count": compound["carbon_atom_count"], "entity_product_carbon_atoms": len(product_nodes), "reachable_carbon_atoms": reachable_count})
-    report = {"schema": "cannabis-carbon.carbon-lineage.v1", "source": str(network_path), "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2.", "co2_entity_id": co2_id, "resolved_carbon_edges": len(edges), "inferred_carbon_edges": sum(e["status"] == "inferred" for e in edges), "candidate_carbon_edges": sum(e["status"] == "candidate" for e in edges), "reachable_carbon_nodes": len(reachable), "external_carbon_input_entity_count": len(external_carbon_inputs), "external_carbon_input_entity_ids": external_carbon_inputs, "edge_block_counts": dict(edge_blocks), "target_summary": {status: sum(t["status"] == status for t in targets) for status in ("supported", "candidate", "unresolved")}, "targets": targets, "claim_boundary": "Reachability is based on one-to-one structural RDKit mappings and exact identity crosswalks. It is not isotope tracing, enzyme validation, or proof of in-vivo biosynthesis; all unresolved reasons are retained."}
+    report = {"schema": "cannabis-carbon.carbon-lineage.v1", "source": str(network_path), "direction_overrides": directions, "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2.", "co2_entity_id": co2_id, "resolved_carbon_edges": len(edges), "inferred_carbon_edges": sum(e["status"] == "inferred" for e in edges), "candidate_carbon_edges": sum(e["status"] == "candidate" for e in edges), "reachable_carbon_nodes": len(reachable), "external_carbon_input_entity_count": len(external_carbon_inputs), "external_carbon_input_entity_ids": external_carbon_inputs, "edge_block_counts": dict(edge_blocks), "target_summary": {status: sum(t["status"] == status for t in targets) for status in ("supported", "candidate", "unresolved")}, "targets": targets, "claim_boundary": "Reachability is based on one-to-one structural RDKit mappings and exact identity crosswalks. It is not isotope tracing, enzyme validation, or proof of in-vivo biosynthesis; all unresolved reasons are retained."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
     return {"resolved_carbon_edges": len(edges), "inferred_carbon_edges": sum(e["status"] == "inferred" for e in edges), "candidate_carbon_edges": sum(e["status"] == "candidate" for e in edges), "reachable_carbon_nodes": len(reachable), "target_summary": report["target_summary"]}

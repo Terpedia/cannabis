@@ -134,6 +134,16 @@ These are data-coverage metrics. They do not imply that all CannabisDB
 compounds are endogenous cannabis metabolites or that Terpedia's reaction graph
 constitutes a demonstrated in-vivo pathway.
 
+## Unified NetworkDB
+
+`docs/data/networkdb.json` is the published normalized inventory used for
+cross-source reconciliation. It contains 6,220 CannabisDB compound records,
+1,245 Terpedia metabolite records, 1,086 Terpedia biochemical reaction records,
+all reaction participants and stoichiometric coefficients, enzyme associations,
+source URLs, and the 136 exact CannabisDB–Terpedia identity links. The two
+namespaces remain separate so an identity match cannot silently collapse distinct
+source records; links are explicit in `identity_links` and `identity_link`.
+
 ## Phase 1 balance gate
 
 The Phase 1 audit is stored in

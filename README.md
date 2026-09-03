@@ -18,6 +18,10 @@ its source, reaction direction, atom-mapping method, and uncertainty.
 - Missing reaction enzymes trigger genome-wide candidate discovery against
   annotated cannabis proteins, using enzyme-family homology, catalytic motifs,
   domain architecture, localization, and expression where available.
+- `docs/data/networkdb.json` is the unified NetworkDB snapshot: all 6,220
+  CannabisDB compounds, all 1,245 Terpedia metabolites, all 1,086 Terpedia
+  reactions, participant coefficients, enzyme associations, and exact identity
+  links are retained in one source-linked artifact.
 
 ## Genome-to-enzyme discovery
 
