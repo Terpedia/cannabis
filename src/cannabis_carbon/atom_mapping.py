@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+from functools import lru_cache
+
 from rdkit import Chem
+from rdkit.Chem import rdFMCS
 from rdkit import RDLogger
 
 RDLogger.DisableLog("rdApp.warning")
@@ -22,6 +25,48 @@ def _carbon_signature(atom: Chem.Atom) -> tuple:
     return (atom.GetDegree(), atom.IsInRing(), atom.GetIsAromatic(), tuple(sorted(n.GetAtomicNum() for n in atom.GetNeighbors())))
 
 
+@lru_cache(maxsize=4096)
+def _mcs_carbon_candidates_cached(reactant_smiles: str, product_smiles: str, product_atom: int) -> tuple[tuple[int, int], ...]:
+    """Return unique MCS-derived reactant candidates for one product carbon.
+
+    MCS is used only as a fallback for rearrangements where local topology
+    changes. A candidate is retained only when the same MCS atom maps to the
+    requested product atom; multiple MCS matches remain ambiguous.
+    """
+    reactant = Chem.MolFromSmiles(reactant_smiles)
+    product = Chem.MolFromSmiles(product_smiles)
+    if reactant is None or product is None or not any(atom.GetAtomicNum() == 6 for atom in reactant.GetAtoms()):
+        return ()
+    result = rdFMCS.FindMCS(
+        [reactant, product],
+        atomCompare=rdFMCS.AtomCompare.CompareElements,
+        bondCompare=rdFMCS.BondCompare.CompareOrder,
+        ringMatchesRingOnly=False,
+        completeRingsOnly=False,
+        timeout=1,
+    )
+    if result.canceled or result.numAtoms < 2:
+        return ()
+    query = Chem.MolFromSmarts(result.smartsString)
+    if query is None:
+        return ()
+    candidates = set()
+    for reactant_match in reactant.GetSubstructMatches(query, uniquify=True):
+        for product_match in product.GetSubstructMatches(query, uniquify=True):
+            if product_atom not in product_match:
+                continue
+            query_index = product_match.index(product_atom)
+            reactant_atom = reactant_match[query_index]
+            if reactant.GetAtomWithIdx(reactant_atom).GetAtomicNum() == 6:
+                candidates.add((0, reactant_atom))
+    return tuple(sorted(candidates))
+
+
+def _mcs_carbon_candidates(reactants: list[Chem.Mol], product: Chem.Mol, product_atom: int) -> set[tuple[int, int]]:
+    candidates = _mcs_carbon_candidates_cached(Chem.MolToSmiles(reactants[0]), Chem.MolToSmiles(product), product_atom)
+    return {(ri, atom) for ri, atom in candidates}
+
+
 def map_reaction_smiles(reaction_smiles: str) -> dict:
     """Map product carbons to conserved reactant carbons.
 
@@ -36,6 +81,7 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
     reactant_carbons = [(ri, atom.GetIdx(), _carbon_signature(atom)) for ri, mol in enumerate(reactants) for atom in mol.GetAtoms() if atom.GetAtomicNum() == 6]
     used_reactant_carbons = set()
     product_carbons = [(pi, atom) for pi, product in enumerate(products) for atom in product.GetAtoms() if atom.GetAtomicNum() == 6]
+    co2_reactant_indices = [ri for ri, molecule in enumerate(reactants) if Chem.MolToSmiles(molecule) == "O=C=O"]
     # Process constrained product atoms first. A reactant atom may be used only
     # once; this prevents repeated local signatures from fabricating carbon
     # conservation. Non-unique matches are retained as explicit ambiguity.
@@ -53,10 +99,25 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
         else:
             reason = "reactant-carbon-already-assigned" if choices else "no-conserved-reactant-carbon"
             mappings.append({**base, "status": "unresolved", "reason": reason})
+    # Local signatures intentionally reject many bond-order/ring rearrangements.
+    # Use a unique maximum-common-substructure correspondence as a second,
+    # still structural, inference method before considering CO2 transfer.
+    simple_mcs = len(reactants) == 1 and len(products) == 1 and sum(m.GetNumAtoms() for m in reactants + products) <= 80
+    for mapping in mappings:
+        if mapping["status"] != "ambiguous" or co2_reactant_indices or not simple_mcs:
+            continue
+        product = products[mapping["product_index"]]
+        candidates = _mcs_carbon_candidates(reactants, product, mapping["product_atom"])
+        available = candidates - used_reactant_carbons
+        if len(available) == 1:
+            ri, ra = next(iter(available))
+            used_reactant_carbons.add((ri, ra))
+            mapping.update({"reactant_index": ri, "reactant_atom": ra, "status": "inferred", "method": "rdkit-mcs-carbon-conservation"})
+            mapping.pop("reason", None)
+            mapping.pop("alternatives", None)
     # CO2 fixation creates a carbon whose local neighborhood is not conserved.
     # Permit only this explicit inorganic-carbon transfer; do not generalize it
     # to arbitrary unresolved carbons or to CO2 appearing only as a product.
-    co2_reactant_indices = [ri for ri, molecule in enumerate(reactants) if Chem.MolToSmiles(molecule) == "O=C=O"]
     for ri in co2_reactant_indices:
         for mapping in sorted((m for m in mappings if m["status"] != "inferred"), key=lambda m: (-sum(n.GetAtomicNum() == 8 for n in products[m["product_index"]].GetAtomWithIdx(m["product_atom"]).GetNeighbors()), m["product_index"], m["product_atom"])):
             product_atom = products[mapping["product_index"]].GetAtomWithIdx(mapping["product_atom"])
