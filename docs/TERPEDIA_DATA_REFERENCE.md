@@ -124,11 +124,16 @@ constitutes a demonstrated in-vivo pathway.
 The Phase 1 audit is stored in
 `data/reports/phase1-balance-audit.json`:
 
-- 676 of 1,086 reactions are fully element- and charge-balanced.
-- 410 reactions are not auditable because the source lacks complete formulas or
-  formal charges.
-- 0 reactions are explicitly imbalanced in the imported snapshot.
+- 799 of 1,086 reactions are fully element- and charge-balanced after the
+  RDKit structure fallback is applied.
+- 2 reactions are explicitly imbalanced after computation.
+- 285 reactions remain not auditable because their participants lack sufficient
+  formula/structure or charge information.
+- The source-only fields report 676 element-balanced and 801 charge-balanced
+  reactions; computed fields are retained separately for provenance.
 
 Phase 1 accepts a reaction only as stoichiometrically balanced when both element
-and charge checks pass. This gate does not claim enzyme function, reaction
-direction, carbon atom provenance, or biological flux.
+and charge checks pass. When source formulas are absent, the audit may derive
+formula and formal charge from Terpedia canonical SMILES with RDKit; computed
+results remain distinct from source assertions. This gate does not claim enzyme
+function, reaction direction, carbon atom provenance, or biological flux.

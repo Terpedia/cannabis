@@ -10,4 +10,4 @@ def test_phase1_requires_both_element_and_charge_balance(tmp_path):
     with gzip.open(source, "wt") as h: json.dump(network, h)
     out = tmp_path / "report.json"
     summary = audit_balances(source, out)
-    assert summary == {"fully_balanced": 0, "imbalanced": 0, "not_auditable": 1, "element_balanced": 1, "charge_balanced": 0}
+    assert summary == {"fully_balanced": 0, "imbalanced": 0, "not_auditable": 1, "element_balanced": 1, "charge_balanced": 0, "computed_fully_balanced": 0, "computed_imbalanced": 0}
