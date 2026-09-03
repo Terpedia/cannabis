@@ -11,4 +11,5 @@ def test_oxidation_preserves_all_product_carbons():
 def test_carboxylation_like_new_carbon_is_unresolved():
     result = map_reaction_smiles("CCO>>CC(=O)O")
     assert result["status"] == "unresolved"
+    assert len(result["mappings"]) == result["product_carbon_atom_count"]
     assert len(result["unresolved_product_carbons"]) >= 1

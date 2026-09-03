@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from collections import defaultdict
 from rdkit import Chem
 from rdkit import RDLogger
 
@@ -35,16 +34,25 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
     reactants, products = _molecules(left), _molecules(right)
     mappings = []
     reactant_carbons = [(ri, atom.GetIdx(), _carbon_signature(atom)) for ri, mol in enumerate(reactants) for atom in mol.GetAtoms() if atom.GetAtomicNum() == 6]
-    for pi, product in enumerate(products):
-        for atom in product.GetAtoms():
-            if atom.GetAtomicNum() != 6:
-                continue
-            choices = [(ri, ra) for ri, ra, signature in reactant_carbons if signature == _carbon_signature(atom)]
-            if len(choices) == 1:
-                mappings.append({"reactant_index": choices[0][0], "reactant_atom": choices[0][1], "product_index": pi, "product_atom": atom.GetIdx(), "status": "inferred", "method": "rdkit-carbon-neighborhood"})
-            elif choices:
-                mappings.append({"reactant_index": choices[0][0], "reactant_atom": choices[0][1], "product_index": pi, "product_atom": atom.GetIdx(), "status": "ambiguous", "method": "rdkit-carbon-neighborhood", "alternatives": [{"reactant_index": ri, "reactant_atom": ra} for ri, ra in choices]})
-    mapped = {(m["product_index"], m["product_atom"]) for m in mappings if m["status"] == "inferred"}
-    unresolved = [{"product_index": pi, "product_atom": atom.GetIdx()} for pi, product in enumerate(products) for atom in product.GetAtoms() if atom.GetAtomicNum() == 6 and (pi, atom.GetIdx()) not in mapped]
+    used_reactant_carbons = set()
+    product_carbons = [(pi, atom) for pi, product in enumerate(products) for atom in product.GetAtoms() if atom.GetAtomicNum() == 6]
+    # Process constrained product atoms first. A reactant atom may be used only
+    # once; this prevents repeated local signatures from fabricating carbon
+    # conservation. Non-unique matches are retained as explicit ambiguity.
+    candidate_rows = []
+    for pi, atom in product_carbons:
+        choices = [(ri, ra) for ri, ra, signature in reactant_carbons if signature == _carbon_signature(atom)]
+        candidate_rows.append((len(choices), pi, atom, choices))
+    for _, pi, atom, choices in sorted(candidate_rows, key=lambda row: (row[0], row[1], row[2].GetIdx())):
+        base = {"product_index": pi, "product_atom": atom.GetIdx(), "method": "rdkit-carbon-neighborhood"}
+        if len(choices) == 1 and choices[0] not in used_reactant_carbons:
+            used_reactant_carbons.add(choices[0])
+            mappings.append({**base, "reactant_index": choices[0][0], "reactant_atom": choices[0][1], "status": "inferred"})
+        elif len(choices) > 1:
+            mappings.append({**base, "status": "ambiguous", "reason": "multiple-conserved-reactant-candidates", "alternatives": [{"reactant_index": ri, "reactant_atom": ra} for ri, ra in choices]})
+        else:
+            reason = "reactant-carbon-already-assigned" if choices else "no-conserved-reactant-carbon"
+            mappings.append({**base, "status": "unresolved", "reason": reason})
+    unresolved = [{"product_index": m["product_index"], "product_atom": m["product_atom"], "status": m["status"], "reason": m.get("reason")} for m in mappings if m["status"] != "inferred"]
     status = "inferred" if not unresolved and all(m["status"] == "inferred" for m in mappings) else "unresolved"
     return {"status": status, "mappings": mappings, "unresolved_product_carbons": unresolved, "product_carbon_atom_count": sum(atom.GetAtomicNum() == 6 for product in products for atom in product.GetAtoms()), "reactant_count": len(reactants), "product_count": len(products)}
