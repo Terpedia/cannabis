@@ -28,6 +28,6 @@ def test_completeness_can_include_co2_lineage(tmp_path):
     compounds_path = tmp_path / "compounds.json"
     compounds_path.write_text(json.dumps({"compounds": []}))
     lineage_path = tmp_path / "lineage.json"
-    lineage_path.write_text(json.dumps({"target_summary": {"supported": 1}, "reachable_carbon_nodes": 2, "inferred_carbon_edges": 1, "external_carbon_input_entity_count": 3, "carbon_source_policy": "CO2 only"}))
+    lineage_path.write_text(json.dumps({"target_summary": {"supported": 1}, "reachable_carbon_nodes": 2, "resolved_carbon_edges": 1, "inferred_carbon_edges": 1, "candidate_carbon_edges": 0, "external_carbon_input_entity_count": 3, "carbon_source_policy": "CO2 only"}))
     result = compute_completeness(network_path, compounds_path, lineage_path=lineage_path)
     assert result["coverage"]["co2_lineage"]["target_summary"]["supported"] == 1

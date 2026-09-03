@@ -49,5 +49,5 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
         result["coverage"].update(mapped_carbon_atoms=mapped, unresolved_carbon_atoms=unresolved, reaction_product_carbon_atoms=mapping["carbon_counts"]["product_carbon_atoms"], reaction_mapping_coverage_percent=mapping["carbon_counts"]["mapping_coverage_percent"], reaction_mapping_status_counts=mapping["status_counts"])
     if lineage_path and lineage_path.exists():
         lineage = json.loads(lineage_path.read_text())
-        result["coverage"]["co2_lineage"] = {"target_summary": lineage["target_summary"], "reachable_carbon_nodes": lineage["reachable_carbon_nodes"], "inferred_carbon_edges": lineage["inferred_carbon_edges"], "external_carbon_input_entity_count": lineage["external_carbon_input_entity_count"], "carbon_source_policy": lineage["carbon_source_policy"]}
+        result["coverage"]["co2_lineage"] = {"target_summary": lineage["target_summary"], "reachable_carbon_nodes": lineage["reachable_carbon_nodes"], "resolved_carbon_edges": lineage["resolved_carbon_edges"], "inferred_carbon_edges": lineage["inferred_carbon_edges"], "candidate_carbon_edges": lineage["candidate_carbon_edges"], "external_carbon_input_entity_count": lineage["external_carbon_input_entity_count"], "carbon_source_policy": lineage["carbon_source_policy"]}
     return result

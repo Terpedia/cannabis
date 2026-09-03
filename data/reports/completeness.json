@@ -198,7 +198,9 @@
         "unresolved": 6220
       },
       "reachable_carbon_nodes": 3,
-      "inferred_carbon_edges": 2591,
+      "resolved_carbon_edges": 2591,
+      "inferred_carbon_edges": 2590,
+      "candidate_carbon_edges": 1,
       "external_carbon_input_entity_count": 643,
       "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2."
     }
