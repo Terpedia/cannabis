@@ -17,9 +17,9 @@ DOWNLOADS = {
 }
 
 
-def download(out: Path) -> None:
+def download(out: Path, insecure: bool = False) -> None:
     out.mkdir(parents=True, exist_ok=True)
-    context = ssl._create_unverified_context()
+    context = ssl._create_unverified_context() if insecure else ssl.create_default_context()
     manifest = {"source": "Cannabis Compound Database", "retrieved_at": datetime.now(timezone.utc).isoformat(), "files": []}
     for name, url in DOWNLOADS.items():
         target = out / name
@@ -49,10 +49,11 @@ def main() -> None:
     sub = parser.add_subparsers(dest="command", required=True)
     p_download = sub.add_parser("download")
     p_download.add_argument("--out", type=Path, default=Path("data/raw"))
+    p_download.add_argument("--insecure-download", action="store_true", help="Allow the current CannabisDB expired TLS certificate")
     p_inspect = sub.add_parser("inspect-sdf")
     p_inspect.add_argument("path", type=Path)
     args = parser.parse_args()
     if args.command == "download":
-        download(args.out)
+        download(args.out, args.insecure_download)
     elif args.command == "inspect-sdf":
         inspect_sdf(args.path)
