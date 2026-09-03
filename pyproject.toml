@@ -12,5 +12,8 @@ dependencies = ["rdkit>=2023.9"]
 [project.scripts]
 cannabis-carbon = "cannabis_carbon.cli:main"
 
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
 [tool.setuptools.packages.find]
 where = ["src"]

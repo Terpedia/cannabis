@@ -15,6 +15,30 @@ its source, reaction direction, atom-mapping method, and uncertainty.
 - Reactions are represented as mapped reactant/product structures with explicit
   carbon provenance. Unmapped product carbons are reported as gaps.
 - Enzyme evidence is kept separate from structural atom mapping.
+- Missing reaction enzymes trigger genome-wide candidate discovery against
+  annotated cannabis proteins, using enzyme-family homology, catalytic motifs,
+  domain architecture, localization, and expression where available.
+
+## Genome-to-enzyme discovery
+
+For each carbon-producing reaction without a known cannabis enzyme, the planned
+evidence ladder is:
+
+1. Resolve the reaction and exact substrate/product structures from Terpedia.
+2. Find characterized enzymes for the same EC/Rhea chemistry in curated public
+   sources and build a reference sequence set.
+3. Search cannabis protein translations from a pinned genome annotation (the
+   Ensembl Plants `cs10` assembly and NCBI RefSeq are supported sources).
+4. Filter and rank candidates by profile homology, catalytic residues/motifs,
+   domain completeness, subcellular targeting, trichome/tissue expression, and
+   genomic neighborhood.
+5. Test each candidate against the RDKit atom-mapping requirements of the
+   reaction. Sequence similarity alone cannot establish substrate specificity
+   or in-vivo flux.
+
+Candidate results will be labeled `homology_candidate`, `annotation_supported`,
+`biochemically_supported`, or `rejected`, with the first two never promoted to
+confirmed pathway edges automatically.
 
 CannabisDB currently provides bulk downloads rather than a public API:
 
