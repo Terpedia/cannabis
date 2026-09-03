@@ -21,3 +21,4 @@ def test_networkdb_contains_all_source_records(tmp_path):
     assert len(result["compounds"]) == 2
     assert len(result["reactions"]) == 1
     assert result["reactions"][0]["carbon_mapping"]["status"] == "unavailable"
+    assert result["reactions"][0]["carbon_mapping"]["lineage_edge_counts"] == {"inferred": 0, "candidate": 0}

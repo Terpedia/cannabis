@@ -163,6 +163,8 @@ Every one of the 1,086 reaction records also carries a carbon-mapping summary
 from the RDKit report: 109 reactions are fully inferred, 415 retain ambiguous
 carbon mappings, and 562 retain unresolved mappings. These statuses are
 independent of enzyme status and are exposed as a separate Cytoscape filter.
+Each reaction also records its inferred and candidate lineage-edge counts and
+the source report used to derive them.
 It also carries 2,236 candidate hypotheses and 4,042 deduplicated candidate
 protein records; 934 reaction records have one or more attached candidate
 proteins. All 4,042 candidate proteins are present in the 30,304-protein
