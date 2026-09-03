@@ -1,0 +1,182 @@
+{
+  "referenceProteome": {
+    "proteinCount": 30304,
+    "ncbiProteinCodingGeneCount": null,
+    "proteinToNcbiCodingGenePercent": null,
+    "caveat": "NCBI coding-gene denominator was not merged because the UniProt reference-proteome and NCBI annotation snapshots are not one-to-one."
+  },
+  "enzymeAnnotation": {
+    "proteinsWithExactEc": 3564,
+    "proteinPercent": 11.76,
+    "uniqueExactEcNumbers": 765,
+    "uniquePartialEcNumbers": 41
+  },
+  "reactionResolution": {
+    "exactEcNumbersMappedToRhea": 695,
+    "exactEcToRheaPercent": 90.85,
+    "proteinsResolvedToRhea": 2885,
+    "exactEcProteinResolutionPercent": 80.95,
+    "uniqueRheaMasterReactions": 1086,
+    "reactionsWithDirectionalSmiles": 1032,
+    "reactionStructurePercent": 95.03
+  },
+  "reactionParticipantsAndBalance": {
+    "reactionsWithParsedEquations": 1086,
+    "reactionEquationPercent": 100,
+    "uniqueChebiParticipants": 1245,
+    "chebiParticipantsWithFormula": 984,
+    "chebiParticipantsWithSmiles": 982,
+    "elementBalance": {
+      "balanced": 676,
+      "imbalanced": 0,
+      "not_auditable": 410
+    },
+    "chargeBalance": {
+      "balanced": 801,
+      "imbalanced": 0,
+      "not_auditable": 285
+    },
+    "chargeBalanceAssessedReactions": 801,
+    "bipartiteConnectedComponents": 21,
+    "largestComponentReactions": 1063,
+    "largestComponentMetabolites": 1195,
+    "boundaryMetabolites": 634,
+    "topReactionDegreeMetabolites": [
+      {
+        "chebiId": "CHEBI:15378",
+        "name": "H(+)",
+        "reactionCount": 609
+      },
+      {
+        "chebiId": "CHEBI:15377",
+        "name": "H2O",
+        "reactionCount": 339
+      },
+      {
+        "chebiId": "CHEBI:30616",
+        "name": "ATP",
+        "reactionCount": 179
+      },
+      {
+        "chebiId": "CHEBI:456216",
+        "name": "ADP",
+        "reactionCount": 132
+      },
+      {
+        "chebiId": "CHEBI:43474",
+        "name": "phosphate",
+        "reactionCount": 124
+      },
+      {
+        "chebiId": "CHEBI:33019",
+        "name": "diphosphate",
+        "reactionCount": 121
+      },
+      {
+        "chebiId": "CHEBI:15379",
+        "name": "O2",
+        "reactionCount": 89
+      },
+      {
+        "chebiId": "CHEBI:59789",
+        "name": "S-adenosyl-L-methionine",
+        "reactionCount": 80
+      },
+      {
+        "chebiId": "CHEBI:57783",
+        "name": "NADPH",
+        "reactionCount": 79
+      },
+      {
+        "chebiId": "CHEBI:58349",
+        "name": "NADP(+)",
+        "reactionCount": 78
+      },
+      {
+        "chebiId": "CHEBI:16526",
+        "name": "CO2",
+        "reactionCount": 72
+      },
+      {
+        "chebiId": "CHEBI:57856",
+        "name": "S-adenosyl-L-homocysteine",
+        "reactionCount": 70
+      },
+      {
+        "chebiId": "CHEBI:57540",
+        "name": "NAD(+)",
+        "reactionCount": 62
+      },
+      {
+        "chebiId": "CHEBI:456215",
+        "name": "AMP",
+        "reactionCount": 57
+      },
+      {
+        "chebiId": "CHEBI:57945",
+        "name": "NADH",
+        "reactionCount": 56
+      },
+      {
+        "chebiId": "CHEBI:57287",
+        "name": "CoA",
+        "reactionCount": 50
+      },
+      {
+        "chebiId": "CHEBI:29985",
+        "name": "L-glutamate",
+        "reactionCount": 45
+      },
+      {
+        "chebiId": "CHEBI:78442",
+        "name": "CHEBI:78442",
+        "reactionCount": 30
+      },
+      {
+        "chebiId": "CHEBI:28938",
+        "name": "NH4(+)",
+        "reactionCount": 29
+      },
+      {
+        "chebiId": "CHEBI:16810",
+        "name": "2-oxoglutarate",
+        "reactionCount": 29
+      }
+    ]
+  },
+  "compartmentAndTransport": {
+    "proteinsWithCandidateCompartments": 12039,
+    "exactEcProteinsWithLocationSupport": 1986,
+    "exactEcProteinLocationPercent": 55.72,
+    "exactEcProteinsWithPreciseCompartment": 1218,
+    "reactionsWithCandidateCompartments": 728,
+    "reactionCandidateCompartmentPercent": 67.03,
+    "reactionsWithSingleCandidateCompartment": 464,
+    "reactionsWithMultipleCandidateCompartments": 264,
+    "allProteinsWithTransmembraneFeature": 5665,
+    "exactEcProteinsWithTransmembraneFeature": 730,
+    "transporterCandidates": 1487,
+    "transporterCandidatesWithTransmembraneTopology": 1210,
+    "transporterCandidatesWithAnnotationSpecificity": 801,
+    "clusterTransportersWithUnresolvedSubstrate": 0,
+    "rheaExplicitInOutTransportCandidates": 24,
+    "rheaTransportCandidatesWithTransmembraneProteinSupport": 22,
+    "rheaTransportCandidatesWithoutTransmembraneProteinSupport": 2,
+    "modelAssignedTransportReactions": 0,
+    "curatedTransportReactions": 0,
+    "exchangeReactions": 0
+  },
+  "physiologicalDirectionality": {
+    "proteinsWithDirectUniProtCatalyticActivities": 2830,
+    "reactionsWithPhysiologicalDirection": 164,
+    "reactionDirectionPercent": 15.1,
+    "reactionsWithConflictingDirections": 0,
+    "reactionsWithExperimentalDirectionEvidence": 11,
+    "directionCounts": {
+      "left-to-right": 142,
+      "right-to-left": 22
+    },
+    "caveat": "UniProt physiological direction annotations do not substitute for thermodynamic constraints, compartment-specific reversibility, or measured flux."
+  },
+  "transporterInventoryCount": 1487
+}

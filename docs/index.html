@@ -24,6 +24,7 @@
 <header><div><h1>Terpedia · Cannabis carbon map</h1><p>Compounds are nodes; reactions and enzymes are edges.</p></div><div id="count" aria-live="polite"></div></header>
 <main><div id="cy" role="img" aria-label="Interactive cannabis metabolic network"></div><aside>
   <label for="search">Find a compound or reaction</label><input id="search" placeholder="e.g. CBGA, THCA synthase" autocomplete="off">
+  <label for="status" style="margin-top:14px">Show evidence status</label><select id="status" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:6px;background:#0b1220;color:var(--text);font:inherit"><option value="all">All statuses</option><option value="supported">Supported / observed</option><option value="candidate">Candidate / inferred</option><option value="unresolved">Unresolved</option></select>
   <div class="legend"><div><span class="dot" style="background:var(--green)"></span>supported / observed</div><div><span class="dot" style="background:var(--amber)"></span>candidate / inferred</div><div><span class="dot" style="background:var(--red)"></span>unresolved carbon origin</div></div>
   <div id="details"><h2>Select a node or edge</h2><p>This is a provisional, source-linked view while Terpedia reactions and CannabisDB structures are being ingested.</p><p class="note">A connected graph is not proof of in-vivo flux.</p></div>
 </aside></main>
@@ -63,8 +64,9 @@ Promise.all([fetch('data/compounds.json').then(r=>r.json()), fetch('data/terpedi
   document.getElementById('count').textContent = `${nodesById.size.toLocaleString()} compounds · ${network.stats.reactions.toLocaleString()} reactions · ${catalog.compounds.reduce((n,c)=>n+c.carbon_atom_count,0).toLocaleString()} catalog carbons`;
   cy.layout({name:'grid',eles:cy.nodes(),animate:false,padding:35}).run();
 }).catch(()=>{});
-function show(ele){ const d=ele.data(); document.getElementById('details').innerHTML = `<h2>${d.label||d.id}</h2><p><strong>Type:</strong> ${d.kind}</p><p><strong>Status:</strong> ${d.status||'—'}</p><p><strong>Evidence:</strong> ${d.evidence||'structure record'}</p>`; }
+function show(ele){ const d=ele.data(); const source=d.source_url?`<p><strong>Source:</strong> <a href="${d.source_url}" target="_blank" rel="noreferrer">open record</a></p>`:''; const enzymes=d.enzyme_ids?.length?`<p><strong>Enzymes:</strong> ${d.enzyme_ids.join(', ')}</p>`:''; const carbons=d.carbon_atom_count?`<p><strong>Carbon atoms:</strong> ${d.carbon_atom_count}</p>`:''; document.getElementById('details').innerHTML = `<h2>${d.label||d.id}</h2><p><strong>Type:</strong> ${d.kind}</p><p><strong>Status:</strong> ${d.status||'—'}</p>${enzymes}${carbons}<p><strong>Evidence:</strong> ${d.evidence||'source record'}</p>${source}`; }
 cy.on('tap','node,edge',e=>{cy.elements().removeClass('selected');e.target.addClass('selected');show(e.target)});
-document.getElementById('search').addEventListener('input',e=>{const q=e.target.value.toLowerCase();cy.elements().removeClass('faded');if(!q)return;cy.elements().forEach(x=>{const d=x.data();if(!`${d.label||''} ${d.id}`.toLowerCase().includes(q))x.addClass('faded')})});
+function applyFilters(){ const q=document.getElementById('search').value.toLowerCase(), status=document.getElementById('status').value; cy.elements().removeClass('faded'); cy.elements().forEach(x=>{const d=x.data(); const text=`${d.label||''} ${d.id} ${(d.enzyme_ids||[]).join(' ')}`.toLowerCase(); if((q&&!text.includes(q))||(status!=='all'&&d.status!==status))x.addClass('faded')}); }
+document.getElementById('search').addEventListener('input',applyFilters); document.getElementById('status').addEventListener('change',applyFilters);
 </script>
 </body></html>

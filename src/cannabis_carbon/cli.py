@@ -11,6 +11,7 @@ from pathlib import Path
 from rdkit import Chem
 from .candidates import CandidateEvidence, rank_candidate
 from .ingest import ingest_sdf
+from .terpedia import cytoscape_elements, load_network
 
 DOWNLOADS = {
     "compounds.sdf": "https://cannabisdatabase.ca/simple/download_compound_as_sdf",
@@ -75,6 +76,9 @@ def main() -> None:
     p_ingest.add_argument("source", type=Path)
     p_ingest.add_argument("--graph-out", type=Path, default=Path("docs/data/compounds.json"))
     p_ingest.add_argument("--report-out", type=Path, default=Path("data/reports/carbon-coverage.json"))
+    p_export = sub.add_parser("export-terpedia-graph")
+    p_export.add_argument("source", type=Path)
+    p_export.add_argument("--out", type=Path, default=Path("docs/data/terpedia-network.json"))
     args = parser.parse_args()
     if args.command == "download":
         download(args.out, args.insecure_download)
@@ -84,6 +88,11 @@ def main() -> None:
         rank_candidates(args.path)
     elif args.command == "ingest-sdf":
         print(json.dumps(ingest_sdf(args.source, args.graph_out, args.report_out), indent=2))
+    elif args.command == "export-terpedia-graph":
+        graph = cytoscape_elements(load_network(args.source))
+        args.out.parent.mkdir(parents=True, exist_ok=True)
+        args.out.write_text(json.dumps(graph, separators=(",", ":")) + "\n")
+        print(json.dumps(graph["stats"], indent=2))
 
 
 if __name__ == "__main__":
