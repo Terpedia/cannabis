@@ -124,6 +124,8 @@ def main() -> None:
     p_genome = sub.add_parser("genome-search")
     p_genome.add_argument("queue", type=Path)
     p_genome.add_argument("fasta", type=Path)
+    p_genome.add_argument("--diamond-hits", type=Path)
+    p_genome.add_argument("--reference-tsv", type=Path)
     p_genome.add_argument("--out", type=Path, default=Path("data/reports/genome-candidate-search.json"))
     args = parser.parse_args()
     if args.command == "download":
@@ -157,7 +159,7 @@ def main() -> None:
     elif args.command == "networkdb":
         print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out, args.hypotheses, args.genome_search), indent=2))
     elif args.command == "genome-search":
-        print(json.dumps(build_genome_search(args.queue, args.fasta, args.out), indent=2))
+        print(json.dumps(build_genome_search(args.queue, args.fasta, args.out, args.diamond_hits, args.reference_tsv), indent=2))
 
 
 if __name__ == "__main__":

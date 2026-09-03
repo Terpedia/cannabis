@@ -149,6 +149,12 @@ proteins. All 3,518 candidate proteins are present in the 30,304-protein
 UP000583929 reference-proteome FASTA and have sequence length/hash evidence in
 `data/reports/genome-candidate-search.json`. This is proteome membership and
 annotation evidence, not a homology score or confirmation of enzyme function.
+The full proteome was also searched with DIAMOND blastp against 11,424 reviewed
+UniProt reference proteins covering the 70 exact unresolved EC hypotheses. The
+search produced hits for 1,257 candidate proteins; 653 meet the screening
+threshold of at least 30% identity, 50% query coverage, and e-value at most
+1e-5. These thresholds define candidate evidence only and do not establish
+substrate specificity or in-vivo activity.
 
 ## Phase 1 balance gate
 
