@@ -1,0 +1,22 @@
+from __future__ import annotations
+
+import gzip
+import json
+from pathlib import Path
+
+from .atom_mapping import map_reaction_smiles
+from .terpedia import load_network
+
+
+def build_reaction_report(source: Path, output: Path) -> dict:
+    network = load_network(source)
+    reactions = [e for e in network["entities"] if e.get("type") == "biochemical_reaction"]
+    rows = []
+    for reaction in reactions:
+        attrs = reaction.get("attributes", {})
+        mapping = map_reaction_smiles(attrs.get("reactionSmiles"))
+        rows.append({"reaction_id": reaction["id"], "rhea_url": reaction.get("url"), "equation": attrs.get("equation"), "reaction_smiles": attrs.get("reactionSmiles"), **mapping})
+    report = {"schema": "cannabis-carbon.reaction-carbon-mapping.v1", "source": str(source), "reaction_count": len(rows), "status_counts": {status: sum(row["status"] == status for row in rows) for status in ("inferred", "unresolved")}, "reactions": rows, "claim_boundary": "Structural atom mapping is not isotope tracing and does not establish in-vivo flux."}
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
+    return {"reaction_count": len(rows), "status_counts": report["status_counts"]}

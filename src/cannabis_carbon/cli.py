@@ -12,6 +12,8 @@ from rdkit import Chem
 from .candidates import CandidateEvidence, rank_candidate
 from .ingest import ingest_sdf
 from .terpedia import cytoscape_elements, load_network
+from .reaction_report import build_reaction_report
+from .completeness import compute_completeness
 
 DOWNLOADS = {
     "compounds.sdf": "https://cannabisdatabase.ca/simple/download_compound_as_sdf",
@@ -79,6 +81,14 @@ def main() -> None:
     p_export = sub.add_parser("export-terpedia-graph")
     p_export.add_argument("source", type=Path)
     p_export.add_argument("--out", type=Path, default=Path("docs/data/terpedia-network.json"))
+    p_map = sub.add_parser("map-reactions")
+    p_map.add_argument("source", type=Path)
+    p_map.add_argument("--out", type=Path, default=Path("data/reports/reaction-carbon-mapping.json"))
+    p_complete = sub.add_parser("completeness")
+    p_complete.add_argument("network", type=Path)
+    p_complete.add_argument("compounds", type=Path, default=Path("docs/data/compounds.json"), nargs="?")
+    p_complete.add_argument("--mapping", type=Path)
+    p_complete.add_argument("--out", type=Path, default=Path("data/reports/completeness.json"))
     args = parser.parse_args()
     if args.command == "download":
         download(args.out, args.insecure_download)
@@ -93,6 +103,13 @@ def main() -> None:
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(json.dumps(graph, separators=(",", ":")) + "\n")
         print(json.dumps(graph["stats"], indent=2))
+    elif args.command == "map-reactions":
+        print(json.dumps(build_reaction_report(args.source, args.out), indent=2))
+    elif args.command == "completeness":
+        result = compute_completeness(args.network, args.compounds, args.mapping)
+        args.out.parent.mkdir(parents=True, exist_ok=True)
+        args.out.write_text(json.dumps(result, indent=2) + "\n")
+        print(json.dumps(result, indent=2))
 
 
 if __name__ == "__main__":
