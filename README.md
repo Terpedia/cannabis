@@ -40,6 +40,13 @@ Candidate results will be labeled `homology_candidate`, `annotation_supported`,
 `biochemically_supported`, or `rejected`, with the first two never promoted to
 confirmed pathway edges automatically.
 
+## Runtime split
+
+The Cytoscape visualization is a static GitHub Pages artifact and does not
+require GCR, Docker, or Cloud Run. GCP is reserved for data ingestion, RDKit
+mapping, genome searches, and report generation; those jobs publish versioned
+JSON artifacts consumed by Pages.
+
 CannabisDB currently provides bulk downloads rather than a public API:
 
 `https://cannabisdatabase.ca/simple/download_compound_as_sdf`
