@@ -53,11 +53,14 @@ const cy = cytoscape({container:document.getElementById('cy'),elements,style:[
  {selector:'.faded',style:{'opacity':.16}}, {selector:'.selected',style:{'border-width':5,'line-color':'#fff','target-arrow-color':'#fff'}}
 ],layout:{name:'cose',animate:false,padding:35}});
 document.getElementById('count').textContent = `${cy.nodes().length} compounds · ${cy.edges().length} reactions`;
-fetch('data/compounds.json').then(r=>r.json()).then(catalog=>{
-  const known = new Set(cy.nodes().map(n=>n.id()));
-  const nodes = catalog.compounds.filter(c=>!known.has(c.id)).map(c=>({data:{id:c.id,label:c.label,kind:'compound',status:'unresolved',formula:c.formula,carbon_atom_count:c.carbon_atom_count,source:c.source,source_url:c.source_url}}));
-  cy.add(nodes);
-  document.getElementById('count').textContent = `${cy.nodes().length} compounds · ${cy.edges().length} reactions · ${catalog.compounds.reduce((n,c)=>n+c.carbon_atom_count,0).toLocaleString()} carbons`;
+Promise.all([fetch('data/compounds.json').then(r=>r.json()), fetch('data/terpedia-network.json').then(r=>r.json())]).then(([catalog, network])=>{
+  // The hard-coded seed graph is only a loading fallback; published content is source-backed.
+  cy.elements().remove();
+  const nodesById = new Map();
+  for (const node of network.nodes) nodesById.set(node.data.id, node);
+  for (const compound of catalog.compounds) if (!nodesById.has(compound.id)) nodesById.set(compound.id, {data:{id:compound.id,label:compound.label,kind:'compound',status:'unresolved',formula:compound.formula,carbon_atom_count:compound.carbon_atom_count,source:compound.source,source_url:compound.source_url}});
+  cy.add([...nodesById.values(), ...network.edges]);
+  document.getElementById('count').textContent = `${nodesById.size.toLocaleString()} compounds · ${network.stats.reactions.toLocaleString()} reactions · ${catalog.compounds.reduce((n,c)=>n+c.carbon_atom_count,0).toLocaleString()} catalog carbons`;
   cy.layout({name:'grid',eles:cy.nodes(),animate:false,padding:35}).run();
 }).catch(()=>{});
 function show(ele){ const d=ele.data(); document.getElementById('details').innerHTML = `<h2>${d.label||d.id}</h2><p><strong>Type:</strong> ${d.kind}</p><p><strong>Status:</strong> ${d.status||'—'}</p><p><strong>Evidence:</strong> ${d.evidence||'structure record'}</p>`; }

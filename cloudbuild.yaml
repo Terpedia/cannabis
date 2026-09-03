@@ -17,6 +17,6 @@ steps:
   - '--image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:$BUILD_ID'
   - '--region=${_REGION}'
   - '--platform=managed'
-  - '--no-allow-unauthenticated'
+  - '--allow-unauthenticated'
 images:
 - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:$BUILD_ID'
