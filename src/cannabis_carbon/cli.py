@@ -117,6 +117,7 @@ def main() -> None:
     p_networkdb.add_argument("network", type=Path)
     p_networkdb.add_argument("compounds", type=Path)
     p_networkdb.add_argument("crosswalk", type=Path)
+    p_networkdb.add_argument("--hypotheses", type=Path, default=Path("data/reports/candidate-work-queue.json"))
     p_networkdb.add_argument("--out", type=Path, default=Path("docs/data/networkdb.json"))
     args = parser.parse_args()
     if args.command == "download":
@@ -148,7 +149,7 @@ def main() -> None:
     elif args.command == "carbon-lineage":
         print(json.dumps(build_carbon_lineage(args.network, args.mapping, args.crosswalk, args.compounds, args.out, args.directions), indent=2))
     elif args.command == "networkdb":
-        print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out), indent=2))
+        print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out, args.hypotheses), indent=2))
 
 
 if __name__ == "__main__":

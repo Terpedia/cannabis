@@ -143,6 +143,9 @@ all reaction participants and stoichiometric coefficients, enzyme associations,
 source URLs, and the 136 exact CannabisDB–Terpedia identity links. The two
 namespaces remain separate so an identity match cannot silently collapse distinct
 source records; links are explicit in `identity_links` and `identity_link`.
+It also carries 2,236 candidate hypotheses and 3,518 deduplicated candidate
+protein records; 756 reaction records have one or more attached candidate
+proteins. These candidates are hypotheses and are not confirmed enzymes.
 
 ## Phase 1 balance gate
 
