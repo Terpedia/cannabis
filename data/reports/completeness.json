@@ -178,6 +178,8 @@
     "compounds_with_exact_terpedia_identity": 136,
     "compounds_with_ambiguous_identity": 1,
     "compounds_without_exact_terpedia_identity": 6082,
+    "connectivity_candidate_identity_links": 249,
+    "connectivity_candidate_ambiguous": 40,
     "crosswalk_matched_carbon_atoms": 1257
   },
   "coverage": {
