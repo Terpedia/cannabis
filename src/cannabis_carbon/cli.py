@@ -10,6 +10,7 @@ from pathlib import Path
 
 from rdkit import Chem
 from .candidates import CandidateEvidence, rank_candidate
+from .ingest import ingest_sdf
 
 DOWNLOADS = {
     "compounds.sdf": "https://cannabisdatabase.ca/simple/download_compound_as_sdf",
@@ -70,6 +71,10 @@ def main() -> None:
     p_inspect.add_argument("path", type=Path)
     p_rank = sub.add_parser("rank-candidate")
     p_rank.add_argument("path", type=Path)
+    p_ingest = sub.add_parser("ingest-sdf")
+    p_ingest.add_argument("source", type=Path)
+    p_ingest.add_argument("--graph-out", type=Path, default=Path("docs/data/compounds.json"))
+    p_ingest.add_argument("--report-out", type=Path, default=Path("data/reports/carbon-coverage.json"))
     args = parser.parse_args()
     if args.command == "download":
         download(args.out, args.insecure_download)
@@ -77,3 +82,9 @@ def main() -> None:
         inspect_sdf(args.path)
     elif args.command == "rank-candidate":
         rank_candidates(args.path)
+    elif args.command == "ingest-sdf":
+        print(json.dumps(ingest_sdf(args.source, args.graph_out, args.report_out), indent=2))
+
+
+if __name__ == "__main__":
+    main()

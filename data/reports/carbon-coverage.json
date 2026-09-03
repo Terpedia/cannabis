@@ -1,0 +1,15 @@
+{
+  "schema": "cannabis-carbon.coverage.v1",
+  "generated_at": "2026-09-03T22:04:35.807069+00:00",
+  "source_file": "data/raw/compounds.sdf",
+  "compound_count": 6220,
+  "invalid_records": [],
+  "carbon_atom_count": 285623,
+  "status_counts": {
+    "supported": 0,
+    "candidate": 0,
+    "inferred": 0,
+    "unresolved": 285623
+  },
+  "claim_boundary": "A structure catalog does not establish biosynthesis or carbon origin."
+}
