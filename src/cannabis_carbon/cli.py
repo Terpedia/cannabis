@@ -17,6 +17,7 @@ from .completeness import compute_completeness
 from .hypotheses import build_candidate_queue
 from .crosswalk import build_crosswalk
 from .balance import audit_balances
+from .lineage import build_carbon_lineage
 
 DOWNLOADS = {
     "compounds.sdf": "https://cannabisdatabase.ca/simple/download_compound_as_sdf",
@@ -92,6 +93,7 @@ def main() -> None:
     p_complete.add_argument("compounds", type=Path, default=Path("docs/data/compounds.json"), nargs="?")
     p_complete.add_argument("--mapping", type=Path)
     p_complete.add_argument("--crosswalk", type=Path)
+    p_complete.add_argument("--lineage", type=Path)
     p_complete.add_argument("--out", type=Path, default=Path("data/reports/completeness.json"))
     p_queue = sub.add_parser("candidate-queue")
     p_queue.add_argument("source", type=Path)
@@ -103,6 +105,12 @@ def main() -> None:
     p_balance = sub.add_parser("balance-audit")
     p_balance.add_argument("network", type=Path)
     p_balance.add_argument("--out", type=Path, default=Path("data/reports/phase1-balance-audit.json"))
+    p_lineage = sub.add_parser("carbon-lineage")
+    p_lineage.add_argument("network", type=Path)
+    p_lineage.add_argument("mapping", type=Path)
+    p_lineage.add_argument("crosswalk", type=Path)
+    p_lineage.add_argument("compounds", type=Path)
+    p_lineage.add_argument("--out", type=Path, default=Path("data/reports/carbon-lineage.json"))
     args = parser.parse_args()
     if args.command == "download":
         download(args.out, args.insecure_download)
@@ -120,7 +128,7 @@ def main() -> None:
     elif args.command == "map-reactions":
         print(json.dumps(build_reaction_report(args.source, args.out), indent=2))
     elif args.command == "completeness":
-        result = compute_completeness(args.network, args.compounds, args.mapping, args.crosswalk)
+        result = compute_completeness(args.network, args.compounds, args.mapping, args.crosswalk, args.lineage)
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(json.dumps(result, indent=2) + "\n")
         print(json.dumps(result, indent=2))
@@ -130,6 +138,8 @@ def main() -> None:
         print(json.dumps(build_crosswalk(args.cannabisdb_sdf, args.terpedia_network, args.out), indent=2))
     elif args.command == "balance-audit":
         print(json.dumps(audit_balances(args.network, args.out), indent=2))
+    elif args.command == "carbon-lineage":
+        print(json.dumps(build_carbon_lineage(args.network, args.mapping, args.crosswalk, args.compounds, args.out), indent=2))
 
 
 if __name__ == "__main__":

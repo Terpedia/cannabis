@@ -53,6 +53,32 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
         else:
             reason = "reactant-carbon-already-assigned" if choices else "no-conserved-reactant-carbon"
             mappings.append({**base, "status": "unresolved", "reason": reason})
-    unresolved = [{"product_index": m["product_index"], "product_atom": m["product_atom"], "status": m["status"], "reason": m.get("reason")} for m in mappings if m["status"] != "inferred"]
+    # CO2 fixation creates a carbon whose local neighborhood is not conserved.
+    # Permit only this explicit inorganic-carbon transfer; do not generalize it
+    # to arbitrary unresolved carbons or to CO2 appearing only as a product.
+    co2_reactant_indices = [ri for ri, molecule in enumerate(reactants) if Chem.MolToSmiles(molecule) == "O=C=O"]
+    for ri in co2_reactant_indices:
+        for mapping in sorted((m for m in mappings if m["status"] != "inferred"), key=lambda m: (-sum(n.GetAtomicNum() == 8 for n in products[m["product_index"]].GetAtomWithIdx(m["product_atom"]).GetNeighbors()), m["product_index"], m["product_atom"])):
+            product_atom = products[mapping["product_index"]].GetAtomWithIdx(mapping["product_atom"])
+            oxygen_neighbors = sum(n.GetAtomicNum() == 8 for n in product_atom.GetNeighbors())
+            if oxygen_neighbors < 2:
+                continue
+            mapping.update({"reactant_index": ri, "reactant_atom": next(atom.GetIdx() for atom in reactants[ri].GetAtoms() if atom.GetAtomicNum() == 6), "status": "inferred", "method": "rdkit-co2-carbon-source"})
+            mapping.pop("reason", None)
+            mapping.pop("alternatives", None)
+            break
+        else:
+            continue
+        break
+    # Some fixation reactions produce a carbonyl rather than a carboxylate.
+    # Keep this weaker assignment visibly candidate-supported.
+    if co2_reactant_indices and any(m["status"] != "inferred" for m in mappings):
+        ri = co2_reactant_indices[0]
+        for mapping in sorted((m for m in mappings if m["status"] != "inferred"), key=lambda m: (m["product_index"], m["product_atom"])):
+            mapping.update({"reactant_index": ri, "reactant_atom": next(atom.GetIdx() for atom in reactants[ri].GetAtoms() if atom.GetAtomicNum() == 6), "status": "candidate", "method": "rdkit-co2-carbon-source-candidate"})
+            mapping.pop("reason", None)
+            mapping.pop("alternatives", None)
+            break
+    unresolved = [{"product_index": m["product_index"], "product_atom": m["product_atom"], "status": m["status"], "reason": m.get("reason")} for m in mappings if m["status"] not in ("inferred", "candidate")]
     status = "inferred" if not unresolved and all(m["status"] == "inferred" for m in mappings) else "unresolved"
     return {"status": status, "mappings": mappings, "unresolved_product_carbons": unresolved, "product_carbon_atom_count": sum(atom.GetAtomicNum() == 6 for product in products for atom in product.GetAtoms()), "reactant_count": len(reactants), "product_count": len(products)}

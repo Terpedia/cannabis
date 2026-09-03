@@ -13,3 +13,8 @@ def test_carboxylation_like_new_carbon_is_unresolved():
     assert result["status"] == "unresolved"
     assert len(result["mappings"]) == result["product_carbon_atom_count"]
     assert len(result["unresolved_product_carbons"]) >= 1
+
+
+def test_explicit_co2_carbon_source_is_mapped_to_carboxyl_carbon():
+    result = map_reaction_smiles("CC(=O)O.O=C=O>>CC(=O)C(=O)O")
+    assert any(mapping["method"].startswith("rdkit-co2-carbon-source") for mapping in result["mappings"])

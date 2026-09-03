@@ -181,15 +181,26 @@
     "crosswalk_matched_carbon_atoms": 1257
   },
   "coverage": {
-    "mapped_carbon_atoms": 3718,
-    "unresolved_carbon_atoms": 18470,
+    "mapped_carbon_atoms": 3550,
+    "unresolved_carbon_atoms": 18637,
     "coverage_percent": null,
-    "coverage_denominator": "CannabisDB-to-Terpedia identity crosswalk missing",
+    "coverage_denominator": "all CannabisDB carbons; no complete pathway crosswalk",
     "reaction_product_carbon_atoms": 22188,
-    "reaction_mapping_coverage_percent": 16.7568,
+    "reaction_mapping_coverage_percent": 15.9996,
     "reaction_mapping_status_counts": {
-      "inferred": 35,
-      "unresolved": 1051
+      "inferred": 32,
+      "unresolved": 1054
+    },
+    "co2_lineage": {
+      "target_summary": {
+        "supported": 0,
+        "candidate": 0,
+        "unresolved": 6220
+      },
+      "reachable_carbon_nodes": 3,
+      "inferred_carbon_edges": 2591,
+      "external_carbon_input_entity_count": 643,
+      "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2."
     }
   },
   "claim_boundary": "These are database-coverage metrics, not evidence that every listed compound is biosynthesized by Cannabis."

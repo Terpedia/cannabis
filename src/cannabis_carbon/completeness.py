@@ -5,7 +5,7 @@ from collections import Counter
 from pathlib import Path
 
 
-def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None, crosswalk_path: Path | None = None) -> dict:
+def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None, crosswalk_path: Path | None = None, lineage_path: Path | None = None) -> dict:
     with __import__("gzip").open(network_path, "rt", encoding="utf-8") as handle:
         network = json.load(handle)
     entities = {e["id"]: e for e in network["entities"]}
@@ -47,4 +47,7 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
         mapped = mapping["carbon_counts"]["mapped_carbon_atoms"]
         unresolved = mapping["carbon_counts"]["unresolved_or_ambiguous_carbon_atoms"]
         result["coverage"].update(mapped_carbon_atoms=mapped, unresolved_carbon_atoms=unresolved, reaction_product_carbon_atoms=mapping["carbon_counts"]["product_carbon_atoms"], reaction_mapping_coverage_percent=mapping["carbon_counts"]["mapping_coverage_percent"], reaction_mapping_status_counts=mapping["status_counts"])
+    if lineage_path and lineage_path.exists():
+        lineage = json.loads(lineage_path.read_text())
+        result["coverage"]["co2_lineage"] = {"target_summary": lineage["target_summary"], "reachable_carbon_nodes": lineage["reachable_carbon_nodes"], "inferred_carbon_edges": lineage["inferred_carbon_edges"], "external_carbon_input_entity_count": lineage["external_carbon_input_entity_count"], "carbon_source_policy": lineage["carbon_source_policy"]}
     return result
