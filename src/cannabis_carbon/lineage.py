@@ -34,6 +34,26 @@ def _participant_ids(network: dict, reaction_id: str, predicate: str) -> list[st
     return [s["objectEntityId"] for s in network["statements"] if s.get("subjectId") == reaction_id and s.get("predicate") == predicate]
 
 
+def _direction_evidence(network: dict) -> tuple[dict, list[str]]:
+    directions = {}
+    conflicts = []
+    by_reaction = defaultdict(set)
+    statement_sources = {}
+    for statement in network["statements"]:
+        predicate = statement.get("predicate")
+        if predicate not in ("physiological_direction_left_to_right", "physiological_direction_right_to_left"):
+            continue
+        reaction_id = statement.get("subjectId")
+        by_reaction[reaction_id].add(predicate)
+        statement_sources[reaction_id] = (statement.get("sources") or [{}])[0].get("url")
+    for reaction_id, predicates in by_reaction.items():
+        if len(predicates) > 1:
+            conflicts.append(reaction_id)
+        elif "physiological_direction_right_to_left" in predicates:
+            directions[reaction_id] = {"directional_rhea_id": None, "orientation": "reverse_master", "source": statement_sources.get(reaction_id), "reason": "Terpedia physiological direction statement"}
+    return directions, conflicts
+
+
 def _resolve_molecules(molecules, participant_ids, entities):
     by_key = defaultdict(list)
     for entity_id in participant_ids:
@@ -63,7 +83,9 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
     mapping_report = json.loads(mapping_path.read_text())
     crosswalk = json.loads(crosswalk_path.read_text())
     compounds = json.loads(compounds_path.read_text())["compounds"]
-    directions = json.loads(directions_path.read_text()) if directions_path and directions_path.exists() else {}
+    directions, direction_conflicts = _direction_evidence(network)
+    if directions_path and directions_path.exists():
+        directions.update(json.loads(directions_path.read_text()))
     entities = {e["id"]: e for e in network["entities"]}
     edges = []
     edge_blocks = defaultdict(int)
@@ -137,7 +159,7 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
         else:
             status, reason = "unresolved", "entity-not-reachable-from-CO2-through-inferred-carbon-edges"
         targets.append({"cannabisdb_id": compound["id"], "terpedia_id": entity_id, "status": status, "reason": reason, "carbon_atom_count": compound["carbon_atom_count"], "entity_product_carbon_atoms": len(product_nodes), "reachable_carbon_atoms": reachable_count})
-    report = {"schema": "cannabis-carbon.carbon-lineage.v1", "source": str(network_path), "direction_overrides": directions, "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2.", "co2_entity_id": co2_id, "resolved_carbon_edges": len(edges), "inferred_carbon_edges": sum(e["status"] == "inferred" for e in edges), "candidate_carbon_edges": sum(e["status"] == "candidate" for e in edges), "reachable_carbon_nodes": len(reachable), "external_carbon_input_entity_count": len(external_carbon_inputs), "external_carbon_input_entity_ids": external_carbon_inputs, "edge_block_counts": dict(edge_blocks), "target_summary": {status: sum(t["status"] == status for t in targets) for status in ("supported", "candidate", "unresolved")}, "targets": targets, "claim_boundary": "Reachability is based on one-to-one structural RDKit mappings and exact identity crosswalks. It is not isotope tracing, enzyme validation, or proof of in-vivo biosynthesis; all unresolved reasons are retained."}
+    report = {"schema": "cannabis-carbon.carbon-lineage.v1", "source": str(network_path), "direction_overrides": directions, "direction_conflicts": direction_conflicts, "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2.", "co2_entity_id": co2_id, "resolved_carbon_edges": len(edges), "inferred_carbon_edges": sum(e["status"] == "inferred" for e in edges), "candidate_carbon_edges": sum(e["status"] == "candidate" for e in edges), "reachable_carbon_nodes": len(reachable), "external_carbon_input_entity_count": len(external_carbon_inputs), "external_carbon_input_entity_ids": external_carbon_inputs, "edge_block_counts": dict(edge_blocks), "target_summary": {status: sum(t["status"] == status for t in targets) for status in ("supported", "candidate", "unresolved")}, "targets": targets, "claim_boundary": "Reachability is based on one-to-one structural RDKit mappings and exact identity crosswalks. It is not isotope tracing, enzyme validation, or proof of in-vivo biosynthesis; all unresolved reasons are retained."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
     return {"resolved_carbon_edges": len(edges), "inferred_carbon_edges": sum(e["status"] == "inferred" for e in edges), "candidate_carbon_edges": sum(e["status"] == "candidate" for e in edges), "reachable_carbon_nodes": len(reachable), "target_summary": report["target_summary"]}
