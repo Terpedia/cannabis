@@ -5,7 +5,7 @@ from collections import Counter
 from pathlib import Path
 
 
-def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None) -> dict:
+def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None, crosswalk_path: Path | None = None) -> dict:
     with __import__("gzip").open(network_path, "rt", encoding="utf-8") as handle:
         network = json.load(handle)
     entities = {e["id"]: e for e in network["entities"]}
@@ -34,9 +34,14 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
             "carbon_atoms_total": sum(c["carbon_atom_count"] for c in compounds),
             "compound_to_terpedia_identity_crosswalk": "not_yet_available",
         },
-        "coverage": {"mapped_carbon_atoms": 0, "unresolved_carbon_atoms": sum(c["carbon_atom_count"] for c in compounds), "coverage_percent": None, "coverage_denominator": "CannabisDB-to-Terpedia identity crosswalk missing"},
+        "coverage": {"mapped_carbon_atoms": 0, "unresolved_carbon_atoms": sum(c["carbon_atom_count"] for c in compounds), "coverage_percent": None, "coverage_denominator": "all CannabisDB carbons; no complete pathway crosswalk"},
         "claim_boundary": "These are database-coverage metrics, not evidence that every listed compound is biosynthesized by Cannabis.",
     }
+    if crosswalk_path and crosswalk_path.exists():
+        crosswalk = json.loads(crosswalk_path.read_text())
+        matched_ids = {row["cannabisdb"]["cannabisdb_id"] for row in crosswalk["matches"]}
+        matched_carbons = sum(c["carbon_atom_count"] for c in compounds if c["id"] in matched_ids)
+        result["cannabisdb"].update(compounds_with_exact_terpedia_identity=len(matched_ids), compounds_with_ambiguous_identity=crosswalk["ambiguous"], compounds_without_exact_terpedia_identity=crosswalk["unmatched"], crosswalk_matched_carbon_atoms=matched_carbons, compound_to_terpedia_identity_crosswalk="exact-inchikey")
     if mapping_path and mapping_path.exists():
         mapping = json.loads(mapping_path.read_text())
         mapped = mapping["carbon_counts"]["mapped_carbon_atoms"]
