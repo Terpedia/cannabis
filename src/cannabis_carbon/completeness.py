@@ -34,12 +34,12 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
             "carbon_atoms_total": sum(c["carbon_atom_count"] for c in compounds),
             "compound_to_terpedia_identity_crosswalk": "not_yet_available",
         },
-        "coverage": {"mapped_carbon_atoms": 0, "unresolved_carbon_atoms": sum(c["carbon_atom_count"] for c in compounds), "coverage_percent": 0.0},
+        "coverage": {"mapped_carbon_atoms": 0, "unresolved_carbon_atoms": sum(c["carbon_atom_count"] for c in compounds), "coverage_percent": None, "coverage_denominator": "CannabisDB-to-Terpedia identity crosswalk missing"},
         "claim_boundary": "These are database-coverage metrics, not evidence that every listed compound is biosynthesized by Cannabis.",
     }
     if mapping_path and mapping_path.exists():
         mapping = json.loads(mapping_path.read_text())
-        mapped = sum(len([m for m in row["mappings"] if m["status"] == "inferred"]) for row in mapping["reactions"])
-        unresolved = sum(len(row["unresolved_product_carbons"]) for row in mapping["reactions"])
-        result["coverage"].update(mapped_carbon_atoms=mapped, unresolved_carbon_atoms=unresolved, reaction_mapping_status_counts=mapping["status_counts"])
+        mapped = mapping["carbon_counts"]["mapped_carbon_atoms"]
+        unresolved = mapping["carbon_counts"]["unresolved_or_ambiguous_carbon_atoms"]
+        result["coverage"].update(mapped_carbon_atoms=mapped, unresolved_carbon_atoms=unresolved, reaction_product_carbon_atoms=mapping["carbon_counts"]["product_carbon_atoms"], reaction_mapping_coverage_percent=mapping["carbon_counts"]["mapping_coverage_percent"], reaction_mapping_status_counts=mapping["status_counts"])
     return result

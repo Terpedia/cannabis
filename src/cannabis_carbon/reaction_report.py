@@ -16,7 +16,9 @@ def build_reaction_report(source: Path, output: Path) -> dict:
         attrs = reaction.get("attributes", {})
         mapping = map_reaction_smiles(attrs.get("reactionSmiles"))
         rows.append({"reaction_id": reaction["id"], "rhea_url": reaction.get("url"), "equation": attrs.get("equation"), "reaction_smiles": attrs.get("reactionSmiles"), **mapping})
-    report = {"schema": "cannabis-carbon.reaction-carbon-mapping.v1", "source": str(source), "reaction_count": len(rows), "status_counts": {status: sum(row["status"] == status for row in rows) for status in ("inferred", "unresolved")}, "reactions": rows, "claim_boundary": "Structural atom mapping is not isotope tracing and does not establish in-vivo flux."}
+    mapped = sum(sum(m["status"] == "inferred" for m in row["mappings"]) for row in rows)
+    product_carbons = sum(row["product_carbon_atom_count"] for row in rows)
+    report = {"schema": "cannabis-carbon.reaction-carbon-mapping.v1", "source": str(source), "reaction_count": len(rows), "status_counts": {status: sum(row["status"] == status for row in rows) for status in ("inferred", "unresolved")}, "carbon_counts": {"product_carbon_atoms": product_carbons, "mapped_carbon_atoms": mapped, "unresolved_or_ambiguous_carbon_atoms": product_carbons - mapped, "mapping_coverage_percent": round(100 * mapped / product_carbons, 4) if product_carbons else 0.0}, "reactions": rows, "claim_boundary": "Structural atom mapping is not isotope tracing and does not establish in-vivo flux."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
     return {"reaction_count": len(rows), "status_counts": report["status_counts"]}

@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from collections import defaultdict
 from rdkit import Chem
-from rdkit.Chem import rdFMCS
+from rdkit import RDLogger
+
+RDLogger.DisableLog("rdApp.warning")
 
 
 def _molecules(side: str) -> list[Chem.Mol]:
@@ -16,22 +18,9 @@ def _molecules(side: str) -> list[Chem.Mol]:
     return molecules
 
 
-def _pair_maps(reactant: Chem.Mol, product: Chem.Mol) -> list[tuple[int, int]]:
-    result = rdFMCS.FindMCS(
-        [reactant, product], atomCompare=rdFMCS.AtomCompare.CompareElements,
-        bondCompare=rdFMCS.BondCompare.CompareOrder, ringMatchesRingOnly=True,
-        completeRingsOnly=True, timeout=5,
-    )
-    if result.canceled or not result.smartsString:
-        return []
-    query = Chem.MolFromSmarts(result.smartsString)
-    rmatch, pmatch = reactant.GetSubstructMatch(query), product.GetSubstructMatch(query)
-    return [(r, p) for r, p in zip(rmatch, pmatch)
-            if reactant.GetAtomWithIdx(r).GetAtomicNum() == 6
-            and product.GetAtomWithIdx(p).GetAtomicNum() == 6
-            # A carbon cannot silently acquire a new heavy-atom position.
-            # Bond-order changes (e.g. alcohol -> carbonyl) remain allowed.
-            and reactant.GetAtomWithIdx(r).GetDegree() == product.GetAtomWithIdx(p).GetDegree()]
+def _carbon_signature(atom: Chem.Atom) -> tuple:
+    """A bond-order-independent local invariant for conservative mapping."""
+    return (atom.GetDegree(), atom.IsInRing(), atom.GetIsAromatic(), tuple(sorted(n.GetAtomicNum() for n in atom.GetNeighbors())))
 
 
 def map_reaction_smiles(reaction_smiles: str) -> dict:
@@ -41,19 +30,21 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
     matches, malformed sides, and missing reaction SMILES remain explicit.
     """
     if not reaction_smiles or ">>" not in reaction_smiles:
-        return {"status": "unresolved", "reason": "missing-or-invalid-reaction-smiles", "mappings": [], "unresolved_product_carbons": []}
+        return {"status": "unresolved", "reason": "missing-or-invalid-reaction-smiles", "mappings": [], "unresolved_product_carbons": [], "product_carbon_atom_count": 0}
     left, right = reaction_smiles.split(">>", 1)
     reactants, products = _molecules(left), _molecules(right)
     mappings = []
-    by_product = defaultdict(list)
-    for ri, reactant in enumerate(reactants):
-        for pi, product in enumerate(products):
-            for ra, pa in _pair_maps(reactant, product):
-                by_product[(pi, pa)].append((ri, ra))
-    for (pi, pa), choices in by_product.items():
-        unique = sorted(set(choices))
-        mappings.append({"reactant_index": unique[0][0], "reactant_atom": unique[0][1], "product_index": pi, "product_atom": pa, "status": "inferred" if len(unique) == 1 else "ambiguous", "method": "rdkit-mcs-conserved-substructure", "alternatives": [{"reactant_index": ri, "reactant_atom": ra} for ri, ra in unique]})
+    reactant_carbons = [(ri, atom.GetIdx(), _carbon_signature(atom)) for ri, mol in enumerate(reactants) for atom in mol.GetAtoms() if atom.GetAtomicNum() == 6]
+    for pi, product in enumerate(products):
+        for atom in product.GetAtoms():
+            if atom.GetAtomicNum() != 6:
+                continue
+            choices = [(ri, ra) for ri, ra, signature in reactant_carbons if signature == _carbon_signature(atom)]
+            if len(choices) == 1:
+                mappings.append({"reactant_index": choices[0][0], "reactant_atom": choices[0][1], "product_index": pi, "product_atom": atom.GetIdx(), "status": "inferred", "method": "rdkit-carbon-neighborhood"})
+            elif choices:
+                mappings.append({"reactant_index": choices[0][0], "reactant_atom": choices[0][1], "product_index": pi, "product_atom": atom.GetIdx(), "status": "ambiguous", "method": "rdkit-carbon-neighborhood", "alternatives": [{"reactant_index": ri, "reactant_atom": ra} for ri, ra in choices]})
     mapped = {(m["product_index"], m["product_atom"]) for m in mappings if m["status"] == "inferred"}
     unresolved = [{"product_index": pi, "product_atom": atom.GetIdx()} for pi, product in enumerate(products) for atom in product.GetAtoms() if atom.GetAtomicNum() == 6 and (pi, atom.GetIdx()) not in mapped]
     status = "inferred" if not unresolved and all(m["status"] == "inferred" for m in mappings) else "unresolved"
-    return {"status": status, "mappings": mappings, "unresolved_product_carbons": unresolved, "reactant_count": len(reactants), "product_count": len(products)}
+    return {"status": status, "mappings": mappings, "unresolved_product_carbons": unresolved, "product_carbon_atom_count": sum(atom.GetAtomicNum() == 6 for product in products for atom in product.GetAtoms()), "reactant_count": len(reactants), "product_count": len(products)}
