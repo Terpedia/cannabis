@@ -42,3 +42,10 @@ def test_decarboxylation_maps_released_carbon_to_co2():
     assert result["status"] == "inferred"
     assert len(result["mappings"]) == 2
     assert any(mapping["method"] == "rdkit-decarboxylation-released-carbon" for mapping in result["mappings"])
+
+
+def test_full_carbon_mcs_maps_oxidation_with_oxygen_only_cofactor():
+    result = map_reaction_smiles("CCCCCC1=CC(O)=C(CC=C(C)CCC=C(C)C)C(O)=C1C(O)=O.O=O>>CCCCCC1=C(C(O)=O)C(O)=C([C@@H]2C=C(C)CC[C@H]2C(C)=C)C(O)=C1.OO")
+    assert result["status"] == "inferred"
+    assert len(result["mappings"]) == 22
+    assert all(row["method"] == "rdkit-full-carbon-mcs-conservation" for row in result["mappings"])

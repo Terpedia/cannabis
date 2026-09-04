@@ -97,6 +97,36 @@ def _mcs_pair_carbon_candidates(reactants: list[Chem.Mol], products: list[Chem.M
     return candidates
 
 
+def _full_carbon_mcs_mapping(reactants: list[Chem.Mol], products: list[Chem.Mol]) -> list[dict] | None:
+    """Map all carbons for a unique one-substrate/one-product MCS."""
+    carbon_reactants = [(i, mol) for i, mol in enumerate(reactants) if any(a.GetAtomicNum() == 6 for a in mol.GetAtoms())]
+    carbon_products = [(i, mol) for i, mol in enumerate(products) if any(a.GetAtomicNum() == 6 for a in mol.GetAtoms())]
+    if len(carbon_reactants) != 1 or len(carbon_products) != 1:
+        return None
+    ri, reactant = carbon_reactants[0]
+    pi, product = carbon_products[0]
+    reactant_carbons = [a.GetIdx() for a in reactant.GetAtoms() if a.GetAtomicNum() == 6]
+    product_carbons = [a.GetIdx() for a in product.GetAtoms() if a.GetAtomicNum() == 6]
+    if len(reactant_carbons) != len(product_carbons):
+        return None
+    result = rdFMCS.FindMCS([reactant, product], atomCompare=rdFMCS.AtomCompare.CompareElements, bondCompare=rdFMCS.BondCompare.CompareAny, ringMatchesRingOnly=False, completeRingsOnly=False, timeout=2)
+    if result.canceled or result.numAtoms < len(product_carbons):
+        return None
+    query = Chem.MolFromSmarts(result.smartsString)
+    if query is None:
+        return None
+    reactant_matches = reactant.GetSubstructMatches(query, uniquify=True)
+    product_matches = product.GetSubstructMatches(query, uniquify=True)
+    if len(reactant_matches) != 1 or len(product_matches) != 1:
+        return None
+    reactant_match, product_match = reactant_matches[0], product_matches[0]
+    if set(product_carbons) - set(product_match) or set(reactant_carbons) - set(reactant_match):
+        return None
+    reactant_by_query = {query_index: atom_index for query_index, atom_index in enumerate(reactant_match)}
+    product_by_query = {query_index: atom_index for query_index, atom_index in enumerate(product_match)}
+    return [{"product_index": pi, "product_atom": product_atom, "reactant_index": ri, "reactant_atom": reactant_by_query[next(index for index, atom_index in product_by_query.items() if atom_index == product_atom)], "method": "rdkit-full-carbon-mcs-conservation", "status": "inferred"} for product_atom in product_carbons]
+
+
 def map_reaction_smiles(reaction_smiles: str) -> dict:
     """Map product carbons to conserved reactant carbons.
 
@@ -112,6 +142,9 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
     used_reactant_carbons = set()
     product_carbons = [(pi, atom) for pi, product in enumerate(products) for atom in product.GetAtoms() if atom.GetAtomicNum() == 6]
     co2_reactant_indices = [ri for ri, molecule in enumerate(reactants) if Chem.MolToSmiles(molecule) == "O=C=O"]
+    full_carbon_mcs = _full_carbon_mcs_mapping(reactants, products)
+    if full_carbon_mcs is not None and (len(reactants) > 1 or len(products) > 1):
+        return {"status": "inferred", "mappings": full_carbon_mcs, "unresolved_product_carbons": [], "product_carbon_atom_count": len(product_carbons), "reactant_count": len(reactants), "product_count": len(products)}
     # A unique whole-product substructure match is stronger than repeated
     # local carbon signatures for cleavage/decarboxylation-like reactions.
     # It conserves only atoms actually present in the product and does not
