@@ -58,6 +58,17 @@ def test_completeness_can_include_co2_lineage(tmp_path):
     assert result["coverage"]["co2_lineage"]["target_summary"]["supported"] == 1
 
 
+def test_completeness_reports_mapping_blockers(tmp_path):
+    network_path = tmp_path / "network.json.gz"
+    with gzip.open(network_path, "wt") as handle: json.dump({"entities": [], "statements": []}, handle)
+    compounds_path = tmp_path / "compounds.json"
+    compounds_path.write_text(json.dumps({"compounds": []}))
+    mapping_path = tmp_path / "mapping.json"
+    mapping_path.write_text(json.dumps({"carbon_counts": {"mapped_carbon_atoms": 1, "unresolved_or_ambiguous_carbon_atoms": 2, "product_carbon_atoms": 3, "mapping_coverage_percent": 33.3}, "status_counts": {}, "reactions": [{"reaction_id": "r1", "mappings": [{"status": "ambiguous"}, {"status": "unresolved"}, {"status": "inferred"}]}]}))
+    result = compute_completeness(network_path, compounds_path, mapping_path=mapping_path)
+    assert result["coverage"]["carbon_mapping_blockers"] == {"reactions_with_blocked_product_carbon_rows": 1, "product_carbon_row_status_counts": {"ambiguous": 1, "inferred": 1, "unresolved": 1}, "blocked_product_carbon_rows": 2}
+
+
 def test_completeness_distinguishes_nonexact_from_unresolved_identity(tmp_path):
     network = {"entities": [], "statements": []}
     network_path = tmp_path / "network.json.gz"

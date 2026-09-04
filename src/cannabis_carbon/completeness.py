@@ -69,7 +69,10 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
         mapping = json.loads(mapping_path.read_text())
         mapped = mapping["carbon_counts"]["mapped_carbon_atoms"]
         unresolved = mapping["carbon_counts"]["unresolved_or_ambiguous_carbon_atoms"]
-        result["coverage"].update(mapped_carbon_atoms=mapped, unresolved_carbon_atoms=unresolved, reaction_product_carbon_atoms=mapping["carbon_counts"]["product_carbon_atoms"], reaction_mapping_coverage_percent=mapping["carbon_counts"]["mapping_coverage_percent"], reaction_mapping_status_counts=mapping["status_counts"])
+        mapping_rows = [mapping_row for reaction in mapping.get("reactions", []) for mapping_row in reaction.get("mappings", [])]
+        row_status_counts = Counter(row.get("status", "unresolved") for row in mapping_rows)
+        blocked_reactions = [reaction for reaction in mapping.get("reactions", []) if any(row.get("status") in ("ambiguous", "unresolved") for row in reaction.get("mappings", []))]
+        result["coverage"].update(mapped_carbon_atoms=mapped, unresolved_carbon_atoms=unresolved, reaction_product_carbon_atoms=mapping["carbon_counts"]["product_carbon_atoms"], reaction_mapping_coverage_percent=mapping["carbon_counts"]["mapping_coverage_percent"], reaction_mapping_status_counts=mapping["status_counts"], carbon_mapping_blockers={"reactions_with_blocked_product_carbon_rows": len(blocked_reactions), "product_carbon_row_status_counts": dict(sorted(row_status_counts.items())), "blocked_product_carbon_rows": sum(row_status_counts.get(status, 0) for status in ("ambiguous", "unresolved"))})
     if lineage_path and lineage_path.exists():
         lineage = json.loads(lineage_path.read_text())
         status_identity = Counter()

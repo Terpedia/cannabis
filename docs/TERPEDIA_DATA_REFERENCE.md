@@ -215,6 +215,8 @@ remain unresolved for CO₂ reachability, and 242 identity-resolved targets are
 already candidate or supported. Of the 88 specialty-name targets, 17 are
 candidate and 71 remain unresolved. This partitions the next work into identity
 resolution versus reaction/pathway reconstruction.
+It also reports `carbon_mapping_blockers`: 765 reactions and 16,406 product
+carbon rows currently require ambiguity or unresolved-mapping curation.
 
 The companion `data/reports/carbon-atom-audit.json` and published
 `docs/data/carbon-atom-audit.json` artifacts partition all **285,623**

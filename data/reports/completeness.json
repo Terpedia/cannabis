@@ -102,6 +102,16 @@
       "inferred": 278,
       "unresolved": 829
     },
+    "carbon_mapping_blockers": {
+      "reactions_with_blocked_product_carbon_rows": 765,
+      "product_carbon_row_status_counts": {
+        "ambiguous": 15234,
+        "candidate": 106,
+        "inferred": 6239,
+        "unresolved": 1172
+      },
+      "blocked_product_carbon_rows": 16406
+    },
     "co2_lineage": {
       "target_summary": {
         "supported": 1,
