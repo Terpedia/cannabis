@@ -21,6 +21,7 @@ from .lineage import build_carbon_lineage
 from .networkdb import build_networkdb
 from .genome import build_genome_search
 from .inventory import build_specialty_inventory
+from .test_hypotheses import build_test_hypotheses
 
 DOWNLOADS = {
     "compounds.sdf": "https://cannabisdatabase.ca/simple/download_compound_as_sdf",
@@ -136,6 +137,10 @@ def main() -> None:
     p_inventory.add_argument("crosswalk", type=Path)
     p_inventory.add_argument("network", type=Path)
     p_inventory.add_argument("--out", type=Path, default=Path("data/reports/named-specialty-inventory.json"))
+    p_tests = sub.add_parser("test-hypotheses")
+    p_tests.add_argument("queue", type=Path)
+    p_tests.add_argument("network", type=Path)
+    p_tests.add_argument("--out", type=Path, default=Path("data/reports/testable-hypotheses.json"))
     args = parser.parse_args()
     if args.command == "download":
         download(args.out, args.insecure_download)
@@ -171,6 +176,8 @@ def main() -> None:
         print(json.dumps(build_genome_search(args.queue, args.fasta, args.out, args.diamond_hits, args.reference_tsv), indent=2))
     elif args.command == "specialty-inventory":
         print(json.dumps(build_specialty_inventory(args.compounds, args.crosswalk, args.network, args.out), indent=2))
+    elif args.command == "test-hypotheses":
+        print(json.dumps(build_test_hypotheses(args.queue, args.network, args.out), indent=2))
 
 
 if __name__ == "__main__":

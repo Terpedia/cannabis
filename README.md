@@ -23,6 +23,9 @@ its source, reaction direction, atom-mapping method, and uncertainty.
   working reactions, participant coefficients, enzyme associations, exact/candidate
   identity links, and reaction-level carbon-mapping summaries are retained in
   one source-linked artifact.
+- `docs/data/testable-hypotheses.json` turns the unresolved queue into 2,243
+  falsifiable records with candidate proteins, required reaction inputs,
+  blockers, provenance, and proposed recombinant/plant validation assays.
 
 ## Genome-to-enzyme discovery
 

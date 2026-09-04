@@ -212,6 +212,18 @@ protein A0A7J6EQA1 (gene G4B88_002492), with 63.4% identity, 77.9% query
 coverage, and E-value 4.8e-97 to reviewed Arabidopsis IspD. This is a
 sequence-supported candidate producer, not a confirmed cannabis enzyme.
 
+## Testable hypothesis set
+
+`docs/data/testable-hypotheses.json` converts every candidate or blocked queue
+record into a falsifiable hypothesis. Each record preserves the reaction and
+exact participant IDs when available, candidate proteins and best sequence hit,
+blocking causes, source provenance, and a proposed assay plan. The current set
+contains 2,243 records: 1,712 with candidate proteins and 531 blocked records;
+1,326 are attached to a working reaction. TKS and OAC have dedicated coupled
+or substrate-specificity assay plans in addition to recombinant-enzyme and
+plant-validation steps. These are future tests, not claims of confirmed
+activity.
+
 ## Phase 1 balance gate
 
 The Phase 1 audit is stored in
