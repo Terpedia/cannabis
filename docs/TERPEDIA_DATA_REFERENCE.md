@@ -137,8 +137,8 @@ The static map's Phase 1 evidence filter uses
 `docs/data/phase1-map-evidence.json`, joining exact reaction-ID/SMARTS variants
 without a name or reaction-family fallback. Its expansion-only denominator is
 690 variants: 491 balanced, 150 imbalanced, and 49 not auditable. Of the balanced
-variants, 175 have screened homology candidates and 24 additional variants have
-core enzyme associations; 292 lack either evidence type (285 missing references,
+variants, 178 have screened homology candidates and 24 additional variants have
+core enzyme associations; 289 lack either evidence type (282 missing references,
 four no-hit searches, three weak-hit-only searches). These are not confirmed
 enzyme or complete-pathway percentages. The filter dims nonmatching edges and
 nodes, composes with existing filters, and updates when the candidate layer loads.
@@ -153,21 +153,30 @@ search statuses remain unchanged, and core equation orientation does not establi
 the expansion's physiological direction.
 
 The Phase 1 experimental shortlist (`docs/data/phase1-experimental-shortlist.json`)
-groups 3,098 protein–reaction proposals under 18 Cannabis proteins, covering
-175 balanced reaction variants. Every protein retains its source FASTA header,
+groups 3,128 protein–reaction proposals under 18 Cannabis proteins, covering
+178 balanced reaction variants. Every protein retains its source FASTA header,
 sequence and checksum; each proposal includes ranked reference alignments,
 reaction SMARTS, provenance and unresolved validation steps. The proposals
 share homology evidence and must not be counted as independent confirmations.
 
-Targeted Phase 1 protein search: all 105 source protein references were retrieved,
-including 97 UniProtKB and eight UniParc records.
+Targeted Phase 1 protein search: all 123 source references were resolved to
+sequences, including 97 UniProtKB, eight UniParc, 16 NCBI protein records and
+two single-CDS translations annotated in NCBI nucleotide records. The latter
+preserve separate identities: MK803261.1 → QDZ36304.1 and
+MK803262.1 → QDZ36305.1, with source XML checksums and CDS locations.
+Ambiguous multi-CDS records are rejected, not assigned an arbitrary protein.
 DIAMOND searched all 30,304 proteins in UP000583929. Of 491 balanced reaction
-variants, 178 have hits and 175 have candidates passing 30% identity and 50%
+variants, 181 have hits and 178 have candidates passing 30% identity and 50%
 coverage of both query and reference (E-value at most 1e-5). These correspond
 to 18 distinct Cannabis proteins. The report at
 `docs/data/phase1-targeted-protein-search.json` retains every balanced variant,
 no-hit outcomes, missing references, sequence hashes and search command.
 Homology supports experimental prioritization, not established activity.
+
+NCBI reference WP_169336908.1 (source-annotated squalene/oxidosqualene cyclase
+from Eudoraea adriatica) supplied the previously unsearched reference for
+MARTS:6816, MARTS:6817 and MARTS:6818. Each now has ten screened Cannabis
+protein candidates, adding 30 reaction–protein hypotheses, not confirmed enzymes.
 
 Phase 1 priority: atom tracing is deferred at the user's request. The
 [enzyme discovery queue](data/phase1-enzyme-discovery-queue.json) groups 690
