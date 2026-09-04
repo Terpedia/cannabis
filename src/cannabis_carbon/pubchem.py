@@ -17,6 +17,7 @@ from pathlib import Path
 PROPERTIES = "InChIKey,Title,IUPACName,CanonicalSMILES,IsomericSMILES,MolecularFormula,InChI"
 BASE_URL = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/inchikey"
 ID_EXCHANGE_URL = "https://pubchem.ncbi.nlm.nih.gov/idexchange/idexchange.cgi"
+CID_BASE_URL = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid"
 
 
 def _fetch_batch(keys: list[str], retries: int = 3) -> list[dict]:
@@ -41,6 +42,31 @@ def _fetch_batch(keys: list[str], retries: int = 3) -> list[dict]:
                 raise
             time.sleep(2**attempt)
     return []
+
+
+def _fetch_cid_properties(cids: list[int], retries: int = 3) -> dict[int, dict]:
+    """Fetch the same structure evidence for CIDs returned by bulk exchange."""
+    if not cids:
+        return {}
+    path = ",".join(str(cid) for cid in cids)
+    url = f"{CID_BASE_URL}/{path}/property/{PROPERTIES}/JSON"
+    context = ssl.create_default_context()
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(url, context=context, timeout=60) as response:
+                payload = json.load(response)
+            return {int(row["CID"]): row for row in payload.get("PropertyTable", {}).get("Properties", []) if row.get("CID") is not None}
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:
+                return {}
+            if attempt + 1 == retries:
+                raise
+            time.sleep(2**attempt)
+        except (urllib.error.URLError, TimeoutError):
+            if attempt + 1 == retries:
+                raise
+            time.sleep(2**attempt)
+    return {}
 
 
 def _fetch_bulk(keys: list[str], input_type: str = "inchikey", operator: str = "samecid", poll_seconds: int = 5, timeout_seconds: int = 1800) -> list[dict]:
@@ -106,9 +132,12 @@ def resolve_pubchem(compounds_path: Path, output: Path, batch_size: int = 25, pa
     if method == "bulk":
         if keys:
             returned = _fetch_bulk(keys)
+            properties = {}
+            for start in range(0, len(returned), 100):
+                properties.update(_fetch_cid_properties([int(item["CID"]) for item in returned[start:start + 100] if item.get("CID") is not None]))
             for item in returned:
                 if item.get("InChIKey") in by_key:
-                    by_key[item["InChIKey"]].append(item)
+                    by_key[item["InChIKey"]].append({**properties.get(int(item["CID"]), {}), **item})
             negative_keys.update(key for key in keys if not by_key[key])
         # PubChem may have standardized a structure differently (stereo,
         # charge, tautomer, or salt). Keep connectivity matches as candidates.
@@ -118,8 +147,12 @@ def resolve_pubchem(compounds_path: Path, output: Path, batch_size: int = 25, pa
             for item in _fetch_bulk(sorted(by_smiles), input_type="smiles", operator="samecon"):
                 if item.get("query") in by_smiles:
                     by_smiles[item["query"]].append({"CID": item["CID"], "query": item["query"], "match_type": "same_connectivity"})
+            candidate_properties = {}
+            candidate_cids = sorted({int(item["CID"]) for values in by_smiles.values() for item in values if item.get("CID") is not None})
+            for start in range(0, len(candidate_cids), 100):
+                candidate_properties.update(_fetch_cid_properties(candidate_cids[start:start + 100]))
             for record in fallback_records:
-                candidates = by_smiles.get(record["smiles"], [])
+                candidates = [{**candidate_properties.get(int(item["CID"]), {}), **item} for item in by_smiles.get(record["smiles"], [])]
                 if candidates:
                     record["connectivity_candidates"] = candidates
         name_records = [r for r in fallback_records if not r.get("connectivity_candidates") and r.get("names")]
@@ -128,8 +161,12 @@ def resolve_pubchem(compounds_path: Path, output: Path, batch_size: int = 25, pa
             for item in _fetch_bulk(sorted(by_name), input_type="synofiltered", operator="samecid"):
                 if item.get("query") in by_name:
                     by_name[item["query"]].append({"CID": item["CID"], "query": item["query"], "match_type": "same_name"})
+            candidate_properties = {}
+            candidate_cids = sorted({int(item["CID"]) for values in by_name.values() for item in values if item.get("CID") is not None})
+            for start in range(0, len(candidate_cids), 100):
+                candidate_properties.update(_fetch_cid_properties(candidate_cids[start:start + 100]))
             for record in name_records:
-                candidates = [item for name in record["names"] for item in by_name.get(name, [])]
+                candidates = [{**candidate_properties.get(int(item["CID"]), {}), **item} for name in record["names"] for item in by_name.get(name, [])]
                 if candidates:
                     record["name_candidates"] = candidates
     else:
