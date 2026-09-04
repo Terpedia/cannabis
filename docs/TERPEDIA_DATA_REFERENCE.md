@@ -221,9 +221,9 @@ missing CO₂-assimilation and/or structure-resolved links needed to establish
 the plant-wide carbon path; it is not evidence that Cannabis uses another
 carbon source.
 
-The completeness artifact now includes `co2_lineage.target_triage`: 5,810
-targets have no Terpedia identity, 168 have an exact or candidate identity but
-remain unresolved for CO₂ reachability, and 242 identity-resolved targets are
+The completeness artifact now includes `co2_lineage.target_triage`: 5,795
+targets have no Terpedia identity, 225 have an exact or candidate identity but
+remain unresolved for CO₂ reachability, and 200 identity-resolved targets are
 already candidate or supported. Of the 88 specialty-name targets, 17 are
 candidate and 71 remain unresolved. This partitions the next work into identity
 resolution versus reaction/pathway reconstruction.
