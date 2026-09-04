@@ -172,6 +172,9 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
     external_carbon_inputs = sorted(entity_id for entity_id in carbon_reactant_entities if entity_id != co2_id and not any(node[0] == entity_id for node in reachable))
 
     exact_by_cdb = {row["cannabisdb"]["cannabisdb_id"]: row for row in crosswalk["matches"]}
+    # XML ChEBI links are promoted only when their linked Terpedia structure
+    # independently agrees by full InChIKey; conflicts remain separate.
+    exact_by_cdb.update({row["cannabisdb"]["cannabisdb_id"]: row for row in crosswalk.get("identifier_match_records", []) if row.get("identity_status") == "structure-verified" and row["cannabisdb"]["cannabisdb_id"] not in exact_by_cdb})
     candidate_by_cdb = defaultdict(list)
     for row in crosswalk.get("candidate_matches", []):
         candidate_by_cdb[row["cannabisdb"]["cannabisdb_id"]].append(row)
@@ -250,6 +253,7 @@ def build_carbon_atom_audit(network_path: Path, lineage_path: Path, crosswalk_pa
         incoming[node].append(edge)
 
     exact_by_cdb = {row["cannabisdb"]["cannabisdb_id"]: row for row in crosswalk.get("matches", [])}
+    exact_by_cdb.update({row["cannabisdb"]["cannabisdb_id"]: row for row in crosswalk.get("identifier_match_records", []) if row.get("identity_status") == "structure-verified" and row["cannabisdb"]["cannabisdb_id"] not in exact_by_cdb})
     candidate_by_cdb = defaultdict(list)
     for row in crosswalk.get("candidate_matches", []):
         candidate_by_cdb[row["cannabisdb"]["cannabisdb_id"]].append(row)
