@@ -30,7 +30,7 @@ def _name_key(value: str | None) -> str:
     return re.sub(r"[^a-z0-9]", "", unicodedata.normalize("NFKD", value or "").encode("ascii", "ignore").decode().lower())
 
 
-def build_crosswalk(cannabisdb_sdf: Path, terpedia_network: Path, output: Path, cannabisdb_catalog: Path | None = None) -> dict:
+def build_crosswalk(cannabisdb_sdf: Path, terpedia_network: Path, output: Path, cannabisdb_catalog: Path | None = None, pubchem_chebi_path: Path | None = None) -> dict:
     """Crosswalk CannabisDB compounds to Terpedia ChEBI metabolites by InChIKey."""
     by_key = defaultdict(list)
     by_connectivity = defaultdict(list)
@@ -156,9 +156,37 @@ def build_crosswalk(cannabisdb_sdf: Path, terpedia_network: Path, output: Path, 
                     row["identity_status"] = "conflict"
                     row["terpedia_inchikey"] = terpedia_key
                     identifier_conflicts.append(row)
+    pubchem_chebi_candidate_matches = []
+    pubchem_chebi_candidate_ambiguous = []
+    pubchem_candidate_ids = set()
+    pubchem_ambiguous_ids = set()
+    if pubchem_chebi_path and pubchem_chebi_path.exists():
+        pubchem_xrefs = json.loads(pubchem_chebi_path.read_text())
+        exact_or_candidate_ids = exact_ids
+        identifier_record_ids = {row["cannabisdb"]["cannabisdb_id"] for row in identifier_matches + identifier_conflicts}
+        for xref in pubchem_xrefs.get("records", []):
+            compound_id = xref.get("cannabisdb_id")
+            if not compound_id or compound_id in exact_or_candidate_ids or compound_id in identifier_record_ids:
+                continue
+            entities = {entity["id"]: entity for chebi in xref.get("pubchem_chebi_ids", []) for entity in terpedia_by_chebi.get(str(chebi).upper().replace("CHEBI:", ""), [])}
+            if len(entities) == 1:
+                entity = next(iter(entities.values()))
+                record = next((record for records in by_key.values() for record in records if record.get("cannabisdb_id") == compound_id), None)
+                if record:
+                    pair = (compound_id, entity["id"])
+                    if not any((row["cannabisdb"]["cannabisdb_id"], row["terpedia_id"]) == pair for row in candidate_matches + identifier_matches + identifier_conflicts):
+                        pubchem_chebi_candidate_matches.append({"terpedia_id": entity["id"], "terpedia_label": entity.get("label"), "cannabisdb": record, "pubchem_cid": xref.get("cid"), "pubchem_chebi_ids": xref.get("pubchem_chebi_ids", []), "method": "pubchem-chebi-xref-candidate", "identity_status": "candidate", "claim_boundary": "PubChem ChEBI cross-reference is retained as candidate identity evidence; structure, stereochemistry, and reaction context remain unresolved."})
+                    pubchem_candidate_ids.add(compound_id)
+            elif len(entities) > 1:
+                record = next((record for records in by_key.values() for record in records if record.get("cannabisdb_id") == compound_id), None)
+                if record:
+                    pubchem_chebi_candidate_ambiguous.append({"cannabisdb": record, "pubchem_cid": xref.get("cid"), "pubchem_chebi_ids": xref.get("pubchem_chebi_ids", []), "terpedia_candidates": [{"terpedia_id": entity["id"], "label": entity.get("label")} for entity in entities.values()], "method": "pubchem-chebi-xref-candidate", "reason": "multiple-terpedia-chebi-targets"})
+                    pubchem_ambiguous_ids.add(compound_id)
+    candidate_matches.extend(pubchem_chebi_candidate_matches)
+    candidate_ambiguous.extend(pubchem_chebi_candidate_ambiguous)
     cannabisdb_unmatched_ids = sorted(all_cannabisdb_ids - matched_cannabisdb_ids - ambiguous_cannabisdb_ids - connectivity_candidate_ids - connectivity_ambiguous_ids - tautomer_candidate_ids - tautomer_ambiguous_ids)
-    cannabisdb_unmatched_ids = sorted(all_cannabisdb_ids - matched_cannabisdb_ids - ambiguous_cannabisdb_ids - connectivity_candidate_ids - connectivity_ambiguous_ids - tautomer_candidate_ids - tautomer_ambiguous_ids - name_candidate_ids - name_ambiguous_ids)
-    report = {"schema": "cannabis-carbon.identity-crosswalk.v1", "method": "RDKit InChIKey with candidate-only tautomer and unique-name layers plus optional CannabisDB XML ChEBI identifier evidence", "cannabisdb_compounds": len(all_cannabisdb_ids), "terpedia_metabolites": len(metabolites), "exact_matches": len(matches), "ambiguous": len(ambiguous), "unmatched": len(unmatched), "terpedia_unmatched": len(unmatched), "cannabisdb_unmatched": len(cannabisdb_unmatched_ids), "connectivity_candidate_matches": len(candidate_matches), "connectivity_candidate_ambiguous": len(candidate_ambiguous), "tautomer_candidate_matches": len(tautomer_candidate_matches), "tautomer_candidate_ambiguous": len(tautomer_candidate_ambiguous), "name_candidate_matches": len(name_candidate_matches), "name_candidate_ambiguous": len(name_candidate_ambiguous), "identifier_matches": len(identifier_matches), "identifier_conflicts": len(identifier_conflicts), "matches": matches, "identifier_match_records": identifier_matches, "identifier_conflict_records": identifier_conflicts, "candidate_matches": candidate_matches + tautomer_candidate_matches + name_candidate_matches, "candidate_ambiguous_records": candidate_ambiguous + tautomer_candidate_ambiguous + name_candidate_ambiguous, "ambiguous_records": ambiguous, "unmatched_records": unmatched, "cannabisdb_unmatched_ids": cannabisdb_unmatched_ids, "claim_boundary": "Exact matches require full InChIKey identity. XML identifier links are reported separately and are structure-verified only when the linked Terpedia structure has the same full InChIKey; conflicts remain unresolved and are not biosynthetic evidence."}
+    cannabisdb_unmatched_ids = sorted(all_cannabisdb_ids - matched_cannabisdb_ids - ambiguous_cannabisdb_ids - connectivity_candidate_ids - connectivity_ambiguous_ids - tautomer_candidate_ids - tautomer_ambiguous_ids - name_candidate_ids - name_ambiguous_ids - pubchem_candidate_ids - pubchem_ambiguous_ids)
+    report = {"schema": "cannabis-carbon.identity-crosswalk.v1", "method": "RDKit InChIKey with candidate-only tautomer, unique-name, CannabisDB XML ChEBI, and PubChem ChEBI cross-reference layers", "cannabisdb_compounds": len(all_cannabisdb_ids), "terpedia_metabolites": len(metabolites), "exact_matches": len(matches), "ambiguous": len(ambiguous), "unmatched": len(unmatched), "terpedia_unmatched": len(unmatched), "cannabisdb_unmatched": len(cannabisdb_unmatched_ids), "connectivity_candidate_matches": len(candidate_matches), "connectivity_candidate_ambiguous": len(candidate_ambiguous), "tautomer_candidate_matches": len(tautomer_candidate_matches), "tautomer_candidate_ambiguous": len(tautomer_candidate_ambiguous), "name_candidate_matches": len(name_candidate_matches), "name_candidate_ambiguous": len(name_candidate_ambiguous), "identifier_matches": len(identifier_matches), "identifier_conflicts": len(identifier_conflicts), "pubchem_chebi_candidate_matches": len(pubchem_chebi_candidate_matches), "pubchem_chebi_candidate_ambiguous": len(pubchem_chebi_candidate_ambiguous), "matches": matches, "identifier_match_records": identifier_matches, "identifier_conflict_records": identifier_conflicts, "candidate_matches": candidate_matches + tautomer_candidate_matches + name_candidate_matches, "candidate_ambiguous_records": candidate_ambiguous + tautomer_candidate_ambiguous + name_candidate_ambiguous, "ambiguous_records": ambiguous, "unmatched_records": unmatched, "cannabisdb_unmatched_ids": cannabisdb_unmatched_ids, "claim_boundary": "Exact matches require full InChIKey identity. XML and PubChem identifier links are reported separately and are structure-verified only when the linked Terpedia structure has the same full InChIKey; conflicts remain unresolved and are not biosynthetic evidence."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
     return {k: report[k] for k in ("cannabisdb_compounds", "terpedia_metabolites", "exact_matches", "ambiguous", "unmatched", "terpedia_unmatched", "cannabisdb_unmatched", "connectivity_candidate_matches", "connectivity_candidate_ambiguous", "tautomer_candidate_matches", "tautomer_candidate_ambiguous", "name_candidate_matches", "name_candidate_ambiguous")}

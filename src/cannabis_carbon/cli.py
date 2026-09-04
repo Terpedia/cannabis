@@ -30,6 +30,7 @@ from .pubchem import resolve_pubchem
 from .cannabisdb_xml import enrich_compounds_with_xrefs, extract_terpedia_table
 from .identity_set import refresh_identity_set
 from .identity_set_paths import refresh_identity_set_upstream, map_identity_set_upstream, build_identity_set_core_bridges
+from .pubchem_xrefs import retrieve_pubchem_chebi_xrefs
 
 DOWNLOADS = {
     "compounds.sdf": "https://cannabisdatabase.ca/simple/download_compound_as_sdf",
@@ -123,6 +124,7 @@ def main() -> None:
     p_crosswalk.add_argument("cannabisdb_sdf", type=Path)
     p_crosswalk.add_argument("terpedia_network", type=Path)
     p_crosswalk.add_argument("--compounds", type=Path, help="Normalized CannabisDB catalog with XML external identifiers")
+    p_crosswalk.add_argument("--pubchem-chebi", type=Path, help="PubChem ChEBI cross-reference report")
     p_crosswalk.add_argument("--out", type=Path, default=Path("data/reports/identity-crosswalk.json"))
     p_balance = sub.add_parser("balance-audit")
     p_balance.add_argument("network", type=Path)
@@ -208,6 +210,11 @@ def main() -> None:
     p_pubchem.add_argument("--workers", type=int, default=4)
     p_pubchem.add_argument("--cache", type=Path, default=Path("data/reports/pubchem-cache.json"))
     p_pubchem.add_argument("--method", choices=("bulk", "batch"), default="bulk")
+    p_pubchem_xrefs = sub.add_parser("pubchem-chebi-xrefs")
+    p_pubchem_xrefs.add_argument("pubchem", type=Path, default=Path("data/reports/pubchem-resolution.json"), nargs="?")
+    p_pubchem_xrefs.add_argument("--out", type=Path, default=Path("data/reports/pubchem-chebi-xrefs.json"))
+    p_pubchem_xrefs.add_argument("--workers", type=int, default=4)
+    p_pubchem_xrefs.add_argument("--pause", type=float, default=0.15)
     p_xrefs = sub.add_parser("enrich-cannabisdb-xrefs")
     p_xrefs.add_argument("xml", type=Path)
     p_xrefs.add_argument("compounds", type=Path, default=Path("docs/data/compounds.json"), nargs="?")
@@ -260,7 +267,7 @@ def main() -> None:
     elif args.command == "carbon-mapping-queue":
         print(json.dumps(build_carbon_mapping_queue(args.mapping, args.networkdb, args.out), indent=2))
     elif args.command == "crosswalk":
-        print(json.dumps(build_crosswalk(args.cannabisdb_sdf, args.terpedia_network, args.out, args.compounds), indent=2))
+        print(json.dumps(build_crosswalk(args.cannabisdb_sdf, args.terpedia_network, args.out, args.compounds, args.pubchem_chebi), indent=2))
     elif args.command == "balance-audit":
         print(json.dumps(audit_balances(args.network, args.out), indent=2))
     elif args.command == "hypothesis-balance-audit":
@@ -291,6 +298,8 @@ def main() -> None:
             raise SystemExit(1)
     elif args.command == "pubchem-resolve":
         print(json.dumps(resolve_pubchem(args.compounds, args.out, args.batch_size, args.pause, args.workers, args.cache, args.method), indent=2))
+    elif args.command == "pubchem-chebi-xrefs":
+        print(json.dumps(retrieve_pubchem_chebi_xrefs(args.pubchem, args.out, args.workers, args.pause), indent=2))
     elif args.command == "enrich-cannabisdb-xrefs":
         print(json.dumps(enrich_compounds_with_xrefs(args.xml, args.compounds, args.out, args.report), indent=2))
     elif args.command == "refresh-identity-set":
