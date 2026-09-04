@@ -16,5 +16,47 @@
     "orientation": "reverse_master",
     "source": "https://www.rhea-db.org/rhea/26121",
     "reason": "Rhea directional record for GcpE/IspG: 2-C-methyl-D-erythritol 2,4-cyclic diphosphate + reduced ferredoxin + H(+) => (2E)-4-hydroxy-3-methylbut-2-enyl diphosphate + oxidized ferredoxin + H2O"
+  },
+  "rhea:27626": {
+    "directional_rhea_id": "rhea:27628",
+    "orientation": "reverse_master",
+    "source": "https://www.rhea-db.org/rhea/27628",
+    "reason": "Calvin regeneration scenario: beta-D-fructose 6-phosphate + D-glyceraldehyde 3-phosphate => D-erythrose 4-phosphate + D-xylulose 5-phosphate"
+  },
+  "rhea:17053": {
+    "directional_rhea_id": "rhea:17055",
+    "orientation": "reverse_master",
+    "source": "https://www.rhea-db.org/rhea/17055",
+    "reason": "Calvin regeneration scenario: D-erythrose 4-phosphate + beta-D-fructose 6-phosphate => D-sedoheptulose 7-phosphate + D-glyceraldehyde 3-phosphate"
+  },
+  "rhea:10508": {
+    "directional_rhea_id": "rhea:10509",
+    "orientation": "master",
+    "source": "https://www.rhea-db.org/rhea/10509",
+    "reason": "Calvin regeneration scenario: D-sedoheptulose 7-phosphate + D-glyceraldehyde 3-phosphate => ribose 5-phosphate + xylulose 5-phosphate"
+  },
+  "rhea:14657": {
+    "directional_rhea_id": "rhea:14658",
+    "orientation": "master",
+    "source": "https://www.rhea-db.org/rhea/14658",
+    "reason": "Calvin regeneration scenario: ribose 5-phosphate => ribulose 5-phosphate"
+  },
+  "rhea:13677": {
+    "directional_rhea_id": "rhea:13679",
+    "orientation": "reverse_master",
+    "source": "https://www.rhea-db.org/rhea/13679",
+    "reason": "Calvin regeneration scenario for the reversible epimerase: xylulose 5-phosphate => ribulose 5-phosphate"
+  },
+  "rhea:14729": {
+    "directional_rhea_id": "rhea:14731",
+    "orientation": "reverse_master",
+    "source": "https://www.rhea-db.org/rhea/14731",
+    "reason": "Calvin regeneration scenario: D-glyceraldehyde 3-phosphate + dihydroxyacetone phosphate => fructose 1,6-bisphosphate"
+  },
+  "rhea:18585": {
+    "directional_rhea_id": "rhea:18586",
+    "orientation": "master",
+    "source": "https://www.rhea-db.org/rhea/18586",
+    "reason": "Calvin regeneration scenario: D-glyceraldehyde 3-phosphate => dihydroxyacetone phosphate"
   }
 }

@@ -156,13 +156,13 @@ that the compounds are absent from Cannabis or that they share one route.
 
 The report `data/reports/carbon-lineage.json` applies the plant carbon-source
 constraint explicitly: CO₂ is the only admissible carbon input. In the current
-working network, 33 carbon atom nodes across 14 metabolite entities are
-reachable from the CO₂ seed through 2,915 inferred structural edges and
-97,879 explicitly retained candidate alternative edges. Candidate alternatives
+working network, 37 carbon atom nodes across 16 metabolite entities are
+reachable from the CO₂ seed through 2,916 inferred structural edges and
+97,874 explicitly retained candidate alternative edges. Candidate alternatives
 come from ambiguous one-to-one RDKit mappings; they are visible for review but
 are not promoted to confirmed provenance. This uses 22 explicit Terpedia
 physiological direction assertions plus source-backed Rubisco and Calvin-cycle
-direction records. There are 635 carbon-containing reactant entities outside
+direction records. There are 634 carbon-containing reactant entities outside
 that lineage and therefore reported as external-carbon-source blockers. The
 current target summary is 1 supported, 8 candidate, and 6,211 unresolved
 CannabisDB compounds. The one supported target is the CannabisDB CO₂ record
@@ -195,18 +195,17 @@ ambiguous carbon mappings, and 567 retain unresolved mappings. These statuses ar
 independent of enzyme status and are exposed as a separate Cytoscape filter.
 Each reaction also records its inferred and candidate lineage-edge counts and
 the source report used to derive them.
-It also carries 2,243 candidate hypotheses and 4,046 deduplicated candidate
-protein records; 938 reaction records have one or more attached candidate
-proteins. All 4,046 candidate proteins are present in the 30,304-protein
+It also carries 2,243 candidate hypotheses and 4,054 deduplicated candidate
+protein records; 940 reaction records have one or more attached candidate
+proteins. All 4,054 candidate proteins are present in the 30,304-protein
 UP000583929 reference-proteome FASTA and have sequence length/hash evidence in
 `data/reports/genome-candidate-search.json`. This is proteome membership and
 annotation evidence, not a homology score or confirmation of enzyme function.
-The full proteome was also searched with DIAMOND blastp against 11,424 reviewed
-UniProt reference proteins covering the 70 exact unresolved EC hypotheses. The
-search produced hits for 1,261 candidate proteins; 657 meet the screening
-threshold of at least 30% identity, 50% query coverage, and e-value at most
-1e-5. These thresholds define candidate evidence only and do not establish
-substrate specificity or in-vivo activity.
+The full proteome was also searched with DIAMOND blastp and specialized
+sequence searches against reviewed reference proteins. Twelve candidate
+proteins currently have recorded hits and meet the screening threshold. These
+thresholds define candidate evidence only and do not establish substrate
+specificity or in-vivo activity.
 The specialized IspD search for the added Rhea 13429 step found cannabis
 protein A0A7J6EQA1 (gene G4B88_002492), with 63.4% identity, 77.9% query
 coverage, and E-value 4.8e-97 to reviewed Arabidopsis IspD. This is a
