@@ -241,6 +241,17 @@
       "method": "Reuse of genome-wide Cannabis CBCA synthase search as a varin-substrate hypothesis",
       "reference_query_url": "https://rest.uniprot.org/uniprotkb/Q33DQ2/entry",
       "candidate_proteins": [{"proteinId":"uniprot:a0a7j6gda6","accession":"A0A7J6GDA6","label":"FAD-binding PCMH-type domain-containing protein","geneSymbols":["G4B88_028786"],"candidateOrigin":"Varin substrate-extension hypothesis from Cannabis CBCA synthase search","sourceUrls":["https://rest.uniprot.org/uniprotkb/Q33DQ2/entry","https://www.sciencedirect.com/science/article/pii/S0031942298002787"]}]
+    },
+    {
+      "search_id": "varin-tks-oac-coupled-substrate-extension",
+      "reaction_id": "cannabis:reaction:butyryl-coa-to-divarinolic-acid",
+      "ec_number": "2.3.1.206+4.4.1.26",
+      "method": "Reuse of genome-wide Cannabis TKS and OAC searches as a coupled varin-substrate hypothesis",
+      "reference_query_url": "https://www.nature.com/articles/s41586-019-0978-9",
+      "candidate_proteins": [
+        {"proteinId":"uniprot:a0a7j6hqj4","accession":"A0A7J6HQJ4","label":"chalcone synthase","geneSymbols":["G4B88_027297"],"candidateOrigin":"Varin substrate-extension hypothesis from Cannabis TKS search","sourceUrls":["https://rest.uniprot.org/uniprotkb/B1Q2B6/entry","https://www.nature.com/articles/s41586-019-0978-9"]},
+        {"proteinId":"uniprot:a0a7j6f2j6","accession":"A0A7J6F2J6","label":"stress-response A/B barrel domain-containing protein","geneSymbols":["G4B88_025604"],"candidateOrigin":"Varin substrate-extension hypothesis from Cannabis OAC search","sourceUrls":["https://rest.uniprot.org/uniprotkb/I6WU39/entry","https://www.nature.com/articles/s41586-019-0978-9"]}
+      ]
     }
   ]
 }
