@@ -171,22 +171,22 @@
   "claim_boundary": "These are database-coverage metrics, not evidence that every listed compound is biosynthesized by Cannabis.",
   "hypothesis_layer": {
     "source": "docs/data/networkdb.json",
-    "compound_records": 10124,
+    "compound_records": 10111,
     "hypothesis_edges": 7249,
     "hypothesis_edge_status_counts": {
-      "candidate": 6184,
-      "unresolved": 1065
+      "candidate": 6294,
+      "unresolved": 955
     },
     "hypothesis_edges_with_enzyme_evidence": 1101,
     "hypothesis_reaction_inventory": 5429,
     "hypothesis_product_inventory": 1324,
-    "missing_substrate_nodes": 544,
+    "missing_substrate_nodes": 531,
     "claim_boundary": "Hypothesis-layer counts are separate from balanced reaction and CO2 lineage metrics; they represent source-linked candidates and unresolved structures, not confirmed Cannabis metabolism.",
     "candidate_lineage": {
       "source": "data/reports/hypothesis-lineage.json",
       "seed_core_reachable_compounds": 242,
-      "candidate_edges_traversed": 6184,
-      "candidate_reachable_entities": 342,
+      "candidate_edges_traversed": 6294,
+      "candidate_reachable_entities": 343,
       "target_summary": {
         "counts_by_status": {
           "candidate": 17,
@@ -202,7 +202,8 @@
         "candidate_cannabisdb_carbon_atoms": 387
       },
       "blocked_unresolved_hypothesis_edges": {
-        "missing-corpus-substrate": 1065
+        "ambiguous-connectivity-match": 6,
+        "missing-corpus-substrate": 949
       },
       "claim_boundary": "Candidate paths are source-linked structural hypotheses, not confirmed enzyme activity, isotope tracing, or proof of in-vivo Cannabis biosynthesis. Unresolved edges are not traversed."
     }

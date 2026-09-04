@@ -115,6 +115,7 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
     compounds = []
     cdb_ids_by_inchikey = {}
     ids_by_structure = {}
+    ids_by_connectivity = {}
 
     def structure_key(smiles):
         if not smiles:
@@ -132,6 +133,10 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
         key = structure_key(compound.get("smiles"))
         if key and key not in ids_by_structure:
             ids_by_structure[key] = compound["id"]
+        mol = Chem.MolFromSmiles(compound.get("smiles")) if compound.get("smiles") else None
+        if mol is not None:
+            connectivity_key = Chem.MolToSmiles(mol, canonical=True, isomericSmiles=False)
+            ids_by_connectivity.setdefault(connectivity_key, set()).add(compound["id"])
     for entity in network["entities"]:
         if entity.get("type") != "metabolite":
             continue
@@ -141,6 +146,9 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
         key = structure_key(attrs.get("canonicalSmiles"))
         if key and key not in ids_by_structure:
             ids_by_structure[key] = entity["id"]
+        if mol is not None:
+            connectivity_key = Chem.MolToSmiles(mol, canonical=True, isomericSmiles=False)
+            ids_by_connectivity.setdefault(connectivity_key, set()).add(entity["id"])
     hypothetical_connections = []
     hypothetical_reactions = (hypothetical_inventory or {}).get("reactions", [])
     hypothetical_missing_substrate_nodes = {}
@@ -185,13 +193,19 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
                 if exact_structure_id:
                     hypothetical_connections.append({"reaction_id": row.get("reaction_id"), "substrate_compound_id": exact_structure_id, "product_compound_id": product_id, "substrate_smiles": structure, "product_terpene_id": row.get("product_terpene_id"), "source_type": row.get("source_type"), "evidence_type": row.get("evidence_type"), "source_dataset": row.get("source_dataset"), "source_url": row.get("source_url"), "reaction_smarts": row.get("reaction_smarts"), "status": "candidate", "layer": "Terpedia structure-resolved hypothesis edge", "substrate_identity_resolution": "exact-canonical-structure", "claim_boundary": "This source-directed connection uses an exact canonical RDKit structure match to a corpus compound, but remains a testable hypothesis and is not included in balanced reaction or CO2 lineage counts."})
                     continue
+                connectivity_key = Chem.MolToSmiles(mol, canonical=True, isomericSmiles=False)
+                connectivity_ids = sorted(ids_by_connectivity.get(connectivity_key, set()))
+                if len(connectivity_ids) == 1:
+                    exact_structure_id = connectivity_ids[0]
+                    hypothetical_connections.append({"reaction_id": row.get("reaction_id"), "substrate_compound_id": exact_structure_id, "product_compound_id": product_id, "substrate_smiles": structure, "product_terpene_id": row.get("product_terpene_id"), "source_type": row.get("source_type"), "evidence_type": row.get("evidence_type"), "source_dataset": row.get("source_dataset"), "source_url": row.get("source_url"), "reaction_smarts": row.get("reaction_smarts"), "status": "candidate", "layer": "Terpedia connectivity-resolved hypothesis edge", "substrate_identity_resolution": "unique-connectivity-candidate", "substrate_identity_candidates": connectivity_ids, "claim_boundary": "This source-directed connection uses a unique connectivity match, but stereochemistry is unresolved; it remains a testable hypothesis and is not included in balanced reaction or CO2 lineage counts."})
+                    continue
                 digest = hashlib.sha256(structure.encode()).hexdigest()[:16]
                 substrate_id = f"terpedia:hypothesis-missing-substrate:{digest}"
                 if substrate_id not in existing_compound_ids:
-                    compounds.append({"id": substrate_id, "namespace": "terpedia_hypothesis_missing_substrate", "label": f"Unresolved substrate {digest}", "formula": rdMolDescriptors.CalcMolFormula(mol), "smiles": structure, "carbon_atom_count": sum(atom.GetAtomicNum() == 6 for atom in mol.GetAtoms()), "source_url": row.get("source_url"), "hypothesis_status": "unresolved-missing-corpus-substrate", "blocker": "structure is required by the source reaction but has no resolved Terpedia corpus identity"})
+                    compounds.append({"id": substrate_id, "namespace": "terpedia_hypothesis_missing_substrate", "label": f"Unresolved substrate {digest}", "formula": rdMolDescriptors.CalcMolFormula(mol), "smiles": structure, "carbon_atom_count": sum(atom.GetAtomicNum() == 6 for atom in mol.GetAtoms()), "source_url": row.get("source_url"), "hypothesis_status": "unresolved-missing-corpus-substrate", "blocker": "ambiguous-connectivity-match" if connectivity_ids else "structure is required by the source reaction but has no resolved Terpedia corpus identity", "identity_candidate_ids": connectivity_ids})
                     existing_compound_ids.add(substrate_id)
                 hypothetical_missing_substrate_nodes[substrate_id] = True
-                hypothetical_connections.append({"reaction_id": row.get("reaction_id"), "substrate_compound_id": substrate_id, "product_compound_id": product_id, "substrate_smiles": structure, "product_terpene_id": row.get("product_terpene_id"), "source_type": row.get("source_type"), "evidence_type": row.get("evidence_type"), "source_dataset": row.get("source_dataset"), "source_url": row.get("source_url"), "reaction_smarts": row.get("reaction_smarts"), "status": "unresolved", "layer": "Terpedia unresolved-substrate hypothesis edge", "blocker": "missing-corpus-substrate", "claim_boundary": "This edge preserves a carbon-containing substrate required by a GCP hypothesis reaction, but the substrate has no resolved corpus identity and is not included in balanced reaction or CO2 lineage counts."})
+                hypothetical_connections.append({"reaction_id": row.get("reaction_id"), "substrate_compound_id": substrate_id, "product_compound_id": product_id, "substrate_smiles": structure, "product_terpene_id": row.get("product_terpene_id"), "source_type": row.get("source_type"), "evidence_type": row.get("evidence_type"), "source_dataset": row.get("source_dataset"), "source_url": row.get("source_url"), "reaction_smarts": row.get("reaction_smarts"), "status": "unresolved", "layer": "Terpedia unresolved-substrate hypothesis edge", "blocker": "ambiguous-connectivity-match" if connectivity_ids else "missing-corpus-substrate", "identity_candidate_ids": connectivity_ids, "claim_boundary": "This edge preserves a carbon-containing substrate required by the source reaction, but its corpus identity is unresolved and it is not included in balanced reaction or CO2 lineage counts."})
     evidence_by_reaction = {}
     for record in (hypothesis_enzyme_evidence or {}).get("records", []):
         reaction_id = f"MARTS:{record.get('marts_reaction_id')}"
