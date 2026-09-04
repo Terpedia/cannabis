@@ -25,8 +25,10 @@ def build_candidate_queue(path: Path, output: Path) -> dict:
         reaction = row.get("reaction", {})
         target = row.get("targetMetabolite", {})
         queue.append({"id": row["hypothesisId"], "kind": row["hypothesisType"], "status": row["status"], "reaction_id": reaction.get("reactionId"), "ec_number": None, "target_metabolite": target, "candidate_proteins": row.get("candidateEnzymes", []), "source": row.get("claimBoundary")})
-    additions_path = path.parent / "reaction-additions.json"
-    if additions_path.exists():
+    addition_paths = [path.parent / "reaction-additions.json", path.parent / "varin-reaction-additions.json"]
+    for additions_path in addition_paths:
+        if not additions_path.exists():
+            continue
         additions = json.loads(additions_path.read_text())
         known_reactions = {item.get("reaction_id") for item in queue}
         for reaction in additions.get("entities", []):

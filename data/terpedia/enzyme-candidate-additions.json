@@ -209,6 +209,38 @@
         {"proteinId": "uniprot:a0acm8rgn3", "accession": "A0ACM8RGN3", "label": "A0ACM8RGN3_CANSA", "geneSymbols": ["G4B88_012185"], "candidateOrigin": "Specialized DIAMOND CBGA geranyltransferase search", "specialized_search": {"search_id": "cbga-pt-ec-2.5.1.102-cannabis-proteome", "reference_accession": "A0A455ZJC3", "reference_ec_numbers": ["2.5.1.102"], "identity_percent": 39.4, "alignment_length": 368, "query_length": 384, "reference_length": 398, "evalue": 3.4e-85, "bitscore": 252.0, "query_coverage_percent": 92.7, "reference_coverage_percent": 88.9, "strong_candidate_hit": true, "source": "data/terpedia/enzyme-candidate-additions.json"}},
         {"proteinId": "uniprot:a0a7j6hnp8", "accession": "A0A7J6HNP8", "label": "A0A7J6HNP8_CANSA", "geneSymbols": ["G4B88_020677"], "candidateOrigin": "Specialized DIAMOND CBGA geranyltransferase search", "specialized_search": {"search_id": "cbga-pt-ec-2.5.1.102-cannabis-proteome", "reference_accession": "A0A455ZJC3", "reference_ec_numbers": ["2.5.1.102"], "identity_percent": 32.1, "alignment_length": 299, "query_length": 406, "reference_length": 398, "evalue": 8.9e-31, "bitscore": 108.0, "query_coverage_percent": 70.4, "reference_coverage_percent": 71.9, "strong_candidate_hit": true, "source": "data/terpedia/enzyme-candidate-additions.json"}}
       ]
+    },
+    {
+      "search_id": "varin-geranyltransferase-substrate-extension",
+      "reaction_id": "cannabis:reaction:divarinolic-acid-to-cbgva",
+      "ec_number": "2.5.1.102",
+      "method": "Reuse of genome-wide Cannabis geranyltransferase search as a varin-substrate hypothesis",
+      "reference_query_url": "https://rest.uniprot.org/uniprotkb/A0A455ZJC3/entry",
+      "candidate_proteins": [{"proteinId":"uniprot:a0a7j6fzk1","accession":"A0A7J6FZK1","label":"A0A7J6FZK1_CANSA","geneSymbols":["G4B88_004939"],"candidateOrigin":"Varin substrate-extension hypothesis from Cannabis geranyltransferase search","sourceUrls":["https://rest.uniprot.org/uniprotkb/A0A455ZJC3/entry","https://pubmed.ncbi.nlm.nih.gov/30814733/"]}]
+    },
+    {
+      "search_id": "varin-cbdas-substrate-extension",
+      "reaction_id": "cannabis:reaction:cbgva-to-cbdva",
+      "ec_number": "1.21.3.8",
+      "method": "Reuse of genome-wide Cannabis CBDA synthase search as a varin-substrate hypothesis",
+      "reference_query_url": "https://rest.uniprot.org/uniprotkb/A6P6V9/entry",
+      "candidate_proteins": [{"proteinId":"uniprot:a0a7j6g9c8","accession":"A0A7J6G9C8","label":"FAD-binding PCMH-type domain-containing protein","geneSymbols":["G4B88_028766"],"candidateOrigin":"Varin substrate-extension hypothesis from Cannabis CBDA synthase search","sourceUrls":["https://rest.uniprot.org/uniprotkb/A6P6V9/entry","https://doi.org/10.1074/jbc.271.29.17411"]}]
+    },
+    {
+      "search_id": "varin-thcas-substrate-extension",
+      "reaction_id": "cannabis:reaction:cbgva-to-thcva",
+      "ec_number": "1.21.3.7",
+      "method": "Reuse of genome-wide Cannabis THCA synthase search as a varin-substrate hypothesis",
+      "reference_query_url": "https://rest.uniprot.org/uniprotkb/Q8GTB6/entry",
+      "candidate_proteins": [{"proteinId":"uniprot:a0a7j6djs8","accession":"A0A7J6DJS8","label":"FAD-binding PCMH-type domain-containing protein","geneSymbols":["G4B88_000693"],"candidateOrigin":"Varin substrate-extension hypothesis from Cannabis THCA synthase search","sourceUrls":["https://rest.uniprot.org/uniprotkb/Q8GTB6/entry","https://pubmed.ncbi.nlm.nih.gov/22766313/"]}]
+    },
+    {
+      "search_id": "varin-cbcas-substrate-extension",
+      "reaction_id": "cannabis:reaction:cbgva-to-cbcva",
+      "ec_number": null,
+      "method": "Reuse of genome-wide Cannabis CBCA synthase search as a varin-substrate hypothesis",
+      "reference_query_url": "https://rest.uniprot.org/uniprotkb/Q33DQ2/entry",
+      "candidate_proteins": [{"proteinId":"uniprot:a0a7j6gda6","accession":"A0A7J6GDA6","label":"FAD-binding PCMH-type domain-containing protein","geneSymbols":["G4B88_028786"],"candidateOrigin":"Varin substrate-extension hypothesis from Cannabis CBCA synthase search","sourceUrls":["https://rest.uniprot.org/uniprotkb/Q33DQ2/entry","https://www.sciencedirect.com/science/article/pii/S0031942298002787"]}]
     }
   ]
 }
