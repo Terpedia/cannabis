@@ -18,7 +18,7 @@ from .hypotheses import build_candidate_queue
 from .crosswalk import build_crosswalk
 from .balance import audit_balances
 from .lineage import build_carbon_lineage
-from .networkdb import build_networkdb
+from .networkdb import build_networkdb, build_map_snapshot
 from .genome import build_genome_search
 from .inventory import build_specialty_inventory
 from .test_hypotheses import build_test_hypotheses
@@ -141,6 +141,9 @@ def main() -> None:
     p_networkdb.add_argument("--atom-audit", type=Path, default=Path("data/reports/carbon-atom-audit.json"))
     p_networkdb.add_argument("--pubchem", type=Path, default=Path("data/reports/pubchem-resolution.json"))
     p_networkdb.add_argument("--out", type=Path, default=Path("docs/data/networkdb.json"))
+    p_map_snapshot = sub.add_parser("map-snapshot")
+    p_map_snapshot.add_argument("networkdb", type=Path)
+    p_map_snapshot.add_argument("--out", type=Path, default=Path("docs/data/network-map.json"))
     p_genome = sub.add_parser("genome-search")
     p_genome.add_argument("queue", type=Path)
     p_genome.add_argument("fasta", type=Path)
@@ -217,6 +220,8 @@ def main() -> None:
         print(json.dumps(build_carbon_atom_audit(args.network, args.lineage, args.crosswalk, args.compounds, args.out), indent=2))
     elif args.command == "networkdb":
         print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out, args.hypotheses, args.genome_search, args.genome_fasta, args.mapping, args.lineage, args.atom_audit, args.pubchem), indent=2))
+    elif args.command == "map-snapshot":
+        print(json.dumps(build_map_snapshot(args.networkdb, args.out), indent=2))
     elif args.command == "genome-search":
         print(json.dumps(build_genome_search(args.queue, args.fasta, args.out, args.diamond_hits, args.reference_tsv), indent=2))
     elif args.command == "specialty-inventory":

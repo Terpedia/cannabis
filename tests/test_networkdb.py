@@ -1,7 +1,7 @@
 import gzip
 import json
 
-from cannabis_carbon.networkdb import build_networkdb
+from cannabis_carbon.networkdb import build_map_snapshot, build_networkdb
 
 
 def test_networkdb_contains_all_source_records(tmp_path):
@@ -84,3 +84,16 @@ def test_networkdb_orients_participants_from_directional_override(tmp_path):
     assert [p["compound_id"] for p in reaction["reactants"]] == ["m:a"]
     assert [p["compound_id"] for p in reaction["products"]] == ["m:b"]
     assert reaction["raw_reactants"][0]["compound_id"] == "m:b"
+
+
+def test_map_snapshot_excludes_isolated_catalog_records(tmp_path):
+    source = tmp_path / "networkdb.json"
+    source.write_text(json.dumps({
+        "compounds": [{"id": "m:a"}, {"id": "m:b"}, {"id": "c:isolated"}],
+        "reactions": [{"id": "r:1", "reactants": [{"compound_id": "m:a"}], "products": [{"compound_id": "m:b"}], "candidate_proteins": []}],
+        "coverage": {"compound_records": 3},
+    }))
+    output = tmp_path / "map.json"
+    result = build_map_snapshot(source, output)
+    assert result["compounds"] == 2
+    assert [c["id"] for c in json.loads(output.read_text())["compounds"]] == ["m:a", "m:b"]

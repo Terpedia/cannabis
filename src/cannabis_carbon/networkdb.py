@@ -11,6 +11,22 @@ from rdkit import Chem
 from .terpedia import load_network
 
 
+def build_map_snapshot(networkdb_path: Path, output: Path) -> dict:
+    """Write a compact visualization snapshot containing reaction-connected records."""
+    networkdb = json.loads(networkdb_path.read_text())
+    reaction_ids = {p["compound_id"] for r in networkdb.get("reactions", []) for p in r.get("reactants", []) + r.get("products", [])}
+    compounds = [c for c in networkdb.get("compounds", []) if c.get("id") in reaction_ids]
+    reactions = []
+    for reaction in networkdb.get("reactions", []):
+        compact = {key: reaction.get(key) for key in ("id", "label", "equation", "ec_numbers", "reactants", "products", "enzyme_ids", "status", "carbon_mapping", "source_url", "directional_rhea_ids", "direction")}
+        compact["candidate_proteins"] = [{"proteinId": p.get("proteinId"), "accession": p.get("accession"), "label": p.get("label")} for p in reaction.get("candidate_proteins", [])]
+        reactions.append(compact)
+    report = {"schema": "cannabis-carbon.network-map.v1", "source_networkdb": str(networkdb_path), "claim_boundary": "This is a compact connected visualization projection. The complete compound and protein inventories remain in NetworkDB.", "compounds": compounds, "reactions": reactions, "coverage": networkdb.get("coverage", {})}
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
+    return {"compounds": len(compounds), "reactions": len(reactions), "bytes": output.stat().st_size}
+
+
 def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Path, output: Path, hypotheses_path: Path | None = None, genome_search_path: Path | None = None, genome_fasta_path: Path | None = None, mapping_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None, pubchem_path: Path | None = None) -> dict:
     network = load_network(network_path)
     directions_path = network_path.parent / "directional-reaction-overrides.json"
