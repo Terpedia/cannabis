@@ -241,7 +241,9 @@ The Pages visualization loads `docs/data/network-map-focus.json` by default,
 a 2.4 MB view of reaction-connected and CO₂-reachable records. The complete
 7,487-compound/1,107-reaction projection remains available at
 `docs/data/network-map.json`; the browser fallback graph is not the published
-map.
+map. Selecting a compound in the map now reports how many of its carbon atoms
+have explicit serialized CO₂ paths and the maximum number of reaction steps;
+the corresponding atom-by-atom chains remain in the downloadable audit.
 
 The complete CannabisDB XML export is preserved at
 `data/terpedia/cannabisdb-compounds.xml.gz` with its retrieval URL and SHA-256
