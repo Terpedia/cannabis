@@ -9,6 +9,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from rdkit import Chem
+from rdkit.Chem import rdFMCS
 from rdkit import RDLogger
 
 from .atom_mapping import _molecules, map_reaction_smiles
@@ -99,7 +100,29 @@ def _entity_atom_index_map(reaction_molecule, entity_smiles: str | None) -> dict
         return None
     match = entity_molecule.GetSubstructMatch(reaction_molecule)
     if len(match) != reaction_molecule.GetNumAtoms():
-        return None
+        # Identity candidates can differ only in charge, aromaticity, or
+        # serialized bond representation.  A full, unique element-preserving
+        # MCS supplies a stable atom-order bridge without accepting a partial
+        # match.  Symmetric or incomplete matches remain unresolved.
+        result = rdFMCS.FindMCS(
+            [reaction_molecule, entity_molecule],
+            atomCompare=rdFMCS.AtomCompare.CompareElements,
+            bondCompare=rdFMCS.BondCompare.CompareAny,
+            ringMatchesRingOnly=False,
+            completeRingsOnly=False,
+            timeout=1,
+        )
+        if result.canceled or result.numAtoms != reaction_molecule.GetNumAtoms() or result.numAtoms != entity_molecule.GetNumAtoms():
+            return None
+        query = Chem.MolFromSmarts(result.smartsString)
+        if query is None:
+            return None
+        reaction_matches = reaction_molecule.GetSubstructMatches(query, uniquify=True)
+        entity_matches = entity_molecule.GetSubstructMatches(query, uniquify=True)
+        if len(reaction_matches) != 1 or len(entity_matches) != 1:
+            return None
+        reaction_match, entity_match = reaction_matches[0], entity_matches[0]
+        return {reaction_index: entity_match[query_index] for query_index, reaction_index in enumerate(reaction_match)}
     return {reaction_index: entity_index for reaction_index, entity_index in enumerate(match)}
 
 

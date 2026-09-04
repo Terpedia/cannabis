@@ -230,8 +230,8 @@ carbon rows currently require ambiguity or unresolved-mapping curation.
 
 The companion `data/reports/carbon-atom-audit.json` and published
 `docs/data/carbon-atom-audit.json` artifacts partition all **285,623**
-CannabisDB carbon atoms into **1 supported**, **1,402 candidate**, and
-**284,220 unresolved** atoms. Each group retains CannabisDB atom indices,
+CannabisDB carbon atoms into **1 supported**, **1,579 candidate**, and
+**284,043 unresolved** atoms. Each group retains CannabisDB atom indices,
 resolved Terpedia atom indices when available, reaction references, provenance
 URLs, and the blocking reason. The target atom indices are explicitly scoped to
 RDKit atom indices in each CannabisDB SMILES field and are not assumed to equal
@@ -243,8 +243,8 @@ IDs from NetworkDB; unresolved atoms have no fabricated path and retain their
 blocker. These enzyme and protein annotations remain hypotheses or source
 associations, not functional validation.
 The completeness artifact reports the same denominator as percentages:
-0.000350% strict-supported, 0.491207% evidence-bearing when candidate atoms
-are included, and 99.508793% unresolved.
+0.000350% strict-supported, 0.553177% evidence-bearing when candidate atoms
+are included, and 99.446823% unresolved.
 
 These are data-coverage metrics. They do not imply that all CannabisDB
 compounds are endogenous cannabis metabolites or that Terpedia's reaction graph

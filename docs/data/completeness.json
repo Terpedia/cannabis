@@ -158,14 +158,14 @@
       "carbon_atoms_total": 285623,
       "status_counts": {
         "supported": 1,
-        "candidate": 1402,
+        "candidate": 1579,
         "inferred": 0,
-        "unresolved": 284220
+        "unresolved": 284043
       },
       "compound_count": 6220,
       "strict_supported_percent": 0.00035,
-      "evidence_bearing_percent": 0.491207,
-      "unresolved_percent": 99.508793
+      "evidence_bearing_percent": 0.553177,
+      "unresolved_percent": 99.446823
     }
   },
   "claim_boundary": "These are database-coverage metrics, not evidence that every listed compound is biosynthesized by Cannabis.",
