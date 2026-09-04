@@ -41,7 +41,7 @@
   "cannabisdb": {
     "compounds_total": 6220,
     "carbon_atoms_total": 285623,
-    "compound_to_terpedia_identity_crosswalk": "exact-inchikey-plus-candidate-tautomer-layer",
+    "compound_to_terpedia_identity_crosswalk": "exact-inchikey-plus-candidate-tautomer-and-formula-compatible-name-layers",
     "compounds_with_exact_terpedia_identity": 148,
     "compounds_with_ambiguous_identity": 1,
     "compounds_without_exact_terpedia_identity": 6072,
@@ -50,6 +50,8 @@
     "connectivity_candidate_ambiguous": 40,
     "tautomer_candidate_identity_links": 0,
     "tautomer_candidate_ambiguous": 1,
+    "name_candidate_identity_links": 0,
+    "name_candidate_ambiguous": 0,
     "crosswalk_matched_carbon_atoms": 1507
   },
   "coverage": {
