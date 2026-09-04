@@ -69,6 +69,18 @@ def test_completeness_reports_mapping_blockers(tmp_path):
     assert result["coverage"]["carbon_mapping_blockers"] == {"reactions_with_blocked_product_carbon_rows": 1, "product_carbon_row_status_counts": {"ambiguous": 1, "inferred": 1, "unresolved": 1}, "blocked_product_carbon_rows": 2}
 
 
+def test_completeness_reports_atom_percentages(tmp_path):
+    network_path = tmp_path / "network.json.gz"
+    with gzip.open(network_path, "wt") as handle: json.dump({"entities": [], "statements": []}, handle)
+    compounds_path = tmp_path / "compounds.json"
+    compounds_path.write_text(json.dumps({"compounds": []}))
+    audit_path = tmp_path / "audit.json"
+    audit_path.write_text(json.dumps({"carbon_atoms_total": 10, "compound_count": 1, "status_counts": {"supported": 1, "candidate": 2, "inferred": 3, "unresolved": 4}}))
+    result = compute_completeness(network_path, compounds_path, atom_audit_path=audit_path)
+    assert result["coverage"]["carbon_atom_audit"]["evidence_bearing_percent"] == 60.0
+    assert result["coverage"]["carbon_atom_audit"]["unresolved_percent"] == 40.0
+
+
 def test_completeness_distinguishes_nonexact_from_unresolved_identity(tmp_path):
     network = {"entities": [], "statements": []}
     network_path = tmp_path / "network.json.gz"

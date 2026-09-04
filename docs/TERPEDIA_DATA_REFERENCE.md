@@ -232,6 +232,9 @@ edge evidence status, provenance, known enzyme IDs, and genome candidate-protein
 IDs from NetworkDB; unresolved atoms have no fabricated path and retain their
 blocker. These enzyme and protein annotations remain hypotheses or source
 associations, not functional validation.
+The completeness artifact reports the same denominator as percentages:
+0.000350% strict-supported, 0.491207% evidence-bearing when candidate atoms
+are included, and 99.508793% unresolved.
 
 These are data-coverage metrics. They do not imply that all CannabisDB
 compounds are endogenous cannabis metabolites or that Terpedia's reaction graph
