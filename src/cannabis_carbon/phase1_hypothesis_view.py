@@ -5,9 +5,18 @@ from collections import defaultdict
 from pathlib import Path
 
 
-def generate(report_path, output):
+def generate(report_path, output, overlay_path=None):
     raw = report_path.read_bytes()
     report = json.loads(raw)
+    overlay_digest = None
+    if overlay_path:
+        from .phase1_screened_overlay import apply_overlay
+        overlay_raw = overlay_path.read_bytes()
+        overlay = json.loads(overlay_raw)
+        if overlay['source_sha256'][str(report_path)] != hashlib.sha256(raw).hexdigest():
+            raise ValueError('Overlay parent checksum mismatch')
+        report = apply_overlay(report, overlay)
+        overlay_digest = hashlib.sha256(overlay_raw).hexdigest()
     compounds = {c['id']: c for c in report['compounds']}
     evidence = {e['id']: e for e in report['enzyme_evidence']}
     targets = {t['cannabisdb_id']: t for t in report['targets']}
@@ -43,7 +52,8 @@ def generate(report_path, output):
     for shard, bundles in sorted(shards.items()):
         files[f'reactions/{shard}.json'] = write(f'reactions/{shard}.json', bundles)
     index = {'schema': 'cannabis-carbon.phase1-hypothesis-view.v1',
-        'source_report': 'phase1-target-hypotheses.json', 'source_sha256': hashlib.sha256(raw).hexdigest(),
+        'source_report': report_path.name, 'source_sha256': hashlib.sha256(raw).hexdigest(),
+        'enzyme_overlay_report': overlay_path.name if overlay_path else None, 'enzyme_overlay_sha256': overlay_digest,
         'summary': report['summary'], 'claim_boundary': report['claim_boundary'],
         'targets': [{k: t[k] for k in ('cannabisdb_id', 'label', 'status', 'carbon_count', 'structure_status', 'next_step')} |
                     {'hypothesis_count': len(t['hypothesis_ids'])} for t in report['targets']],
@@ -55,4 +65,5 @@ def generate(report_path, output):
 
 
 if __name__ == '__main__':
-    generate(Path('data/reports/phase1-target-hypotheses.json'), Path('docs/data/hypothesis-view'))
+    generate(Path('data/reports/phase1-target-hypotheses.json'), Path('docs/data/hypothesis-view'),
+             Path('data/reports/phase1-screened-enzyme-overlay.json'))

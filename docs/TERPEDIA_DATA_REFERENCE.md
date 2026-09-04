@@ -133,6 +133,28 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The focused Cytoscape map now includes the
+[screened-enzyme evidence layer](data/phase1-screened-enzyme-overlay.json).
+It joins 633 independently balanced equation IDs to the new Cannabis homology
+screen without altering source equations, coefficients, chemical identities,
+directions or pathway status. Candidate evidence now covers **289 carbon-bearing
+targets**, up from 79; 210 additional targets gain candidate leads. Across all
+target projections, 1,487 hypotheses gain attached evidence, bringing the total
+to 2,523 (including carbon-free targets). These are not confirmed enzyme counts.
+
+The map's candidate/missing-evidence filter uses this combined snapshot.
+Each added evidence record retains all passing alignment IDs and an explicitly
+labeled representative alignment per protein, with identity, both coverage values,
+reference accession, and unresolved-specificity/direction warnings.
+The base hypothesis catalog remains immutable; the evidence layer has its own
+parent/search checksums and GCP snapshot:
+`terpedia-489015.terpedia_core.cannabis_phase1_screened_enzyme_overlay_20260904_v1`.
+Its 634 rows contain 633 evidence records plus integration metadata. Rebuild using
+`PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_screened_overlay`, then
+`PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_hypothesis_view`.
+All 19,772 hypotheses remain blocked pending biochemical and pathway validation;
+the 409 carbon-bearing targets with structural production hypotheses are unchanged.
+
 The [new reference-driven Cannabis proteome screen](data/phase1-new-protein-search.json)
 retrieved and validated all 4,653 reference sequences, then searched all 30,304
 proteins in the checksum-verified Cannabis reference proteome using DIAMOND
@@ -153,8 +175,8 @@ The report embeds passing alignments once, with per-equation alignment IDs,
 reference annotations, complete candidate/reference sequences and hashes, retrieval
 URLs, the exact search command/version, and validation blockers. The complete raw
 alignment output (including weak hits) is checksummed separately; per-equation raw
-counts distinguish weak evidence from no hits. The focused map still uses its
-previous candidate-evidence snapshot pending explicit integration of this new layer.
+counts distinguish weak evidence from no hits. The focused map incorporates these
+candidates through the separate, checksummed screened-enzyme layer described above.
 
 GCP snapshot:
 `terpedia-489015.terpedia_core.cannabis_phase1_new_protein_search_20260904_v1`.
@@ -198,7 +220,7 @@ enzyme evidence, blockers, bootstrap warnings, and proposed tests remain inspect
 
 The view is static GitHub Pages content, derived from the same GCP-backed catalog.
 It loads a small target list and one reaction shard on demand; every reaction
-shard is below 0.5 MB. `data/hypothesis-view/index.json` preserves the parent
+shard is below 0.6 MB. `data/hypothesis-view/index.json` preserves the parent
 report checksum and all generated-file hashes. Regenerate the view using
 `PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_hypothesis_view`.
 The whole-network map remains available and links to this focused view.

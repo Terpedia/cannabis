@@ -35,6 +35,14 @@ test('loader fetches only requested shards, caches, retries failures and rejects
   assert.equal(matchingTargets([{cannabisdb_id: 'CDB000055', label: 'Eugenol'}], 'eUGEnol').length, 1);
 });
 
+test('loader revalidates the manifest and versions data requests by published checksum', async () => {
+  const calls = [];
+  const loader = createLoader(async (url, options) => {calls.push({url, options}); return {ok: true, json: async () => ({files: {'targets/CDB000055.json': {sha256: '1234567890abcdef' + '0'.repeat(48)}}})};});
+  await loader.index(); await loader.target('CDB000055');
+  assert.equal(calls[0].options.cache, 'no-cache');
+  assert.equal(calls[1].url, 'data/hypothesis-view/targets/CDB000055.json?v=1234567890abcdef');
+});
+
 test('published bundles render all required participants for every hypothesis', () => {
   const folder = path.join(__dirname, '../docs/data/hypothesis-view');
   const index = JSON.parse(fs.readFileSync(path.join(folder, 'index.json')));
@@ -47,6 +55,8 @@ test('published bundles render all required participants for every hypothesis', 
         assert.deepEqual(new Set(graph.nodes.map(n => n.data.id)), expected);
         assert.equal(graph.edges.length, h.required_inputs.length * h.outputs.length);
         assert.equal(new Set(graph.edges.map(e => e.data.reaction_id)).size, 1);
+        const screenedIds = (bundle.enzyme_evidence || []).filter(e => (h.evidence_ids || []).includes(e.id)).flatMap(e => (e.screened_proteins || []).map(p => p.accession));
+        assert.ok(graph.edges.every(e => screenedIds.every(id => e.data.candidate_protein_ids.includes(id))));
         count++;
       }
     }

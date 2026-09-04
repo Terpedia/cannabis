@@ -1,0 +1,11 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_screened_enzyme_overlay_20260904_v1",
+  "load_job_id": "bqjob_r3dfd96a195c94112_000001a06ed55fc0_1",
+  "source": "data/reports/phase1-screened-enzyme-overlay.ndjson",
+  "report_sha256": "43b8ad998c9f5a648e528c5a81d2de16a2a1fd7bfab50a674c32fe57b1583ce0",
+  "verified_evidence_records": 633,
+  "verified_metadata_records": 1,
+  "verified_unique_ids_equal_record_count_in_each_group": true,
+  "verified_report_snapshots_per_group": 1,
+  "claim_boundary": "Screened candidate enzyme evidence only. Chemistry, direction, required inputs, target identity and blocked pathway status are unchanged."
+}

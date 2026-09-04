@@ -10,6 +10,11 @@ def test_published_lazy_bundles_preserve_every_target_hypothesis_and_input():
     folder = root / 'docs/data/hypothesis-view'
     index = json.loads((folder / 'index.json').read_text())
     assert index['source_sha256'] == hashlib.sha256(source.read_bytes()).hexdigest()
+    if index.get('enzyme_overlay_report'):
+        from cannabis_carbon.phase1_screened_overlay import apply_overlay
+        overlay = root / 'data/reports' / index['enzyme_overlay_report']
+        assert index['enzyme_overlay_sha256'] == hashlib.sha256(overlay.read_bytes()).hexdigest()
+        report = apply_overlay(report, json.loads(overlay.read_text()))
     assert index['summary'] == report['summary']
     assert [t['cannabisdb_id'] for t in index['targets']] == [t['cannabisdb_id'] for t in report['targets']]
     expected_hypotheses = {h['id']: h for h in report['hypotheses']}

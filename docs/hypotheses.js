@@ -25,12 +25,17 @@
         position: compact ? {x: (row % 2) * 160, y: offsets[column] + Math.floor(row / 2) * 110} : {x: column * 230, y: (row - (group.length - 1) / 2) * 110}};
     }));
     const sourceIds = [...new Set(bundle.reaction.sources.map(s => s.source_reaction_id))];
+    const candidateProteinIds = [...new Set((bundle.enzyme_evidence || []).filter(e => (h.evidence_ids || []).includes(e.id)).flatMap(e => [
+      ...(e.screened_proteins || []).map(p => p.accession), ...(e.enzyme_ids || []),
+      ...(e.enzyme_evidence?.screened_homology_proteins || []), ...(e.enzyme_evidence?.direction_unresolved_family_proteins || [])
+    ]))];
     const edges = h.required_inputs.flatMap((input, i) => h.outputs.map((output, j) => ({data: {
       id: `${h.id}:${i}:${j}`, source: input.compound_id, target: output.compound_id,
       label: sourceIds[0] || 'reaction hypothesis', kind: 'reaction-projection',
       hypothesis_id: h.id, reaction_id: h.reaction_id,
       has_candidate_enzyme_evidence: h.has_candidate_enzyme_evidence,
       enzyme_evidence_ids: h.evidence_ids || [],
+      candidate_protein_ids: candidateProteinIds,
       direction_status: 'hypothetical; physiological direction unestablished',
       required_inputs: h.required_inputs, outputs: h.outputs,
       claim_boundary: 'Projection of one full reaction; every input is required. Not an independent reaction or an atom-flow edge.'
@@ -39,14 +44,17 @@
   }
   function createLoader(fetcher) {
     const cache = new Map();
+    let files = {};
     async function load(relative) {
-      if (!cache.has(relative)) cache.set(relative, fetcher(base + relative).then(response => {
+      const version = files[relative]?.sha256;
+      const url = base + relative + (version ? '?v=' + version.slice(0, 16) : '');
+      if (!cache.has(relative)) cache.set(relative, fetcher(url, {cache: relative === 'index.json' ? 'no-cache' : 'default'}).then(response => {
         if (!response.ok) throw new Error(`Could not load ${relative} (HTTP ${response.status})`);
         return response.json();
       }).catch(error => { cache.delete(relative); throw error; }));
       return cache.get(relative);
     }
-    return {index: () => load('index.json'), target: id => {
+    return {index: async () => { const index = await load('index.json'); files = index.files || {}; return index; }, target: id => {
       if (!/^CDB\d+$/.test(id)) throw new Error('Invalid CannabisDB identifier');
       return load(`targets/${id}.json`);
     }, reaction: async id => {
@@ -157,6 +165,7 @@
         if (token !== generation) return;
         const s = index.summary;
         $('metrics').textContent = `${s.carbon_bearing_target_status_counts['net-production-hypotheses-found']} / ${s.carbon_bearing_target_records} carbon-bearing records have one-step hypotheses · ${s.cannabisdb_records} total records retained · not CO₂ pathway completeness`;
+        if (s.carbon_bearing_targets_with_candidate_enzyme_evidence !== undefined) $('metrics').textContent += ` · ${s.carbon_bearing_targets_with_candidate_enzyme_evidence} carbon-bearing targets have candidate enzyme evidence (not confirmed activity)`;
         const requested = new URLSearchParams(location.search).get('target');
         const initial = index.targets.find(t => t.cannabisdb_id === requested) || index.targets.find(t => t.label.toLowerCase() === 'eugenol' && t.hypothesis_count) || index.targets.find(t => t.hypothesis_count);
         $('targetSearch').value = initial?.cannabisdb_id || ''; search(initial?.cannabisdb_id);
