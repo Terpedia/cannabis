@@ -20,3 +20,14 @@ def test_candidate_queue_merges_specialized_enzyme_search(tmp_path):
     build_candidate_queue(source, output)
     item = json.loads(output.read_text())["items"][0]
     assert item["candidate_proteins"][0]["proteinId"] == "uniprot:p1"
+
+
+def test_target_hypothesis_does_not_assert_catalog_presence_is_endogenous(tmp_path):
+    from cannabis_carbon.test_hypotheses import _target_hypotheses
+
+    lineage = tmp_path / "lineage.json"
+    lineage.write_text(json.dumps({"targets": [{"cannabisdb_id": "CDB1", "status": "unresolved", "reason": "no-path"}]}))
+    compounds = tmp_path / "compounds.json"
+    compounds.write_text(json.dumps({"compounds": [{"id": "CDB1", "label": "test", "aliases": [], "carbon_atom_count": 1}]}))
+    target = _target_hypotheses(lineage, compounds)[0]
+    assert target["claim"].startswith("Test whether CDB1")

@@ -100,7 +100,7 @@ def _target_hypotheses(lineage_path: Path | None, compounds_path: Path | None) -
             "priority_reason": priority_reason,
             "carbon_atom_count": target.get("carbon_atom_count"),
             "reachable_carbon_atoms": target.get("reachable_carbon_atoms", 0),
-            "claim": f"{target['cannabisdb_id']} is an endogenous Cannabis metabolite whose carbon atoms can be traced to inorganic CO2 through a documented pathway.",
+            "claim": f"Test whether {target['cannabisdb_id']} is an endogenous Cannabis metabolite and whether its carbon atoms are traceable to inorganic CO2 through a documented pathway.",
             "blocking_causes": blockers,
             "proposed_tests": _target_test_plan(target),
             "source": str(lineage_path),
