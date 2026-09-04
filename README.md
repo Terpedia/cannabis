@@ -15,6 +15,12 @@ participation, enzyme associations, genome-derived protein candidates, and
 testable hypotheses. Atom tracing is deferred; existing tracing artifacts are
 retained for later work and do not gate Phase 1 progress.
 
+Explore the [balanced hypothesis map](https://terpedia.github.io/cannabis/hypotheses.html):
+search every CannabisDB target, select a full reaction, and inspect its required
+inputs, coefficients, candidate enzyme evidence, blockers, and proposed tests.
+It is a static, on-demand Cytoscape view; arrows represent hypothetical reaction
+direction, not established Cannabis physiology or traced carbon flow.
+
 - Cannabis Compound Database (CannabisDB) is the metabolite/protein source.
 - RDKit performs molecular parsing, formula audits, and atom-level mapping.
 - Reactions are represented as mapped reactant/product structures with explicit

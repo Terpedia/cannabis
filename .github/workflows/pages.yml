@@ -27,7 +27,7 @@ jobs:
       - name: Run unit tests
         run: python -m pytest -q
       - name: Test Phase 1 map evidence filters
-        run: node --test tests/phase1-evidence.test.cjs
+        run: node --test tests/phase1-evidence.test.cjs tests/hypotheses.test.cjs
       - name: Validate published carbon artifacts
         run: >-
           python -m cannabis_carbon.cli validate-artifacts

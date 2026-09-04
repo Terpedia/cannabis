@@ -133,6 +133,22 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [interactive balanced-hypothesis map](hypotheses.html) now exposes this
+catalog directly in Cytoscape. Search by label or CannabisDB ID, filter by
+attached candidate enzyme evidence, and select one hypothesis. All 6,220 records
+remain searchable, including explicit gaps. Each selected graph includes every
+input and output, with compounds as nodes and directed reaction projections as
+edges. Multiple projected edges represent **one** full reaction, not separate
+pathway steps or traced carbon flows. The equation, coefficients, source records,
+enzyme evidence, blockers, bootstrap warnings, and proposed tests remain inspectable.
+
+The view is static GitHub Pages content, derived from the same GCP-backed catalog.
+It loads a small target list and one reaction shard on demand; every reaction
+shard is below 0.5 MB. `data/hypothesis-view/index.json` preserves the parent
+report checksum and all generated-file hashes. Regenerate the view using
+`PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_hypothesis_view`.
+The whole-network map remains available and links to this focused view.
+
 The [full-inventory one-step hypothesis catalog](data/phase1-target-hypotheses.json)
 distinguishes reaction participation from **net production**. Of 6,220 CannabisDB
 records, 424 have balanced net-production hypotheses, six occur only unchanged

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Balanced pathway hypotheses · Terpedia Cannabis</title>
+  <script src="https://unpkg.com/cytoscape@3.31.2/dist/cytoscape.min.js"></script>
+  <link rel="stylesheet" href="hypotheses.css">
+</head>
+<body>
+<header><h1>Cannabis · Balanced pathway hypotheses</h1><a href="index.html">Whole-network map</a></header>
+<section class="controls" aria-label="Choose a compound and reaction">
+  <div><label for="targetSearch">Find a compound by name or CannabisDB ID</label><input id="targetSearch" type="search" placeholder="Eugenol, CDB000055…"><label for="targetSelect">Matching compounds</label><select id="targetSelect" disabled></select><p id="searchCount"></p></div>
+  <div><label for="enzymeFilter">Enzyme evidence</label><select id="enzymeFilter"><option value="all">All hypotheses</option><option value="candidate">Candidate evidence attached</option><option value="missing">No candidate evidence attached</option></select><label for="hypothesisSelect">One reaction hypothesis</label><select id="hypothesisSelect" disabled></select><p id="hypothesisCount"></p></div>
+</section>
+<p id="metrics" class="banner" aria-live="polite">Loading compound inventory…</p>
+<p class="boundary">Arrows show a hypothesis, not confirmed Cannabis physiology or carbon flow. Every listed input is required. A connected edge is not a complete pathway from CO₂.</p>
+<p id="message" role="status"></p><button id="retry" hidden>Retry loading</button>
+<main>
+  <section class="graph-panel"><div id="hypothesisCy" role="img" aria-label="Selected reaction hypothesis; the complete equation is listed beside the graph"></div><button id="fit">Fit selected reaction</button><p id="graphCount"></p></section>
+  <aside><h2 id="selectionTitle">Choose a compound</h2><p id="targetState"></p><div id="equation"></div><div id="blockers"></div><div id="tests"></div><div id="sources"></div><details><summary>Source-linked enzyme evidence</summary><pre id="evidence"></pre></details><h2>Selected compound or edge</h2><pre id="selectedDetails">Tap a node for its exact structure, or an edge for its full reaction requirements.</pre></aside>
+</main>
+<footer><a href="data/phase1-target-hypotheses.json">Full hypothesis catalog (about 64 MiB)</a> · Atom tracing deferred. The graph loads only the selected reaction’s data shard.</footer>
+<script src="hypotheses.js"></script><script>HypothesisView.mount();</script>
+</body></html>
