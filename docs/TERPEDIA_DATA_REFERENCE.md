@@ -133,11 +133,33 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [consolidated Phase 1 reaction catalog](data/phase1-reaction-catalog.json)
+contains 491 balanced source-reaction variants, 215 exact compound structures,
+and an audit ledger retaining all 690 original expansion variants. Reactions
+store full reactant/product lists with coefficients and include carbon-free
+co-reactants. Structure IDs preserve canonical isomeric SMILES identity; no
+CannabisDB cross-reference is inferred from those IDs. Source-linked homology,
+core annotations and direction-unresolved family evidence remain separate.
+
+The 108 balanced-alternative links resolve to only 37 distinct Rhea equations,
+all already among the 491 balanced variants. They are not 108 new reactions.
+The catalog attaches each link and participant difference without automatically
+transferring the original MARTS protein annotation to the Rhea equation. All 199
+non-balanced originals remain excluded from the balanced set; 108 have reference
+alternatives and 91 do not. This catalog covers the expansion, not the complete
+Cannabis metabolome or core NetworkDB, and does not establish CO₂ reachability.
+
+GCP catalog table:
+`terpedia-489015.terpedia_core.cannabis_phase1_reaction_catalog_20260904_v1`.
+Its 1,396 rows distinguish `compound`, `reaction` and `source_variant` records,
+with stable IDs, complete record JSON and a report checksum. Load source:
+`data/reports/phase1-reaction-catalog.ndjson`.
+
 The [source-backed balance alternatives](data/phase1-balance-reference.json)
 compare all 199 non-balanced expansion variants against 36,552 Rhea equations
 in Terpedia's normalized reaction catalog. Matching preserves stereochemistry,
 isotopes, formal charge and the carbon-containing species on each reaction side.
-There are 108 balanced full-equation alternatives for imbalanced MARTS variants:
+There are 108 links from imbalanced MARTS variants to 37 distinct balanced equations:
 96 preserve carbon-compound coefficients, while 12 require coefficient changes.
 Every alternative passes an element-and-charge audit and explicitly records
 added/removed participants and coefficient differences. Original records remain

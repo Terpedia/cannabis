@@ -1,0 +1,10 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_reaction_catalog_20260904_v1",
+  "load_job_id": "bqjob_r533fa221e2c16bba_000001a06e93c4dc_1",
+  "source": "data/reports/phase1-reaction-catalog.ndjson",
+  "report_sha256": "5b66647e4a4c3f8573ae52b169c6b306cc90e569338f4f2d36c193cae1071559",
+  "verified_records": {"compound": 215, "reaction": 491, "source_variant": 690},
+  "verified_distinct_ids": {"compound": 215, "reaction": 491, "source_variant": 690},
+  "verified_report_snapshots_per_kind": 1,
+  "claim_boundary": "Expansion catalog with complete reaction participants and separate source links; not whole-metabolome completion or demonstrated physiological pathways."
+}
