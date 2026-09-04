@@ -75,4 +75,5 @@ def test_identity_pair_mapper_keeps_carbon_gain_unresolved():
     result = map_identity_pair_smiles("CC", "CCC")
     assert result["status"] == "unresolved"
     assert result["reason"] == "identity-pair-carbon-count-delta"
-    assert len(result["unresolved_product_carbons"]) == 3
+    assert len(result["mappings"]) == 3
+    assert len(result["unresolved_product_carbons"]) == 1

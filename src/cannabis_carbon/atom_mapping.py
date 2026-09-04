@@ -221,11 +221,37 @@ def map_identity_pair_smiles(reactant_smiles: str | None, product_smiles: str | 
         return {"status": "unresolved", "reason": "invalid-identity-pair-structure", "mappings": [], "unresolved_product_carbons": []}
     reactant_skeleton, reactant_indices = _carbon_skeleton(reactant)
     product_skeleton, product_indices = _carbon_skeleton(product)
-    if len(reactant_indices) != len(product_indices):
-        return {"status": "unresolved", "reason": "identity-pair-carbon-count-delta", "mappings": [], "unresolved_product_carbons": [{"product_atom": atom, "status": "unresolved", "reason": "identity-pair-carbon-count-delta"} for atom in product_indices], "product_carbon_atom_count": len(product_indices)}
+    count_delta = len(reactant_indices) != len(product_indices)
     matches = reactant_skeleton.GetSubstructMatches(product_skeleton, uniquify=True)
-    if not matches:
-        return {"status": "unresolved", "reason": "identity-pair-carbon-skeleton-not-conserved", "mappings": [], "unresolved_product_carbons": [{"product_atom": atom, "status": "unresolved", "reason": "identity-pair-carbon-skeleton-not-conserved"} for atom in product_indices], "product_carbon_atom_count": len(product_indices)}
+    if count_delta or not matches:
+        # A bounded carbon-only MCS preserves a unique retained fragment even
+        # when the pair gains/losses carbons or changes ring connectivity.
+        result = rdFMCS.FindMCS([reactant_skeleton, product_skeleton], atomCompare=rdFMCS.AtomCompare.CompareElements, bondCompare=rdFMCS.BondCompare.CompareAny, ringMatchesRingOnly=False, completeRingsOnly=False, timeout=1)
+        query = Chem.MolFromSmarts(result.smartsString) if not result.canceled and result.numAtoms >= 2 else None
+        reactant_matches = reactant_skeleton.GetSubstructMatches(query, uniquify=True) if query is not None else ()
+        product_matches = product_skeleton.GetSubstructMatches(query, uniquify=True) if query is not None else ()
+        if reactant_matches and product_matches:
+            selected_product_atoms = set(product_matches[0])
+            choices_by_product = {product_atom: set() for product_atom in selected_product_atoms}
+            for reactant_match, product_match in ((rm, pm) for rm in reactant_matches for pm in product_matches):
+                for query_index, product_atom in enumerate(product_match):
+                    if product_atom in choices_by_product:
+                        choices_by_product[product_atom].add(reactant_indices[reactant_match[query_index]])
+            reason = "identity-pair-carbon-count-delta" if count_delta else "identity-pair-carbon-skeleton-not-conserved"
+            mappings, unresolved = [], []
+            for product_atom in range(len(product_indices)):
+                choices = choices_by_product.get(product_atom, set())
+                if not choices:
+                    unresolved.append({"product_index": 0, "product_atom": product_indices[product_atom], "status": "unresolved", "reason": reason})
+                    continue
+                alternatives = [{"reactant_index": 0, "reactant_atom": atom} for atom in sorted(choices)]
+                mappings.append({"product_index": 0, "product_atom": product_indices[product_atom], "method": "rdkit-identity-pair-partial-carbon-skeleton", "status": "candidate" if len(alternatives) > 1 or len(product_matches) > 1 else "inferred", "reactant_index": alternatives[0]["reactant_index"], "reactant_atom": alternatives[0]["reactant_atom"], "alternatives": alternatives})
+            if not unresolved:
+                status = "candidate" if any(item["status"] == "candidate" for item in mappings) else "inferred"
+                return {"status": status, "mappings": mappings, "unresolved_product_carbons": [], "product_carbon_atom_count": len(product_indices)}
+            return {"status": "unresolved", "reason": unresolved[0]["reason"], "mappings": mappings + unresolved, "unresolved_product_carbons": unresolved, "product_carbon_atom_count": len(product_indices)}
+        reason = "identity-pair-carbon-count-delta" if count_delta else "identity-pair-carbon-skeleton-not-conserved"
+        return {"status": "unresolved", "reason": reason, "mappings": [], "unresolved_product_carbons": [{"product_atom": atom, "status": "unresolved", "reason": reason} for atom in product_indices], "product_carbon_atom_count": len(product_indices)}
     if len(matches) == 1:
         mapping = [{"product_index": 0, "product_atom": product_atom, "reactant_index": 0, "reactant_atom": reactant_indices[matches[0][skeleton_index]], "method": "rdkit-identity-pair-carbon-skeleton", "status": "inferred"} for skeleton_index, product_atom in enumerate(product_indices)]
         return {"status": "inferred", "mappings": mapping, "unresolved_product_carbons": [], "product_carbon_atom_count": len(product_indices)}

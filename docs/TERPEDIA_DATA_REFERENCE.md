@@ -303,12 +303,14 @@ metabolic-map edges to exact identity-set matches and runs the RDKit carbon
 mapper on each reaction SMARTS. It currently contains 3,401 edges, 87
 identity-set target structures, 1,373 precursor identities, and 364 reactions;
 1,530 edges are candidate-mapped, 874 are inferred, and 997 remain unresolved,
-with 29,547 product-carbon atoms explicitly unresolved. It remains separate from
+with 29,547 product-carbon atoms explicitly unresolved in whole-reaction
+mapping. It remains separate from
 the balanced reaction catalog and CO₂ lineage until each edge receives
 stoichiometric, direction, enzyme, and mapping review.
-The same report carries a separate target-pair mapping: 2,111 of the 3,401
-precursor/product identity pairs have complete inferred carbon-skeleton mappings,
-while 1,290 remain unresolved. This pair layer is not substituted for
+The same report carries a separate target-pair mapping: 2,567 of the 3,401
+precursor/product identity pairs have complete inferred or candidate
+carbon-skeleton mappings, while 834 remain unresolved; 77,640 target-pair
+carbon atoms are mapped and 2,297 remain unresolved. This pair layer is not substituted for
 whole-reaction mapping when ancillary carbon-bearing substrates may contribute
 to the product.
 Each CannabisDB compound record carries its CO₂-lineage status and reachable
