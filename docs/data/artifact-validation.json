@@ -4,6 +4,7 @@
   "checks": {
     "carbon_atom_partition": true,
     "atom_evidence_fields": true,
+    "global_carbon_accounting": true,
     "reaction_product_carbon_rows": true,
     "reaction_mapping_classification": true,
     "no_imbalanced_reactions": true
@@ -11,6 +12,12 @@
   "compounds_checked": 6220,
   "carbon_atoms_expected": 285623,
   "carbon_atoms_audited": 285623,
+  "carbon_atom_status_counts": {
+    "supported": 1,
+    "candidate": 1402,
+    "inferred": 0,
+    "unresolved": 284220
+  },
   "reactions_checked": 1107,
   "imbalanced_reaction_count": 0,
   "failures": [],
