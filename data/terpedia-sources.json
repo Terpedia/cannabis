@@ -23,7 +23,10 @@
           "table": "terpedia-489015.terpedia_core.terpene_identity_set",
           "snapshot": "data/reports/terpene-identity-set-match.json",
           "live_row_count_verified": 268924,
-          "exact_cannabisdb_matches": 246
+          "exact_cannabisdb_matches": 246,
+          "connectivity_candidate_cannabisdb_compounds": 104,
+          "connectivity_candidate_records": 437,
+          "match_policy": "Full InChIKey is exact; first InChIKey block is candidate-only and preserves stereochemical alternatives."
         },
         {
           "table": "terpedia-489015.terpedia_core.terpene_biotransformation_hypothetical_connections_current_v2",
