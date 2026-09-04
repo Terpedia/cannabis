@@ -133,6 +133,13 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The Phase 1 experimental shortlist (`docs/data/phase1-experimental-shortlist.json`)
+groups 3,098 protein–reaction proposals under 18 Cannabis proteins, covering
+175 balanced reaction variants. Every protein retains its source FASTA header,
+sequence and checksum; each proposal includes ranked reference alignments,
+reaction SMARTS, provenance and unresolved validation steps. The proposals
+share homology evidence and must not be counted as independent confirmations.
+
 Targeted Phase 1 protein search: all 105 source protein references were retrieved,
 including 97 UniProtKB and eight UniParc records.
 DIAMOND searched all 30,304 proteins in UP000583929. Of 491 balanced reaction
