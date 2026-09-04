@@ -65,3 +65,4 @@ def test_reversible_candidate_lineage_preserves_candidate_path_mode(tmp_path):
     row = json.loads(output.read_text())["rows"][0]
     assert row["path_mode"] == "all-reactions-reversible-upper-bound"
     assert row["core_path_reaction_ids"] == ["R1"]
+    assert row["core_path_carbon_edges"][0]["from_atom"] is None

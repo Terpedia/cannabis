@@ -362,7 +362,8 @@ The merged carbon-provenance artifact
 those paths to the RDKit pair mappings: 2,154 paths have complete product-
 carbon correspondence, covering 132,378 mapped product carbons, while 4,220
 product-carbon rows remain unresolved. These are reversible sensitivity
-hypotheses and do not alter the directed atom audit.
+hypotheses now retain atom-level CO₂-to-core carbon edges and do not alter the
+directed atom audit.
 When available, each CannabisDB record also carries the exact-InChIKey PubChem
 resolution status and CID/structure properties; unresolved PubChem queries are
 retained as explicit negatives rather than being treated as missing data.
