@@ -133,6 +133,8 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
             "source": str(candidate_path_carbon_path),
             "path_count": candidate_paths.get("path_count", len(path_rows)),
             "candidate_product_count": len(candidate_products),
+            "core_atom_continuity_counts": dict(sorted(Counter(row.get("core_atom_continuity", {}).get("status", "unresolved") for row in path_rows).items())),
+            "carbon_provenance_status_counts": dict(sorted(Counter(row.get("carbon_provenance_status", "unresolved") for row in path_rows).items())),
             "candidate_cannabisdb_compound_count": len(candidate_cdb_ids),
             "candidate_cannabisdb_carbon_atoms": sum(compound_by_id.get(cdb_id, {}).get("carbon_atom_count", 0) for cdb_id in candidate_cdb_ids),
             "complete_product_carbon_paths": candidate_paths.get("paths_with_complete_product_carbon_mapping", 0),

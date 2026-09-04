@@ -172,6 +172,13 @@
       "source": "data/reports/terpene-identity-set-reversible-candidate-lineage-carbon.json",
       "path_count": 3634,
       "candidate_product_count": 79,
+      "core_atom_continuity_counts": {
+        "continuous": 2308,
+        "unresolved": 1326
+      },
+      "carbon_provenance_status_counts": {
+        "unresolved": 3634
+      },
       "candidate_cannabisdb_compound_count": 7,
       "candidate_cannabisdb_carbon_atoms": 230,
       "complete_product_carbon_paths": 2154,
@@ -182,7 +189,7 @@
         "inferred": 2146,
         "unresolved": 1480
       },
-      "atom_level_core_path_edges": 22649,
+      "atom_level_core_path_edges": 36105,
       "path_mode": "all-reactions-reversible-upper-bound",
       "claim_boundary": "These are source-linked, structurally mapped candidate paths. Reversible traversal is an upper bound and does not establish physiological direction, enzyme activity, isotope tracing, or in-vivo Cannabis biosynthesis."
     }

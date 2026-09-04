@@ -20,6 +20,39 @@ def atom_continuity_blockers(edges: list[dict]) -> list[dict]:
     return blockers
 
 
+def continuous_core_paths(adjacency: dict, seed: str) -> dict:
+    """Find one shortest atom-continuous witness per reachable core entity.
+
+    Input indices use the source lineage namespace. This remains a reversible
+    sensitivity calculation; it does not verify co-substrates or bridge atoms.
+    """
+    by_atom = defaultdict(list)
+    for edges in adjacency.values():
+        for edge in edges:
+            if edge.get("from_atom") is None or edge.get("to_atom") is None:
+                continue
+            by_atom[(edge["from"], edge["from_atom"])].append(edge)
+    seeds = sorted(node for node in by_atom if node[0] == seed)
+    previous = {node: None for node in seeds}
+    queue = deque(seeds)
+    witnesses = {}
+    while queue:
+        node = queue.popleft()
+        if node[0] not in witnesses:
+            path, cursor = [], node
+            while previous[cursor] is not None:
+                edge = previous[cursor]
+                path.append(edge)
+                cursor = (edge["from"], edge["from_atom"])
+            witnesses[node[0]] = list(reversed(path))
+        for edge in by_atom.get(node, []):
+            target = (edge["to"], edge["to_atom"])
+            if target not in previous:
+                previous[target] = edge
+                queue.append(target)
+    return witnesses
+
+
 def build_reversible_candidate_lineage(bridges_path: Path, lineage_path: Path, output: Path, balance_path: Path | None = None, expansion_path: Path | None = None) -> dict:
     bridges = json.loads(bridges_path.read_text())
     lineage = json.loads(lineage_path.read_text())
@@ -38,6 +71,7 @@ def build_reversible_candidate_lineage(bridges_path: Path, lineage_path: Path, o
         adjacency[source].append(record)
         adjacency[target].append({**record, "from": target, "to": source, "from_atom": record["to_atom"], "to_atom": record["from_atom"], "status": "reversible-upper-bound"})
     seed = lineage.get("co2_entity_id") or "chebi:16526"
+    atom_paths = continuous_core_paths(adjacency, seed)
     previous, previous_edge = {seed: None}, {}
     queue = deque([seed])
     while queue:
@@ -62,6 +96,11 @@ def build_reversible_candidate_lineage(bridges_path: Path, lineage_path: Path, o
         path = path_to(anchor) if anchor else None
         if path is None:
             continue
+        # Preserve unresolved entity witnesses when no continuous alternative
+        # exists, so a failed atom traversal never silently drops a bridge.
+        atom_anchor = next((candidate for candidate in (bridge.get("core_precursor_entity_id"), bridge.get("core_product_entity_id")) if candidate in atom_paths), None)
+        if atom_anchor is not None:
+            anchor, path = atom_anchor, atom_paths[atom_anchor]
         bridge_key = (bridge.get("reaction_id"), bridge.get("product_terpene_id"), bridge.get("precursor_terpene_id"), bridge.get("expansion_depth"))
         source_smarts = bridge.get("reaction_smarts")
         candidates = expansion_by_key.get(bridge_key, set())
@@ -71,6 +110,7 @@ def build_reversible_candidate_lineage(bridges_path: Path, lineage_path: Path, o
         balance_status = balance_row.get("status", "not_auditable") if balance_row else "not_auditable"
         rows.append({"candidate_product_terpene_id": bridge.get("product_terpene_id"), "candidate_precursor_terpene_id": bridge.get("precursor_terpene_id"), "reaction_id": bridge.get("reaction_id"), "reaction_smarts": source_smarts, "expansion_depth": bridge.get("expansion_depth"), "source_type": bridge.get("source_type"), "source_url": bridge.get("source_url"), "source_uniprot_id": bridge.get("source_uniprot_id"), "core_anchor_entity_id": anchor, "core_path_reaction_ids": [edge.get("reaction_id") for edge in path if edge.get("reaction_id")], "core_path_entity_ids": [seed] + [edge["to"] for edge in path], "core_path_carbon_edges": [{"from_entity_id": edge["from"], "from_atom": edge.get("from_atom"), "to_entity_id": edge["to"], "to_atom": edge.get("to_atom"), "reaction_id": edge.get("reaction_id"), "status": edge.get("status"), "provenance": edge.get("provenance")} for edge in path], "core_path_step_count": len(path), "path_mode": "all-reactions-reversible-upper-bound", "status": "candidate", "balance_status": balance_status, "balance_eligible": balance_status == "balanced", "balance_audit_source": str(balance_path) if balance_path else None, "claim_boundary": "This ordered path combines reversible structural reachability with a candidate identity bridge. It is a sensitivity hypothesis only; direction, exact identity, enzyme activity, isotope tracing, and in-vivo Cannabis production remain unestablished."})
         rows[-1]["candidate_cannabisdb_ids"] = bridge.get("candidate_cannabisdb_ids", [])
+        rows[-1]["core_search_mode"] = "compound-and-atom" if atom_anchor is not None else "entity-only-unresolved-fallback"
         blockers = atom_continuity_blockers(rows[-1]["core_path_carbon_edges"])
         rows[-1]["core_atom_continuity"] = {"status": "unresolved" if blockers else "continuous", "blockers": blockers}
         rows[-1]["carbon_provenance_status"] = "unresolved"

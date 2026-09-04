@@ -1,6 +1,22 @@
 import json
 
 from cannabis_carbon.candidate_lineage import atom_continuity_blockers, build_reversible_candidate_lineage
+from cannabis_carbon.candidate_lineage import continuous_core_paths
+
+
+def test_atom_search_rejects_shortcut_and_finds_longer_continuous_route():
+    def edge(a, i, b, j):
+        return {"from": a, "from_atom": i, "to": b, "to_atom": j}
+    graph = {
+        "co2": [edge("co2", 1, "a", 0), edge("co2", 1, "x", 2)],
+        "a": [edge("a", 4, "target", 0)],
+        "x": [edge("x", 2, "y", 3)],
+        "y": [edge("y", 3, "target", 5)],
+    }
+    paths = continuous_core_paths(graph, "co2")
+    assert [e["to"] for e in paths["target"]] == ["x", "y", "target"]
+    del graph["y"]
+    assert "target" not in continuous_core_paths(graph, "co2")
 
 
 def test_connected_entities_do_not_imply_connected_atoms():

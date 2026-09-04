@@ -133,9 +133,11 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
-Atom-continuity correction: all 3,634 current reversible candidate paths
-contain a discontinuity between carbon indices. Each row now records these
-blockers and unresolved carbon provenance. Reverse traversal swaps both entity
+Atom-continuity correction: traversal now uses compound and atom index, finding
+continuous CO₂-to-core witnesses for 2,308 candidate bridge records; 1,326
+retain unresolved entity-path fallbacks. All 3,634 still have unresolved
+end-to-end carbon provenance pending core-to-target identity mapping and
+required-input verification. Reverse traversal swaps both entity
 and atom endpoints. The 2,154 complete product-carbon mappings describe local
 identity-pair correspondences only; they do not establish continuous CO₂
 provenance. Balance eligibility checks only the candidate bridge reaction.
