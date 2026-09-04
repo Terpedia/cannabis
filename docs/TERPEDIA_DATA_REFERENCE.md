@@ -253,8 +253,9 @@ constitutes a demonstrated in-vivo pathway.
 ## Unified NetworkDB
 
 The Pages visualization loads `docs/data/network-map-focus.json` by default,
-a 2.4 MB view of reaction-connected and CO₂-reachable records. The complete
-7,487-compound/1,107-reaction projection remains available at
+a compact 1.2 MB view of the 664 CO₂-reachable compounds and their fully
+resolved reaction records. The complete 10,224-compound/1,107-reaction
+projection, including all hypothesis edges, remains available at
 `docs/data/network-map.json`; the browser fallback graph is not the published
 map. Selecting a compound in the map now reports how many of its carbon atoms
 have explicit serialized CO₂ paths and the maximum number of reaction steps;

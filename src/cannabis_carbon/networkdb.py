@@ -31,12 +31,29 @@ def build_map_snapshot(networkdb_path: Path, output: Path, lineage_path: Path | 
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
     if focus_output:
-        focused_ids = {c["id"] for c in compounds if c["reaction_connected"] or c["co2_reachable"] or c["hypothesis_connected"]}
+        # Keep the published focus payload genuinely small.  The full map
+        # remains available in ``output``; the focus projection is the
+        # explicit CO2-reachable carbon-path view, not a second copy of the
+        # entire hypothesis inventory hidden by CSS.
+        focused_ids = {c["id"] for c in compounds if c["co2_reachable"]}
+        # Retain one-hop hypothesis context around the CO2-reachable core so
+        # the default graph shows unresolved/candidate edges without loading
+        # the entire hypothesis inventory into the initial Cytoscape layout.
+        focused_hypotheses = [
+            h for h in hypothetical_connections
+            if h["substrate_compound_id"] in focused_ids or h["product_compound_id"] in focused_ids
+        ]
+        focused_ids.update(
+            h["substrate_compound_id"] for h in focused_hypotheses
+        )
+        focused_ids.update(
+            h["product_compound_id"] for h in focused_hypotheses
+        )
         focused_reactions = [
             reaction for reaction in reactions
-            if any(p["compound_id"] in focused_ids for p in reaction.get("reactants", []) + reaction.get("products", []))
+            if all(p["compound_id"] in focused_ids for p in reaction.get("reactants", []) + reaction.get("products", []))
         ]
-        focused = {**report, "schema": "cannabis-carbon.network-map-focus.v1", "compounds": [c for c in compounds if c["id"] in focused_ids], "reactions": focused_reactions, "hypothetical_connections": [h for h in hypothetical_connections if h["substrate_compound_id"] in focused_ids or h["product_compound_id"] in focused_ids], "focus": {**report["focus"], "focused_compounds": len(focused_ids)}}
+        focused = {**report, "schema": "cannabis-carbon.network-map-focus.v1", "compounds": [c for c in compounds if c["id"] in focused_ids], "reactions": focused_reactions, "hypothetical_connections": [h for h in focused_hypotheses if h["substrate_compound_id"] in focused_ids and h["product_compound_id"] in focused_ids], "focus": {**report["focus"], "focused_compounds": len(focused_ids), "focused_hypothesis_edges": len(focused_hypotheses)}}
         focus_output.parent.mkdir(parents=True, exist_ok=True)
         focus_output.write_text(json.dumps(focused, separators=(",", ":")) + "\n")
     return {"compounds": len(compounds), "reactions": len(reactions), "bytes": output.stat().st_size}
