@@ -172,6 +172,8 @@
       "source": "data/reports/terpene-identity-set-reversible-candidate-lineage-carbon.json",
       "path_count": 3634,
       "candidate_product_count": 79,
+      "candidate_cannabisdb_compound_count": 7,
+      "candidate_cannabisdb_carbon_atoms": 230,
       "complete_product_carbon_paths": 2154,
       "mapped_product_carbon_atoms": 132378,
       "unresolved_product_carbon_atoms": 4220,

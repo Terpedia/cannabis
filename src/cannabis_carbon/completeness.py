@@ -126,11 +126,15 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
         path_rows = candidate_paths.get("rows", [])
         candidate_statuses = Counter(row.get("carbon_mapping", {}).get("status", "unresolved") for row in path_rows)
         candidate_products = {row.get("candidate_product_terpene_id") for row in path_rows if row.get("candidate_product_terpene_id")}
+        candidate_cdb_ids = {cdb_id for row in path_rows for cdb_id in row.get("candidate_cannabisdb_ids", [])}
+        compound_by_id = {compound.get("id"): compound for compound in compounds}
         candidate_core_edges = sum(len(row.get("core_path_carbon_edges", [])) for row in path_rows)
         result["coverage"]["candidate_co2_path_carbon_layer"] = {
             "source": str(candidate_path_carbon_path),
             "path_count": candidate_paths.get("path_count", len(path_rows)),
             "candidate_product_count": len(candidate_products),
+            "candidate_cannabisdb_compound_count": len(candidate_cdb_ids),
+            "candidate_cannabisdb_carbon_atoms": sum(compound_by_id.get(cdb_id, {}).get("carbon_atom_count", 0) for cdb_id in candidate_cdb_ids),
             "complete_product_carbon_paths": candidate_paths.get("paths_with_complete_product_carbon_mapping", 0),
             "mapped_product_carbon_atoms": candidate_paths.get("mapped_product_carbon_atoms", 0),
             "unresolved_product_carbon_atoms": candidate_paths.get("unresolved_product_carbon_atoms", 0),
