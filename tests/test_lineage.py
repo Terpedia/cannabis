@@ -99,3 +99,4 @@ def test_carbon_atom_audit_accounts_for_every_target_carbon(tmp_path):
     assert result["status_counts"] == {"supported": 1, "candidate": 0, "inferred": 0, "unresolved": 0}
     groups = json.loads(output.read_text())["compounds"][0]["groups"]
     assert sum(len(group["atom_indices"]) for group in groups) == 1
+    assert json.loads(output.read_text())["compounds"][0]["co2_paths"] == {"1": []}

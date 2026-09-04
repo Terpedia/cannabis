@@ -224,7 +224,10 @@ resolved Terpedia atom indices when available, reaction references, provenance
 URLs, and the blocking reason. The target atom indices are explicitly scoped to
 RDKit atom indices in each CannabisDB SMILES field and are not assumed to equal
 the source-SDF atom ordering. The groups are required to partition the complete
-carbon-atom set for each compound.
+carbon-atom set for each compound. For every reachable atom, `co2_paths` now
+serializes one CO₂-to-atom chain with entity-local atom indices, reaction IDs,
+edge evidence status, and provenance; unresolved atoms have no fabricated path
+and retain their blocker.
 
 These are data-coverage metrics. They do not imply that all CannabisDB
 compounds are endogenous cannabis metabolites or that Terpedia's reaction graph

@@ -154,6 +154,7 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
     candidate_reachable = set()
     seen_states = {(node, False) for node in co2_atoms}
     queue = deque((node, False) for node in co2_atoms)
+    predecessors = {}
     while queue:
         node, has_candidate = queue.popleft()
         for child, edge_status in forward[node]:
@@ -163,6 +164,7 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
             child_state = (child, child_has_candidate)
             if child_state not in seen_states:
                 seen_states.add(child_state)
+                predecessors[child_state] = ((node, has_candidate), (child, edge_status))
                 queue.append(child_state)
             if child_has_candidate:
                 candidate_reachable.add(child)
@@ -170,6 +172,19 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
     # through candidate edges, but that downstream occurrence must not demote
     # the seed's own identity from supported to candidate.
     candidate_reachable.difference_update(co2_atoms)
+
+    def co2_path(node):
+        """Return one edge chain from the CO2 seed to a reachable carbon node."""
+        state = (node, True) if (node, True) in seen_states else (node, False)
+        if state[0] in co2_atoms:
+            return []
+        path = []
+        while state in predecessors:
+            previous, (child, edge_status) = predecessors[state]
+            path.append({"from_entity_id": previous[0][0], "from_atom": previous[0][1], "to_entity_id": child[0], "to_atom": child[1], "status": edge_status})
+            state = previous
+        path.reverse()
+        return path if state[0] in co2_atoms else None
     # Structural sensitivity run: allow every mapped carbon edge in both
     # directions, but keep it separate from the directed physiological result.
     # This is an upper bound for direction-curation work, not a flux claim.
@@ -259,6 +274,7 @@ def build_carbon_atom_audit(network_path: Path, lineage_path: Path, crosswalk_pa
     candidate_reachable = set()
     queue = deque((node, False) for node in co2_nodes)
     seen_states = {(node, False) for node in co2_nodes}
+    predecessors = {}
     while queue:
         node, has_candidate = queue.popleft()
         for edge in forward.get(node, []):
@@ -270,8 +286,21 @@ def build_carbon_atom_audit(network_path: Path, lineage_path: Path, crosswalk_pa
             state = (child, child_has_candidate)
             if state not in seen_states:
                 seen_states.add(state)
+                predecessors[state] = ((node, has_candidate), edge)
                 queue.append(state)
     candidate_reachable.difference_update(co2_nodes)
+
+    def co2_path(node):
+        state = (node, True) if (node, True) in seen_states else (node, False)
+        if state[0] in co2_nodes:
+            return []
+        path = []
+        while state in predecessors:
+            previous, edge = predecessors[state]
+            path.append({key: edge.get(key) for key in ("reaction_id", "reactant_entity_id", "reactant_atom", "product_entity_id", "product_atom", "status", "provenance", "directional_rhea_id")})
+            state = previous
+        path.reverse()
+        return path if state[0] in co2_nodes else None
     incoming = defaultdict(list)
     for edge in lineage.get("carbon_edges", []):
         node = (edge["product_entity_id"], edge["product_atom"])
@@ -305,6 +334,7 @@ def build_carbon_atom_audit(network_path: Path, lineage_path: Path, crosswalk_pa
         entity_smiles = entities.get(terpedia_id, {}).get("attributes", {}).get("canonicalSmiles") if terpedia_id else None
         index_map = _entity_atom_index_map(compound_molecule, entity_smiles) if compound_molecule is not None and entity_smiles else None
         grouped = {}
+        atom_paths = {}
         for atom_index in carbon_indices:
             status = "unresolved"
             reason = "no-terpedia-identity"
@@ -328,12 +358,14 @@ def build_carbon_atom_audit(network_path: Path, lineage_path: Path, crosswalk_pa
                     status, reason = "candidate", "candidate-co2-lineage-or-identity"
                 else:
                     status, reason = "inferred", "rdkit-structural-co2-lineage"
+                if node in reachable:
+                    atom_paths[str(atom_index)] = co2_path(node)
             key = (status, reason, tuple(reaction_ids), tuple(provenance), entity_atom)
             grouped.setdefault(key, {"status": status, "reason": reason, "atom_indices": [], "entity_atom_indices": [], "reaction_ids": reaction_ids, "provenance": provenance})
             grouped[key]["atom_indices"].append(atom_index)
             grouped[key]["entity_atom_indices"].append(entity_atom)
             status_counts[status] += 1
-        atom_groups.append({"cannabisdb_id": compound["id"], "atom_index_namespace": "RDKit atom indices in the CannabisDB SMILES field", "carbon_atom_count": len(carbon_indices), "identity_status": identity_status, "terpedia_id": terpedia_id, "groups": list(grouped.values()), "claim_boundary": "Each group explicitly accounts for listed CannabisDB carbon atom indices; unresolved atoms are not assigned an origin."})
+        atom_groups.append({"cannabisdb_id": compound["id"], "atom_index_namespace": "RDKit atom indices in the CannabisDB SMILES field", "carbon_atom_count": len(carbon_indices), "identity_status": identity_status, "terpedia_id": terpedia_id, "groups": list(grouped.values()), "co2_paths": atom_paths, "claim_boundary": "Each group explicitly accounts for listed CannabisDB carbon atom indices; unresolved atoms are not assigned an origin."})
     report = {"schema": "cannabis-carbon.carbon-atom-audit.v1", "source_network": str(network_path), "source_lineage": str(lineage_path), "source_crosswalk": str(crosswalk_path), "source_compounds": str(compounds_path), "atom_index_namespace": "RDKit atom indices in each compound's CannabisDB SMILES field; these are not assumed to equal source-SDF atom ordering", "carbon_source_policy": lineage.get("carbon_source_policy"), "compound_count": len(compounds), "carbon_atoms_total": sum(item["carbon_atom_count"] for item in atom_groups), "status_counts": {status: status_counts[status] for status in ("supported", "candidate", "inferred", "unresolved")}, "compounds": atom_groups, "claim_boundary": "This is a structure-indexed provenance audit. Inferred and candidate statuses are not isotope tracing, enzyme validation, or proof of in-vivo cannabis biosynthesis."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")

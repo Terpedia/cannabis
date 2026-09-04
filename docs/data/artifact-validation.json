@@ -13,10 +13,10 @@
   "carbon_atoms_expected": 285623,
   "carbon_atoms_audited": 285623,
   "carbon_atom_status_counts": {
+    "unresolved": 284220,
     "supported": 1,
-    "candidate": 1402,
     "inferred": 0,
-    "unresolved": 284220
+    "candidate": 1402
   },
   "reactions_checked": 1107,
   "imbalanced_reaction_count": 0,
