@@ -340,6 +340,18 @@ carries total, reachable, unresolved, and reversible-upper-bound carbon counts
 plus the lineage blocker, so the assay queue can be ranked by missing carbon
 rather than compound count alone.
 
+## Terpedia forward hypothesis-edge layer
+
+The GCP table `terpedia-489015.terpedia_core.terpene_hypothetical_forward_connections`
+is published as `docs/data/hypothetical-forward-connections.json` and loaded as
+a separate Cytoscape layer. It currently contributes 1,901 source-directed
+connections (1,666 Rhea-derived and 235 MARTS-DB-derived) across 828 resolved
+Terpedia identity-set compounds. Purple dashed edges are candidate hypotheses
+only; they are not included in balanced reaction, completeness, or CO₂ lineage
+counts until source reaction, direction, atom balance, and enzyme evidence are
+validated. Each record retains GCP source fields, structure-match mode, reaction
+SMARTS, source enzyme/protein fields, and its claim boundary.
+
 ## Phase 1 balance gate
 
 The Phase 1 audit is stored in

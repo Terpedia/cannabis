@@ -98,4 +98,4 @@ def test_map_snapshot_includes_isolated_catalog_records(tmp_path):
     assert result["compounds"] == 3
     payload = json.loads(output.read_text())
     assert [c["id"] for c in payload["compounds"]] == ["m:a", "m:b", "c:isolated"]
-    assert payload["focus"] == {"co2_reachable_compounds": 0, "reaction_connected_compounds": 2, "all_inventory_compounds": 3}
+    assert payload["focus"] == {"co2_reachable_compounds": 0, "reaction_connected_compounds": 2, "hypothesis_connected_compounds": 0, "all_inventory_compounds": 3}
