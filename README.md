@@ -38,6 +38,9 @@ its source, reaction direction, atom-mapping method, and uncertainty.
   candidates, name candidates, and explicit no-match records; PubChem identity
   is evidence for structure reconciliation only, not evidence of Cannabis
   biosynthesis.
+- `data/reports/pubchem-chebi-xrefs.json` records explicit ChEBI references
+  extracted from PubChem PUG View for the 3,586 exact PubChem-resolved records;
+  it contributes only candidate identity evidence to the crosswalk.
 - `data/terpedia/cannabisdb-compounds.xml.gz` is the complete versioned
   CannabisDB XML source snapshot; `data/terpedia/cannabisdb-compounds.json`
   is its normalized Terpedia table, retaining structures, synonyms, external
@@ -99,6 +102,7 @@ pip install -e .
 cannabis-carbon download --out data/raw
 cannabis-carbon inspect-sdf data/raw/compounds.sdf
 cannabis-carbon pubchem-resolve docs/data/compounds.json
+cannabis-carbon pubchem-chebi-xrefs data/reports/pubchem-resolution.json
 ```
 
 The download command records the retrieval timestamp and SHA-256 checksums.

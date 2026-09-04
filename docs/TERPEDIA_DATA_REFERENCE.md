@@ -256,7 +256,7 @@ constitutes a demonstrated in-vivo pathway.
 
 The Pages visualization loads `docs/data/network-map-focus.json` by default,
 a compact view of 1,255 compounds: 196 CO₂-reachable compounds plus one-hop
-hypothesis context, 65 reaction records, and 3,438 hypothesis edges. The
+hypothesis context, 65 reaction records, and 3,450 hypothesis edges. The
 complete 10,111-compound/1,107-reaction
 projection, including all hypothesis edges, remains available at
 `docs/data/network-map.json`; the browser fallback graph is not the published
