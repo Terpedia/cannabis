@@ -133,6 +133,29 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [Phase 1 reference-discovery audit](data/phase1-reference-discovery.json)
+checks all 282 missing-reference variants against Terpedia's current normalized
+reaction catalog (282 exact reaction-ID/SMARTS matches) and reviewed, nonfragment
+UniProt entries. No returned annotation matches the exact requested directional
+Rhea ID. Explicit joins through the published Rhea direction-family table provide
+168 reference proteins for 125 variants. These are direction-unresolved search
+inputs, not newly screened Cannabis candidates, so the map's candidate-enzyme
+completeness counts remain unchanged.
+
+GCP snapshot table:
+`terpedia-489015.terpedia_core.cannabis_phase1_reference_discovery_20260904_v1`.
+It contains one row per gap variant, with separate exact-reference and
+direction-family-reference JSON columns, source catalog rows, direction mappings,
+sequence-search status and checksums. The reproducible local load source is
+`data/reports/phase1-reference-discovery.ndjson`; the full audit retains query URLs
+and raw snapshot checksums. The discovery module uses `bq` on PATH, or the
+`CANNABIS_BQ` environment override.
+
+Reference interpretation follows the [Rhea API documentation](https://www.rhea-db.org/help/rest-api)
+and its [published directional mapping](https://www.rhea-db.org/help/download).
+Reviewed annotations and direction-family membership do not establish a
+direction-specific Cannabis reaction or a complete pathway.
+
 The static map's Phase 1 evidence filter uses
 `docs/data/phase1-map-evidence.json`, joining exact reaction-ID/SMARTS variants
 without a name or reaction-family fallback. Its expansion-only denominator is

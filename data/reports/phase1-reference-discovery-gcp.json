@@ -1,0 +1,11 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_reference_discovery_20260904_v1",
+  "load_job_id": "bqjob_r5faf6efc9fbc62ea_000001a06e7c71ec_1",
+  "source": "data/reports/phase1-reference-discovery.ndjson",
+  "report_sha256": "c63261f696483b98f45892ee6e56b1a0b79f9de48c8c781ea8fdc0d012312817",
+  "verified_variants": 282,
+  "verified_variants_with_family_references": 125,
+  "verified_variants_with_exact_references": 0,
+  "verified_report_snapshots": 1,
+  "claim_boundary": "Published reference-discovery leads only; no new Cannabis sequence search or directional enzyme confirmation is asserted."
+}
