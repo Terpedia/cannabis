@@ -133,10 +133,10 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
-Targeted Phase 1 protein search: 97 UniProtKB references were retrieved for
-105 source protein identifiers; eight UniParc identifiers remain unresolved.
+Targeted Phase 1 protein search: all 105 source protein references were retrieved,
+including 97 UniProtKB and eight UniParc records.
 DIAMOND searched all 30,304 proteins in UP000583929. Of 491 balanced reaction
-variants, 163 have hits and 160 have candidates passing 30% identity and 50%
+variants, 178 have hits and 175 have candidates passing 30% identity and 50%
 coverage of both query and reference (E-value at most 1e-5). These correspond
 to 18 distinct Cannabis proteins. The report at
 `docs/data/phase1-targeted-protein-search.json` retains every balanced variant,
