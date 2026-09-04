@@ -13,6 +13,12 @@ def _structure_formula(entity: dict) -> tuple[dict[str, int] | None, int | None]
     smiles = entity.get("attributes", {}).get("canonicalSmiles")
     if not smiles:
         return None, None
+    # Rhea generic compounds use wildcard atoms (for example [1*]) and
+    # molecular formulas containing R.  Their atom counts are not concrete
+    # enough for a stoichiometric balance claim.
+    formula_text = entity.get("attributes", {}).get("molecularFormula", "")
+    if "*" in smiles or "R" in formula_text:
+        return None, entity.get("attributes", {}).get("formalCharge")
     mol = Chem.MolFromSmiles(smiles)
     if mol is None:
         return None, None
@@ -36,7 +42,7 @@ def _computed_balance(reaction_id: str, entities: dict, statements: list[dict]) 
         attrs = entity.get("attributes", {})
         if formula is None:
             formula_text = attrs.get("molecularFormula")
-            if formula_text and all(ch.isalpha() or ch.isdigit() for ch in formula_text):
+            if formula_text and "R" not in formula_text and all(ch.isalpha() or ch.isdigit() for ch in formula_text):
                 import re
                 formula = {symbol: int(count or 1) for symbol, count in re.findall(r"([A-Z][a-z]?)(\d*)", formula_text)}
             charge = attrs.get("formalCharge") if attrs.get("formalCharge") is not None else charge
