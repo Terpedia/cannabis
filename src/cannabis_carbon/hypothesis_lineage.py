@@ -204,6 +204,33 @@ def build_hypothesis_lineage(networkdb_path: Path, output: Path) -> dict:
     for row in target_rows:
         carbon_counts[row["status"]] += row["carbon_atom_count"]
     blocked_edges = Counter(edge.get("blocker") or "unspecified" for edge in edges if edge.get("status") == "unresolved")
+    carbon_source_gaps = []
+    seen_gaps = set()
+    for target in target_rows:
+        if target["status"] != "candidate":
+            continue
+        for step, mapping in zip(target["path"], target["atom_mapping"]):
+            accounting = mapping.get("carbon_input_accounting")
+            if not accounting:
+                continue
+            if accounting["status"] == "endpoint-carbon-count-compatible" and mapping.get("status") == "candidate":
+                continue
+            key = (target["cannabisdb_id"], step["reaction_id"], step["from_compound_id"], step["to_compound_id"])
+            if key in seen_gaps:
+                continue
+            seen_gaps.add(key)
+            carbon_source_gaps.append({
+                "cannabisdb_id": target["cannabisdb_id"],
+                "target_label": target["label"],
+                "reaction_id": step["reaction_id"],
+                "from_compound_id": step["from_compound_id"],
+                "to_compound_id": step["to_compound_id"],
+                "atom_mapping_status": mapping.get("status"),
+                "atom_mapping_reason": mapping.get("reason"),
+                "carbon_input_accounting": accounting,
+                "source_url": step.get("source_url"),
+            })
+    gap_status_counts = Counter(row["carbon_input_accounting"]["status"] for row in carbon_source_gaps)
     report = {
         "schema": "cannabis-carbon.hypothesis-lineage.v1",
         "source_networkdb": str(networkdb_path),
@@ -220,6 +247,13 @@ def build_hypothesis_lineage(networkdb_path: Path, output: Path) -> dict:
             "candidate_carbon_atoms_with_complete_atom_paths": sum(row["carbon_atom_count"] for row in target_rows if row["atom_mapping_status"] == "complete-candidate"),
         },
         "blocked_unresolved_hypothesis_edges": dict(sorted(blocked_edges.items())),
+        "carbon_source_gap_summary": {
+            "path_steps_with_explicit_carbon_gaps": len(carbon_source_gaps),
+            "status_counts": dict(sorted(gap_status_counts.items())),
+            "missing_input_carbon_atoms": sum(row["carbon_input_accounting"]["missing_input_carbon_atoms"] for row in carbon_source_gaps),
+            "product_carbon_deficit_atoms": sum(max(0, row["carbon_input_accounting"]["endpoint_carbon_delta"]) for row in carbon_source_gaps if row["carbon_input_accounting"]["status"] == "product-carbon-deficit"),
+        },
+        "carbon_source_gaps": carbon_source_gaps,
         "targets": target_rows,
         "claim_boundary": "Candidate paths are source-linked structural hypotheses, not confirmed enzyme activity, isotope tracing, or proof of in-vivo Cannabis biosynthesis. Unresolved edges are not traversed.",
     }

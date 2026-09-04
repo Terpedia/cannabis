@@ -377,7 +377,10 @@ those edges remain candidate hypotheses and do not assert in-vivo activity.
 Candidate-path atom reports also expose endpoint carbon deltas and the carbon
 count of required or missing cosubstrates. This keeps methylation and other
 multi-substrate steps unresolved when the new carbon is not itself connected
-to the CO₂ lineage.
+to the CO₂ lineage. The same report now includes a deduplicated
+`carbon_source_gaps` queue: 22 candidate path steps are flagged, with 529
+missing input-carbon atoms and one product-carbon deficit, for targeted
+substrate/reaction curation.
 The GCP `terpene_enzyme_reaction_gene_evidence` table is preserved in
 `docs/data/terpene-enzyme-reaction-gene-evidence.json` (4,639 records) and
 attached to 502 hypothesis connections by MARTS reaction ID. It includes
