@@ -41,6 +41,10 @@
           ,"candidate_expansion_bridges_touching_directed_co2": 0
           ,"candidate_expansion_bridges_touching_reversible_co2": 2308
           ,"candidate_expansion_bridge_reaction_records": 90
+          ,"candidate_expansion_carbon_mapping_snapshot": "data/reports/terpene-identity-set-candidate-expansion-carbon-mapping.json"
+          ,"candidate_expansion_carbon_mapping_pairs": 6607
+          ,"candidate_expansion_carbon_mapped_atoms": 251320
+          ,"candidate_expansion_carbon_unresolved_atoms": 4060
         },
         {
           "table": "terpedia-489015.terpedia_core.terpene_biotransformation_hypothetical_connections_current_v2",

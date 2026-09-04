@@ -429,3 +429,24 @@ def build_candidate_expansion_bridges(expansion_path: Path, network_path: Path, 
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, separators=(",", ":")) + "\n")
     return {key: result[key] for key in ("bridge_count", "distinct_expansion_products", "distinct_expansion_precursors", "bridges_touching_co2_reachable_core")}
+
+
+def build_candidate_expansion_carbon_mapping(expansion_path: Path, bridges_path: Path, output: Path) -> dict:
+    """Map conserved product carbons for structure-matched candidate expansion pairs."""
+    expansion = json.loads(expansion_path.read_text())
+    bridges = json.loads(bridges_path.read_text()).get("bridges", [])
+    wanted = {(b.get("product_terpene_id"), b.get("precursor_terpene_id"), b.get("reaction_id"), b.get("expansion_depth")) for b in bridges}
+    source_rows = {}
+    for row in expansion.get("rows", []):
+        key = (row.get("product_terpene_id"), row.get("precursor_terpene_id"), row.get("reaction_id"), row.get("expansion_depth"))
+        if key in wanted and key not in source_rows:
+            source_rows[key] = row
+    rows = []
+    for key, row in source_rows.items():
+        mapping = map_identity_pair_smiles(row.get("precursor_smiles"), row.get("product_smiles"))
+        rows.append({"product_terpene_id": row.get("product_terpene_id"), "precursor_terpene_id": row.get("precursor_terpene_id"), "reaction_id": row.get("reaction_id"), "expansion_depth": row.get("expansion_depth"), "source_type": row.get("source_type"), "source_url": row.get("source_url"), "source_uniprot_id": row.get("source_uniprot_id"), "status": mapping.get("status", "unresolved"), "product_carbon_atom_count": mapping.get("product_carbon_atom_count", 0), "mapped_product_carbon_atoms": len(mapping.get("mappings", [])), "unresolved_product_carbon_atoms": len(mapping.get("unresolved_product_carbons", [])), "mapping_reason": mapping.get("reason"), "mappings": mapping.get("mappings", []), "unresolved_product_carbons": mapping.get("unresolved_product_carbons", []), "claim_boundary": "RDKit identity-pair correspondence is structural evidence only; it does not establish isotope tracing, enzyme activity, physiological direction, or CO2 provenance."})
+    rows.sort(key=lambda row: (row.get("expansion_depth", 0), row.get("product_terpene_id") or "", row.get("reaction_id") or ""))
+    result = {"schema": "cannabis-carbon.terpene-identity-set-candidate-expansion-carbon-mapping.v1", "source_expansion": str(expansion_path), "source_bridges": str(bridges_path), "mapping_method": "RDKit identity-pair carbon-skeleton correspondence on unique structure-matched candidate expansion pairs", "pair_count": len(rows), "status_counts": dict(sorted(Counter(row["status"] for row in rows).items())), "mapped_product_carbon_atoms": sum(row["mapped_product_carbon_atoms"] for row in rows), "unresolved_product_carbon_atoms": sum(row["unresolved_product_carbon_atoms"] for row in rows), "rows": rows, "claim_boundary": "Candidate expansion carbon mappings are source-linked structural hypotheses and remain separate from the directed CO2 lineage."}
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(result, separators=(",", ":")) + "\n")
+    return {key: result[key] for key in ("pair_count", "mapped_product_carbon_atoms", "unresolved_product_carbon_atoms", "status_counts")}
