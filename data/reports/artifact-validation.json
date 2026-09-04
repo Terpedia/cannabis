@@ -16,8 +16,8 @@
   "carbon_atoms_audited": 285623,
   "carbon_atom_status_counts": {
     "supported": 1,
-    "inferred": 0,
     "unresolved": 284201,
+    "inferred": 0,
     "candidate": 1421
   },
   "reactions_checked": 1107,

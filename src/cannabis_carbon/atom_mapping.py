@@ -10,6 +10,10 @@ from rdkit import RDLogger
 
 RDLogger.DisableLog("rdApp.warning")
 
+# A single documented bound keeps repeated report generation comparable while
+# preventing pathological MCS searches from running without limit.
+MCS_TIMEOUT_SECONDS = 10
+
 
 def _molecules(side: str) -> list[Chem.Mol]:
     molecules = []
@@ -45,7 +49,7 @@ def _mcs_carbon_candidates_cached(reactant_smiles: str, product_smiles: str, pro
         bondCompare=rdFMCS.BondCompare.CompareAny,
         ringMatchesRingOnly=False,
         completeRingsOnly=False,
-        timeout=1,
+        timeout=MCS_TIMEOUT_SECONDS,
     )
     if result.canceled or result.numAtoms < 2:
         return ()
@@ -109,7 +113,7 @@ def _full_carbon_mcs_mapping(reactants: list[Chem.Mol], products: list[Chem.Mol]
     product_carbons = [a.GetIdx() for a in product.GetAtoms() if a.GetAtomicNum() == 6]
     if len(reactant_carbons) != len(product_carbons):
         return None
-    result = rdFMCS.FindMCS([reactant, product], atomCompare=rdFMCS.AtomCompare.CompareElements, bondCompare=rdFMCS.BondCompare.CompareAny, ringMatchesRingOnly=False, completeRingsOnly=False, timeout=2)
+    result = rdFMCS.FindMCS([reactant, product], atomCompare=rdFMCS.AtomCompare.CompareElements, bondCompare=rdFMCS.BondCompare.CompareAny, ringMatchesRingOnly=False, completeRingsOnly=False, timeout=MCS_TIMEOUT_SECONDS)
     if result.canceled or result.numAtoms < len(product_carbons):
         return None
     query = Chem.MolFromSmarts(result.smartsString)
@@ -190,7 +194,7 @@ def _full_carbon_skeleton_mapping(reactants: list[Chem.Mol], products: list[Chem
     product_skeleton, product_indices = _carbon_skeleton(product)
     if len(product_indices) > len(reactant_indices):
         return None
-    result = rdFMCS.FindMCS([reactant_skeleton, product_skeleton], atomCompare=rdFMCS.AtomCompare.CompareElements, bondCompare=rdFMCS.BondCompare.CompareAny, ringMatchesRingOnly=False, completeRingsOnly=False, timeout=2)
+    result = rdFMCS.FindMCS([reactant_skeleton, product_skeleton], atomCompare=rdFMCS.AtomCompare.CompareElements, bondCompare=rdFMCS.BondCompare.CompareAny, ringMatchesRingOnly=False, completeRingsOnly=False, timeout=MCS_TIMEOUT_SECONDS)
     if result.canceled or result.numAtoms != len(product_indices):
         return None
     query = Chem.MolFromSmarts(result.smartsString)
@@ -226,7 +230,7 @@ def map_identity_pair_smiles(reactant_smiles: str | None, product_smiles: str | 
     if count_delta or not matches:
         # A bounded carbon-only MCS preserves a unique retained fragment even
         # when the pair gains/losses carbons or changes ring connectivity.
-        result = rdFMCS.FindMCS([reactant_skeleton, product_skeleton], atomCompare=rdFMCS.AtomCompare.CompareElements, bondCompare=rdFMCS.BondCompare.CompareAny, ringMatchesRingOnly=False, completeRingsOnly=False, timeout=1)
+        result = rdFMCS.FindMCS([reactant_skeleton, product_skeleton], atomCompare=rdFMCS.AtomCompare.CompareElements, bondCompare=rdFMCS.BondCompare.CompareAny, ringMatchesRingOnly=False, completeRingsOnly=False, timeout=MCS_TIMEOUT_SECONDS)
         query = Chem.MolFromSmarts(result.smartsString) if not result.canceled and result.numAtoms >= 2 else None
         reactant_matches = reactant_skeleton.GetSubstructMatches(query, uniquify=True) if query is not None else ()
         product_matches = product_skeleton.GetSubstructMatches(query, uniquify=True) if query is not None else ()
@@ -485,27 +489,48 @@ def apply_reaction_specific_candidate_mapping(reaction_id: str, reaction_smiles:
     supported_reactions = {
         "cannabis:reaction:tetraketide-coa-to-olivetolate",
         "cannabis:reaction:butyryl-coa-to-divarinolic-acid",
+        "cannabis:reaction:tks-hexanoyl-coa-to-tetraketide-coa",
     }
     if reaction_id not in supported_reactions or not reaction_smiles or ">>" not in reaction_smiles:
         return mapping
     left, right = reaction_smiles.split(">>", 1)
     reactants, products = _molecules(left), _molecules(right)
+    polyketide_decarboxylation = reaction_id in {
+        "cannabis:reaction:tetraketide-coa-to-olivetolate",
+        "cannabis:reaction:butyryl-coa-to-divarinolic-acid",
+        "cannabis:reaction:tks-hexanoyl-coa-to-tetraketide-coa",
+    }
+    malonyl_carboxyl_candidates = []
+    if polyketide_decarboxylation:
+        reactant_smiles = [Chem.MolToSmiles(reactant) for reactant in reactants]
+        repeated_substrates = {smiles for smiles in reactant_smiles if reactant_smiles.count(smiles) >= 3}
+        for ri, reactant in enumerate(reactants):
+            if reactant_smiles[ri] not in repeated_substrates:
+                continue
+            for atom in reactant.GetAtoms():
+                if atom.GetAtomicNum() == 6 and sum(neighbor.GetAtomicNum() == 8 for neighbor in atom.GetNeighbors()) >= 2:
+                    malonyl_carboxyl_candidates.append((ri, atom.GetIdx()))
     for row in mapping.get("mappings", []):
-        if row.get("status") != "unresolved" or row.get("product_index") != 0:
+        if row.get("status") != "unresolved":
             continue
         choices = set()
         product = products[row["product_index"]]
-        for ri, reactant in enumerate(reactants):
-            for _, atom in _mcs_carbon_candidates_cached(Chem.MolToSmiles(reactant), Chem.MolToSmiles(product), row["product_atom"]):
-                choices.add((ri, atom))
+        if row.get("product_index") == 0:
+            for ri, reactant in enumerate(reactants):
+                for _, atom in _mcs_carbon_candidates_cached(Chem.MolToSmiles(reactant), Chem.MolToSmiles(product), row["product_atom"]):
+                    choices.add((ri, atom))
+        elif polyketide_decarboxylation and Chem.MolToSmiles(product) == "O=C=O":
+            choices.update(malonyl_carboxyl_candidates)
         if not choices:
             continue
         alternatives = [{"reactant_index": ri, "reactant_atom": atom} for ri, atom in sorted(choices)]
-        row.update({"reactant_index": alternatives[0]["reactant_index"], "reactant_atom": alternatives[0]["reactant_atom"], "status": "candidate", "method": "rdkit-targeted-pairwise-mcs-candidate", "alternatives": alternatives})
+        method = "rdkit-targeted-polyketide-decarboxylation-candidate" if row.get("product_index") != 0 else "rdkit-targeted-pairwise-mcs-candidate"
+        row.update({"reactant_index": alternatives[0]["reactant_index"], "reactant_atom": alternatives[0]["reactant_atom"], "status": "candidate", "method": method, "alternatives": alternatives})
         row.pop("reason", None)
     unresolved = [{"product_index": row["product_index"], "product_atom": row["product_atom"], "status": row["status"], "reason": row.get("reason")} for row in mapping.get("mappings", []) if row.get("status") not in ("inferred", "candidate")]
     mapping["unresolved_product_carbons"] = unresolved
     mapping["status"] = "unresolved" if unresolved else "candidate" if any(row.get("status") == "candidate" for row in mapping.get("mappings", [])) else mapping.get("status", "inferred")
-    if any(row.get("method") == "rdkit-targeted-pairwise-mcs-candidate" for row in mapping.get("mappings", [])):
-        mapping["targeted_mapping"] = "rdkit-targeted-pairwise-mcs-candidate"
+    targeted_methods = {row.get("method") for row in mapping.get("mappings", []) if row.get("method", "").startswith("rdkit-targeted-")}
+    if targeted_methods:
+        mapping["targeted_mapping"] = sorted(targeted_methods)
     return mapping
