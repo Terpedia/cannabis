@@ -7,7 +7,7 @@ from pathlib import Path
 from .terpedia import load_network
 
 
-def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None, crosswalk_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None) -> dict:
+def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None, crosswalk_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None, hypotheses_path: Path | None = None) -> dict:
     network = load_network(network_path)
     entities = {e["id"]: e for e in network["entities"]}
     metabolites = {i for i, e in entities.items() if e.get("type") == "metabolite"}
@@ -18,6 +18,11 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
         elif s["predicate"] == "has_product" and s["subjectId"] in reactions: product_metabolites.add(s["objectEntityId"])
         elif s["predicate"] in ("catalyzes", "maps_to_reaction") and s["objectEntityId"] in reactions: enzyme_reactions.add(s["objectEntityId"])
     compounds = json.loads(compounds_path.read_text())["compounds"]
+    candidate_reactions = set()
+    if hypotheses_path and hypotheses_path.exists():
+        hypotheses = json.loads(hypotheses_path.read_text())
+        candidate_reactions = {item.get("reaction_id") for item in hypotheses.get("items", []) if item.get("reaction_id") and item.get("candidate_proteins")}
+    no_enzyme_reactions = reactions - enzyme_reactions
     result = {
         "schema": "cannabis-carbon.completeness.v1",
         "terpedia": {
@@ -26,7 +31,9 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
             "metabolites_without_reactions": len(metabolites - reactant_metabolites - product_metabolites),
             "reactions_total": len(reactions),
             "reactions_with_enzyme_association": len(enzyme_reactions),
-            "reactions_without_enzyme_association": len(reactions - enzyme_reactions),
+            "reactions_without_enzyme_association": len(no_enzyme_reactions),
+            "reactions_without_enzyme_with_candidate_proteins": len(no_enzyme_reactions & candidate_reactions),
+            "reactions_without_enzyme_without_candidate_proteins": len(no_enzyme_reactions - candidate_reactions),
             "metabolite_ids_without_reactions": sorted(metabolites - reactant_metabolites - product_metabolites),
             "reaction_ids_without_enzyme_association": sorted(reactions - enzyme_reactions),
         },

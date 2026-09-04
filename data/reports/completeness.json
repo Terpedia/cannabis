@@ -7,6 +7,8 @@
     "reactions_total": 1093,
     "reactions_with_enzyme_association": 934,
     "reactions_without_enzyme_association": 159,
+    "reactions_without_enzyme_with_candidate_proteins": 6,
+    "reactions_without_enzyme_without_candidate_proteins": 153,
     "metabolite_ids_without_reactions": [
       "chebi:139069",
       "chebi:139070",

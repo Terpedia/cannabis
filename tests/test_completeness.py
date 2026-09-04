@@ -31,3 +31,26 @@ def test_completeness_can_include_co2_lineage(tmp_path):
     lineage_path.write_text(json.dumps({"target_summary": {"supported": 1}, "reachable_carbon_nodes": 2, "resolved_carbon_edges": 1, "inferred_carbon_edges": 1, "candidate_carbon_edges": 0, "external_carbon_input_entity_count": 3, "carbon_source_policy": "CO2 only"}))
     result = compute_completeness(network_path, compounds_path, lineage_path=lineage_path)
     assert result["coverage"]["co2_lineage"]["target_summary"]["supported"] == 1
+
+
+def test_completeness_splits_unannotated_reactions_by_candidate_proteins(tmp_path):
+    network = {"entities": [
+        {"id": "m:a", "type": "metabolite"}, {"id": "m:b", "type": "metabolite"},
+        {"id": "r:1", "type": "biochemical_reaction"},
+        {"id": "r:2", "type": "biochemical_reaction"},
+    ], "statements": [
+        {"subjectId": "r:1", "predicate": "has_reactant", "objectEntityId": "m:a"},
+        {"subjectId": "r:1", "predicate": "has_product", "objectEntityId": "m:b"},
+        {"subjectId": "r:2", "predicate": "has_reactant", "objectEntityId": "m:a"},
+        {"subjectId": "r:2", "predicate": "has_product", "objectEntityId": "m:b"},
+    ]}
+    network_path = tmp_path / "network.json.gz"
+    with gzip.open(network_path, "wt") as handle: json.dump(network, handle)
+    compounds_path = tmp_path / "compounds.json"
+    compounds_path.write_text(json.dumps({"compounds": []}))
+    hypotheses_path = tmp_path / "hypotheses.json"
+    hypotheses_path.write_text(json.dumps({"items": [{"reaction_id": "r:1", "candidate_proteins": [{"id": "p:1"}]}]}))
+    result = compute_completeness(network_path, compounds_path, hypotheses_path=hypotheses_path)
+    assert result["terpedia"]["reactions_without_enzyme_association"] == 2
+    assert result["terpedia"]["reactions_without_enzyme_with_candidate_proteins"] == 1
+    assert result["terpedia"]["reactions_without_enzyme_without_candidate_proteins"] == 1
