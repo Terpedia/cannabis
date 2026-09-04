@@ -1,0 +1,16 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_new_references_20260904_v1",
+  "load_job_id": "bqjob_r3428a3662378c092_000001a06ec25627_1",
+  "source": "data/reports/phase1-new-references.ndjson",
+  "report_sha256": "fa73c6b944dfbc647eef6c952daa9f132c589c4f0364a34b179713de431f6da3",
+  "verified_equation_gap_statuses": {
+    "references-found": 1140,
+    "no-reviewed-reference-returned": 258,
+    "not-searched-in-priority-pass": 1169
+  },
+  "verified_reference_proteins": 4653,
+  "verified_retrieved_lookups": 48,
+  "verified_unique_ids_equal_record_count_in_each_group": true,
+  "verified_report_snapshots_per_group": 1,
+  "claim_boundary": "Reviewed protein-reference annotations, not confirmed Cannabis enzymes, producing direction or CO2 pathways."
+}

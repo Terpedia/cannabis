@@ -133,6 +133,30 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [new carbon-target enzyme-reference discovery](data/phase1-new-references.json)
+retains all 3,000 carbon-bearing one-step hypotheses lacking attached candidate
+enzyme evidence, grouped into 2,567 balanced equations. It prioritizes the 330
+targets with no candidate-supported alternative. Queries covered 1,188 explicit
+Rhea master families in 48 successful UniProt batches, restricted to reviewed,
+non-fragment records. Returned annotations are joined through the checksum-verified
+published Rhea direction-family table, never guessed from adjacent numeric IDs.
+
+Reference leads were found for 1,140 gap equations and 276 of the 330 priority
+targets, involving 4,653 distinct reference proteins. These are **reference
+annotations, not newly identified Cannabis proteins**. Exact source-ID matches
+and family-only matches remain separate; neither establishes the producing
+direction required by a hypothesis. Unqueried alternative gaps and queries
+without matching references are retained explicitly. Next: validate reference
+sequences, screen the full Cannabis proteome, and evaluate substrate specificity.
+The live graph's candidate-enzyme counts are not inflated by these references.
+
+GCP snapshot:
+`terpedia-489015.terpedia_core.cannabis_phase1_new_references_20260904_v1`.
+Reaction-gap rows, reference protein annotations, lookup URLs and snapshot
+checksums are retained in `data/reports/phase1-new-references.ndjson` and the
+published report. Regenerate via
+`PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_new_references`.
+
 The [interactive balanced-hypothesis map](hypotheses.html) now exposes this
 catalog directly in Cytoscape. Search by label or CannabisDB ID, filter by
 attached candidate enzyme evidence, and select one hypothesis. All 6,220 records
