@@ -39,6 +39,7 @@ def _direction_evidence(network: dict) -> tuple[dict, list[str]]:
     conflicts = []
     by_reaction = defaultdict(set)
     statement_sources = {}
+    directional_rhea_ids = defaultdict(set)
     for statement in network["statements"]:
         predicate = statement.get("predicate")
         if predicate not in ("physiological_direction_left_to_right", "physiological_direction_right_to_left"):
@@ -46,11 +47,17 @@ def _direction_evidence(network: dict) -> tuple[dict, list[str]]:
         reaction_id = statement.get("subjectId")
         by_reaction[reaction_id].add(predicate)
         statement_sources[reaction_id] = (statement.get("sources") or [{}])[0].get("url")
+        for support in (statement.get("qualifiers") or {}).get("support", []):
+            directional_id = support.get("directionalRheaId")
+            if directional_id:
+                directional_rhea_ids[reaction_id].add(str(directional_id))
     for reaction_id, predicates in by_reaction.items():
         if len(predicates) > 1:
             conflicts.append(reaction_id)
         elif "physiological_direction_right_to_left" in predicates:
-            directions[reaction_id] = {"directional_rhea_id": None, "orientation": "reverse_master", "source": statement_sources.get(reaction_id), "reason": "Terpedia physiological direction statement"}
+            directions[reaction_id] = {"directional_rhea_id": next(iter(directional_rhea_ids[reaction_id]), None), "orientation": "reverse_master", "source": statement_sources.get(reaction_id), "reason": "Terpedia physiological direction statement"}
+        else:
+            directions[reaction_id] = {"directional_rhea_id": next(iter(directional_rhea_ids[reaction_id]), None), "orientation": "master", "source": statement_sources.get(reaction_id), "reason": "Terpedia physiological direction statement"}
     return directions, conflicts
 
 

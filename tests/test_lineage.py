@@ -41,6 +41,19 @@ def test_lineage_accepts_direction_override_file(tmp_path):
     assert json.loads(output.read_text())["direction_overrides"]["rhea:test"]["directional_rhea_id"] == "rhea:test-forward"
 
 
+def test_direction_evidence_retains_uniprot_directional_rhea_id():
+    from cannabis_carbon.lineage import _direction_evidence
+
+    network = {"statements": [{
+        "subjectId": "rhea:test", "predicate": "physiological_direction_right_to_left",
+        "sources": [{"url": "https://example.test/uniprot"}],
+        "qualifiers": {"support": [{"directionalRheaId": "12346"}]},
+    }]}
+    directions, conflicts = _direction_evidence(network)
+    assert not conflicts
+    assert directions["rhea:test"] == {"directional_rhea_id": "12346", "orientation": "reverse_master", "source": "https://example.test/uniprot", "reason": "Terpedia physiological direction statement"}
+
+
 def test_lineage_uses_rdkit_carbon_atom_indices_for_targets(tmp_path):
     co2 = {"id": "chebi:16526", "type": "metabolite", "attributes": {"canonicalSmiles": "O=C=O"}}
     network = {
