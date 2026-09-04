@@ -29,6 +29,7 @@ from .validate import validate_artifacts
 from .pubchem import resolve_pubchem
 from .cannabisdb_xml import enrich_compounds_with_xrefs, extract_terpedia_table
 from .identity_set import refresh_identity_set
+from .identity_set_paths import refresh_identity_set_upstream
 
 DOWNLOADS = {
     "compounds.sdf": "https://cannabisdatabase.ca/simple/download_compound_as_sdf",
@@ -215,6 +216,10 @@ def main() -> None:
     p_identity_refresh.add_argument("compounds", type=Path, default=Path("docs/data/compounds.json"), nargs="?")
     p_identity_refresh.add_argument("--out", type=Path, default=Path("data/reports/terpene-identity-set-match.json"))
     p_identity_refresh.add_argument("--bq", default="bq")
+    p_identity_upstream = sub.add_parser("refresh-identity-set-upstream")
+    p_identity_upstream.add_argument("compounds", type=Path, default=Path("docs/data/compounds.json"), nargs="?")
+    p_identity_upstream.add_argument("--out", type=Path, default=Path("data/reports/terpedia-identity-set-upstream.json"))
+    p_identity_upstream.add_argument("--bq", default="bq")
     p_table = sub.add_parser("extract-cannabisdb-table")
     p_table.add_argument("xml", type=Path)
     p_table.add_argument("--out", type=Path, default=Path("data/terpedia/cannabisdb-compounds.json"))
@@ -282,6 +287,8 @@ def main() -> None:
         print(json.dumps(enrich_compounds_with_xrefs(args.xml, args.compounds, args.out, args.report), indent=2))
     elif args.command == "refresh-identity-set":
         print(json.dumps(refresh_identity_set(args.compounds, args.out, args.bq), indent=2))
+    elif args.command == "refresh-identity-set-upstream":
+        print(json.dumps(refresh_identity_set_upstream(args.compounds, args.out, args.bq), indent=2))
     elif args.command == "extract-cannabisdb-table":
         print(json.dumps(extract_terpedia_table(args.xml, args.out, args.report), indent=2))
 

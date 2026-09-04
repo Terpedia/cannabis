@@ -297,6 +297,13 @@ evidence of endogenous Cannabis biosynthesis or pathway direction.
 When available, each CannabisDB record also carries the exact-InChIKey PubChem
 resolution status and CID/structure properties; unresolved PubChem queries are
 retained as explicit negatives rather than being treated as missing data.
+The focused upstream evidence queue
+(`data/terpedia-identity-set-upstream.json`) joins current Terpedia metabolic-map
+edges to exact identity-set matches. It currently contains 3,401 edges, 87
+identity-set target structures, 1,373 precursor identities, and 364 reactions.
+It remains separate from the balanced reaction catalog and CO₂ lineage until
+each edge receives stoichiometric, direction, enzyme, and RDKit atom-mapping
+review.
 Each CannabisDB compound record carries its CO₂-lineage status and reachable
 carbon-atom count, and NetworkDB links to the complete atom-level audit.
 Every one of the 1,107 working reaction records also carries a carbon-mapping
