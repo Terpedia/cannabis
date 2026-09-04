@@ -80,6 +80,51 @@
       "source_url": "https://cannabisdatabase.ca"
     },
     {
+      "id": "cannabisdb:CDB000003",
+      "type": "metabolite",
+      "label": "Cannabigerol",
+      "attributes": {"molecularFormula": "C21H32O2", "formalCharge": 0, "canonicalSmiles": "CCCCCC1=CC(O)=C(C\\C=C(/C)CCC=C(C)C)C(O)=C1", "sourceRecordId": "CDB000003"},
+      "url": "https://cannabisdatabase.ca",
+      "source": "Cannabis Compound Database",
+      "source_url": "https://cannabisdatabase.ca"
+    },
+    {
+      "id": "cannabisdb:CDB000014",
+      "type": "metabolite",
+      "label": "Cannabidivarinic acid",
+      "attributes": {"molecularFormula": "C20H26O4", "formalCharge": 0, "canonicalSmiles": "[H][C@]1(CCC(C)=C[C@@]1([H])C1=C(O)C=C(CCC)C(C(O)=O)=C1O)C(C)=C", "sourceRecordId": "CDB000014"},
+      "url": "https://cannabisdatabase.ca",
+      "source": "Cannabis Compound Database",
+      "source_url": "https://cannabisdatabase.ca"
+    },
+    {
+      "id": "cannabisdb:CDB000015",
+      "type": "metabolite",
+      "label": "Cannabidivarin",
+      "attributes": {"molecularFormula": "C19H26O2", "formalCharge": 0, "canonicalSmiles": "[H][C@]1(CCC(C)=C[C@@]1([H])C1=C(O)C=C(CCC)C=C1O)C(C)=C", "sourceRecordId": "CDB000015"},
+      "url": "https://cannabisdatabase.ca",
+      "source": "Cannabis Compound Database",
+      "source_url": "https://cannabisdatabase.ca"
+    },
+    {
+      "id": "cannabisdb:CDB000020",
+      "type": "metabolite",
+      "label": "Delta-9-tetrahydrocannabivarinic acid",
+      "attributes": {"molecularFormula": "C20H26O4", "formalCharge": 0, "canonicalSmiles": "[H][C@@]12CCC(C)=C[C@@]1([H])C1=C(OC2(C)C)C=C(CCC)C(C(O)=O)=C1O", "sourceRecordId": "CDB000020"},
+      "url": "https://cannabisdatabase.ca",
+      "source": "Cannabis Compound Database",
+      "source_url": "https://cannabisdatabase.ca"
+    },
+    {
+      "id": "cannabisdb:CDB000021",
+      "type": "metabolite",
+      "label": "Delta-9-tetrahydrocannabivarin",
+      "attributes": {"molecularFormula": "C19H26O2", "formalCharge": 0, "canonicalSmiles": "[H][C@@]12C=C(C)CC[C@@]1([H])C(C)(C)OC1=CC(CCC)=CC(O)=C21", "sourceRecordId": "CDB000021"},
+      "url": "https://cannabisdatabase.ca",
+      "source": "Cannabis Compound Database",
+      "source_url": "https://cannabisdatabase.ca"
+    },
+    {
       "id": "chebi:66955",
       "type": "metabolite",
       "label": "olivetolic acid",
@@ -222,6 +267,36 @@
       "url": "https://pubmed.ncbi.nlm.nih.gov/36432817/",
       "source": "Cannabis cannabinoid profiling and decarboxylation study",
       "source_url": "https://pubmed.ncbi.nlm.nih.gov/36432817/"
+    },
+    {
+      "id": "cannabis:reaction:cbga-decarboxylation",
+      "type": "biochemical_reaction",
+      "label": "Cannabigerolic acid = cannabigerol + CO2 (non-enzymatic decarboxylation)",
+      "identifiers": {"curationId": "cbga-decarboxylation"},
+      "attributes": {"equation": "cannabisdb:CDB000018 = cannabisdb:CDB000003 + CHEBI:16526", "reactionSmiles": "CCCCCC1=CC(O)=C(CC=C(C)CCC=C(C)C)C(O)=C1C(O)=O>>CCCCCC1=CC(O)=C(C\\C=C(/C)CCC=C(C)C)C(O)=C1.O=C=O", "ecNumbers": [], "reactionClass": "non-enzymatic-decarboxylation", "conditions": "thermal/storage or other decarboxylating conditions", "sourceEvidence": "Acidic cannabinoids including CBGA decarboxylate with CO2 release; this is a chemical conversion, not an endogenous enzyme claim."},
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36432817/",
+      "source": "Cannabis cannabinoid profiling and decarboxylation study",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/36432817/"
+    },
+    {
+      "id": "cannabis:reaction:cbdva-decarboxylation",
+      "type": "biochemical_reaction",
+      "label": "Cannabidivarinic acid = cannabidivarin + CO2 (non-enzymatic decarboxylation)",
+      "identifiers": {"curationId": "cbdva-decarboxylation"},
+      "attributes": {"equation": "cannabisdb:CDB000014 = cannabisdb:CDB000015 + CHEBI:16526", "reactionSmiles": "[H][C@]1(CCC(C)=C[C@@]1([H])C1=C(O)C=C(CCC)C(C(O)=O)=C1O)C(C)=C>>[H][C@]1(CCC(C)=C[C@@]1([H])C1=C(O)C=C(CCC)C=C1O)C(C)=C.O=C=O", "ecNumbers": [], "reactionClass": "non-enzymatic-decarboxylation", "conditions": "thermal/storage or other decarboxylating conditions", "sourceEvidence": "Varinic acidic cannabinoids decarboxylate with CO2 release; this is a chemical conversion, not an endogenous enzyme claim."},
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36432817/",
+      "source": "Cannabis cannabinoid profiling and decarboxylation study",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/36432817/"
+    },
+    {
+      "id": "cannabis:reaction:thcv-decarboxylation",
+      "type": "biochemical_reaction",
+      "label": "Delta-9-tetrahydrocannabivarinic acid = delta-9-tetrahydrocannabivarin + CO2 (non-enzymatic decarboxylation)",
+      "identifiers": {"curationId": "thcv-decarboxylation"},
+      "attributes": {"equation": "cannabisdb:CDB000020 = cannabisdb:CDB000021 + CHEBI:16526", "reactionSmiles": "[H][C@@]12CCC(C)=C[C@@]1([H])C1=C(OC2(C)C)C=C(CCC)C(C(O)=O)=C1O>>[H][C@@]12C=C(C)CC[C@@]1([H])C(C)(C)OC1=CC(CCC)=CC(O)=C21.O=C=O", "ecNumbers": [], "reactionClass": "non-enzymatic-decarboxylation", "conditions": "thermal/storage or other decarboxylating conditions", "sourceEvidence": "Varinic acidic cannabinoids including THCVA decarboxylate with CO2 release; this is a chemical conversion, not an endogenous enzyme claim."},
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36432817/",
+      "source": "Cannabis cannabinoid profiling and decarboxylation study",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/36432817/"
     }
   ],
   "statements": [
@@ -271,6 +346,18 @@
     {"subjectId": "cannabis:reaction:thca-decarboxylation", "predicate": "has_product", "objectEntityId": "chebi:16526", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "CO2 release"}]},
     {"subjectId": "cannabis:reaction:cbca-decarboxylation", "predicate": "has_reactant", "objectEntityId": "cannabisdb:CDB000398", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "observed cannabinoid decarboxylation"}]},
     {"subjectId": "cannabis:reaction:cbca-decarboxylation", "predicate": "has_product", "objectEntityId": "cannabisdb:CDB000007", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "observed cannabinoid decarboxylation"}]},
-    {"subjectId": "cannabis:reaction:cbca-decarboxylation", "predicate": "has_product", "objectEntityId": "chebi:16526", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "CO2 release"}]}
+    {"subjectId": "cannabis:reaction:cbca-decarboxylation", "predicate": "has_product", "objectEntityId": "chebi:16526", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "CO2 release"}]},
+    {"subjectId": "cannabis:reaction:cbga-decarboxylation", "predicate": "has_reactant", "objectEntityId": "cannabisdb:CDB000018", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "observed cannabinoid decarboxylation"}]},
+    {"subjectId": "cannabis:reaction:cbga-decarboxylation", "predicate": "has_product", "objectEntityId": "cannabisdb:CDB000003", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "observed cannabinoid decarboxylation"}]},
+    {"subjectId": "cannabis:reaction:cbga-decarboxylation", "predicate": "has_product", "objectEntityId": "chebi:16526", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "CO2 release"}]},
+    {"subjectId": "cannabis:reaction:cbdva-decarboxylation", "predicate": "has_reactant", "objectEntityId": "cannabisdb:CDB000014", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "observed cannabinoid decarboxylation"}]},
+    {"subjectId": "cannabis:reaction:cbdva-decarboxylation", "predicate": "has_product", "objectEntityId": "cannabisdb:CDB000015", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "observed cannabinoid decarboxylation"}]},
+    {"subjectId": "cannabis:reaction:cbdva-decarboxylation", "predicate": "has_product", "objectEntityId": "chebi:16526", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "CO2 release"}]},
+    {"subjectId": "cannabis:reaction:thcv-decarboxylation", "predicate": "has_reactant", "objectEntityId": "cannabisdb:CDB000020", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "observed cannabinoid decarboxylation"}]},
+    {"subjectId": "cannabis:reaction:thcv-decarboxylation", "predicate": "has_product", "objectEntityId": "cannabisdb:CDB000021", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "observed cannabinoid decarboxylation"}]},
+    {"subjectId": "cannabis:reaction:thcv-decarboxylation", "predicate": "has_product", "objectEntityId": "chebi:16526", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "CO2 release"}]},
+    {"subjectId": "cannabis:reaction:cbdva-decarboxylation", "predicate": "physiological_direction_left_to_right", "objectEntityId": "cannabis:reaction:cbdva-decarboxylation", "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "observed chemical conversion; not a flux claim"}]},
+    {"subjectId": "cannabis:reaction:thcv-decarboxylation", "predicate": "physiological_direction_left_to_right", "objectEntityId": "cannabis:reaction:thcv-decarboxylation", "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "observed chemical conversion; not a flux claim"}]},
+    {"subjectId": "cannabis:reaction:cbga-decarboxylation", "predicate": "physiological_direction_left_to_right", "objectEntityId": "cannabis:reaction:cbga-decarboxylation", "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "observed chemical conversion; not a flux claim"}]}
   ]
 }
