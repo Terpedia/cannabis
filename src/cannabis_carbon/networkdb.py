@@ -112,7 +112,8 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
         reactants, products = (raw_products, raw_reactants) if direction.get("orientation") == "reverse_master" else (raw_reactants, raw_products)
         reactions.append({"id": reaction_id, "label": entity.get("label", reaction_id), "equation": attrs.get("equation"), "reaction_smiles": attrs.get("reactionSmiles"), "ec_numbers": attrs.get("ecNumbers", []), "reactants": reactants, "products": products, "raw_reactants": raw_reactants, "raw_products": raw_products, "direction": direction, "enzyme_ids": enzymes, "enzyme_associations": [{"enzyme_id": s.get("subjectId"), "predicate": s.get("predicate"), "sources": s.get("sources", []), "qualifiers": s.get("qualifiers", {})} for s in enzyme_statements], "candidate_proteins": candidate_proteins, "status": "supported" if any((s.get("qualifiers") or {}).get("directExperimentalEvidence") for s in enzyme_statements) else "candidate" if enzymes or candidate_proteins else "unresolved", "carbon_mapping": carbon_mapping, "source_url": entity.get("url"), "directional_rhea_ids": entity.get("identifiers", {}).get("directionalRheaIds", [])})
     for reaction in reactions:
-        if entities.get(reaction["id"], {}).get("attributes", {}).get("reactionClass") == "non-enzymatic-decarboxylation":
+        reaction_class = entities.get(reaction["id"], {}).get("attributes", {}).get("reactionClass", "")
+        if str(reaction_class).startswith("non-enzymatic-"):
             reaction["status"] = "non_enzymatic"
     candidate_protein_records = {p.get("proteinId"): p for item in hypotheses.get("items", []) for p in item.get("candidate_proteins", []) if p.get("proteinId")}
     for candidates in candidate_by_reaction.values():

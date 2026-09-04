@@ -65,7 +65,8 @@ def cytoscape_elements(network: dict, direction_overrides: dict | None = None) -
         oriented_products = reactants[reaction_id] if direction.get("orientation") == "reverse_master" else products[reaction_id]
         enzyme_ids = sorted(set(enzymes[reaction_id]))
         enzyme_labels = [entities[e].get("label", e) for e in enzyme_ids if e in entities]
-        status = "supported" if any(q.get("directExperimentalEvidence") for q in evidence[reaction_id]) else "candidate"
+        reaction_class = reactions[reaction_id].get("attributes", {}).get("reactionClass", "")
+        status = "non_enzymatic" if str(reaction_class).startswith("non-enzymatic-") else "supported" if any(q.get("directExperimentalEvidence") for q in evidence[reaction_id]) else "candidate"
         label = reactions[reaction_id].get("label", reaction_id)
         if enzyme_labels:
             label = f"{label} · {'; '.join(enzyme_labels[:3])}"

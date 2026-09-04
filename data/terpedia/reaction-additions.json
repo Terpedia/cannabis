@@ -239,6 +239,16 @@
       "source_url": "https://www.sciencedirect.com/science/article/pii/S0014579398004505"
     },
     {
+      "id": "cannabis:reaction:olivetolate-protonation",
+      "type": "biochemical_reaction",
+      "label": "Olivetolate + H+ = olivetolic acid (acid-base equilibrium)",
+      "identifiers": {"curationId": "olivetolate-protonation"},
+      "attributes": {"equation": "CHEBI:66950 + CHEBI:15378 = CHEBI:66955", "reactionSmiles": "CCCCCc1cc(O)cc(O)c1C([O-])=O.[H+]>>CCCCCC1=C(C(=CC(=C1)O)O)C(=O)O", "ecNumbers": [], "reactionClass": "non-enzymatic-acid-base-equilibrium", "conditions": "acid/base state equilibrium; pH-dependent", "sourceEvidence": "ChEBI and PubChem identify olivetolate as the conjugate base of olivetolic acid; this edge reconciles the explicit charge state used by Rhea with the neutral substrate used by the characterized geranyltransferase."},
+      "url": "https://pubchem.ncbi.nlm.nih.gov/compound/Olivetolate",
+      "source": "ChEBI / PubChem acid-base identity",
+      "source_url": "https://pubchem.ncbi.nlm.nih.gov/compound/Olivetolate"
+    },
+    {
       "id": "cannabis:reaction:cbda-decarboxylation",
       "type": "biochemical_reaction",
       "label": "Cannabidiolic acid = cannabidiol + CO2 (non-enzymatic decarboxylation)",
@@ -338,6 +348,10 @@
     {"subjectId": "cannabis:reaction:olivetolate-to-cbga", "predicate": "has_product", "objectEntityId": "cannabisdb:CDB000018", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0014579398004505", "evidenceType": "direct biochemical characterization"}]},
     {"subjectId": "cannabis:reaction:olivetolate-to-cbga", "predicate": "has_product", "objectEntityId": "chebi:33019", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0014579398004505", "evidenceType": "direct biochemical characterization"}]},
     {"subjectId": "cannabis:reaction:olivetolate-to-cbga", "predicate": "physiological_direction_left_to_right", "objectEntityId": "cannabis:reaction:olivetolate-to-cbga", "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0014579398004505", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:olivetolate-protonation", "predicate": "has_reactant", "objectEntityId": "chebi:66950", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubchem.ncbi.nlm.nih.gov/compound/Olivetolate", "evidenceType": "ChEBI/PubChem acid-base identity"}]},
+    {"subjectId": "cannabis:reaction:olivetolate-protonation", "predicate": "has_reactant", "objectEntityId": "chebi:15378", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubchem.ncbi.nlm.nih.gov/compound/Olivetolate", "evidenceType": "acid-base equilibrium"}]},
+    {"subjectId": "cannabis:reaction:olivetolate-protonation", "predicate": "has_product", "objectEntityId": "chebi:66955", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubchem.ncbi.nlm.nih.gov/compound/Olivetolate", "evidenceType": "ChEBI/PubChem acid-base identity"}]},
+    {"subjectId": "cannabis:reaction:olivetolate-protonation", "predicate": "physiological_direction_left_to_right", "objectEntityId": "cannabis:reaction:olivetolate-protonation", "sources": [{"url": "https://pubchem.ncbi.nlm.nih.gov/compound/Olivetolate", "evidenceType": "acid-base equilibrium; direction is pH-dependent"}]},
     {"subjectId": "cannabis:reaction:cbda-decarboxylation", "predicate": "has_reactant", "objectEntityId": "cannabisdb:CDB000010", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "observed cannabinoid decarboxylation"}]},
     {"subjectId": "cannabis:reaction:cbda-decarboxylation", "predicate": "has_product", "objectEntityId": "cannabisdb:CDB000002", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "observed cannabinoid decarboxylation"}]},
     {"subjectId": "cannabis:reaction:cbda-decarboxylation", "predicate": "has_product", "objectEntityId": "chebi:16526", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/36432817/", "evidenceType": "CO2 release"}]},

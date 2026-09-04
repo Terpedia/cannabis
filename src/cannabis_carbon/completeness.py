@@ -16,7 +16,7 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
     entities = {e["id"]: e for e in network["entities"]}
     metabolites = {i for i, e in entities.items() if e.get("type") == "metabolite"}
     reactions = {i for i, e in entities.items() if e.get("type") == "biochemical_reaction"}
-    non_enzymatic_reactions = {i for i in reactions if entities[i].get("attributes", {}).get("reactionClass") == "non-enzymatic-decarboxylation"}
+    non_enzymatic_reactions = {i for i in reactions if str(entities[i].get("attributes", {}).get("reactionClass", "")).startswith("non-enzymatic-")}
     enzyme_requiring_reactions = reactions - non_enzymatic_reactions
     reactant_metabolites, product_metabolites, enzyme_reactions = set(), set(), set()
     for s in network["statements"]:
