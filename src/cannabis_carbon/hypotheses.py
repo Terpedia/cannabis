@@ -51,3 +51,50 @@ def build_candidate_queue(path: Path, output: Path) -> dict:
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
     return report["summary"]
+
+
+def build_carbon_mapping_queue(mapping_path: Path, networkdb_path: Path, output: Path) -> dict:
+    """Rank reaction carbon-mapping blockers for atom-lineage curation."""
+    mapping = json.loads(mapping_path.read_text())
+    networkdb = json.loads(networkdb_path.read_text())
+    reaction_by_id = {reaction["id"]: reaction for reaction in networkdb.get("reactions", [])}
+    items = []
+    for row in mapping.get("reactions", []):
+        counts = {status: sum(mapping_row.get("status") == status for mapping_row in row.get("mappings", [])) for status in ("inferred", "candidate", "ambiguous", "unresolved")}
+        blocked = counts["ambiguous"] + counts["unresolved"]
+        if not blocked:
+            continue
+        reaction = reaction_by_id.get(row["reaction_id"], {})
+        items.append({
+            "rank_key": blocked,
+            "reaction_id": row["reaction_id"],
+            "label": reaction.get("label", row["reaction_id"]),
+            "equation": reaction.get("equation"),
+            "source_url": reaction.get("source_url") or row.get("rhea_url"),
+            "product_carbon_atom_count": row.get("product_carbon_atom_count", 0),
+            "mapping_status_counts": counts,
+            "blocker": "unresolved-or-ambiguous-rdkit-carbon-mapping",
+            "enzyme_ids": reaction.get("enzyme_ids", []),
+            "candidate_protein_ids": sorted({protein.get("proteinId") for protein in reaction.get("candidate_proteins", []) if protein.get("proteinId")}),
+            "mapping_methods": sorted({mapping_row.get("method") for mapping_row in row.get("mappings", []) if mapping_row.get("method")}),
+        })
+    items.sort(key=lambda item: (-item["rank_key"], -item["mapping_status_counts"]["unresolved"], item["reaction_id"]))
+    for rank, item in enumerate(items, 1):
+        item["rank"] = rank
+        item.pop("rank_key")
+    report = {
+        "schema": "cannabis-carbon.carbon-mapping-work-queue.v1",
+        "source_mapping": str(mapping_path),
+        "source_networkdb": str(networkdb_path),
+        "summary": {
+            "reactions_with_mapping_blockers": len(items),
+            "ambiguous_product_carbon_rows": sum(item["mapping_status_counts"]["ambiguous"] for item in items),
+            "unresolved_product_carbon_rows": sum(item["mapping_status_counts"]["unresolved"] for item in items),
+            "total_blocked_product_carbon_rows": sum(item["rank_key"] if "rank_key" in item else item["mapping_status_counts"]["ambiguous"] + item["mapping_status_counts"]["unresolved"] for item in items),
+        },
+        "items": items,
+        "claim_boundary": "This queue prioritizes structural atom-mapping work. Resolving a mapping does not establish reaction direction, enzyme function, or in-vivo cannabis biosynthesis.",
+    }
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
+    return report["summary"]

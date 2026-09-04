@@ -14,7 +14,7 @@ from .ingest import ingest_sdf
 from .terpedia import cytoscape_elements, load_network
 from .reaction_report import build_reaction_report
 from .completeness import compute_completeness
-from .hypotheses import build_candidate_queue
+from .hypotheses import build_candidate_queue, build_carbon_mapping_queue
 from .crosswalk import build_crosswalk
 from .balance import audit_balances
 from .lineage import build_carbon_lineage
@@ -108,6 +108,10 @@ def main() -> None:
     p_queue = sub.add_parser("candidate-queue")
     p_queue.add_argument("source", type=Path)
     p_queue.add_argument("--out", type=Path, default=Path("data/reports/candidate-work-queue.json"))
+    p_mapping_queue = sub.add_parser("carbon-mapping-queue")
+    p_mapping_queue.add_argument("mapping", type=Path)
+    p_mapping_queue.add_argument("networkdb", type=Path)
+    p_mapping_queue.add_argument("--out", type=Path, default=Path("data/reports/carbon-mapping-work-queue.json"))
     p_crosswalk = sub.add_parser("crosswalk")
     p_crosswalk.add_argument("cannabisdb_sdf", type=Path)
     p_crosswalk.add_argument("terpedia_network", type=Path)
@@ -214,6 +218,8 @@ def main() -> None:
         print(json.dumps(result, indent=2))
     elif args.command == "candidate-queue":
         print(json.dumps(build_candidate_queue(args.source, args.out), indent=2))
+    elif args.command == "carbon-mapping-queue":
+        print(json.dumps(build_carbon_mapping_queue(args.mapping, args.networkdb, args.out), indent=2))
     elif args.command == "crosswalk":
         print(json.dumps(build_crosswalk(args.cannabisdb_sdf, args.terpedia_network, args.out, args.compounds), indent=2))
     elif args.command == "balance-audit":
