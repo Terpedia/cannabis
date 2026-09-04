@@ -26,7 +26,9 @@ its source, reaction direction, atom-mapping method, and uncertainty.
 - `docs/data/testable-hypotheses.json` turns the unresolved queue into 2,243
   falsifiable reaction records and adds one target-level hypothesis for each
   of the 6,220 CannabisDB compounds, with candidate proteins, required inputs,
-  blockers, provenance, and proposed recombinant/plant validation assays.
+  blockers, provenance, and proposed recombinant/plant validation assays. The
+  target records retain CannabisDB names, aliases, formulas, SMILES, and review
+  priority so future experiments can be selected without losing identity context.
 
 ## Genome-to-enzyme discovery
 

@@ -223,8 +223,11 @@ blocked records; 1,326 are attached to a working reaction. It also contains
 6,220 target-level hypotheses, one for every CannabisDB compound, including
 6,211 unresolved CO₂-lineage targets. TKS and OAC have dedicated coupled or
 substrate-specificity assay plans in addition to recombinant-enzyme and
-plant-validation steps. These are future tests, not claims of confirmed
-activity.
+plant-validation steps. Target records retain CannabisDB identity fields and a
+review priority: 88 explicit cannabinoid/Cannabis specialty records are high
+priority, 136 exact-identity records are medium priority, and the remainder
+stay normal priority until identity or route evidence improves. These are
+future tests, not claims of confirmed activity.
 
 ## Phase 1 balance gate
 

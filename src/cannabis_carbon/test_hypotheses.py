@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 
@@ -51,14 +52,25 @@ def _target_test_plan(target: dict) -> list[dict]:
     ]
 
 
-def _target_hypotheses(lineage_path: Path | None) -> list[dict]:
+_SPECIALTY_NAME = re.compile(r"cannab|tetrahydrocannabin|cannabidiol|cannabiger|cannabichrom|cannabinol|cannabicycl|cannabielso|cannabifuran|cannabitriol|cannabid|cannabivarin|cannabistilbene|cannabisativine", re.IGNORECASE)
+
+
+def _target_hypotheses(lineage_path: Path | None, compounds_path: Path | None) -> list[dict]:
     if not lineage_path or not lineage_path.exists():
         return []
     lineage = json.loads(lineage_path.read_text())
+    compounds = {}
+    if compounds_path and compounds_path.exists():
+        compounds = {c["id"]: c for c in json.loads(compounds_path.read_text()).get("compounds", [])}
     targets = []
     for target in lineage.get("targets", []):
         reason = target.get("reason") or "unresolved-target-status"
         blockers = [] if target.get("status") == "supported" else [reason]
+        compound = compounds.get(target["cannabisdb_id"], {})
+        names = [compound.get("label", ""), *compound.get("aliases", [])]
+        specialty = any(_SPECIALTY_NAME.search(name) for name in names)
+        review_priority = "high" if specialty else "medium" if target.get("identity_status") == "exact" else "normal"
+        priority_reason = "explicit Cannabis/cannabinoid specialty name" if specialty else "exact structural identity" if target.get("identity_status") == "exact" else "catalog target requiring identity resolution"
         targets.append({
             "hypothesis_id": f"target:{target['cannabisdb_id']}",
             "hypothesis_type": "metabolite-identity-and-co2-lineage",
@@ -66,6 +78,13 @@ def _target_hypotheses(lineage_path: Path | None) -> list[dict]:
             "cannabisdb_id": target["cannabisdb_id"],
             "terpedia_id": target.get("terpedia_id"),
             "identity_status": target.get("identity_status"),
+            "label": compound.get("label", target["cannabisdb_id"]),
+            "aliases": compound.get("aliases", []),
+            "formula": compound.get("formula"),
+            "smiles": compound.get("smiles"),
+            "source_url": compound.get("source_url"),
+            "review_priority": review_priority,
+            "priority_reason": priority_reason,
             "carbon_atom_count": target.get("carbon_atom_count"),
             "reachable_carbon_atoms": target.get("reachable_carbon_atoms", 0),
             "claim": f"{target['cannabisdb_id']} is an endogenous Cannabis metabolite whose carbon atoms can be traced to inorganic CO2 through a documented pathway.",
@@ -77,7 +96,7 @@ def _target_hypotheses(lineage_path: Path | None) -> list[dict]:
     return targets
 
 
-def build_test_hypotheses(queue_path: Path, network_path: Path, output: Path, lineage_path: Path | None = None) -> dict:
+def build_test_hypotheses(queue_path: Path, network_path: Path, output: Path, lineage_path: Path | None = None, compounds_path: Path | None = None) -> dict:
     queue = json.loads(queue_path.read_text())
     if network_path.suffix == ".gz":
         from .terpedia import load_network
@@ -105,7 +124,7 @@ def build_test_hypotheses(queue_path: Path, network_path: Path, output: Path, li
             hypothesis_type = "blocked-reaction-mechanism"
         claim = f"A Cannabis protein candidate catalyzes {reaction['label']}" if reaction else "A missing or unresolved Cannabis reaction/protein hypothesis can explain the queued pathway record."
         hypotheses.append({"hypothesis_id": f"test:{item.get('id')}", "hypothesis_type": hypothesis_type, "status": "candidate" if candidates else "blocked", "reaction_id": reaction_id, "reaction": reaction, "claim": claim, "candidate_proteins": candidates, "blocking_causes": blockers, "proposed_tests": _test_plan(reaction_id, reaction), "source": item.get("source"), "queue_kind": item.get("kind"), "claim_boundary": "This is a test design and candidate ranking record. It is not evidence of enzyme activity, pathway flux, or in-vivo cannabis biosynthesis."})
-    targets = _target_hypotheses(lineage_path)
+    targets = _target_hypotheses(lineage_path, compounds_path)
     report = {"schema": "cannabis-carbon.testable-hypotheses.v2", "source_queue": str(queue_path), "source_network": str(network_path), "source_lineage": str(lineage_path) if lineage_path else None, "summary": {"total": len(hypotheses), "candidate": sum(h["status"] == "candidate" for h in hypotheses), "blocked": sum(h["status"] == "blocked" for h in hypotheses), "with_reaction": sum(bool(h["reaction_id"]) for h in hypotheses), "with_candidate_proteins": sum(bool(h["candidate_proteins"]) for h in hypotheses), "metabolite_targets_total": len(targets), "metabolite_targets_supported": sum(h["status"] == "supported" for h in targets), "metabolite_targets_candidate": sum(h["status"] == "candidate" for h in targets), "metabolite_targets_unresolved": sum(h["status"] == "unresolved" for h in targets)}, "hypotheses": hypotheses, "metabolite_target_hypotheses": targets, "claim_boundary": "The report turns unresolved graph records and every catalog target into falsifiable experimental hypotheses. It does not promote any candidate to a confirmed enzyme or pathway."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, indent=2) + "\n")
