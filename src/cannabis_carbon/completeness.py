@@ -51,6 +51,7 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
             "carbon_atoms_total": sum(c["carbon_atom_count"] for c in compounds),
             "compound_to_terpedia_identity_crosswalk": "not_yet_available",
             "pubchem_resolution": "not_yet_available",
+            "external_id_coverage": {"records_with_any_external_id": sum(bool(c.get("external_ids")) for c in compounds), "records_without_external_ids": sum(not c.get("external_ids") for c in compounds), "counts_by_database": dict(sorted({db: sum(db in c.get("external_ids", {}) for c in compounds) for db in {db for c in compounds for db in c.get("external_ids", {})}}.items()))},
         },
         "coverage": {"mapped_carbon_atoms": 0, "unresolved_carbon_atoms": sum(c["carbon_atom_count"] for c in compounds), "coverage_percent": None, "coverage_denominator": "all CannabisDB carbons; no complete pathway crosswalk"},
         "claim_boundary": "These are database-coverage metrics, not evidence that every listed compound is biosynthesized by Cannabis.",
