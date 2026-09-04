@@ -153,7 +153,7 @@ def _full_carbon_skeleton_mapping(reactants: list[Chem.Mol], products: list[Chem
     pi, product = carbon_products[0]
     reactant_skeleton, reactant_indices = _carbon_skeleton(reactant)
     product_skeleton, product_indices = _carbon_skeleton(product)
-    if len(reactant_indices) != len(product_indices):
+    if len(product_indices) > len(reactant_indices):
         return None
     result = rdFMCS.FindMCS([reactant_skeleton, product_skeleton], atomCompare=rdFMCS.AtomCompare.CompareElements, bondCompare=rdFMCS.BondCompare.CompareAny, ringMatchesRingOnly=False, completeRingsOnly=False, timeout=2)
     if result.canceled or result.numAtoms != len(product_indices):

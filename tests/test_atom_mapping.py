@@ -14,6 +14,13 @@ def test_heteroatom_addition_with_conserved_carbon_skeleton_is_inferred():
     assert {row["method"] for row in result["mappings"]} == {"rdkit-carbon-skeleton-mcs"}
 
 
+def test_unique_carbon_skeleton_maps_retained_product_when_carbon_is_lost():
+    result = map_reaction_smiles("CCOC>>CC(=O)O")
+    assert result["status"] == "inferred"
+    assert len(result["mappings"]) == 2
+    assert all(row["method"] == "rdkit-carbon-skeleton-mcs" for row in result["mappings"])
+
+
 def test_explicit_co2_carbon_source_is_mapped_to_carboxyl_carbon():
     result = map_reaction_smiles("CC(=O)O.O=C=O>>CC(=O)C(=O)O")
     assert any(mapping["method"].startswith("rdkit-co2-carbon-source") for mapping in result["mappings"])
