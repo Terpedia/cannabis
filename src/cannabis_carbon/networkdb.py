@@ -114,6 +114,14 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
             proteins_by_ec.setdefault(ec, []).append(record)
     compounds = []
     cdb_ids_by_inchikey = {}
+    ids_by_structure = {}
+
+    def structure_key(smiles):
+        if not smiles:
+            return None
+        mol = Chem.MolFromSmiles(smiles)
+        return Chem.MolToSmiles(mol, canonical=True, isomericSmiles=True) if mol is not None else None
+
     for compound in catalog:
         candidates = candidate_identity_by_cdb.get(compound["id"], [])
         target = lineage_targets.get(compound["id"], {})
@@ -121,12 +129,18 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
         compounds.append({**compound, "namespace": "cannabisdb", "identity_link": identity_by_cdb.get(compound["id"]), "identity_link_candidates": candidates, "identity_status": "exact" if compound["id"] in identity_by_cdb else "candidate" if candidates else "unresolved", "terpedia_identity_set": identity_set_by_id.get(compound["id"]), "pubchem": pubchem_record.get("pubchem"), "pubchem_status": pubchem_record.get("status", "not-queried"), "pubchem_reason": pubchem_record.get("reason"), "carbon_lineage_status": target.get("status", "unresolved"), "co2_reachable_carbon_atoms": target.get("reachable_carbon_atoms", 0), "carbon_lineage_reason": target.get("reason", "no-lineage-record")})
         if compound.get("inchikey") and compound["inchikey"] not in cdb_ids_by_inchikey:
             cdb_ids_by_inchikey[compound["inchikey"]] = compound["id"]
+        key = structure_key(compound.get("smiles"))
+        if key and key not in ids_by_structure:
+            ids_by_structure[key] = compound["id"]
     for entity in network["entities"]:
         if entity.get("type") != "metabolite":
             continue
         attrs = entity.get("attributes", {})
         mol = Chem.MolFromSmiles(attrs["canonicalSmiles"]) if attrs.get("canonicalSmiles") else None
         compounds.append({"id": entity["id"], "namespace": "terpedia", "label": entity.get("label", entity["id"]), "formula": attrs.get("molecularFormula"), "smiles": attrs.get("canonicalSmiles"), "source_url": entity.get("url"), "carbon_atom_count": sum(atom.GetAtomicNum() == 6 for atom in mol.GetAtoms()) if mol is not None else None})
+        key = structure_key(attrs.get("canonicalSmiles"))
+        if key and key not in ids_by_structure:
+            ids_by_structure[key] = entity["id"]
     hypothetical_connections = []
     hypothetical_reactions = (hypothetical_inventory or {}).get("reactions", [])
     hypothetical_missing_substrate_nodes = {}
@@ -166,6 +180,10 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
             for structure in missing_structures:
                 mol = Chem.MolFromSmiles(structure)
                 if mol is None or not any(atom.GetAtomicNum() == 6 for atom in mol.GetAtoms()):
+                    continue
+                exact_structure_id = ids_by_structure.get(structure_key(structure))
+                if exact_structure_id:
+                    hypothetical_connections.append({"reaction_id": row.get("reaction_id"), "substrate_compound_id": exact_structure_id, "product_compound_id": product_id, "substrate_smiles": structure, "product_terpene_id": row.get("product_terpene_id"), "source_type": row.get("source_type"), "evidence_type": row.get("evidence_type"), "source_dataset": row.get("source_dataset"), "source_url": row.get("source_url"), "reaction_smarts": row.get("reaction_smarts"), "status": "candidate", "layer": "Terpedia structure-resolved hypothesis edge", "substrate_identity_resolution": "exact-canonical-structure", "claim_boundary": "This source-directed connection uses an exact canonical RDKit structure match to a corpus compound, but remains a testable hypothesis and is not included in balanced reaction or CO2 lineage counts."})
                     continue
                 digest = hashlib.sha256(structure.encode()).hexdigest()[:16]
                 substrate_id = f"terpedia:hypothesis-missing-substrate:{digest}"
