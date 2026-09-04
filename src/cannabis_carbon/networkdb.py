@@ -7,6 +7,7 @@ import hashlib
 from pathlib import Path
 
 from rdkit import Chem
+from rdkit.Chem import rdMolDescriptors
 
 from .terpedia import load_network
 
@@ -19,7 +20,7 @@ def build_map_snapshot(networkdb_path: Path, output: Path, lineage_path: Path | 
     hypothesis_connected_ids = {h[side] for h in hypothetical_connections for side in ("substrate_compound_id", "product_compound_id")}
     lineage = json.loads(lineage_path.read_text()) if lineage_path and lineage_path.exists() else {}
     reachable_entities = set(lineage.get("reachable_carbon_entity_ids", []))
-    compounds = [{**c, "reaction_connected": c.get("id") in reaction_connected_ids, "hypothesis_connected": c.get("id") in hypothesis_connected_ids, "co2_reachable": c.get("id") in reachable_entities or bool(c.get("co2_reachable_carbon_atoms"))} for c in networkdb.get("compounds", [])]
+    compounds = [{**c, "reaction_connected": c.get("id") in reaction_connected_ids, "hypothesis_connected": c.get("id") in hypothesis_connected_ids or c.get("namespace") == "terpedia_hypothesis_product", "co2_reachable": c.get("id") in reachable_entities or bool(c.get("co2_reachable_carbon_atoms"))} for c in networkdb.get("compounds", [])]
     reactions = []
     for reaction in networkdb.get("reactions", []):
         compact = {key: reaction.get(key) for key in ("id", "label", "equation", "ec_numbers", "reactants", "products", "enzyme_ids", "status", "carbon_mapping", "source_url", "directional_rhea_ids", "direction")}
@@ -40,7 +41,7 @@ def build_map_snapshot(networkdb_path: Path, output: Path, lineage_path: Path | 
     return {"compounds": len(compounds), "reactions": len(reactions), "bytes": output.stat().st_size}
 
 
-def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Path, output: Path, hypotheses_path: Path | None = None, genome_search_path: Path | None = None, genome_fasta_path: Path | None = None, mapping_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None, pubchem_path: Path | None = None, identity_set_path: Path | None = None, hypothetical_connections_path: Path | None = None) -> dict:
+def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Path, output: Path, hypotheses_path: Path | None = None, genome_search_path: Path | None = None, genome_fasta_path: Path | None = None, mapping_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None, pubchem_path: Path | None = None, identity_set_path: Path | None = None, hypothetical_connections_path: Path | None = None, hypothetical_reactions_path: Path | None = None) -> dict:
     network = load_network(network_path)
     directions_path = network_path.parent / "directional-reaction-overrides.json"
     directions = json.loads(directions_path.read_text()) if directions_path.exists() else {}
@@ -51,6 +52,7 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
     identity_set = json.loads(identity_set_path.read_text()) if identity_set_path and identity_set_path.exists() else None
     identity_set_by_id = {r["cannabisdb_id"]: r for r in (identity_set or {}).get("records", [])}
     hypothetical = json.loads(hypothetical_connections_path.read_text()) if hypothetical_connections_path and hypothetical_connections_path.exists() else None
+    hypothetical_inventory = json.loads(hypothetical_reactions_path.read_text()) if hypothetical_reactions_path and hypothetical_reactions_path.exists() else None
     hypotheses = json.loads(hypotheses_path.read_text()) if hypotheses_path and hypotheses_path.exists() else {"items": []}
     hypothesis_items = hypotheses.get("items") or hypotheses.get("hypotheses", [])
     genome_search = json.loads(genome_search_path.read_text()) if genome_search_path and genome_search_path.exists() else None
@@ -105,6 +107,17 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
         mol = Chem.MolFromSmiles(attrs["canonicalSmiles"]) if attrs.get("canonicalSmiles") else None
         compounds.append({"id": entity["id"], "namespace": "terpedia", "label": entity.get("label", entity["id"]), "formula": attrs.get("molecularFormula"), "smiles": attrs.get("canonicalSmiles"), "source_url": entity.get("url"), "carbon_atom_count": sum(atom.GetAtomicNum() == 6 for atom in mol.GetAtoms()) if mol is not None else None})
     hypothetical_connections = []
+    hypothetical_reactions = (hypothetical_inventory or {}).get("reactions", [])
+    if hypothetical_inventory:
+        existing_compound_ids = {compound["id"] for compound in compounds}
+        for product in hypothetical_inventory.get("products", []):
+            compound_id = f"terpedia:hypothesis-product:{product['product_terpene_id']}"
+            if compound_id in existing_compound_ids:
+                continue
+            smiles = product.get("product_smiles")
+            mol = Chem.MolFromSmiles(smiles) if smiles else None
+            compounds.append({"id": compound_id, "namespace": "terpedia_hypothesis_product", "label": product.get("product_label") or product["product_terpene_id"], "formula": rdMolDescriptors.CalcMolFormula(mol) if mol is not None else None, "smiles": smiles, "inchikey": product.get("product_inchikey"), "carbon_atom_count": sum(atom.GetAtomicNum() == 6 for atom in mol.GetAtoms()) if mol is not None else None, "terpene_id": product["product_terpene_id"], "source_url": product.get("source_url"), "hypothesis_status": "unresolved-product-inventory"})
+            existing_compound_ids.add(compound_id)
     if hypothetical:
         existing_compound_ids = {compound["id"] for compound in compounds}
         for row in hypothetical.get("connections", []):
@@ -184,8 +197,11 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
     report = {"schema": "cannabis-carbon.networkdb.v1", "sources": {"cannabisdb_compounds": str(compounds_path), "terpedia_network": str(network_path), "identity_crosswalk": str(crosswalk_path), "terpedia_identity_set": str(identity_set_path) if identity_set_path else None, "pubchem_resolution": str(pubchem_path) if pubchem_path else None, "candidate_hypotheses": str(hypotheses_path) if hypotheses_path else None, "genome_search": str(genome_search_path) if genome_search_path else None, "carbon_mapping": str(mapping_path) if mapping_path else None, "carbon_lineage": str(lineage_path) if lineage_path else None, "carbon_atom_audit": str(atom_audit_path) if atom_audit_path else None}, "carbon_source_policy": "CO2 is the only admissible carbon source for Cannabis; no carbon-containing compound is treated as an implicit source.", "compounds": compounds, "reactions": reactions, "identity_links": crosswalk["matches"], "identity_link_candidates": crosswalk.get("candidate_matches", []), "candidate_proteins": list(candidate_protein_records.values()), "candidate_hypotheses": hypothesis_items, "genome_search": genome_search, "carbon_atom_audit": {"source": str(atom_audit_path), "carbon_atoms_total": atom_audit.get("carbon_atoms_total"), "status_counts": atom_audit.get("status_counts")} if atom_audit else None, "coverage": {"cannabisdb_compounds": len(catalog), "terpedia_metabolites": sum(e.get("type") == "metabolite" for e in network["entities"]), "compound_records": len(compounds), "terpedia_reactions": len(reactions), "reaction_records": len(reactions), "exact_identity_links": len(crosswalk["matches"]), "ambiguous_identity_links": crosswalk["ambiguous"], "terpedia_unmatched_metabolites": crosswalk.get("terpedia_unmatched", crosswalk["unmatched"]), "unmatched_cannabisdb_compounds": crosswalk.get("cannabisdb_unmatched", crosswalk["unmatched"]), "connectivity_candidate_identity_links": len(crosswalk.get("candidate_matches", [])), "connectivity_candidate_ambiguous": len(crosswalk.get("candidate_ambiguous_records", [])), "terpedia_identity_set_matches": len(identity_set_by_id), "external_id_coverage": {"records_with_any_external_id": sum(bool(c.get("external_ids")) for c in catalog), "records_without_external_ids": sum(not c.get("external_ids") for c in catalog), "counts_by_database": dict(sorted(external_id_counts.items()))}, "pubchem_resolution": (pubchem or {}).get("summary"), "carbon_mapping_reactions": len(mapping_by_reaction), "carbon_mapping_status_counts": {status: sum(r["carbon_mapping"]["status"] == status for r in reactions) for status in ("inferred", "candidate", "ambiguous", "unresolved", "unavailable")}, "carbon_lineage_edge_totals": lineage_edge_totals, "carbon_lineage_target_status_counts": lineage_status_counts, "candidate_hypotheses": len(hypothesis_items), "candidate_protein_records": len(candidate_protein_records), "candidate_proteins_with_sequence": sum(bool(p.get("sequence_search", {}).get("sequence_present")) for p in candidate_protein_records.values()), "candidate_proteins_with_diamond_hits": sum(bool((p.get("diamond_search") or {}).get("hits")) for p in candidate_protein_records.values()), "candidate_proteins_meeting_strong_hit_threshold": sum(bool((p.get("diamond_search") or {}).get("strong_candidate_hit")) for p in candidate_protein_records.values()), "reactions_with_candidate_proteins": sum(bool(r["candidate_proteins"]) for r in reactions), "reactions_with_exact_ec_annotation_candidates": sum(any(p.get("candidateOrigin") == "Terpedia reaction EC to protein exact-EC join" for p in r["candidate_proteins"]) for r in reactions)}, "claim_boundary": "This is a unified inventory and reaction database. Presence of a compound, reaction, enzyme association, or identity link does not establish in-vivo cannabis biosynthesis; candidate proteins remain hypotheses and sequence similarity is not functional proof."}
     output.parent.mkdir(parents=True, exist_ok=True)
     report["hypothetical_connections"] = hypothetical_connections
+    report["hypothetical_reactions"] = hypothetical_reactions
     report["sources"]["terpedia_hypothetical_forward_connections"] = str(hypothetical_connections_path) if hypothetical_connections_path else None
     report["coverage"]["hypothetical_forward_connections"] = len(hypothetical_connections)
+    report["coverage"]["hypothetical_reaction_inventory"] = len(hypothetical_reactions)
+    report["coverage"]["hypothetical_product_inventory"] = len((hypothetical_inventory or {}).get("products", []))
     report["coverage"]["hypothetical_identity_compounds"] = sum(compound.get("namespace") == "terpedia_identity_set" for compound in compounds)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
     return report["coverage"]

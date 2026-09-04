@@ -47,7 +47,7 @@ const cy = cytoscape({container:document.getElementById('cy'),elements,style:[
  {selector:'.faded',style:{'opacity':.16}}, {selector:'.selected',style:{'border-width':5,'line-color':'#fff','target-arrow-color':'#fff'}}
 ],layout:{name:'cose',animate:false,padding:35}});
 document.getElementById('count').textContent = 'Loading source-backed network…';
-fetch('data/network-map-focus.json?v=focus-2-20260904').then(r=>{if(!r.ok)throw new Error(`HTTP ${r.status}`);return r.json()}).then(networkdb=>{
+fetch('data/network-map-focus.json?v=focus-3-20260904').then(r=>{if(!r.ok)throw new Error(`HTTP ${r.status}`);return r.json()}).then(networkdb=>{
   // The hard-coded seed graph is only a loading fallback; published content is source-backed.
   cy.elements().remove();
   const nodes = networkdb.compounds.map(c=>({data:{id:c.id,label:c.label||c.id,kind:'compound',namespace:c.namespace,co2_reachable:c.co2_reachable,reaction_connected:c.reaction_connected,hypothesis_connected:c.hypothesis_connected,status:c.id==='chebi:16526'?'supported':c.carbon_lineage_status==='unresolved'?'unresolved':'candidate',carbon_lineage_status:c.carbon_lineage_status,co2_reachable_carbon_atoms:c.co2_reachable_carbon_atoms,co2_path_atom_count:c.co2_path_atom_count,co2_path_max_steps:c.co2_path_max_steps,carbon_lineage_reason:c.carbon_lineage_reason,formula:c.formula,smiles:c.smiles,carbon_atom_count:c.carbon_atom_count,source:c.namespace,source_url:c.source_url,identity_link:c.identity_link,identity_link_candidates:c.identity_link_candidates||[],terpedia_identity_set:c.terpedia_identity_set,external_ids:c.external_ids||{},pubchem_status:c.pubchem_status,pubchem:c.pubchem}}));
