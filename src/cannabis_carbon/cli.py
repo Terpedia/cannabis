@@ -140,6 +140,7 @@ def main() -> None:
     p_tests = sub.add_parser("test-hypotheses")
     p_tests.add_argument("queue", type=Path)
     p_tests.add_argument("network", type=Path)
+    p_tests.add_argument("--lineage", type=Path, default=Path("data/reports/carbon-lineage.json"))
     p_tests.add_argument("--out", type=Path, default=Path("data/reports/testable-hypotheses.json"))
     args = parser.parse_args()
     if args.command == "download":
@@ -177,7 +178,7 @@ def main() -> None:
     elif args.command == "specialty-inventory":
         print(json.dumps(build_specialty_inventory(args.compounds, args.crosswalk, args.network, args.out), indent=2))
     elif args.command == "test-hypotheses":
-        print(json.dumps(build_test_hypotheses(args.queue, args.network, args.out), indent=2))
+        print(json.dumps(build_test_hypotheses(args.queue, args.network, args.out, args.lineage), indent=2))
 
 
 if __name__ == "__main__":

@@ -217,10 +217,12 @@ sequence-supported candidate producer, not a confirmed cannabis enzyme.
 `docs/data/testable-hypotheses.json` converts every candidate or blocked queue
 record into a falsifiable hypothesis. Each record preserves the reaction and
 exact participant IDs when available, candidate proteins and best sequence hit,
-blocking causes, source provenance, and a proposed assay plan. The current set
-contains 2,243 records: 1,712 with candidate proteins and 531 blocked records;
-1,326 are attached to a working reaction. TKS and OAC have dedicated coupled
-or substrate-specificity assay plans in addition to recombinant-enzyme and
+blocking causes, source provenance, and a proposed assay plan. The current
+reaction set contains 2,243 records: 1,712 with candidate proteins and 531
+blocked records; 1,326 are attached to a working reaction. It also contains
+6,220 target-level hypotheses, one for every CannabisDB compound, including
+6,211 unresolved CO₂-lineage targets. TKS and OAC have dedicated coupled or
+substrate-specificity assay plans in addition to recombinant-enzyme and
 plant-validation steps. These are future tests, not claims of confirmed
 activity.
 
