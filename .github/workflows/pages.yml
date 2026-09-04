@@ -18,6 +18,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install validation dependencies
+        run: python -m pip install --upgrade pip && python -m pip install -e '.[test]'
+      - name: Run unit tests
+        run: python -m pytest -q
+      - name: Validate published carbon artifacts
+        run: >-
+          python -m cannabis_carbon.cli validate-artifacts
+          data/reports/carbon-atom-audit.json
+          data/reports/reaction-carbon-mapping.json
+          data/reports/phase1-balance-audit.json
+          docs/data/compounds.json
+          --out /tmp/artifact-validation.json
+      - name: Require valid artifact gate
+        run: python -c "import json; assert json.load(open('/tmp/artifact-validation.json'))['valid']"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
