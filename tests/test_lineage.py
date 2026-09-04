@@ -1,7 +1,17 @@
 import gzip
 import json
 
-from cannabis_carbon.lineage import build_carbon_lineage
+from rdkit import Chem
+
+from cannabis_carbon.lineage import _entity_atom_index_map, build_carbon_lineage
+
+
+def test_lineage_remaps_reaction_atom_order_to_entity_atom_order():
+    reaction_molecule = Chem.MolFromSmiles("O=C(O)C")
+    atom_map = _entity_atom_index_map(reaction_molecule, "CC(=O)O")
+    assert atom_map is not None
+    assert atom_map[1] == 1
+    assert atom_map[3] == 0
 
 
 def test_lineage_marks_unmatched_cannabisdb_compounds(tmp_path):

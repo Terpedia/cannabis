@@ -191,7 +191,7 @@
   },
   "coverage": {
     "mapped_carbon_atoms": 3910,
-    "unresolved_carbon_atoms": 18483,
+    "unresolved_carbon_atoms": 18298,
     "coverage_percent": null,
     "coverage_denominator": "all CannabisDB carbons; no complete pathway crosswalk",
     "reaction_product_carbon_atoms": 22394,
@@ -203,14 +203,14 @@
     "co2_lineage": {
       "target_summary": {
         "supported": 1,
-        "candidate": 8,
-        "unresolved": 6211
+        "candidate": 211,
+        "unresolved": 6008
       },
-      "reachable_carbon_nodes": 37,
-      "resolved_carbon_edges": 100790,
+      "reachable_carbon_nodes": 2843,
+      "resolved_carbon_edges": 101244,
       "inferred_carbon_edges": 2916,
-      "candidate_carbon_edges": 97874,
-      "external_carbon_input_entity_count": 634,
+      "candidate_carbon_edges": 98328,
+      "external_carbon_input_entity_count": 397,
       "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2."
     }
   },

@@ -65,8 +65,36 @@ def _mcs_carbon_candidates_cached(reactant_smiles: str, product_smiles: str, pro
 
 
 def _mcs_carbon_candidates(reactants: list[Chem.Mol], product: Chem.Mol, product_atom: int) -> set[tuple[int, int]]:
-    candidates = _mcs_carbon_candidates_cached(Chem.MolToSmiles(reactants[0]), Chem.MolToSmiles(product), product_atom)
-    return {(ri, atom) for ri, atom in candidates}
+    candidates = set()
+    for ri, reactant in enumerate(reactants):
+        pair_candidates = _mcs_carbon_candidates_cached(Chem.MolToSmiles(reactant), Chem.MolToSmiles(product), product_atom)
+        candidates.update((ri, atom) for _, atom in pair_candidates)
+    return candidates
+
+
+def _mcs_pair_carbon_candidates(reactants: list[Chem.Mol], products: list[Chem.Mol]) -> dict[tuple[int, int], set[tuple[int, int]]]:
+    """Return conservative MCS candidates for every reactant/product pair.
+
+    Local carbon neighborhoods are insufficient for bond-forming and bond-
+    breaking reactions.  For multi-reactant reactions we retain pairwise MCS
+    correspondences as *candidate* alternatives only: the MCS does not decide
+    which substrate supplied a carbon when several correspondences are
+    chemically possible.
+    """
+    candidates = {}
+    for pi, product in enumerate(products):
+        for atom in product.GetAtoms():
+            if atom.GetAtomicNum() != 6:
+                continue
+            key = (pi, atom.GetIdx())
+            pairs = set()
+            for ri, reactant in enumerate(reactants):
+                for _, ra in _mcs_carbon_candidates_cached(Chem.MolToSmiles(reactant), Chem.MolToSmiles(product), atom.GetIdx()):
+                    if reactant.GetAtomWithIdx(ra).GetAtomicNum() == 6:
+                        pairs.add((ri, ra))
+            if pairs:
+                candidates[key] = pairs
+    return candidates
 
 
 def map_reaction_smiles(reaction_smiles: str) -> dict:
@@ -101,6 +129,38 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
         else:
             reason = "reactant-carbon-already-assigned" if choices else "no-conserved-reactant-carbon"
             mappings.append({**base, "status": "unresolved", "reason": reason})
+    # For reactions with multiple substrates, supplement local-signature
+    # results with pairwise MCS candidates.  These remain ambiguous/candidate
+    # provenance rather than inferred mappings because substrate origin is not
+    # uniquely determined by an unlabelled structural MCS.
+    # Keep the catalog-wide audit bounded: large cofactors and macromolecular
+    # participants make pairwise MCS both expensive and less discriminating.
+    # The small-reaction path covers central-carbon rearrangements while the
+    # conservative signature mapper remains the fallback for larger records.
+    if len(reactants) > 1 and sum(m.GetNumAtoms() for m in reactants + products) <= 60:
+        mcs_candidates = _mcs_pair_carbon_candidates(reactants, products)
+        for mapping in mappings:
+            key = (mapping["product_index"], mapping["product_atom"])
+            choices = mcs_candidates.get(key, set())
+            if not choices:
+                continue
+            existing = {(a["reactant_index"], a["reactant_atom"]) for a in mapping.get("alternatives", []) if a.get("reactant_index") is not None}
+            if mapping.get("reactant_index") is not None:
+                existing.add((mapping["reactant_index"], mapping["reactant_atom"]))
+            merged = sorted(existing | choices)
+            if mapping["status"] == "inferred":
+                continue
+            if len(merged) == 1:
+                mapping["reactant_index"], mapping["reactant_atom"] = merged[0]
+                mapping["status"] = "candidate"
+                mapping.pop("reason", None)
+                mapping.pop("alternatives", None)
+                mapping["method"] = "rdkit-mcs-carbon-candidate"
+            else:
+                mapping["status"] = "ambiguous"
+                mapping["reason"] = "multiple-conserved-reactant-candidates"
+                mapping["alternatives"] = [{"reactant_index": ri, "reactant_atom": ra} for ri, ra in merged]
+                mapping["method"] = "rdkit-mcs-carbon-candidate"
     # Local signatures intentionally reject many bond-order/ring rearrangements.
     # Use a unique maximum-common-substructure correspondence as a second,
     # still structural, inference method before considering CO2 transfer.

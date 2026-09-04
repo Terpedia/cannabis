@@ -78,6 +78,24 @@ def _carbon_atom_indices(smiles: str | None) -> list[int]:
     return [atom.GetIdx() for atom in mol.GetAtoms() if atom.GetAtomicNum() == 6] if mol is not None else []
 
 
+def _entity_atom_index_map(reaction_molecule, entity_smiles: str | None) -> dict[int, int] | None:
+    """Map reaction-SMILES atom indices onto the resolved entity structure.
+
+    Rhea reaction SMILES and Terpedia canonical SMILES describe the same
+    molecule with independent RDKit atom orderings.  A carbon edge must use a
+    stable entity-local atom index, otherwise edges from different reactions
+    can be joined to the wrong carbon.  Full-structure matching is required;
+    failure remains an explicit participant-structure blocker.
+    """
+    entity_molecule = Chem.MolFromSmiles(entity_smiles) if entity_smiles else None
+    if entity_molecule is None:
+        return None
+    match = entity_molecule.GetSubstructMatch(reaction_molecule)
+    if len(match) != reaction_molecule.GetNumAtoms():
+        return None
+    return {reaction_index: entity_index for reaction_index, entity_index in enumerate(match)}
+
+
 def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path: Path, compounds_path: Path, output: Path, directions_path: Path | None = None) -> dict:
     network = load_network(network_path)
     mapping_report = json.loads(mapping_path.read_text())
@@ -105,6 +123,8 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
         reaction_id = row["reaction_id"]
         reactant_ids = _resolve_molecules(reactants, _participant_ids(network, reaction_id, reactant_predicate), entities)
         product_ids = _resolve_molecules(products, _participant_ids(network, reaction_id, product_predicate), entities)
+        reactant_atom_maps = [_entity_atom_index_map(molecule, entities.get(entity_id, {}).get("attributes", {}).get("canonicalSmiles")) if entity_id else None for molecule, entity_id in zip(reactants, reactant_ids)]
+        product_atom_maps = [_entity_atom_index_map(molecule, entities.get(entity_id, {}).get("attributes", {}).get("canonicalSmiles")) if entity_id else None for molecule, entity_id in zip(products, product_ids)]
         mappings = map_reaction_smiles(reaction_smiles)["mappings"] if direction.get("orientation") == "reverse_master" else row["mappings"]
         for mapping in mappings:
             if mapping.get("status") not in ("inferred", "candidate", "ambiguous"):
@@ -112,10 +132,10 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
             alternatives = mapping.get("alternatives") or [{"reactant_index": mapping.get("reactant_index"), "reactant_atom": mapping.get("reactant_atom")}]
             for alternative in alternatives:
                 ri, pi = alternative["reactant_index"], mapping["product_index"]
-                if ri is None or ri >= len(reactant_ids) or pi >= len(product_ids) or not reactant_ids[ri] or not product_ids[pi]:
+                if ri is None or ri >= len(reactant_ids) or pi >= len(product_ids) or not reactant_ids[ri] or not product_ids[pi] or not reactant_atom_maps[ri] or not product_atom_maps[pi] or alternative["reactant_atom"] not in reactant_atom_maps[ri] or mapping["product_atom"] not in product_atom_maps[pi]:
                     edge_blocks["participant-structure-unresolved"] += 1
                     continue
-                edges.append({"reaction_id": reaction_id, "reactant_entity_id": reactant_ids[ri], "reactant_atom": alternative["reactant_atom"], "product_entity_id": product_ids[pi], "product_atom": mapping["product_atom"], "status": "candidate" if mapping["status"] == "ambiguous" else mapping["status"], "provenance": direction.get("source") or row.get("rhea_url"), "directional_rhea_id": direction.get("directional_rhea_id"), "mapping_reason": mapping.get("reason")})
+                edges.append({"reaction_id": reaction_id, "reactant_entity_id": reactant_ids[ri], "reactant_atom": reactant_atom_maps[ri][alternative["reactant_atom"]], "product_entity_id": product_ids[pi], "product_atom": product_atom_maps[pi][mapping["product_atom"]], "status": "candidate" if mapping["status"] == "ambiguous" else mapping["status"], "provenance": direction.get("source") or row.get("rhea_url"), "directional_rhea_id": direction.get("directional_rhea_id"), "mapping_reason": mapping.get("reason")})
 
     forward = defaultdict(set)
     for edge in edges:
@@ -139,6 +159,10 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
                 queue.append(child_state)
             if child_has_candidate:
                 candidate_reachable.add(child)
+    # CO2 is the explicit seed.  Decarboxylation reactions can also emit CO2
+    # through candidate edges, but that downstream occurrence must not demote
+    # the seed's own identity from supported to candidate.
+    candidate_reachable.difference_update(co2_atoms)
 
     carbon_reactant_entities = set()
     for reaction in (e for e in network["entities"] if e.get("type") == "biochemical_reaction"):
