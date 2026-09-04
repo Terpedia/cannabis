@@ -9,9 +9,35 @@ from datetime import date
 from pathlib import Path
 
 from .identity_set import SOURCE_TABLE
+from .atom_mapping import map_reaction_smiles
 
 
 EDGE_TABLE = "terpedia-489015.terpedia_core.terpene_metabolic_map_edges_current"
+
+
+def map_identity_set_upstream(input_path: Path, output: Path) -> dict:
+    """Add conservative RDKit carbon mappings to a focused upstream queue."""
+    report = json.loads(input_path.read_text())
+    rows = []
+    status_counts = Counter()
+    for row in report.get("rows", []):
+        mapped = map_reaction_smiles(row.get("reaction_smarts"))
+        enriched = {**row, "carbon_mapping": mapped}
+        rows.append(enriched)
+        status_counts[mapped.get("status", "unresolved")] += 1
+    mapped_report = {
+        **report,
+        "schema": "cannabis-carbon.terpedia-identity-set-upstream-mapped.v1",
+        "mapping_method": "RDKit map_reaction_smiles applied to each source reaction SMARTS; mappings are structural provenance candidates, not isotope tracing.",
+        "mapping_status_counts": dict(sorted(status_counts.items())),
+        "mapped_product_carbon_atoms": sum(len(row["carbon_mapping"].get("mappings", [])) for row in rows),
+        "unresolved_product_carbon_atoms": sum(len(row["carbon_mapping"].get("unresolved_product_carbons", [])) for row in rows),
+        "rows": rows,
+        "claim_boundary": "RDKit mappings conserve structurally matched carbon atoms and retain unresolved product atoms explicitly. They do not establish reaction direction, enzyme function, isotope tracing, or endogenous Cannabis biosynthesis.",
+    }
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(mapped_report, separators=(",", ":")) + "\n")
+    return {key: mapped_report[key] for key in ("edge_count", "mapped_product_carbon_atoms", "unresolved_product_carbon_atoms", "mapping_status_counts")}
 
 
 def refresh_identity_set_upstream(compounds_path: Path, output: Path, bq_binary: str = "bq") -> dict:
