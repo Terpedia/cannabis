@@ -7,6 +7,19 @@ from collections import Counter, defaultdict, deque
 from pathlib import Path
 
 
+def atom_continuity_blockers(edges: list[dict]) -> list[dict]:
+    """Check an entity path before interpreting it as a single carbon path."""
+    blockers = []
+    for index, edge in enumerate(edges):
+        if edge.get("from_atom") is None or edge.get("to_atom") is None:
+            blockers.append({"step": index, "reason": "missing-atom-index"})
+        if index:
+            previous = edges[index - 1]
+            if (previous.get("to_entity_id"), previous.get("to_atom")) != (edge.get("from_entity_id"), edge.get("from_atom")):
+                blockers.append({"step": index, "reason": "carbon-atom-discontinuity", "incoming_atom": previous.get("to_atom"), "outgoing_atom": edge.get("from_atom")})
+    return blockers
+
+
 def build_reversible_candidate_lineage(bridges_path: Path, lineage_path: Path, output: Path, balance_path: Path | None = None, expansion_path: Path | None = None) -> dict:
     bridges = json.loads(bridges_path.read_text())
     lineage = json.loads(lineage_path.read_text())
@@ -23,7 +36,7 @@ def build_reversible_candidate_lineage(bridges_path: Path, lineage_path: Path, o
             continue
         record = {"from": source, "to": target, "from_atom": edge.get("reactant_atom"), "to_atom": edge.get("product_atom"), "reaction_id": edge.get("reaction_id"), "status": edge.get("status"), "provenance": edge.get("provenance")}
         adjacency[source].append(record)
-        adjacency[target].append({**record, "from": target, "to": source, "status": "reversible-upper-bound"})
+        adjacency[target].append({**record, "from": target, "to": source, "from_atom": record["to_atom"], "to_atom": record["from_atom"], "status": "reversible-upper-bound"})
     seed = lineage.get("co2_entity_id") or "chebi:16526"
     previous, previous_edge = {seed: None}, {}
     queue = deque([seed])
@@ -58,6 +71,11 @@ def build_reversible_candidate_lineage(bridges_path: Path, lineage_path: Path, o
         balance_status = balance_row.get("status", "not_auditable") if balance_row else "not_auditable"
         rows.append({"candidate_product_terpene_id": bridge.get("product_terpene_id"), "candidate_precursor_terpene_id": bridge.get("precursor_terpene_id"), "reaction_id": bridge.get("reaction_id"), "reaction_smarts": source_smarts, "expansion_depth": bridge.get("expansion_depth"), "source_type": bridge.get("source_type"), "source_url": bridge.get("source_url"), "source_uniprot_id": bridge.get("source_uniprot_id"), "core_anchor_entity_id": anchor, "core_path_reaction_ids": [edge.get("reaction_id") for edge in path if edge.get("reaction_id")], "core_path_entity_ids": [seed] + [edge["to"] for edge in path], "core_path_carbon_edges": [{"from_entity_id": edge["from"], "from_atom": edge.get("from_atom"), "to_entity_id": edge["to"], "to_atom": edge.get("to_atom"), "reaction_id": edge.get("reaction_id"), "status": edge.get("status"), "provenance": edge.get("provenance")} for edge in path], "core_path_step_count": len(path), "path_mode": "all-reactions-reversible-upper-bound", "status": "candidate", "balance_status": balance_status, "balance_eligible": balance_status == "balanced", "balance_audit_source": str(balance_path) if balance_path else None, "claim_boundary": "This ordered path combines reversible structural reachability with a candidate identity bridge. It is a sensitivity hypothesis only; direction, exact identity, enzyme activity, isotope tracing, and in-vivo Cannabis production remain unestablished."})
         rows[-1]["candidate_cannabisdb_ids"] = bridge.get("candidate_cannabisdb_ids", [])
+        blockers = atom_continuity_blockers(rows[-1]["core_path_carbon_edges"])
+        rows[-1]["core_atom_continuity"] = {"status": "unresolved" if blockers else "continuous", "blockers": blockers}
+        rows[-1]["carbon_provenance_status"] = "unresolved"
+        rows[-1]["carbon_provenance_blocker"] = "core-path-atom-discontinuity" if blockers else "core-to-candidate-atom-identity-and-all-required-inputs-unverified"
+        rows[-1]["balance_scope"] = "candidate-bridge-reaction-only; core-path-balance-not-checked-here"
     result = {"schema": "cannabis-carbon.terpene-identity-set-reversible-candidate-lineage.v1", "source_bridges": str(bridges_path), "source_lineage": str(lineage_path), "source_balance_audit": str(balance_path) if balance_path else None, "co2_entity_id": seed, "path_count": len(rows), "distinct_candidate_products": len({row["candidate_product_terpene_id"] for row in rows}), "distinct_core_anchors": len({row["core_anchor_entity_id"] for row in rows}), "balance_status_counts": dict(sorted(Counter(row["balance_status"] for row in rows).items())), "balance_eligible_path_count": sum(row["balance_eligible"] for row in rows), "rows": rows, "claim_boundary": "These are ordered reversible-upper-bound pathway hypotheses from CO2 to candidate identity-set structures. Balance eligibility is a stoichiometric screen only; these are not directed biological pathways or proof of endogenous Cannabis biosynthesis."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, separators=(",", ":")) + "\n")
