@@ -133,6 +133,12 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+Phase 1 priority: atom tracing is deferred at the user's request. The
+[enzyme discovery queue](data/phase1-enzyme-discovery-queue.json) groups 690
+reaction-ID/SMARTS variants: 185 balanced variants have source protein IDs,
+306 balanced variants need characterized reference enzymes, and 199 require
+stoichiometry review. Source protein IDs do not establish Cannabis activity.
+
 Atom-continuity correction: traversal now uses compound and atom index, finding
 continuous CO₂-to-core witnesses for 2,308 candidate bridge records; 1,326
 retain unresolved entity-path fallbacks. All 3,634 still have unresolved

@@ -10,6 +10,11 @@ its source, reaction direction, atom-mapping method, and uncertainty.
 
 ## Current scope
 
+Current priority (user direction): Phase 1 covers balanced reactions, compound
+participation, enzyme associations, genome-derived protein candidates, and
+testable hypotheses. Atom tracing is deferred; existing tracing artifacts are
+retained for later work and do not gate Phase 1 progress.
+
 - Cannabis Compound Database (CannabisDB) is the metabolite/protein source.
 - RDKit performs molecular parsing, formula audits, and atom-level mapping.
 - Reactions are represented as mapped reactant/product structures with explicit
