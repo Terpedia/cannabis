@@ -133,6 +133,16 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The static map's Phase 1 evidence filter uses
+`docs/data/phase1-map-evidence.json`, joining exact reaction-ID/SMARTS variants
+without a name or reaction-family fallback. Its expansion-only denominator is
+690 variants: 491 balanced, 150 imbalanced, and 49 not auditable. Of the balanced
+variants, 175 have screened homology candidates and 24 additional variants have
+core enzyme associations; 292 lack either evidence type (285 missing references,
+four no-hit searches, three weak-hit-only searches). These are not confirmed
+enzyme or complete-pathway percentages. The filter dims nonmatching edges and
+nodes, composes with existing filters, and updates when the candidate layer loads.
+
 The Phase 1 core enzyme evidence supplement
 (`docs/data/phase1-core-enzyme-evidence.json`) links 24 balanced expansion
 variants lacking search reference sequences to existing core enzyme associations

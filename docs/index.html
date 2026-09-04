@@ -23,6 +23,19 @@
 <body>
 <header><div><h1>Terpedia · Cannabis carbon map</h1><p>Compounds are nodes; reactions and enzymes are edges.</p></div><div id="count" aria-live="polite"></div></header>
 <main><div id="cy" role="img" aria-label="Interactive cannabis metabolic network"></div><aside>
+  <label for="phase1Status">Phase 1 candidate reaction evidence</label>
+  <select id="phase1Status" disabled style="width:100%;padding:10px;border:1px solid var(--line);border-radius:6px;background:#0b1220;color:var(--text);font:inherit">
+    <option value="all">All evidence (no dimming)</option>
+    <option value="screened-homology">Screened homology candidates</option>
+    <option value="core-association">Core enzyme annotations / candidates</option>
+    <option value="missing-reference">Missing reference enzymes</option>
+    <option value="no-hits">Sequence search: no hits</option>
+    <option value="weak-hits">Sequence search: weak hits only</option>
+    <option value="balance-unresolved">Imbalanced / not auditable</option>
+  </select>
+  <p id="phase1Metrics" aria-live="polite">Loading Phase 1 metrics…</p>
+  <p id="phase1Matches" class="note" aria-live="polite"></p>
+  <p><a href="data/phase1-map-evidence.json">Phase 1 variant audit</a> · Atom tracing deferred.</p>
   <label for="search">Find a compound or reaction</label><input id="search" placeholder="e.g. CBGA, THCA synthase" autocomplete="off">
   <label for="status" style="margin-top:14px">Show evidence status</label><select id="status" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:6px;background:#0b1220;color:var(--text);font:inherit"><option value="all">All statuses</option><option value="supported">Supported / observed</option><option value="candidate">Candidate / inferred</option><option value="non_enzymatic">Non-enzymatic chemistry</option><option value="unresolved">Unresolved</option></select>
   <label for="carbonStatus" style="margin-top:14px">Carbon mapping status</label><select id="carbonStatus" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:6px;background:#0b1220;color:var(--text);font:inherit"><option value="all">All carbon mappings</option><option value="inferred">Inferred</option><option value="candidate">Candidate</option><option value="ambiguous">Ambiguous</option><option value="unresolved">Unresolved</option><option value="unavailable">Unavailable</option></select>
@@ -82,4 +95,6 @@ document.getElementById('search').addEventListener('input',applyFilters); docume
 document.getElementById('pathStatus').addEventListener('change',applyFilters);
 document.getElementById('showFull').addEventListener('change',applyVisibility);
 </script>
+<script src="phase1-evidence.js"></script>
+<script>Phase1Evidence.mount(cy);</script>
 </body></html>
