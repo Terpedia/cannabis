@@ -1,6 +1,6 @@
 {
   "schema": "cannabis-carbon.coverage.v1",
-  "generated_at": "2026-09-03T22:04:35.807069+00:00",
+  "generated_at": "2026-09-04T00:13:39.830950+00:00",
   "source_file": "data/raw/compounds.sdf",
   "compound_count": 6220,
   "invalid_records": [],

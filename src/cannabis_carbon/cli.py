@@ -20,6 +20,7 @@ from .balance import audit_balances
 from .lineage import build_carbon_lineage
 from .networkdb import build_networkdb
 from .genome import build_genome_search
+from .inventory import build_specialty_inventory
 
 DOWNLOADS = {
     "compounds.sdf": "https://cannabisdatabase.ca/simple/download_compound_as_sdf",
@@ -130,6 +131,11 @@ def main() -> None:
     p_genome.add_argument("--diamond-hits", type=Path)
     p_genome.add_argument("--reference-tsv", type=Path)
     p_genome.add_argument("--out", type=Path, default=Path("data/reports/genome-candidate-search.json"))
+    p_inventory = sub.add_parser("specialty-inventory")
+    p_inventory.add_argument("compounds", type=Path)
+    p_inventory.add_argument("crosswalk", type=Path)
+    p_inventory.add_argument("network", type=Path)
+    p_inventory.add_argument("--out", type=Path, default=Path("data/reports/named-specialty-inventory.json"))
     args = parser.parse_args()
     if args.command == "download":
         download(args.out, args.insecure_download)
@@ -163,6 +169,8 @@ def main() -> None:
         print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out, args.hypotheses, args.genome_search, args.genome_fasta, args.mapping, args.lineage), indent=2))
     elif args.command == "genome-search":
         print(json.dumps(build_genome_search(args.queue, args.fasta, args.out, args.diamond_hits, args.reference_tsv), indent=2))
+    elif args.command == "specialty-inventory":
+        print(json.dumps(build_specialty_inventory(args.compounds, args.crosswalk, args.network, args.out), indent=2))
 
 
 if __name__ == "__main__":

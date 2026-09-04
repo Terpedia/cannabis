@@ -17,10 +17,17 @@ def ingest_sdf(source: Path, graph_out: Path, report_out: Path) -> dict:
             continue
         props = {name: mol.GetProp(name) for name in mol.GetPropNames()}
         compound_id = props.get("DATABASE_ID", f"sdf-record:{index + 1}")
+        names = []
+        for key in ("GENERIC_NAME", "JCHEM_TRADITIONAL_IUPAC", "JCHEM_IUPAC"):
+            value = props.get(key)
+            if value and value not in names:
+                names.append(value)
+        label = names[0] if names else compound_id
         carbon_atoms = [atom.GetIdx() for atom in mol.GetAtoms() if atom.GetAtomicNum() == 6]
         compounds.append({
             "id": compound_id,
-            "label": compound_id,
+            "label": label,
+            "aliases": names,
             "smiles": props.get("SMILES", Chem.MolToSmiles(mol)),
             "inchikey": props.get("INCHI_KEY"),
             "formula": props.get("FORMULA"),
