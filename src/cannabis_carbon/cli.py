@@ -143,6 +143,7 @@ def main() -> None:
     p_networkdb.add_argument("--out", type=Path, default=Path("docs/data/networkdb.json"))
     p_map_snapshot = sub.add_parser("map-snapshot")
     p_map_snapshot.add_argument("networkdb", type=Path)
+    p_map_snapshot.add_argument("--lineage", type=Path, default=Path("data/reports/carbon-lineage.json"))
     p_map_snapshot.add_argument("--out", type=Path, default=Path("docs/data/network-map.json"))
     p_genome = sub.add_parser("genome-search")
     p_genome.add_argument("queue", type=Path)
@@ -221,7 +222,7 @@ def main() -> None:
     elif args.command == "networkdb":
         print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out, args.hypotheses, args.genome_search, args.genome_fasta, args.mapping, args.lineage, args.atom_audit, args.pubchem), indent=2))
     elif args.command == "map-snapshot":
-        print(json.dumps(build_map_snapshot(args.networkdb, args.out), indent=2))
+        print(json.dumps(build_map_snapshot(args.networkdb, args.out, args.lineage), indent=2))
     elif args.command == "genome-search":
         print(json.dumps(build_genome_search(args.queue, args.fasta, args.out, args.diamond_hits, args.reference_tsv), indent=2))
     elif args.command == "specialty-inventory":
