@@ -285,8 +285,10 @@ the source report used to derive them. The Pages Cytoscape view exposes
 `non_enzymatic` as a separate evidence-status filter.
 The generated `data/reports/carbon-mapping-work-queue.json` ranks the 765
 reactions with unresolved or ambiguous product-carbon rows: 16,406 carbon
-rows currently require mapping curation. Each item retains reaction source,
-mapping methods, known enzyme IDs, and attached genome candidate proteins.
+rows currently require mapping curation. Ranking prioritizes unresolved rows,
+then ambiguous rows, then total blocked carbon weight. Each item retains
+reaction source, mapping methods, known enzyme IDs, and attached genome
+candidate proteins.
 The lineage report also carries a direction-agnostic structural sensitivity
 run. It is an upper bound for prioritizing reaction-direction curation, not a
 physiological route: the directed result remains the authoritative pathway

@@ -66,7 +66,7 @@ def build_carbon_mapping_queue(mapping_path: Path, networkdb_path: Path, output:
             continue
         reaction = reaction_by_id.get(row["reaction_id"], {})
         items.append({
-            "rank_key": blocked,
+            "rank_key": (counts["unresolved"], counts["ambiguous"], blocked),
             "reaction_id": row["reaction_id"],
             "label": reaction.get("label", row["reaction_id"]),
             "equation": reaction.get("equation"),
@@ -78,7 +78,7 @@ def build_carbon_mapping_queue(mapping_path: Path, networkdb_path: Path, output:
             "candidate_protein_ids": sorted({protein.get("proteinId") for protein in reaction.get("candidate_proteins", []) if protein.get("proteinId")}),
             "mapping_methods": sorted({mapping_row.get("method") for mapping_row in row.get("mappings", []) if mapping_row.get("method")}),
         })
-    items.sort(key=lambda item: (-item["rank_key"], -item["mapping_status_counts"]["unresolved"], item["reaction_id"]))
+    items.sort(key=lambda item: tuple(-value for value in item["rank_key"]) + (item["reaction_id"],))
     for rank, item in enumerate(items, 1):
         item["rank"] = rank
         item.pop("rank_key")
