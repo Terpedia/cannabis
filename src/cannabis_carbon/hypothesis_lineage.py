@@ -6,6 +6,27 @@ import json
 from collections import Counter, deque
 from pathlib import Path
 
+from rdkit import Chem
+from rdkit.Chem import rdFMCS
+from rdkit import RDLogger
+
+RDLogger.DisableLog("rdApp.*")
+
+
+def _carbon_mcs(source_smiles: str | None, product_smiles: str | None) -> dict:
+    source = Chem.MolFromSmiles(source_smiles or "")
+    product = Chem.MolFromSmiles(product_smiles or "")
+    product_carbons = {a.GetIdx() for a in product.GetAtoms() if a.GetAtomicNum() == 6} if product else set()
+    if source is None or product is None:
+        return {"status": "unresolved", "product_carbon_atoms": len(product_carbons), "mapped_product_carbon_atoms": 0, "reason": "missing-endpoint-structure"}
+    result = rdFMCS.FindMCS([source, product], atomCompare=rdFMCS.AtomCompare.CompareElements, bondCompare=rdFMCS.BondCompare.CompareAny, ringMatchesRingOnly=False, completeRingsOnly=False, timeout=1)
+    if result.canceled:
+        return {"status": "unresolved", "product_carbon_atoms": len(product_carbons), "mapped_product_carbon_atoms": 0, "reason": "mcs-timeout"}
+    query = Chem.MolFromSmarts(result.smartsString)
+    product_matches = product.GetSubstructMatches(query, uniquify=True) if query else []
+    mapped = {atom for match in product_matches for atom in match if atom in product_carbons}
+    return {"status": "candidate" if mapped == product_carbons else "unresolved", "product_carbon_atoms": len(product_carbons), "mapped_product_carbon_atoms": len(mapped), "mcs_atoms": result.numAtoms, "mapping_alternatives": len(product_matches), "reason": "complete-product-carbon-coverage" if mapped == product_carbons else "partial-product-carbon-coverage"}
+
 
 def build_hypothesis_lineage(networkdb_path: Path, output: Path) -> dict:
     """Traverse candidate hypothesis edges without promoting them to core lineage.
@@ -74,6 +95,14 @@ def build_hypothesis_lineage(networkdb_path: Path, output: Path) -> dict:
                 })
                 current = source
             path.reverse()
+        atom_mapping = []
+        for step in path:
+            edge = next((candidate for candidate in candidate_edges if candidate.get("reaction_id") == step["reaction_id"] and candidate.get("substrate_compound_id") == step["from_compound_id"] and candidate.get("product_compound_id") == step["to_compound_id"]), None)
+            if edge is None:
+                atom_mapping.append({"reaction_id": step["reaction_id"], "status": "unresolved", "reason": "hypothesis-edge-not-found"})
+                continue
+            atom_mapping.append({"reaction_id": step["reaction_id"], **_carbon_mcs(by_id.get(edge.get("substrate_compound_id"), {}).get("smiles"), by_id.get(edge.get("product_compound_id"), {}).get("smiles"))})
+        complete_atom_path = bool(path) and all(item.get("status") == "candidate" for item in atom_mapping)
         target_rows.append({
             "cannabisdb_id": compound_id,
             "label": compound.get("label"),
@@ -82,6 +111,8 @@ def build_hypothesis_lineage(networkdb_path: Path, output: Path) -> dict:
             "status": status,
             "reason": reason,
             "path": path,
+            "atom_mapping": atom_mapping,
+            "atom_mapping_status": "complete-candidate" if complete_atom_path else "not-complete",
         })
 
     status_counts = Counter(row["status"] for row in target_rows)
@@ -101,6 +132,8 @@ def build_hypothesis_lineage(networkdb_path: Path, output: Path) -> dict:
             "carbon_atoms_by_status": dict(sorted(carbon_counts.items())),
             "candidate_cannabisdb_targets": sum(row["status"] == "candidate" for row in target_rows),
             "candidate_cannabisdb_carbon_atoms": carbon_counts["candidate"],
+            "candidate_targets_with_complete_atom_paths": sum(row["atom_mapping_status"] == "complete-candidate" for row in target_rows),
+            "candidate_carbon_atoms_with_complete_atom_paths": sum(row["carbon_atom_count"] for row in target_rows if row["atom_mapping_status"] == "complete-candidate"),
         },
         "blocked_unresolved_hypothesis_edges": dict(sorted(blocked_edges.items())),
         "targets": target_rows,

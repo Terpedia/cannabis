@@ -199,7 +199,9 @@
           "unresolved": 282663
         },
         "candidate_cannabisdb_targets": 17,
-        "candidate_cannabisdb_carbon_atoms": 387
+        "candidate_cannabisdb_carbon_atoms": 387,
+        "candidate_targets_with_complete_atom_paths": 12,
+        "candidate_carbon_atoms_with_complete_atom_paths": 241
       },
       "blocked_unresolved_hypothesis_edges": {
         "ambiguous-connectivity-match": 6,
