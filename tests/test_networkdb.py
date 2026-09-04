@@ -60,3 +60,27 @@ def test_networkdb_labels_non_enzymatic_reactions(tmp_path):
     output = tmp_path / "networkdb.json"
     build_networkdb(network_path, compounds_path, crosswalk_path, output)
     assert json.loads(output.read_text())["reactions"][0]["status"] == "non_enzymatic"
+
+
+def test_networkdb_orients_participants_from_directional_override(tmp_path):
+    network_path = tmp_path / "network.json.gz"
+    network = {"entities": [
+        {"id": "m:a", "type": "metabolite", "label": "A"},
+        {"id": "m:b", "type": "metabolite", "label": "B"},
+        {"id": "r:1", "type": "biochemical_reaction", "label": "B = A", "attributes": {}, "identifiers": {}},
+    ], "statements": [
+        {"subjectId": "r:1", "predicate": "has_reactant", "objectEntityId": "m:b"},
+        {"subjectId": "r:1", "predicate": "has_product", "objectEntityId": "m:a"},
+    ]}
+    with gzip.open(network_path, "wt") as handle: json.dump(network, handle)
+    (tmp_path / "directional-reaction-overrides.json").write_text(json.dumps({"r:1": {"orientation": "reverse_master", "directional_rhea_id": "2"}}))
+    compounds_path = tmp_path / "compounds.json"
+    compounds_path.write_text(json.dumps({"compounds": []}))
+    crosswalk_path = tmp_path / "crosswalk.json"
+    crosswalk_path.write_text(json.dumps({"matches": [], "ambiguous": 0, "unmatched": 0}))
+    output = tmp_path / "networkdb.json"
+    build_networkdb(network_path, compounds_path, crosswalk_path, output)
+    reaction = json.loads(output.read_text())["reactions"][0]
+    assert [p["compound_id"] for p in reaction["reactants"]] == ["m:a"]
+    assert [p["compound_id"] for p in reaction["products"]] == ["m:b"]
+    assert reaction["raw_reactants"][0]["compound_id"] == "m:b"

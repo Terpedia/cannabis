@@ -29,7 +29,13 @@ def load_network(path: Path, additions_path: Path | None = None) -> dict:
     return network
 
 
-def cytoscape_elements(network: dict) -> dict:
+def cytoscape_elements(network: dict, direction_overrides: dict | None = None) -> dict:
+    """Export compound-to-compound reaction edges with curated directions.
+
+    Raw Rhea master records are often oriented opposite to the physiological
+    direction.  The override layer is evidence, not a flux assertion; the raw
+    participant orientation remains available in the edge metadata.
+    """
     entities = {row["id"]: row for row in network["entities"]}
     reactions = {key: row for key, row in entities.items() if row.get("type") == "biochemical_reaction"}
     metabolites = {key: row for key, row in entities.items() if row.get("type") == "metabolite"}
@@ -54,6 +60,9 @@ def cytoscape_elements(network: dict) -> dict:
         nodes.append({"data": {"id": metabolite_id, "label": row.get("label", metabolite_id), "kind": "compound", "status": "supported", "source_url": row.get("url")}})
     edges = []
     for reaction_id in reactions:
+        direction = (direction_overrides or {}).get(reaction_id, {})
+        oriented_reactants = products[reaction_id] if direction.get("orientation") == "reverse_master" else reactants[reaction_id]
+        oriented_products = reactants[reaction_id] if direction.get("orientation") == "reverse_master" else products[reaction_id]
         enzyme_ids = sorted(set(enzymes[reaction_id]))
         enzyme_labels = [entities[e].get("label", e) for e in enzyme_ids if e in entities]
         status = "supported" if any(q.get("directExperimentalEvidence") for q in evidence[reaction_id]) else "candidate"
@@ -62,8 +71,22 @@ def cytoscape_elements(network: dict) -> dict:
             label = f"{label} · {'; '.join(enzyme_labels[:3])}"
         else:
             label = f"{label} · enzyme unresolved"
-        for reactant in reactants[reaction_id]:
-            for product in products[reaction_id]:
+        for reactant in oriented_reactants:
+            for product in oriented_products:
                 if reactant in metabolites and product in metabolites:
-                    edges.append({"data": {"id": f"{reaction_id}:{reactant}>{product}", "source": reactant, "target": product, "label": label, "kind": "reaction", "status": status, "reaction_id": reaction_id, "enzyme_ids": enzyme_ids, "source_url": reactions[reaction_id].get("url")}})
-    return {"schema": "cannabis-carbon.cytoscape.v1", "nodes": nodes, "edges": edges, "stats": {"metabolites": len(nodes), "reaction_edges": len(edges), "reactions": len(reactions)}}
+                    edges.append({"data": {
+                        "id": f"{reaction_id}:{reactant}>{product}",
+                        "source": reactant,
+                        "target": product,
+                        "label": label,
+                        "kind": "reaction",
+                        "status": status,
+                        "reaction_id": reaction_id,
+                        "enzyme_ids": enzyme_ids,
+                        "source_url": reactions[reaction_id].get("url"),
+                        "raw_direction": "product-to-reactant" if direction.get("orientation") == "reverse_master" else "reactant-to-product",
+                        "directional_rhea_id": direction.get("directional_rhea_id"),
+                        "direction_evidence_url": direction.get("source"),
+                        "direction_reason": direction.get("reason"),
+                    }})
+    return {"schema": "cannabis-carbon.cytoscape.v1", "nodes": nodes, "edges": edges, "stats": {"metabolites": len(nodes), "reaction_edges": len(edges), "reactions": len(reactions), "direction_overrides": sum(bool((direction_overrides or {}).get(rid)) for rid in reactions)}}

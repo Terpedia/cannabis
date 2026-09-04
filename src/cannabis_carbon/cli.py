@@ -191,7 +191,9 @@ def main() -> None:
     elif args.command == "ingest-sdf":
         print(json.dumps(ingest_sdf(args.source, args.graph_out, args.report_out), indent=2))
     elif args.command == "export-terpedia-graph":
-        graph = cytoscape_elements(load_network(args.source))
+        directions_path = args.source.parent / "directional-reaction-overrides.json"
+        directions = json.loads(directions_path.read_text()) if directions_path.exists() else {}
+        graph = cytoscape_elements(load_network(args.source), directions)
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(json.dumps(graph, separators=(",", ":")) + "\n")
         print(json.dumps(graph["stats"], indent=2))

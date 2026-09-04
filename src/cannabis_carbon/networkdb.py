@@ -13,6 +13,8 @@ from .terpedia import load_network
 
 def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Path, output: Path, hypotheses_path: Path | None = None, genome_search_path: Path | None = None, genome_fasta_path: Path | None = None, mapping_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None, pubchem_path: Path | None = None) -> dict:
     network = load_network(network_path)
+    directions_path = network_path.parent / "directional-reaction-overrides.json"
+    directions = json.loads(directions_path.read_text()) if directions_path.exists() else {}
     catalog = json.loads(compounds_path.read_text())["compounds"]
     crosswalk = json.loads(crosswalk_path.read_text())
     pubchem = json.loads(pubchem_path.read_text()) if pubchem_path and pubchem_path.exists() else None
@@ -87,7 +89,10 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
         mapping_counts = {status: sum(m.get("status") == status for m in (mapping or {}).get("mappings", [])) for status in ("inferred", "candidate", "ambiguous", "unresolved")}
         carbon_status = "unavailable" if mapping is None else "unresolved" if mapping_counts["unresolved"] else "ambiguous" if mapping_counts["ambiguous"] else "candidate" if mapping_counts["candidate"] else "inferred"
         carbon_mapping = {"status": carbon_status, "product_carbon_atoms": (mapping or {}).get("product_carbon_atom_count"), "counts": mapping_counts, "lineage_edge_counts": lineage_edges_by_reaction.get(reaction_id, {status: 0 for status in ("inferred", "candidate")}), "source": str(mapping_path) if mapping_path else None, "lineage_source": str(lineage_path) if lineage_path else None}
-        reactions.append({"id": reaction_id, "label": entity.get("label", reaction_id), "equation": attrs.get("equation"), "reaction_smiles": attrs.get("reactionSmiles"), "ec_numbers": attrs.get("ecNumbers", []), "reactants": participants("has_reactant"), "products": participants("has_product"), "enzyme_ids": enzymes, "enzyme_associations": [{"enzyme_id": s.get("subjectId"), "predicate": s.get("predicate"), "sources": s.get("sources", []), "qualifiers": s.get("qualifiers", {})} for s in enzyme_statements], "candidate_proteins": candidate_proteins, "status": "supported" if any((s.get("qualifiers") or {}).get("directExperimentalEvidence") for s in enzyme_statements) else "candidate" if enzymes or candidate_proteins else "unresolved", "carbon_mapping": carbon_mapping, "source_url": entity.get("url"), "directional_rhea_ids": entity.get("identifiers", {}).get("directionalRheaIds", [])})
+        raw_reactants, raw_products = participants("has_reactant"), participants("has_product")
+        direction = directions.get(reaction_id, {})
+        reactants, products = (raw_products, raw_reactants) if direction.get("orientation") == "reverse_master" else (raw_reactants, raw_products)
+        reactions.append({"id": reaction_id, "label": entity.get("label", reaction_id), "equation": attrs.get("equation"), "reaction_smiles": attrs.get("reactionSmiles"), "ec_numbers": attrs.get("ecNumbers", []), "reactants": reactants, "products": products, "raw_reactants": raw_reactants, "raw_products": raw_products, "direction": direction, "enzyme_ids": enzymes, "enzyme_associations": [{"enzyme_id": s.get("subjectId"), "predicate": s.get("predicate"), "sources": s.get("sources", []), "qualifiers": s.get("qualifiers", {})} for s in enzyme_statements], "candidate_proteins": candidate_proteins, "status": "supported" if any((s.get("qualifiers") or {}).get("directExperimentalEvidence") for s in enzyme_statements) else "candidate" if enzymes or candidate_proteins else "unresolved", "carbon_mapping": carbon_mapping, "source_url": entity.get("url"), "directional_rhea_ids": entity.get("identifiers", {}).get("directionalRheaIds", [])})
     for reaction in reactions:
         if entities.get(reaction["id"], {}).get("attributes", {}).get("reactionClass") == "non-enzymatic-decarboxylation":
             reaction["status"] = "non_enzymatic"
