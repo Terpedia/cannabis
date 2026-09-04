@@ -133,6 +133,24 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The separate [direction-unresolved family search](data/phase1-family-protein-search.json)
+searched all 30,304 Cannabis proteome sequences against all 168 retrieved reviewed
+reference proteins using DIAMOND's sensitive mode. Among 282 retained gap variants,
+62 have screened family-homology candidates (172 distinct Cannabis proteins;
+831 protein–reaction hypotheses), 41 have weak hits only, 22 have no hits, and
+157 have no family-reference sequence to search. Screening requires at least
+30% identity, 50% coverage of both proteins, and E-value at most 1e-5.
+Full alignments, candidate/reference sequences and hashes, the search command,
+source reaction-family annotations, and proposed validation tests are retained.
+All requested reaction directions remain unverified; this layer is not silently
+added to the main map's 202/491 candidate-evidence metric.
+
+The matching GCP snapshot is
+`terpedia-489015.terpedia_core.cannabis_phase1_family_protein_search_20260904_v1`,
+with one row per gap variant and JSON columns preserving alignments, references,
+candidate proteins and validation blockers. The load source is
+`data/reports/phase1-family-protein-search.ndjson`.
+
 The [Phase 1 reference-discovery audit](data/phase1-reference-discovery.json)
 checks all 282 missing-reference variants against Terpedia's current normalized
 reaction catalog (282 exact reaction-ID/SMARTS matches) and reviewed, nonfragment

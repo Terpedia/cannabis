@@ -1,0 +1,12 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_family_protein_search_20260904_v1",
+  "load_job_id": "bqjob_r7dcbdf81c2a3da78_000001a06e83e736_1",
+  "source": "data/reports/phase1-family-protein-search.ndjson",
+  "report_sha256": "1d7e12f8e3084c2f79d3edbc372225afe4da1219f179ea9dbadfebbd9161ba04",
+  "verified_variants": 282,
+  "verified_variants_with_screened_candidates": 62,
+  "verified_distinct_proteins": 172,
+  "verified_protein_reaction_hypotheses": 831,
+  "verified_report_snapshots": 1,
+  "claim_boundary": "Direction-unresolved family homology, not confirmed reaction-direction or Cannabis activity evidence."
+}
