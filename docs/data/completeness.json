@@ -92,26 +92,26 @@
     "crosswalk_matched_carbon_atoms": 1585
   },
   "coverage": {
-    "mapped_carbon_atoms": 5198,
-    "unresolved_carbon_atoms": 8884,
+    "mapped_carbon_atoms": 5225,
+    "unresolved_carbon_atoms": 8852,
     "coverage_percent": null,
     "coverage_denominator": "all CannabisDB carbons; no complete pathway crosswalk",
     "reaction_product_carbon_atoms": 22751,
-    "reaction_mapping_coverage_percent": 22.8473,
+    "reaction_mapping_coverage_percent": 22.966,
     "reaction_mapping_status_counts": {
-      "inferred": 278,
+      "inferred": 279,
       "candidate": 281,
-      "unresolved": 548
+      "unresolved": 547
     },
     "carbon_mapping_blockers": {
-      "reactions_with_blocked_product_carbon_rows": 494,
+      "reactions_with_blocked_product_carbon_rows": 493,
       "product_carbon_row_status_counts": {
-        "ambiguous": 8465,
-        "candidate": 8669,
-        "inferred": 5198,
-        "unresolved": 419
+        "ambiguous": 8440,
+        "candidate": 8674,
+        "inferred": 5225,
+        "unresolved": 412
       },
-      "blocked_product_carbon_rows": 8884
+      "blocked_product_carbon_rows": 8852
     },
     "co2_lineage": {
       "target_summary": {
@@ -119,10 +119,10 @@
         "candidate": 199,
         "unresolved": 6020
       },
-      "reachable_carbon_nodes": 2641,
-      "resolved_carbon_edges": 58543,
-      "inferred_carbon_edges": 3963,
-      "candidate_carbon_edges": 54580,
+      "reachable_carbon_nodes": 2685,
+      "resolved_carbon_edges": 58526,
+      "inferred_carbon_edges": 3990,
+      "candidate_carbon_edges": 54536,
       "external_carbon_input_entity_count": 460,
       "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2.",
       "target_triage": {
@@ -159,14 +159,14 @@
       "carbon_atoms_total": 285623,
       "status_counts": {
         "supported": 1,
-        "candidate": 1381,
+        "candidate": 1421,
         "inferred": 0,
-        "unresolved": 284241
+        "unresolved": 284201
       },
       "compound_count": 6220,
       "strict_supported_percent": 0.00035,
-      "evidence_bearing_percent": 0.483855,
-      "unresolved_percent": 99.516145
+      "evidence_bearing_percent": 0.497859,
+      "unresolved_percent": 99.502141
     }
   },
   "claim_boundary": "These are database-coverage metrics, not evidence that every listed compound is biosynthesized by Cannabis.",

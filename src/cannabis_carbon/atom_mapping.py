@@ -473,14 +473,20 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
 
 
 def apply_reaction_specific_candidate_mapping(reaction_id: str, reaction_smiles: str | None, mapping: dict) -> dict:
-    """Add a narrowly scoped candidate mapping for the Cannabis OAC assembly.
+    """Add narrowly scoped candidate mappings for the Cannabis polyketide assemblies.
 
     The generic mapper intentionally rejects several cyclization correspondences.
     For tetraketide-CoA → olivetolate, bounded pairwise carbon MCS identifies
-    seven unique retained product-carbon candidates. They remain candidates,
-    not inferred or confirmed mechanistic assignments.
+    seven unique retained product-carbon candidates. For the coupled
+    butyryl-CoA → divarinolic-acid varin assembly, the same bounded search
+    identifies five product carbons with multiple precursor alternatives. All
+    alternatives remain explicit candidates; none are mechanistically resolved.
     """
-    if reaction_id != "cannabis:reaction:tetraketide-coa-to-olivetolate" or not reaction_smiles or ">>" not in reaction_smiles:
+    supported_reactions = {
+        "cannabis:reaction:tetraketide-coa-to-olivetolate",
+        "cannabis:reaction:butyryl-coa-to-divarinolic-acid",
+    }
+    if reaction_id not in supported_reactions or not reaction_smiles or ">>" not in reaction_smiles:
         return mapping
     left, right = reaction_smiles.split(">>", 1)
     reactants, products = _molecules(left), _molecules(right)
@@ -492,10 +498,10 @@ def apply_reaction_specific_candidate_mapping(reaction_id: str, reaction_smiles:
         for ri, reactant in enumerate(reactants):
             for _, atom in _mcs_carbon_candidates_cached(Chem.MolToSmiles(reactant), Chem.MolToSmiles(product), row["product_atom"]):
                 choices.add((ri, atom))
-        if len(choices) != 1:
+        if not choices:
             continue
-        ri, atom = next(iter(choices))
-        row.update({"reactant_index": ri, "reactant_atom": atom, "status": "candidate", "method": "rdkit-targeted-pairwise-mcs-candidate", "alternatives": [{"reactant_index": ri, "reactant_atom": atom}]})
+        alternatives = [{"reactant_index": ri, "reactant_atom": atom} for ri, atom in sorted(choices)]
+        row.update({"reactant_index": alternatives[0]["reactant_index"], "reactant_atom": alternatives[0]["reactant_atom"], "status": "candidate", "method": "rdkit-targeted-pairwise-mcs-candidate", "alternatives": alternatives})
         row.pop("reason", None)
     unresolved = [{"product_index": row["product_index"], "product_atom": row["product_atom"], "status": row["status"], "reason": row.get("reason")} for row in mapping.get("mappings", []) if row.get("status") not in ("inferred", "candidate")]
     mapping["unresolved_product_carbons"] = unresolved
