@@ -407,7 +407,25 @@ def build_candidate_expansion_bridges(expansion_path: Path, network_path: Path, 
                 bridges.append({"product_terpene_id": row.get("product_terpene_id"), "precursor_terpene_id": row.get("precursor_terpene_id"), "core_product_entity_id": product_id, "core_precursor_entity_id": precursor_id, "touches_co2_reachable_core": product_id in reachable or precursor_id in reachable, "touches_reversible_co2_core": product_id in reversible_reachable or precursor_id in reversible_reachable, "reaction_id": row.get("reaction_id"), "source_type": row.get("source_type"), "source_url": row.get("source_url"), "source_uniprot_id": row.get("source_uniprot_id"), "expansion_depth": row.get("expansion_depth"), "status": "candidate", "claim_boundary": "Structure-preserving bridge only; source identity, reaction direction, enzyme activity, and CO2 provenance remain unresolved."})
     unique = {(r["product_terpene_id"], r["precursor_terpene_id"], r["core_product_entity_id"], r["core_precursor_entity_id"], r["reaction_id"], r["expansion_depth"]): r for r in bridges}
     bridges = sorted(unique.values(), key=lambda r: (r["expansion_depth"] or 0, r["product_terpene_id"] or "", r["reaction_id"] or ""))
-    result = {"schema": "cannabis-carbon.terpene-identity-set-candidate-expansion-bridges.v1", "source_expansion": str(expansion_path), "source_network": str(network_path), "source_lineage": str(lineage_path) if lineage_path else None, "bridge_count": len(bridges), "distinct_expansion_products": len({r["product_terpene_id"] for r in bridges}), "distinct_expansion_precursors": len({r["precursor_terpene_id"] for r in bridges}), "bridges_touching_co2_reachable_core": sum(r["touches_co2_reachable_core"] for r in bridges), "bridges_touching_reversible_co2_core": sum(r["touches_reversible_co2_core"] for r in bridges), "bridges": bridges, "claim_boundary": "These are candidate structural bridges between the expanded identity-set neighborhood and Terpedia core entities. Directed and reversible reachability are reported separately; neither establishes exact identity, physiological direction, enzyme function, isotope tracing, or in-vivo Cannabis biosynthesis."}
+    by_reaction = {}
+    for bridge in bridges:
+        item = by_reaction.setdefault(bridge["reaction_id"], {"reaction_id": bridge["reaction_id"], "bridge_count": 0, "reversible_co2_bridge_count": 0, "source_types": set(), "source_uniprot_ids": set(), "source_urls": set()})
+        item["bridge_count"] += 1
+        item["reversible_co2_bridge_count"] += int(bridge["touches_reversible_co2_core"])
+        if bridge.get("source_type"): item["source_types"].add(bridge["source_type"])
+        if bridge.get("source_uniprot_id"): item["source_uniprot_ids"].add(bridge["source_uniprot_id"])
+        if bridge.get("source_url"): item["source_urls"].add(bridge["source_url"])
+    direction_queue = []
+    for item in by_reaction.values():
+        item["source_types"] = sorted(item["source_types"])
+        item["source_uniprot_ids"] = sorted(item["source_uniprot_ids"])
+        item["source_urls"] = sorted(item["source_urls"])
+        item["direction_status"] = "unresolved"
+        item["priority"] = "high" if item["reversible_co2_bridge_count"] else "normal"
+        item["blocker"] = "No curated physiological direction is attached to this expanded candidate reaction; reversible reachability is an upper bound only."
+        direction_queue.append(item)
+    direction_queue.sort(key=lambda item: (-item["reversible_co2_bridge_count"], -item["bridge_count"], item["reaction_id"] or ""))
+    result = {"schema": "cannabis-carbon.terpene-identity-set-candidate-expansion-bridges.v1", "source_expansion": str(expansion_path), "source_network": str(network_path), "source_lineage": str(lineage_path) if lineage_path else None, "bridge_count": len(bridges), "distinct_expansion_products": len({r["product_terpene_id"] for r in bridges}), "distinct_expansion_precursors": len({r["precursor_terpene_id"] for r in bridges}), "bridges_touching_co2_reachable_core": sum(r["touches_co2_reachable_core"] for r in bridges), "bridges_touching_reversible_co2_core": sum(r["touches_reversible_co2_core"] for r in bridges), "direction_curation_reaction_count": len(direction_queue), "direction_curation_queue": direction_queue, "bridges": bridges, "claim_boundary": "These are candidate structural bridges between the expanded identity-set neighborhood and Terpedia core entities. Directed and reversible reachability are reported separately; neither establishes exact identity, physiological direction, enzyme function, isotope tracing, or in-vivo Cannabis biosynthesis."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, separators=(",", ":")) + "\n")
     return {key: result[key] for key in ("bridge_count", "distinct_expansion_products", "distinct_expansion_precursors", "bridges_touching_co2_reachable_core")}

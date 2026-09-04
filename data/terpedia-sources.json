@@ -40,6 +40,7 @@
           ,"candidate_expansion_bridges": 15266
           ,"candidate_expansion_bridges_touching_directed_co2": 0
           ,"candidate_expansion_bridges_touching_reversible_co2": 2308
+          ,"candidate_expansion_bridge_reaction_records": 90
         },
         {
           "table": "terpedia-489015.terpedia_core.terpene_biotransformation_hypothetical_connections_current_v2",
