@@ -133,6 +133,15 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The Phase 1 core enzyme evidence supplement
+(`docs/data/phase1-core-enzyme-evidence.json`) links 24 balanced expansion
+variants lacking search reference sequences to existing core enzyme associations
+through explicit Rhea IDs or listed directional IDs. It preserves association
+sources, qualifiers, core equation participants, and input checksums. These are
+annotation/candidate links, not new biochemical confirmations; original sequence
+search statuses remain unchanged, and core equation orientation does not establish
+the expansion's physiological direction.
+
 The Phase 1 experimental shortlist (`docs/data/phase1-experimental-shortlist.json`)
 groups 3,098 protein–reaction proposals under 18 Cannabis proteins, covering
 175 balanced reaction variants. Every protein retains its source FASTA header,
