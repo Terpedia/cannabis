@@ -23,6 +23,7 @@ from .genome import build_genome_search
 from .inventory import build_specialty_inventory
 from .test_hypotheses import build_test_hypotheses
 from .validate import validate_artifacts
+from .pubchem import resolve_pubchem
 
 DOWNLOADS = {
     "compounds.sdf": "https://cannabisdatabase.ca/simple/download_compound_as_sdf",
@@ -159,6 +160,13 @@ def main() -> None:
     p_validate.add_argument("balance", type=Path)
     p_validate.add_argument("compounds", type=Path)
     p_validate.add_argument("--out", type=Path, default=Path("data/reports/artifact-validation.json"))
+    p_pubchem = sub.add_parser("pubchem-resolve")
+    p_pubchem.add_argument("compounds", type=Path, default=Path("docs/data/compounds.json"), nargs="?")
+    p_pubchem.add_argument("--out", type=Path, default=Path("data/reports/pubchem-resolution.json"))
+    p_pubchem.add_argument("--batch-size", type=int, default=25)
+    p_pubchem.add_argument("--pause", type=float, default=0.25)
+    p_pubchem.add_argument("--workers", type=int, default=4)
+    p_pubchem.add_argument("--cache", type=Path, default=Path("data/reports/pubchem-cache.json"))
     args = parser.parse_args()
     if args.command == "download":
         download(args.out, args.insecure_download)
@@ -204,6 +212,8 @@ def main() -> None:
         print(json.dumps(result, indent=2))
         if not result["valid"]:
             raise SystemExit(1)
+    elif args.command == "pubchem-resolve":
+        print(json.dumps(resolve_pubchem(args.compounds, args.out, args.batch_size, args.pause, args.workers, args.cache), indent=2))
 
 
 if __name__ == "__main__":
