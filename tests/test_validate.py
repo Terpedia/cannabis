@@ -14,7 +14,7 @@ def test_validate_artifacts_enforces_carbon_partition_and_mapping_rows(tmp_path)
     balance.write_text(json.dumps({"reactions": [{"reaction_id": "r1", "status": "balanced"}]}))
     result = validate_artifacts(audit, mapping, balance, compounds, tmp_path / "out.json")
     assert result["valid"]
-    assert result["checks"] == {"carbon_atom_partition": True, "atom_evidence_fields": True, "global_carbon_accounting": True, "carbon_path_integrity": True, "reaction_product_carbon_rows": True, "reaction_mapping_classification": True, "no_imbalanced_reactions": True}
+    assert result["checks"] == {"carbon_atom_partition": True, "atom_evidence_fields": True, "global_carbon_accounting": True, "carbon_path_integrity": True, "carbon_mapping_queue_consistency": True, "reaction_product_carbon_rows": True, "reaction_mapping_classification": True, "no_imbalanced_reactions": True}
 
 
 def test_validate_artifacts_rejects_omitted_carbon(tmp_path):

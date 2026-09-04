@@ -175,6 +175,7 @@ def main() -> None:
     p_validate.add_argument("mapping", type=Path)
     p_validate.add_argument("balance", type=Path)
     p_validate.add_argument("compounds", type=Path)
+    p_validate.add_argument("--mapping-queue", type=Path, default=Path("data/reports/carbon-mapping-work-queue.json"))
     p_validate.add_argument("--out", type=Path, default=Path("data/reports/artifact-validation.json"))
     p_pubchem = sub.add_parser("pubchem-resolve")
     p_pubchem.add_argument("compounds", type=Path, default=Path("docs/data/compounds.json"), nargs="?")
@@ -240,7 +241,7 @@ def main() -> None:
     elif args.command == "test-hypotheses":
         print(json.dumps(build_test_hypotheses(args.queue, args.network, args.out, args.lineage, args.compounds), indent=2))
     elif args.command == "validate-artifacts":
-        result = validate_artifacts(args.atom_audit, args.mapping, args.balance, args.compounds, args.out)
+        result = validate_artifacts(args.atom_audit, args.mapping, args.balance, args.compounds, args.out, args.mapping_queue)
         print(json.dumps(result, indent=2))
         if not result["valid"]:
             raise SystemExit(1)

@@ -33,6 +33,7 @@ jobs:
           data/reports/reaction-carbon-mapping.json
           data/reports/phase1-balance-audit.json
           docs/data/compounds.json
+          --mapping-queue data/reports/carbon-mapping-work-queue.json
           --out /tmp/artifact-validation.json
       - name: Require valid artifact gate
         run: python -c "import json; assert json.load(open('/tmp/artifact-validation.json'))['valid']"

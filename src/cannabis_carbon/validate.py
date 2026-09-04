@@ -13,7 +13,7 @@ def _carbon_indices(smiles: str | None) -> set[int]:
     return {atom.GetIdx() for atom in molecule.GetAtoms() if atom.GetAtomicNum() == 6} if molecule else set()
 
 
-def validate_artifacts(atom_audit_path: Path, mapping_path: Path, balance_path: Path, compounds_path: Path, output: Path) -> dict:
+def validate_artifacts(atom_audit_path: Path, mapping_path: Path, balance_path: Path, compounds_path: Path, output: Path, mapping_queue_path: Path | None = None) -> dict:
     audit = json.loads(atom_audit_path.read_text())
     mapping = json.loads(mapping_path.read_text())
     balance = json.loads(balance_path.read_text())
@@ -78,13 +78,25 @@ def validate_artifacts(atom_audit_path: Path, mapping_path: Path, balance_path: 
                 failures.append({"kind": "reaction-carbon-blocker-missing", "reaction_id": row.get("reaction_id"), "product_index": mapped.get("product_index"), "product_atom": mapped.get("product_atom")})
     imbalanced = [row.get("reaction_id") for row in balance.get("reactions", []) if row.get("status") == "imbalanced"]
     failures.extend({"kind": "imbalanced-reaction", "reaction_id": reaction_id} for reaction_id in imbalanced)
+    queue_consistent = True
+    if mapping_queue_path and mapping_queue_path.exists():
+        mapping_queue = json.loads(mapping_queue_path.read_text())
+        expected_blocked = {
+            row.get("reaction_id")
+            for row in mapping.get("reactions", [])
+            if any(mapping_row.get("status") in {"ambiguous", "unresolved"} for mapping_row in row.get("mappings", []))
+        }
+        observed_blocked = {item.get("reaction_id") for item in mapping_queue.get("items", [])}
+        queue_consistent = expected_blocked == observed_blocked
+        if not queue_consistent:
+            failures.append({"kind": "carbon-mapping-queue-mismatch", "expected_reaction_count": len(expected_blocked), "observed_reaction_count": len(observed_blocked)})
     if audit.get("carbon_atoms_total") != expected_total:
         failures.append({"kind": "global-carbon-total-mismatch", "expected": expected_total, "observed": audit.get("carbon_atoms_total")})
     if sum(observed_status_counts.values()) != expected_total:
         failures.append({"kind": "global-carbon-status-accounting-mismatch", "expected": expected_total, "observed": sum(observed_status_counts.values()), "status_counts": observed_status_counts})
     if audit.get("status_counts") is not None and audit.get("status_counts") != observed_status_counts:
         failures.append({"kind": "reported-carbon-status-count-mismatch", "reported": audit.get("status_counts"), "observed": observed_status_counts})
-    result = {"schema": "cannabis-carbon.artifact-validation.v1", "valid": not failures, "checks": {"carbon_atom_partition": not any(f["kind"] in ("missing-compound-audit", "carbon-atom-partition-mismatch", "duplicate-compound-audit") for f in failures), "atom_evidence_fields": not any(f["kind"] == "atom-evidence-fields-missing" for f in failures), "global_carbon_accounting": not any(f["kind"] in ("global-carbon-total-mismatch", "global-carbon-status-accounting-mismatch", "reported-carbon-status-count-mismatch") for f in failures), "carbon_path_integrity": not any(f["kind"].startswith("carbon-path-") for f in failures), "reaction_product_carbon_rows": not any(f["kind"] == "missing-reaction-product-carbon-row" for f in failures), "reaction_mapping_classification": not any(f["kind"] in ("invalid-reaction-carbon-status", "reaction-carbon-blocker-missing") for f in failures), "no_imbalanced_reactions": not imbalanced}, "compounds_checked": len(compounds), "carbon_atoms_expected": expected_total, "carbon_atoms_audited": audit.get("carbon_atoms_total"), "carbon_atom_status_counts": observed_status_counts, "reactions_checked": len(mapping.get("reactions", [])), "imbalanced_reaction_count": len(imbalanced), "failures": failures, "claim_boundary": "This gate validates artifact accounting, evidence-field presence, path continuity, and stoichiometric status. It does not establish enzyme function, isotope tracing, or in-vivo flux."}
+    result = {"schema": "cannabis-carbon.artifact-validation.v1", "valid": not failures, "checks": {"carbon_atom_partition": not any(f["kind"] in ("missing-compound-audit", "carbon-atom-partition-mismatch", "duplicate-compound-audit") for f in failures), "atom_evidence_fields": not any(f["kind"] == "atom-evidence-fields-missing" for f in failures), "global_carbon_accounting": not any(f["kind"] in ("global-carbon-total-mismatch", "global-carbon-status-accounting-mismatch", "reported-carbon-status-count-mismatch") for f in failures), "carbon_path_integrity": not any(f["kind"].startswith("carbon-path-") for f in failures), "carbon_mapping_queue_consistency": queue_consistent, "reaction_product_carbon_rows": not any(f["kind"] == "missing-reaction-product-carbon-row" for f in failures), "reaction_mapping_classification": not any(f["kind"] in ("invalid-reaction-carbon-status", "reaction-carbon-blocker-missing") for f in failures), "no_imbalanced_reactions": not imbalanced}, "compounds_checked": len(compounds), "carbon_atoms_expected": expected_total, "carbon_atoms_audited": audit.get("carbon_atoms_total"), "carbon_atom_status_counts": observed_status_counts, "reactions_checked": len(mapping.get("reactions", [])), "imbalanced_reaction_count": len(imbalanced), "failures": failures, "claim_boundary": "This gate validates artifact accounting, evidence-field presence, path continuity, queue consistency, and stoichiometric status. It does not establish enzyme function, isotope tracing, or in-vivo flux."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2) + "\n")
     return result
