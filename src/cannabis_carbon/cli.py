@@ -258,6 +258,8 @@ def main() -> None:
     p_candidate_lineage = sub.add_parser("reversible-candidate-lineage")
     p_candidate_lineage.add_argument("bridges", type=Path, default=Path("data/reports/terpene-identity-set-candidate-expansion-bridges.json"), nargs="?")
     p_candidate_lineage.add_argument("lineage", type=Path, default=Path("data/reports/carbon-lineage.json"), nargs="?")
+    p_candidate_lineage.add_argument("--balance-audit", type=Path, default=Path("data/reports/terpene-identity-set-candidate-expansion-balance-audit.json"))
+    p_candidate_lineage.add_argument("--expansion", type=Path, default=Path("data/reports/terpene-identity-set-candidate-expansion.json"))
     p_candidate_lineage.add_argument("--out", type=Path, default=Path("data/reports/terpene-identity-set-reversible-candidate-lineage.json"))
     p_candidate_lineage_carbon = sub.add_parser("reversible-candidate-lineage-carbon")
     p_candidate_lineage_carbon.add_argument("lineage", type=Path, default=Path("data/reports/terpene-identity-set-reversible-candidate-lineage.json"), nargs="?")
@@ -357,7 +359,7 @@ def main() -> None:
         print(json.dumps(build_candidate_expansion_carbon_mapping(args.expansion, args.bridges, args.out), indent=2))
     elif args.command == "reversible-candidate-lineage":
         from .candidate_lineage import build_reversible_candidate_lineage
-        print(json.dumps(build_reversible_candidate_lineage(args.bridges, args.lineage, args.out), indent=2))
+        print(json.dumps(build_reversible_candidate_lineage(args.bridges, args.lineage, args.out, args.balance_audit, args.expansion), indent=2))
     elif args.command == "reversible-candidate-lineage-carbon":
         from .candidate_lineage import attach_candidate_carbon_mapping
         print(json.dumps(attach_candidate_carbon_mapping(args.lineage, args.mapping, args.out), indent=2))

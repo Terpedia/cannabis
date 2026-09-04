@@ -3,13 +3,19 @@
 from __future__ import annotations
 
 import json
-from collections import defaultdict, deque
+from collections import Counter, defaultdict, deque
 from pathlib import Path
 
 
-def build_reversible_candidate_lineage(bridges_path: Path, lineage_path: Path, output: Path) -> dict:
+def build_reversible_candidate_lineage(bridges_path: Path, lineage_path: Path, output: Path, balance_path: Path | None = None, expansion_path: Path | None = None) -> dict:
     bridges = json.loads(bridges_path.read_text())
     lineage = json.loads(lineage_path.read_text())
+    balance = json.loads(balance_path.read_text()) if balance_path and balance_path.exists() else None
+    balance_by_key = {(row.get("reaction_id"), row.get("reaction_smarts")): row for row in (balance or {}).get("reactions", [])}
+    expansion = json.loads(expansion_path.read_text()) if expansion_path and expansion_path.exists() else None
+    expansion_by_key = defaultdict(set)
+    for row in (expansion or {}).get("rows", []):
+        expansion_by_key[(row.get("reaction_id"), row.get("product_terpene_id"), row.get("precursor_terpene_id"), row.get("expansion_depth"))].add(row.get("reaction_smarts"))
     adjacency = defaultdict(list)
     for edge in lineage.get("carbon_edges", []):
         source, target = edge.get("reactant_entity_id"), edge.get("product_entity_id")
@@ -43,8 +49,15 @@ def build_reversible_candidate_lineage(bridges_path: Path, lineage_path: Path, o
         path = path_to(anchor) if anchor else None
         if path is None:
             continue
-        rows.append({"candidate_product_terpene_id": bridge.get("product_terpene_id"), "candidate_precursor_terpene_id": bridge.get("precursor_terpene_id"), "reaction_id": bridge.get("reaction_id"), "expansion_depth": bridge.get("expansion_depth"), "source_type": bridge.get("source_type"), "source_url": bridge.get("source_url"), "source_uniprot_id": bridge.get("source_uniprot_id"), "core_anchor_entity_id": anchor, "core_path_reaction_ids": [edge.get("reaction_id") for edge in path if edge.get("reaction_id")], "core_path_entity_ids": [seed] + [edge["to"] for edge in path], "core_path_carbon_edges": [{"from_entity_id": edge["from"], "from_atom": edge.get("from_atom"), "to_entity_id": edge["to"], "to_atom": edge.get("to_atom"), "reaction_id": edge.get("reaction_id"), "status": edge.get("status"), "provenance": edge.get("provenance")} for edge in path], "core_path_step_count": len(path), "path_mode": "all-reactions-reversible-upper-bound", "status": "candidate", "claim_boundary": "This ordered path combines reversible structural reachability with a candidate identity bridge. It is a sensitivity hypothesis only; direction, exact identity, enzyme activity, isotope tracing, and in-vivo Cannabis production remain unestablished."})
-    result = {"schema": "cannabis-carbon.terpene-identity-set-reversible-candidate-lineage.v1", "source_bridges": str(bridges_path), "source_lineage": str(lineage_path), "co2_entity_id": seed, "path_count": len(rows), "distinct_candidate_products": len({row["candidate_product_terpene_id"] for row in rows}), "distinct_core_anchors": len({row["core_anchor_entity_id"] for row in rows}), "rows": rows, "claim_boundary": "These are ordered reversible-upper-bound pathway hypotheses from CO2 to candidate identity-set structures. They are not directed biological pathways or proof of endogenous Cannabis biosynthesis."}
+        bridge_key = (bridge.get("reaction_id"), bridge.get("product_terpene_id"), bridge.get("precursor_terpene_id"), bridge.get("expansion_depth"))
+        source_smarts = bridge.get("reaction_smarts")
+        candidates = expansion_by_key.get(bridge_key, set())
+        if source_smarts is None and len(candidates) == 1:
+            source_smarts = next(iter(candidates))
+        balance_row = balance_by_key.get((bridge.get("reaction_id"), source_smarts))
+        balance_status = balance_row.get("status", "not_auditable") if balance_row else "not_auditable"
+        rows.append({"candidate_product_terpene_id": bridge.get("product_terpene_id"), "candidate_precursor_terpene_id": bridge.get("precursor_terpene_id"), "reaction_id": bridge.get("reaction_id"), "reaction_smarts": source_smarts, "expansion_depth": bridge.get("expansion_depth"), "source_type": bridge.get("source_type"), "source_url": bridge.get("source_url"), "source_uniprot_id": bridge.get("source_uniprot_id"), "core_anchor_entity_id": anchor, "core_path_reaction_ids": [edge.get("reaction_id") for edge in path if edge.get("reaction_id")], "core_path_entity_ids": [seed] + [edge["to"] for edge in path], "core_path_carbon_edges": [{"from_entity_id": edge["from"], "from_atom": edge.get("from_atom"), "to_entity_id": edge["to"], "to_atom": edge.get("to_atom"), "reaction_id": edge.get("reaction_id"), "status": edge.get("status"), "provenance": edge.get("provenance")} for edge in path], "core_path_step_count": len(path), "path_mode": "all-reactions-reversible-upper-bound", "status": "candidate", "balance_status": balance_status, "balance_eligible": balance_status == "balanced", "balance_audit_source": str(balance_path) if balance_path else None, "claim_boundary": "This ordered path combines reversible structural reachability with a candidate identity bridge. It is a sensitivity hypothesis only; direction, exact identity, enzyme activity, isotope tracing, and in-vivo Cannabis production remain unestablished."})
+    result = {"schema": "cannabis-carbon.terpene-identity-set-reversible-candidate-lineage.v1", "source_bridges": str(bridges_path), "source_lineage": str(lineage_path), "source_balance_audit": str(balance_path) if balance_path else None, "co2_entity_id": seed, "path_count": len(rows), "distinct_candidate_products": len({row["candidate_product_terpene_id"] for row in rows}), "distinct_core_anchors": len({row["core_anchor_entity_id"] for row in rows}), "balance_status_counts": dict(sorted(Counter(row["balance_status"] for row in rows).items())), "balance_eligible_path_count": sum(row["balance_eligible"] for row in rows), "rows": rows, "claim_boundary": "These are ordered reversible-upper-bound pathway hypotheses from CO2 to candidate identity-set structures. Balance eligibility is a stoichiometric screen only; these are not directed biological pathways or proof of endogenous Cannabis biosynthesis."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, separators=(",", ":")) + "\n")
     return {key: result[key] for key in ("path_count", "distinct_candidate_products", "distinct_core_anchors")}

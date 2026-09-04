@@ -60,9 +60,13 @@ def test_reversible_candidate_lineage_preserves_candidate_path_mode(tmp_path):
         "reaction_id": "R1", "status": "inferred",
     }]}))
     output = tmp_path / "candidate-lineage.json"
-    result = build_reversible_candidate_lineage(bridges, lineage, output)
+    balance = tmp_path / "balance.json"
+    balance.write_text(json.dumps({"reactions": [{"reaction_id": "R2", "reaction_smarts": None, "status": "balanced"}]}))
+    result = build_reversible_candidate_lineage(bridges, lineage, output, balance)
     assert result["path_count"] == 1
     row = json.loads(output.read_text())["rows"][0]
     assert row["path_mode"] == "all-reactions-reversible-upper-bound"
+    assert row["balance_status"] == "balanced"
+    assert row["balance_eligible"] is True
     assert row["core_path_reaction_ids"] == ["R1"]
     assert row["core_path_carbon_edges"][0]["from_atom"] is None
