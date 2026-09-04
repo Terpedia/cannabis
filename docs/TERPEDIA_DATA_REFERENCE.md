@@ -334,6 +334,11 @@ source-linked producer hypotheses generated from the 2,463-row MARTS-DB queue;
 multiple CannabisDB candidates are retained when one connectivity prefix maps
 to more than one compound. These edges are intentionally excluded from the
 balanced reaction and CO₂-lineage counts.
+The companion `data/terpene-identity-set-candidate-expansion.json` expands the
+37 distinct candidate precursors through three upstream Terpedia hops, yielding
+32,904 source-linked edges across 729 products and 1,032 precursors (18,780
+Rhea and 14,124 MARTS-DB records). It is a deeper hypothesis queue, not part of
+the confirmed reaction or CO₂-lineage counts.
 When available, each CannabisDB record also carries the exact-InChIKey PubChem
 resolution status and CID/structure properties; unresolved PubChem queries are
 retained as explicit negatives rather than being treated as missing data.

@@ -32,6 +32,11 @@
           "connectivity_upstream_hypothesis_products": 74,
           "connectivity_upstream_hypothesis_reactions": 31,
           "connectivity_upstream_source_filter": "MARTS-DB directly characterized records"
+          ,"candidate_expansion_snapshot": "data/reports/terpene-identity-set-candidate-expansion.json"
+          ,"candidate_expansion_max_depth": 3
+          ,"candidate_expansion_edges": 32904
+          ,"candidate_expansion_products": 729
+          ,"candidate_expansion_precursors": 1032
         },
         {
           "table": "terpedia-489015.terpedia_core.terpene_biotransformation_hypothetical_connections_current_v2",

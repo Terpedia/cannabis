@@ -319,3 +319,53 @@ WHERE e.source_type = 'MARTS-DB'
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, separators=(",", ":")) + "\n")
     return {"edge_count": result["edge_count"], "product_count": result["product_count"], "reaction_count": result["reaction_count"]}
+
+
+def refresh_identity_set_candidate_expansion(connectivity_path: Path, output: Path, bq_binary: str = "bq", max_depth: int = 3) -> dict:
+    """Expand connectivity-candidate precursors upstream as source-linked hypotheses."""
+    seed = json.loads(connectivity_path.read_text())
+    frontier = sorted({row.get("precursor_terpene_id") for row in seed.get("rows", []) if row.get("precursor_terpene_id")})
+    seen_products = set(frontier)
+    rows = []
+    for depth in range(1, max_depth + 1):
+        if not frontier:
+            break
+        literals = ",".join("'" + value.replace("'", "\\'") + "'" for value in frontier)
+        query = f"""
+SELECT e.product_terpene_id, e.precursor_terpene_id, e.reaction_id,
+       e.source_type, e.evidence_type, e.structure_match_mode,
+       e.reaction_smarts, e.required_substrate_structures_json,
+       e.missing_corpus_substrates_json, e.source_dataset, e.source_url,
+       e.source_uniprot_id, e.source_genbank_id, e.source_ec_number,
+       e.claim_boundary, p.inchikey AS product_inchikey, p.inchi AS product_inchi,
+       p.smiles AS product_smiles, p.molecular_formula AS product_molecular_formula,
+       p.carbon_count AS product_carbon_count, p.source_crossrefs AS product_source_crossrefs,
+       q.inchikey AS precursor_inchikey, q.inchi AS precursor_inchi,
+       q.smiles AS precursor_smiles, q.molecular_formula AS precursor_molecular_formula,
+       q.carbon_count AS precursor_carbon_count, q.source_crossrefs AS precursor_source_crossrefs
+FROM `{EDGE_TABLE}` e
+LEFT JOIN `{SOURCE_TABLE}` p ON p.terpene_id = e.product_terpene_id
+LEFT JOIN `{SOURCE_TABLE}` q ON q.terpene_id = e.precursor_terpene_id
+WHERE e.product_terpene_id IN ({literals})
+"""
+        completed = subprocess.run([bq_binary, "query", "--project_id=terpedia-489015", "--use_legacy_sql=false", "--format=prettyjson", "--max_rows=20000", query], check=True, capture_output=True, text=True)
+        batch = json.loads(completed.stdout)
+        next_frontier = set()
+        for row in batch:
+            product_id = row.get("product_terpene_id")
+            precursor_id = row.get("precursor_terpene_id")
+            if not product_id or not precursor_id:
+                continue
+            keep = ("product_terpene_id", "precursor_terpene_id", "reaction_id", "source_type", "evidence_type", "structure_match_mode", "reaction_smarts", "required_substrate_structures_json", "missing_corpus_substrates_json", "source_dataset", "source_url", "source_uniprot_id", "source_genbank_id", "source_ec_number", "product_inchikey", "product_inchi", "product_smiles", "product_molecular_formula", "product_carbon_count", "precursor_inchikey", "precursor_inchi", "precursor_smiles", "precursor_molecular_formula", "precursor_carbon_count")
+            compact = {key: row.get(key) for key in keep if row.get(key) is not None}
+            rows.append({**compact, "expansion_depth": depth, "claim_boundary": "This is a source-linked upstream expansion from a connectivity-only CannabisDB identity candidate; it is a testable hypothesis and does not establish exact stereochemical identity, Cannabis enzyme activity, endogenous biosynthesis, or CO2 provenance."})
+            if precursor_id not in seen_products:
+                next_frontier.add(precursor_id)
+        seen_products.update(next_frontier)
+        frontier = sorted(next_frontier)
+    unique = {(row.get("product_terpene_id"), row.get("precursor_terpene_id"), row.get("reaction_id"), row.get("expansion_depth")): row for row in rows}
+    rows = sorted(unique.values(), key=lambda row: (row.get("expansion_depth", 0), row.get("product_terpene_id") or "", row.get("reaction_id") or "", row.get("precursor_terpene_id") or ""))
+    result = {"schema": "cannabis-carbon.terpene-identity-set-candidate-expansion.v1", "source_connectivity_candidates": str(connectivity_path), "source_table": EDGE_TABLE, "identity_set_table": SOURCE_TABLE, "max_depth": max_depth, "seed_product_count": len({row.get("precursor_terpene_id") for row in seed.get("rows", [])}), "expanded_edge_count": len(rows), "expanded_product_count": len({row.get("product_terpene_id") for row in rows}), "expanded_precursor_count": len({row.get("precursor_terpene_id") for row in rows}), "source_type_counts": dict(sorted(Counter(row.get("source_type") or "unknown" for row in rows).items())), "rows": rows, "claim_boundary": "Expanded edges are source-linked pathway hypotheses rooted in connectivity-only identity candidates. They remain separate from the balanced reaction inventory and directed CO2 lineage until exact identity, direction, stoichiometry, enzyme evidence, and carbon mapping are independently established."}
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(result, separators=(",", ":")) + "\n")
+    return {key: result[key] for key in ("seed_product_count", "expanded_edge_count", "expanded_product_count", "expanded_precursor_count")}
