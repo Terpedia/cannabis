@@ -1,0 +1,16 @@
+{
+  "schema": "cannabis-carbon.artifact-validation.v1",
+  "valid": true,
+  "checks": {
+    "carbon_atom_partition": true,
+    "reaction_product_carbon_rows": true,
+    "no_imbalanced_reactions": true
+  },
+  "compounds_checked": 6220,
+  "carbon_atoms_expected": 285623,
+  "carbon_atoms_audited": 285623,
+  "reactions_checked": 1099,
+  "imbalanced_reaction_count": 0,
+  "failures": [],
+  "claim_boundary": "This gate validates artifact accounting and stoichiometric status. It does not establish enzyme function, isotope tracing, or in-vivo flux."
+}

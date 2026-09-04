@@ -22,6 +22,7 @@ from .networkdb import build_networkdb
 from .genome import build_genome_search
 from .inventory import build_specialty_inventory
 from .test_hypotheses import build_test_hypotheses
+from .validate import validate_artifacts
 
 DOWNLOADS = {
     "compounds.sdf": "https://cannabisdatabase.ca/simple/download_compound_as_sdf",
@@ -152,6 +153,12 @@ def main() -> None:
     p_tests.add_argument("--lineage", type=Path, default=Path("data/reports/carbon-lineage.json"))
     p_tests.add_argument("--compounds", type=Path, default=Path("docs/data/compounds.json"))
     p_tests.add_argument("--out", type=Path, default=Path("data/reports/testable-hypotheses.json"))
+    p_validate = sub.add_parser("validate-artifacts")
+    p_validate.add_argument("atom_audit", type=Path)
+    p_validate.add_argument("mapping", type=Path)
+    p_validate.add_argument("balance", type=Path)
+    p_validate.add_argument("compounds", type=Path)
+    p_validate.add_argument("--out", type=Path, default=Path("data/reports/artifact-validation.json"))
     args = parser.parse_args()
     if args.command == "download":
         download(args.out, args.insecure_download)
@@ -192,6 +199,11 @@ def main() -> None:
         print(json.dumps(build_specialty_inventory(args.compounds, args.crosswalk, args.network, args.out), indent=2))
     elif args.command == "test-hypotheses":
         print(json.dumps(build_test_hypotheses(args.queue, args.network, args.out, args.lineage, args.compounds), indent=2))
+    elif args.command == "validate-artifacts":
+        result = validate_artifacts(args.atom_audit, args.mapping, args.balance, args.compounds, args.out)
+        print(json.dumps(result, indent=2))
+        if not result["valid"]:
+            raise SystemExit(1)
 
 
 if __name__ == "__main__":
