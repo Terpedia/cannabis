@@ -351,6 +351,9 @@ only; they are not included in balanced reaction, completeness, or CO₂ lineage
 counts until source reaction, direction, atom balance, and enzyme evidence are
 validated. Each record retains GCP source fields, structure-match mode, reaction
 SMARTS, source enzyme/protein fields, and its claim boundary.
+The companion `docs/data/terpedia-hypothesis-balance-audit.json` classifies
+these SMARTS records as 1,762 balance-ready, 17 imbalanced, and 122 not
+auditable; this is a review gate, not automatic promotion.
 
 ## Phase 1 balance gate
 
