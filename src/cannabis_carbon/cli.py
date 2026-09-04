@@ -111,6 +111,7 @@ def main() -> None:
     p_crosswalk = sub.add_parser("crosswalk")
     p_crosswalk.add_argument("cannabisdb_sdf", type=Path)
     p_crosswalk.add_argument("terpedia_network", type=Path)
+    p_crosswalk.add_argument("--compounds", type=Path, help="Normalized CannabisDB catalog with XML external identifiers")
     p_crosswalk.add_argument("--out", type=Path, default=Path("data/reports/identity-crosswalk.json"))
     p_balance = sub.add_parser("balance-audit")
     p_balance.add_argument("network", type=Path)
@@ -204,7 +205,7 @@ def main() -> None:
     elif args.command == "candidate-queue":
         print(json.dumps(build_candidate_queue(args.source, args.out), indent=2))
     elif args.command == "crosswalk":
-        print(json.dumps(build_crosswalk(args.cannabisdb_sdf, args.terpedia_network, args.out), indent=2))
+        print(json.dumps(build_crosswalk(args.cannabisdb_sdf, args.terpedia_network, args.out, args.compounds), indent=2))
     elif args.command == "balance-audit":
         print(json.dumps(audit_balances(args.network, args.out), indent=2))
     elif args.command == "carbon-lineage":
