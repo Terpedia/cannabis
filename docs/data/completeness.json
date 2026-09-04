@@ -54,7 +54,8 @@
       "resolved": 3586,
       "ambiguous": 130,
       "candidate_connectivity": 10,
-      "unresolved": 2494,
+      "candidate_name": 180,
+      "unresolved": 2314,
       "missing_inchikey": 0,
       "cannabisdb_pubchem_xref": 3399,
       "xref_without_exact_resolution": 32

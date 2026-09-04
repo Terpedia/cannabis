@@ -35,8 +35,9 @@ its source, reaction direction, atom-mapping method, and uncertainty.
   groups with atom indices, provenance, and blocker reasons.
 - `data/reports/pubchem-resolution.json` is a PubChem cross-reference for every
   CannabisDB record. It retains exact CIDs, ambiguous results, connectivity
-  candidates, and explicit no-match records; PubChem identity is evidence for
-  structure reconciliation only, not evidence of Cannabis biosynthesis.
+  candidates, name candidates, and explicit no-match records; PubChem identity
+  is evidence for structure reconciliation only, not evidence of Cannabis
+  biosynthesis.
 - `data/terpedia/cannabisdb-compounds.xml.gz` is the complete versioned
   CannabisDB XML source snapshot; `data/terpedia/cannabisdb-compounds.json`
   is its normalized Terpedia table, retaining structures, synonyms, external

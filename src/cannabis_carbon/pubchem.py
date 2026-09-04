@@ -94,7 +94,7 @@ def resolve_pubchem(compounds_path: Path, output: Path, batch_size: int = 25, pa
     """Resolve every CannabisDB record by exact InChIKey and retain negatives."""
     source = json.loads(compounds_path.read_text())
     compounds = source.get("compounds", source if isinstance(source, list) else [])
-    records = [{"cannabisdb_id": c["id"], "inchikey": c.get("inchikey"), "smiles": c.get("smiles"), "cannabisdb_external_ids": c.get("external_ids", {}), "cannabisdb_pubchem_cid": c.get("external_ids", {}).get("pubchem"), "status": "unresolved", "provenance": ["https://pubchem.ncbi.nlm.nih.gov/", "https://cannabisdatabase.ca/simple/download_compound_as_xml"]} for c in compounds]
+    records = [{"cannabisdb_id": c["id"], "inchikey": c.get("inchikey"), "smiles": c.get("smiles"), "names": sorted({x for x in [c.get("label"), *(c.get("aliases") or [])] if x}), "cannabisdb_external_ids": c.get("external_ids", {}), "cannabisdb_pubchem_cid": c.get("external_ids", {}).get("pubchem"), "status": "unresolved", "provenance": ["https://pubchem.ncbi.nlm.nih.gov/", "https://cannabisdatabase.ca/simple/download_compound_as_xml"]} for c in compounds]
     by_key = {r["inchikey"]: [] for r in records if r.get("inchikey")}
     cached = json.loads(cache_path.read_text()) if cache_path and cache_path.exists() else {}
     negative_keys = set(cached.get("negative_keys", []))
@@ -122,6 +122,16 @@ def resolve_pubchem(compounds_path: Path, output: Path, batch_size: int = 25, pa
                 candidates = by_smiles.get(record["smiles"], [])
                 if candidates:
                     record["connectivity_candidates"] = candidates
+        name_records = [r for r in fallback_records if not r.get("connectivity_candidates") and r.get("names")]
+        by_name = {name: [] for r in name_records for name in r["names"]}
+        if by_name:
+            for item in _fetch_bulk(sorted(by_name), input_type="synofiltered", operator="samecid"):
+                if item.get("query") in by_name:
+                    by_name[item["query"]].append({"CID": item["CID"], "query": item["query"], "match_type": "same_name"})
+            for record in name_records:
+                candidates = [item for name in record["names"] for item in by_name.get(name, [])]
+                if candidates:
+                    record["name_candidates"] = candidates
     else:
         batches = [keys[start:start + batch_size] for start in range(0, len(keys), batch_size)]
         with ThreadPoolExecutor(max_workers=max(1, workers)) as executor:
@@ -152,6 +162,10 @@ def resolve_pubchem(compounds_path: Path, output: Path, batch_size: int = 25, pa
             record["status"] = "candidate_connectivity"
             record["pubchem_candidates"] = record.pop("connectivity_candidates")
             record["reason"] = "same-connectivity-candidate-not-exact-identity"
+        elif record.get("name_candidates"):
+            record["status"] = "candidate_name"
+            record["pubchem_candidates"] = record.pop("name_candidates")
+            record["reason"] = "same-name-candidate-not-exact-identity"
         else:
             record["reason"] = "no-exact-inchikey-or-connectivity-match"
     summary = {
@@ -159,6 +173,7 @@ def resolve_pubchem(compounds_path: Path, output: Path, batch_size: int = 25, pa
         "resolved": sum(r["status"] == "resolved" for r in records),
         "ambiguous": sum(r["status"] == "ambiguous" for r in records),
         "candidate_connectivity": sum(r["status"] == "candidate_connectivity" for r in records),
+        "candidate_name": sum(r["status"] == "candidate_name" for r in records),
         "unresolved": sum(r["status"] == "unresolved" for r in records),
         "missing_inchikey": sum(not r.get("inchikey") for r in records),
         "cannabisdb_pubchem_xref": sum(bool(r.get("cannabisdb_pubchem_cid")) for r in records),

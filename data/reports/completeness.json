@@ -54,10 +54,29 @@
       "resolved": 3586,
       "ambiguous": 130,
       "candidate_connectivity": 10,
-      "unresolved": 2494,
+      "candidate_name": 180,
+      "unresolved": 2314,
       "missing_inchikey": 0,
       "cannabisdb_pubchem_xref": 3399,
       "xref_without_exact_resolution": 32
+    },
+    "external_id_coverage": {
+      "records_with_any_external_id": 3737,
+      "records_without_external_ids": 2483,
+      "counts_by_database": {
+        "bigg": 295,
+        "biocyc": 757,
+        "chebi": 1250,
+        "chemspider": 1465,
+        "drugbank": 379,
+        "foodb": 1679,
+        "kegg": 1043,
+        "knapsack": 649,
+        "metlin": 391,
+        "pdb": 102,
+        "phenol_explorer": 56,
+        "pubchem": 3399
+      }
     },
     "compounds_with_exact_terpedia_identity": 152,
     "compounds_with_ambiguous_identity": 1,
