@@ -53,7 +53,8 @@
       "total": 6220,
       "resolved": 3586,
       "ambiguous": 130,
-      "unresolved": 2504,
+      "candidate_connectivity": 10,
+      "unresolved": 2494,
       "missing_inchikey": 0
     },
     "compounds_with_exact_terpedia_identity": 152,

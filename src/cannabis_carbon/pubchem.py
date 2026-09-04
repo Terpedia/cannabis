@@ -43,11 +43,11 @@ def _fetch_batch(keys: list[str], retries: int = 3) -> list[dict]:
     return []
 
 
-def _fetch_bulk(keys: list[str], poll_seconds: int = 5, timeout_seconds: int = 1800) -> list[dict]:
+def _fetch_bulk(keys: list[str], input_type: str = "inchikey", operator: str = "samecid", poll_seconds: int = 5, timeout_seconds: int = 1800) -> list[dict]:
     """Use PubChem's queued Identifier Exchange service for large key sets."""
     payload = urllib.parse.urlencode({
-        "inputtype": "inchikey", "inputdsn": "", "idinput": "str",
-        "idstr": "\n".join(keys), "operatortype": "samecid", "outputtype": "cid",
+        "inputtype": input_type, "inputdsn": "", "idinput": "str",
+        "idstr": "\n".join(keys), "operatortype": operator, "outputtype": "cid",
         "outputdsn": "", "method": "file-pair", "compression": "none",
         "submitjob": "Submit Job",
     }).encode()
@@ -64,7 +64,7 @@ def _fetch_bulk(keys: list[str], poll_seconds: int = 5, timeout_seconds: int = 1
         raise RuntimeError("PubChem Identifier Exchange did not return a request ID or download URL")
     reqid = reqid_match.group(1) if reqid_match else None
     start = re.search(r"start=([^&\"]+)", html)
-    query = {"reqid": reqid, "inputtype": "inchikey", "inputdsn": "", "operatortype": "samecid", "outputtype": "cid", "outputdsn": "", "method": "file-pair", "compression": "none", "progress": "1"}
+    query = {"reqid": reqid, "inputtype": input_type, "inputdsn": "", "operatortype": operator, "outputtype": "cid", "outputdsn": "", "method": "file-pair", "compression": "none", "progress": "1"}
     if start:
         query["start"] = urllib.parse.unquote(start.group(1))
     if not download_url:
@@ -86,7 +86,7 @@ def _fetch_bulk(keys: list[str], poll_seconds: int = 5, timeout_seconds: int = 1
     for line in text.splitlines():
         parts = line.split("\t")
         if len(parts) >= 2 and parts[1].isdigit():
-            rows.append({"InChIKey": parts[0], "CID": int(parts[1])})
+            rows.append({"query": parts[0], "CID": int(parts[1]), "InChIKey": parts[0] if input_type == "inchikey" else None})
     return rows
 
 
@@ -94,7 +94,7 @@ def resolve_pubchem(compounds_path: Path, output: Path, batch_size: int = 25, pa
     """Resolve every CannabisDB record by exact InChIKey and retain negatives."""
     source = json.loads(compounds_path.read_text())
     compounds = source.get("compounds", source if isinstance(source, list) else [])
-    records = [{"cannabisdb_id": c["id"], "inchikey": c.get("inchikey"), "status": "unresolved", "provenance": ["https://pubchem.ncbi.nlm.nih.gov/"]} for c in compounds]
+    records = [{"cannabisdb_id": c["id"], "inchikey": c.get("inchikey"), "smiles": c.get("smiles"), "status": "unresolved", "provenance": ["https://pubchem.ncbi.nlm.nih.gov/"]} for c in compounds]
     by_key = {r["inchikey"]: [] for r in records if r.get("inchikey")}
     cached = json.loads(cache_path.read_text()) if cache_path and cache_path.exists() else {}
     negative_keys = set(cached.get("negative_keys", []))
@@ -103,12 +103,25 @@ def resolve_pubchem(compounds_path: Path, output: Path, batch_size: int = 25, pa
             if key in by_key:
                 by_key[key] = hits
     keys = sorted(key for key, hits in by_key.items() if not hits and key not in negative_keys)
-    if method == "bulk" and keys:
-        returned = _fetch_bulk(keys)
-        for item in returned:
-            if item.get("InChIKey") in by_key:
-                by_key[item["InChIKey"]].append(item)
-        negative_keys.update(key for key in keys if not by_key[key])
+    if method == "bulk":
+        if keys:
+            returned = _fetch_bulk(keys)
+            for item in returned:
+                if item.get("InChIKey") in by_key:
+                    by_key[item["InChIKey"]].append(item)
+            negative_keys.update(key for key in keys if not by_key[key])
+        # PubChem may have standardized a structure differently (stereo,
+        # charge, tautomer, or salt). Keep connectivity matches as candidates.
+        fallback_records = [r for r in records if not by_key.get(r.get("inchikey"), []) and r.get("smiles")]
+        by_smiles = {r["smiles"]: [] for r in fallback_records}
+        if by_smiles:
+            for item in _fetch_bulk(sorted(by_smiles), input_type="smiles", operator="samecon"):
+                if item.get("query") in by_smiles:
+                    by_smiles[item["query"]].append({"CID": item["CID"], "query": item["query"], "match_type": "same_connectivity"})
+            for record in fallback_records:
+                candidates = by_smiles.get(record["smiles"], [])
+                if candidates:
+                    record["connectivity_candidates"] = candidates
     else:
         batches = [keys[start:start + batch_size] for start in range(0, len(keys), batch_size)]
         with ThreadPoolExecutor(max_workers=max(1, workers)) as executor:
@@ -135,12 +148,17 @@ def resolve_pubchem(compounds_path: Path, output: Path, batch_size: int = 25, pa
         elif len(hits) > 1:
             record["status"] = "ambiguous"
             record["pubchem_candidates"] = hits
+        elif record.get("connectivity_candidates"):
+            record["status"] = "candidate_connectivity"
+            record["pubchem_candidates"] = record.pop("connectivity_candidates")
+            record["reason"] = "same-connectivity-candidate-not-exact-identity"
         else:
-            record["reason"] = "no-exact-inchikey-match"
+            record["reason"] = "no-exact-inchikey-or-connectivity-match"
     summary = {
         "total": len(records),
         "resolved": sum(r["status"] == "resolved" for r in records),
         "ambiguous": sum(r["status"] == "ambiguous" for r in records),
+        "candidate_connectivity": sum(r["status"] == "candidate_connectivity" for r in records),
         "unresolved": sum(r["status"] == "unresolved" for r in records),
         "missing_inchikey": sum(not r.get("inchikey") for r in records),
     }
