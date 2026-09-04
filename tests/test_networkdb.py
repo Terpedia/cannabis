@@ -86,7 +86,7 @@ def test_networkdb_orients_participants_from_directional_override(tmp_path):
     assert reaction["raw_reactants"][0]["compound_id"] == "m:b"
 
 
-def test_map_snapshot_excludes_isolated_catalog_records(tmp_path):
+def test_map_snapshot_includes_isolated_catalog_records(tmp_path):
     source = tmp_path / "networkdb.json"
     source.write_text(json.dumps({
         "compounds": [{"id": "m:a"}, {"id": "m:b"}, {"id": "c:isolated"}],
@@ -95,5 +95,7 @@ def test_map_snapshot_excludes_isolated_catalog_records(tmp_path):
     }))
     output = tmp_path / "map.json"
     result = build_map_snapshot(source, output)
-    assert result["compounds"] == 2
-    assert [c["id"] for c in json.loads(output.read_text())["compounds"]] == ["m:a", "m:b"]
+    assert result["compounds"] == 3
+    payload = json.loads(output.read_text())
+    assert [c["id"] for c in payload["compounds"]] == ["m:a", "m:b", "c:isolated"]
+    assert payload["focus"] == {"co2_reachable_compounds": 0, "reaction_connected_compounds": 2, "all_inventory_compounds": 3}

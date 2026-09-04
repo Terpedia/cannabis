@@ -14,16 +14,16 @@ from .terpedia import load_network
 def build_map_snapshot(networkdb_path: Path, output: Path, lineage_path: Path | None = None) -> dict:
     """Write a compact visualization snapshot containing reaction-connected records."""
     networkdb = json.loads(networkdb_path.read_text())
-    reaction_ids = {p["compound_id"] for r in networkdb.get("reactions", []) for p in r.get("reactants", []) + r.get("products", [])}
+    reaction_connected_ids = {p["compound_id"] for r in networkdb.get("reactions", []) for p in r.get("reactants", []) + r.get("products", [])}
     lineage = json.loads(lineage_path.read_text()) if lineage_path and lineage_path.exists() else {}
     reachable_entities = set(lineage.get("reachable_carbon_entity_ids", []))
-    compounds = [{**c, "co2_reachable": c.get("id") in reachable_entities or bool(c.get("co2_reachable_carbon_atoms"))} for c in networkdb.get("compounds", []) if c.get("id") in reaction_ids]
+    compounds = [{**c, "reaction_connected": c.get("id") in reaction_connected_ids, "co2_reachable": c.get("id") in reachable_entities or bool(c.get("co2_reachable_carbon_atoms"))} for c in networkdb.get("compounds", [])]
     reactions = []
     for reaction in networkdb.get("reactions", []):
         compact = {key: reaction.get(key) for key in ("id", "label", "equation", "ec_numbers", "reactants", "products", "enzyme_ids", "status", "carbon_mapping", "source_url", "directional_rhea_ids", "direction")}
         compact["candidate_proteins"] = [{"proteinId": p.get("proteinId"), "accession": p.get("accession"), "label": p.get("label")} for p in reaction.get("candidate_proteins", [])]
         reactions.append(compact)
-    report = {"schema": "cannabis-carbon.network-map.v1", "source_networkdb": str(networkdb_path), "source_lineage": str(lineage_path) if lineage_path else None, "claim_boundary": "This is a compact connected visualization projection. The complete compound and protein inventories remain in NetworkDB.", "compounds": compounds, "reactions": reactions, "coverage": networkdb.get("coverage", {}), "focus": {"co2_reachable_compounds": sum(c["co2_reachable"] for c in compounds), "reaction_connected_compounds": len(compounds)}}
+    report = {"schema": "cannabis-carbon.network-map.v1", "source_networkdb": str(networkdb_path), "source_lineage": str(lineage_path) if lineage_path else None, "claim_boundary": "This is a compact visualization projection containing the complete compound inventory and all reaction records. It is not proof of in-vivo flux.", "compounds": compounds, "reactions": reactions, "coverage": networkdb.get("coverage", {}), "focus": {"co2_reachable_compounds": sum(c["co2_reachable"] for c in compounds), "reaction_connected_compounds": sum(c["reaction_connected"] for c in compounds), "all_inventory_compounds": len(compounds)}}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
     return {"compounds": len(compounds), "reactions": len(reactions), "bytes": output.stat().st_size}

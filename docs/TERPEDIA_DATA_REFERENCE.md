@@ -240,7 +240,7 @@ are now extracted rather than discarded by the SDF-only importer.
 
 `docs/data/networkdb.json` is the published normalized inventory used for
 cross-source reconciliation. It contains 6,220 CannabisDB compound records,
-1,267 working Terpedia metabolite records, 1,106 working biochemical reaction records,
+1,267 working Terpedia metabolite records, 1,107 working biochemical reaction records,
 all reaction participants and stoichiometric coefficients, enzyme associations,
 source URLs, and the 152 exact CannabisDB–Terpedia identity links. The two
 namespaces remain separate so an identity match cannot silently collapse distinct
@@ -254,15 +254,15 @@ resolution status and CID/structure properties; unresolved PubChem queries are
 retained as explicit negatives rather than being treated as missing data.
 Each CannabisDB compound record carries its CO₂-lineage status and reachable
 carbon-atom count, and NetworkDB links to the complete atom-level audit.
-Every one of the 1,106 working reaction records also carries a carbon-mapping
-summary from the RDKit report: 312 reactions are fully inferred, 12 retain
-candidate mappings, 396 retain ambiguous carbon mappings, 386 retain
+Every one of the 1,107 working reaction records also carries a carbon-mapping
+summary from the RDKit report: 332 reactions are fully inferred, 10 retain
+candidate mappings, 380 retain ambiguous carbon mappings, 385 retain
 unresolved mappings, and 0 are unavailable. These statuses are
 independent of enzyme status and are exposed as a separate Cytoscape filter.
 Each reaction also records its inferred and candidate lineage-edge counts and
 the source report used to derive them. The Pages Cytoscape view exposes
 `non_enzymatic` as a separate evidence-status filter.
-It also carries 2,256 candidate hypotheses and 4,063 deduplicated candidate
+It also carries 2,264 candidate hypotheses and 4,063 deduplicated candidate
 protein records; 946 reaction records have one or more attached candidate
 proteins. All 4,063 candidate proteins are present in the 30,304-protein
 UP000583929 reference-proteome FASTA and have sequence length/hash evidence in
