@@ -53,6 +53,15 @@
       "source_url": "https://cannabisdatabase.ca"
     },
     {
+      "id": "chebi:66955",
+      "type": "metabolite",
+      "label": "olivetolic acid",
+      "attributes": {"molecularFormula": "C12H16O4", "formalCharge": 0, "canonicalSmiles": "CCCCCC1=C(C(=CC(=C1)O)O)C(=O)O", "chebiId": "CHEBI:66955", "pubchemCid": "2826719"},
+      "url": "https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI%3A66955",
+      "source": "ChEBI / PubChem",
+      "source_url": "https://pubchem.ncbi.nlm.nih.gov/compound/Olivetolic-Acid"
+    },
+    {
       "id": "cannabis:reaction:cbga-to-cbda",
       "type": "biochemical_reaction",
       "label": "Cannabigerolic acid + O2 = cannabidiolic acid + H2O2",
@@ -81,6 +90,16 @@
       "url": "https://www.sciencedirect.com/science/article/pii/S0031942298002787",
       "source": "Morimoto et al. 1998, Phytochemistry",
       "source_url": "https://www.sciencedirect.com/science/article/pii/S0031942298002787"
+    },
+    {
+      "id": "cannabis:reaction:olivetolate-to-cbga",
+      "type": "biochemical_reaction",
+      "label": "Olivetolic acid + geranyl diphosphate = cannabigerolic acid + diphosphate",
+      "identifiers": {"curationId": "olivetolate-to-cbga"},
+      "attributes": {"equation": "CHEBI:66955 + CHEBI:58057 = cannabisdb:CDB000018 + CHEBI:33019", "reactionSmiles": "CCCCCC1=C(C(=CC(=C1)O)O)C(=O)O.CC(C)=CCC/C(C)=C/COP(=O)([O-])OP(=O)([O-])[O-]>>CCCCCC1=CC(O)=C(CC=C(C)CCC=C(C)C)C(O)=C1C(O)=O.O=P([O-])([O-])OP(=O)([O-])O", "ecNumbers": [], "sourceEvidence": "Direct biochemical characterization of geranylpyrophosphate:olivetolate geranyltransferase producing CBGA"},
+      "url": "https://www.sciencedirect.com/science/article/pii/S0014579398004505",
+      "source": "Fellermeier and Zenk 1998, FEBS Letters",
+      "source_url": "https://www.sciencedirect.com/science/article/pii/S0014579398004505"
     }
   ],
   "statements": [
@@ -104,6 +123,11 @@
     {"subjectId": "cannabis:reaction:cbga-to-cbca", "predicate": "has_reactant", "objectEntityId": "chebi:15379", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0031942298002787", "evidenceType": "direct biochemical characterization"}]},
     {"subjectId": "cannabis:reaction:cbga-to-cbca", "predicate": "has_product", "objectEntityId": "cannabisdb:CDB000398", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0031942298002787", "evidenceType": "direct biochemical characterization"}]},
     {"subjectId": "cannabis:reaction:cbga-to-cbca", "predicate": "has_product", "objectEntityId": "chebi:16240", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0031942298002787", "evidenceType": "direct biochemical characterization"}]},
-    {"subjectId": "cannabis:reaction:cbga-to-cbca", "predicate": "physiological_direction_left_to_right", "objectEntityId": "cannabis:reaction:cbga-to-cbca", "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0031942298002787", "evidenceType": "direct biochemical characterization"}]}
+    {"subjectId": "cannabis:reaction:cbga-to-cbca", "predicate": "physiological_direction_left_to_right", "objectEntityId": "cannabis:reaction:cbga-to-cbca", "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0031942298002787", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:olivetolate-to-cbga", "predicate": "has_reactant", "objectEntityId": "chebi:66955", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0014579398004505", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:olivetolate-to-cbga", "predicate": "has_reactant", "objectEntityId": "chebi:58057", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0014579398004505", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:olivetolate-to-cbga", "predicate": "has_product", "objectEntityId": "cannabisdb:CDB000018", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0014579398004505", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:olivetolate-to-cbga", "predicate": "has_product", "objectEntityId": "chebi:33019", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0014579398004505", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:olivetolate-to-cbga", "predicate": "physiological_direction_left_to_right", "objectEntityId": "cannabis:reaction:olivetolate-to-cbga", "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0014579398004505", "evidenceType": "direct biochemical characterization"}]}
   ]
 }
