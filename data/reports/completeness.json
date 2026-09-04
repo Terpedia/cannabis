@@ -9,8 +9,8 @@
     "enzyme_requiring_reactions": 1098,
     "reactions_with_enzyme_association": 1086,
     "reactions_without_enzyme_association": 12,
-    "reactions_without_enzyme_with_candidate_proteins": 0,
-    "reactions_without_enzyme_without_candidate_proteins": 12,
+    "reactions_without_enzyme_with_candidate_proteins": 12,
+    "reactions_without_enzyme_without_candidate_proteins": 0,
     "metabolite_ids_without_reactions": [
       "chebi:139069",
       "chebi:139070",

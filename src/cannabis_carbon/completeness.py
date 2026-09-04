@@ -27,7 +27,8 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
     candidate_reactions = set()
     if hypotheses_path and hypotheses_path.exists():
         hypotheses = json.loads(hypotheses_path.read_text())
-        candidate_reactions = {item.get("reaction_id") for item in hypotheses.get("items", []) if item.get("reaction_id") and item.get("candidate_proteins")}
+        hypothesis_items = hypotheses.get("items") or hypotheses.get("hypotheses", [])
+        candidate_reactions = {item.get("reaction_id") for item in hypothesis_items if item.get("reaction_id") and item.get("candidate_proteins")}
     no_enzyme_reactions = enzyme_requiring_reactions - enzyme_reactions
     result = {
         "schema": "cannabis-carbon.completeness.v1",
