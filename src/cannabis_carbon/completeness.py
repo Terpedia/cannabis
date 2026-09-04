@@ -11,7 +11,7 @@ from .terpedia import load_network
 _SPECIALTY_NAME = re.compile(r"cannab|tetrahydrocannabin|cannabidiol|cannabiger|cannabichrom|cannabinol|cannabicycl|cannabielso|cannabifuran|cannabitriol|cannabid|cannabivarin|cannabistilbene|cannabisativine", re.IGNORECASE)
 
 
-def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None, crosswalk_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None, hypotheses_path: Path | None = None, pubchem_path: Path | None = None) -> dict:
+def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None, crosswalk_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None, hypotheses_path: Path | None = None, pubchem_path: Path | None = None, networkdb_path: Path | None = None) -> dict:
     network = load_network(network_path)
     entities = {e["id"]: e for e in network["entities"]}
     metabolites = {i for i, e in entities.items() if e.get("type") == "metabolite"}
@@ -96,4 +96,18 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
         audit_total = atom_audit.get("carbon_atoms_total") or 0
         evidence_atoms = sum(audit_counts.get(status, 0) for status in ("supported", "candidate", "inferred"))
         result["coverage"]["carbon_atom_audit"] = {"source": str(atom_audit_path), "carbon_atoms_total": audit_total, "status_counts": audit_counts, "compound_count": atom_audit.get("compound_count"), "strict_supported_percent": round(100 * audit_counts.get("supported", 0) / audit_total, 6) if audit_total else None, "evidence_bearing_percent": round(100 * evidence_atoms / audit_total, 6) if audit_total else None, "unresolved_percent": round(100 * audit_counts.get("unresolved", 0) / audit_total, 6) if audit_total else None}
+    if networkdb_path and networkdb_path.exists():
+        networkdb = json.loads(networkdb_path.read_text())
+        hypothesis_edges = networkdb.get("hypothetical_connections", [])
+        result["hypothesis_layer"] = {
+            "source": str(networkdb_path),
+            "compound_records": len(networkdb.get("compounds", [])),
+            "hypothesis_edges": len(hypothesis_edges),
+            "hypothesis_edge_status_counts": dict(sorted(Counter(edge.get("status", "unresolved") for edge in hypothesis_edges).items())),
+            "hypothesis_edges_with_enzyme_evidence": sum(bool(edge.get("enzyme_evidence") or edge.get("enzyme_catalog")) for edge in hypothesis_edges),
+            "hypothesis_reaction_inventory": networkdb.get("coverage", {}).get("hypothetical_reaction_inventory", 0),
+            "hypothesis_product_inventory": networkdb.get("coverage", {}).get("hypothetical_product_inventory", 0),
+            "missing_substrate_nodes": networkdb.get("coverage", {}).get("hypothetical_missing_substrate_nodes", 0),
+            "claim_boundary": "Hypothesis-layer counts are separate from balanced reaction and CO2 lineage metrics; they represent source-linked candidates and unresolved structures, not confirmed Cannabis metabolism.",
+        }
     return result

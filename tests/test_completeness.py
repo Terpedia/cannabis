@@ -130,3 +130,16 @@ def test_completeness_reports_co2_target_triage(tmp_path):
     assert triage["target_counts_by_status_and_identity"] == {"candidate:exact": 1}
     assert triage["carbon_atoms_by_target_status"] == {"candidate": 3}
     assert triage["specialty_target_counts_by_status"] == {"candidate": 1}
+
+
+def test_completeness_reports_hypothesis_layer_separately(tmp_path):
+    network_path = tmp_path / "network.json.gz"
+    with gzip.open(network_path, "wt") as handle: json.dump({"entities": [], "statements": []}, handle)
+    compounds_path = tmp_path / "compounds.json"
+    compounds_path.write_text(json.dumps({"compounds": []}))
+    networkdb_path = tmp_path / "networkdb.json"
+    networkdb_path.write_text(json.dumps({"compounds": [{"id": "x"}], "hypothetical_connections": [{"status": "candidate", "enzyme_evidence": [{}]}, {"status": "unresolved"}], "coverage": {"hypothetical_reaction_inventory": 3, "hypothetical_product_inventory": 2, "hypothetical_missing_substrate_nodes": 1}}))
+    result = compute_completeness(network_path, compounds_path, networkdb_path=networkdb_path)
+    assert result["hypothesis_layer"]["hypothesis_edges"] == 2
+    assert result["hypothesis_layer"]["hypothesis_edges_with_enzyme_evidence"] == 1
+    assert result["hypothesis_layer"]["hypothesis_reaction_inventory"] == 3
