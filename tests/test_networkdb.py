@@ -44,3 +44,19 @@ def test_networkdb_reads_object_reaction_enzyme_associations(tmp_path):
     assert reaction["enzyme_ids"] == ["p:1"]
     assert reaction["enzyme_associations"][0]["predicate"] == "has_catalytic_activity"
     assert reaction["status"] == "candidate"
+
+
+def test_networkdb_labels_non_enzymatic_reactions(tmp_path):
+    network_path = tmp_path / "network.json.gz"
+    network = {"entities": [{
+        "id": "r:1", "type": "biochemical_reaction", "label": "decarboxylation",
+        "attributes": {"reactionClass": "non-enzymatic-decarboxylation"}, "identifiers": {},
+    }], "statements": []}
+    with gzip.open(network_path, "wt") as handle: json.dump(network, handle)
+    compounds_path = tmp_path / "compounds.json"
+    compounds_path.write_text(json.dumps({"compounds": []}))
+    crosswalk_path = tmp_path / "crosswalk.json"
+    crosswalk_path.write_text(json.dumps({"matches": [], "ambiguous": 0, "unmatched": 0}))
+    output = tmp_path / "networkdb.json"
+    build_networkdb(network_path, compounds_path, crosswalk_path, output)
+    assert json.loads(output.read_text())["reactions"][0]["status"] == "non_enzymatic"
