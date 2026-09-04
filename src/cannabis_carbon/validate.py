@@ -48,8 +48,8 @@ def validate_artifacts(atom_audit_path: Path, mapping_path: Path, balance_path: 
                     continue
                 previous = None
                 for step_index, step in enumerate(path):
-                    required = ("from_entity_id", "from_atom", "to_entity_id", "to_atom", "status", "provenance")
-                    if any(not step.get(field) and step.get(field) != 0 for field in required) or step.get("status") not in {"inferred", "candidate"}:
+                    required = ("reaction_id", "from_entity_id", "from_atom", "to_entity_id", "to_atom", "status", "provenance")
+                    if any(not step.get(field) and step.get(field) != 0 for field in required) or step.get("status") not in {"inferred", "candidate"} or not isinstance(step.get("enzyme_ids"), list) or not isinstance(step.get("candidate_protein_ids"), list):
                         failures.append({"kind": "carbon-path-evidence-missing", "compound_id": compound.get("id"), "atom_index": atom_index, "step": step_index})
                     current_start = (step.get("from_entity_id"), step.get("from_atom"))
                     if previous is None:
