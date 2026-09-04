@@ -1,4 +1,4 @@
-from cannabis_carbon.atom_mapping import map_reaction_smiles, map_identity_pair_smiles
+from cannabis_carbon.atom_mapping import apply_reaction_specific_candidate_mapping, map_reaction_smiles, map_identity_pair_smiles
 
 
 def test_oxidation_preserves_all_product_carbons():
@@ -48,6 +48,16 @@ def test_decarboxylation_maps_released_carbon_to_co2():
     assert result["status"] == "inferred"
     assert len(result["mappings"]) == 2
     assert any(mapping["method"] == "rdkit-decarboxylation-released-carbon" for mapping in result["mappings"])
+
+
+def test_unresolved_product_co2_gets_only_a_candidate_carboxyl_source():
+    reaction = "CC(=O)O>>C.O=C=O"
+    result = apply_reaction_specific_candidate_mapping("rhea:test", reaction, map_reaction_smiles(reaction))
+    co2 = [row for row in result["mappings"] if row["product_index"] == 1][0]
+    assert co2["status"] == "candidate"
+    assert co2["method"] == "rdkit-co2-product-decarboxylation-candidate"
+    assert co2["alternatives"] == [{"reactant_index": 0, "reactant_atom": 1}]
+    assert any(row["status"] == "unresolved" for row in result["mappings"] if row["product_index"] == 0)
 
 
 def test_full_carbon_mcs_maps_oxidation_with_oxygen_only_cofactor():

@@ -477,7 +477,7 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
 
 
 def apply_reaction_specific_candidate_mapping(reaction_id: str, reaction_smiles: str | None, mapping: dict) -> dict:
-    """Add narrowly scoped candidate mappings for the Cannabis polyketide assemblies.
+    """Add bounded candidate mappings for explicit carbon-transfer patterns.
 
     The generic mapper intentionally rejects several cyclization correspondences.
     For tetraketide-CoA → olivetolate, bounded pairwise carbon MCS identifies
@@ -485,23 +485,29 @@ def apply_reaction_specific_candidate_mapping(reaction_id: str, reaction_smiles:
     butyryl-CoA → divarinolic-acid varin assembly, the same bounded search
     identifies five product carbons with multiple precursor alternatives. All
     alternatives remain explicit candidates; none are mechanistically resolved.
+
+    For other catalog reactions, an unresolved carbon in a product CO₂ is
+    eligible for a candidate mapping only when a reactant carbon is bonded to
+    at least two oxygens. This is a structural decarboxylation hypothesis,
+    not an inferred atom map; all eligible reactant atoms remain alternatives.
     """
     supported_reactions = {
         "cannabis:reaction:tetraketide-coa-to-olivetolate",
         "cannabis:reaction:butyryl-coa-to-divarinolic-acid",
         "cannabis:reaction:tks-hexanoyl-coa-to-tetraketide-coa",
     }
-    if reaction_id not in supported_reactions or not reaction_smiles or ">>" not in reaction_smiles:
+    if not reaction_smiles or ">>" not in reaction_smiles:
         return mapping
     left, right = reaction_smiles.split(">>", 1)
     reactants, products = _molecules(left), _molecules(right)
+    supported_polyketide = reaction_id in supported_reactions
     polyketide_decarboxylation = reaction_id in {
         "cannabis:reaction:tetraketide-coa-to-olivetolate",
         "cannabis:reaction:butyryl-coa-to-divarinolic-acid",
         "cannabis:reaction:tks-hexanoyl-coa-to-tetraketide-coa",
     }
     malonyl_carboxyl_candidates = []
-    if polyketide_decarboxylation:
+    if polyketide_decarboxylation and supported_polyketide:
         reactant_smiles = [Chem.MolToSmiles(reactant) for reactant in reactants]
         repeated_substrates = {smiles for smiles in reactant_smiles if reactant_smiles.count(smiles) >= 3}
         for ri, reactant in enumerate(reactants):
@@ -515,16 +521,31 @@ def apply_reaction_specific_candidate_mapping(reaction_id: str, reaction_smiles:
             continue
         choices = set()
         product = products[row["product_index"]]
-        if row.get("product_index") == 0:
+        if supported_polyketide and row.get("product_index") == 0:
             for ri, reactant in enumerate(reactants):
                 for _, atom in _mcs_carbon_candidates_cached(Chem.MolToSmiles(reactant), Chem.MolToSmiles(product), row["product_atom"]):
                     choices.add((ri, atom))
-        elif polyketide_decarboxylation and Chem.MolToSmiles(product) == "O=C=O":
+        elif polyketide_decarboxylation and supported_polyketide and Chem.MolToSmiles(product) == "O=C=O":
             choices.update(malonyl_carboxyl_candidates)
+        elif Chem.MolToSmiles(product) == "O=C=O":
+            # A product CO₂ carbon is chemically compatible with release from
+            # a carboxyl-like reactant carbon. Exclude any CO₂ already present
+            # on the reactant side and retain every structural alternative.
+            for ri, reactant in enumerate(reactants):
+                if Chem.MolToSmiles(reactant) == "O=C=O":
+                    continue
+                for atom in reactant.GetAtoms():
+                    if atom.GetAtomicNum() == 6 and sum(neighbor.GetAtomicNum() == 8 for neighbor in atom.GetNeighbors()) >= 2:
+                        choices.add((ri, atom.GetIdx()))
         if not choices:
             continue
         alternatives = [{"reactant_index": ri, "reactant_atom": atom} for ri, atom in sorted(choices)]
-        method = "rdkit-targeted-polyketide-decarboxylation-candidate" if row.get("product_index") != 0 else "rdkit-targeted-pairwise-mcs-candidate"
+        if supported_polyketide and row.get("product_index") == 0:
+            method = "rdkit-targeted-pairwise-mcs-candidate"
+        elif polyketide_decarboxylation and supported_polyketide:
+            method = "rdkit-targeted-polyketide-decarboxylation-candidate"
+        else:
+            method = "rdkit-co2-product-decarboxylation-candidate"
         row.update({"reactant_index": alternatives[0]["reactant_index"], "reactant_atom": alternatives[0]["reactant_atom"], "status": "candidate", "method": method, "alternatives": alternatives})
         row.pop("reason", None)
     unresolved = [{"product_index": row["product_index"], "product_atom": row["product_atom"], "status": row["status"], "reason": row.get("reason")} for row in mapping.get("mappings", []) if row.get("status") not in ("inferred", "candidate")]
