@@ -288,7 +288,8 @@ reactions with unresolved or ambiguous product-carbon rows: 16,406 carbon
 rows currently require mapping curation. Ranking prioritizes unresolved rows,
 then ambiguous rows, then total blocked carbon weight. Each item retains
 reaction source, mapping methods, known enzyme IDs, and attached genome
-candidate proteins.
+candidate proteins. Queue items now also retain reaction-direction evidence and
+classify it as curated or raw-master orientation.
 The lineage report also carries a direction-agnostic structural sensitivity
 run. It is an upper bound for prioritizing reaction-direction curation, not a
 physiological route: the directed result remains the authoritative pathway

@@ -76,6 +76,8 @@ def build_carbon_mapping_queue(mapping_path: Path, networkdb_path: Path, output:
             "blocker": "unresolved-or-ambiguous-rdkit-carbon-mapping",
             "enzyme_ids": reaction.get("enzyme_ids", []),
             "candidate_protein_ids": sorted({protein.get("proteinId") for protein in reaction.get("candidate_proteins", []) if protein.get("proteinId")}),
+            "direction": reaction.get("direction", {}),
+            "direction_status": "curated" if reaction.get("direction", {}).get("directional_rhea_id") else "raw",
             "mapping_methods": sorted({mapping_row.get("method") for mapping_row in row.get("mappings", []) if mapping_row.get("method")}),
         })
     items.sort(key=lambda item: tuple(-value for value in item["rank_key"]) + (item["reaction_id"],))
