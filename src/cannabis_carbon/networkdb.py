@@ -74,7 +74,7 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
         reaction_id = entity["id"]
         statements = [s for s in network["statements"] if s.get("subjectId") == reaction_id]
         participants = lambda predicate: [{"compound_id": s["objectEntityId"], "coefficient": (s.get("qualifiers") or {}).get("stoichiometricCoefficient", 1), "compartment": (s.get("qualifiers") or {}).get("compartment")} for s in statements if s.get("predicate") == predicate]
-        enzyme_statements = [s for s in statements if s.get("predicate") in ("catalyzes", "maps_to_reaction")]
+        enzyme_statements = [s for s in network["statements"] if s.get("predicate") in ("catalyzes", "maps_to_reaction", "has_catalytic_activity") and s.get("objectEntityId") == reaction_id]
         enzymes = sorted({s.get("subjectId") for s in enzyme_statements})
         attrs = entity.get("attributes", {})
         candidate_proteins = candidate_by_reaction.get(reaction_id, [])

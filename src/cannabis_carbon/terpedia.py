@@ -41,7 +41,7 @@ def cytoscape_elements(network: dict) -> dict:
             reactants[subject].append(obj)
         elif predicate == "has_product" and subject in reactions:
             products[subject].append(obj)
-        elif predicate in ("catalyzes", "maps_to_reaction") and obj in reactions:
+        elif predicate in ("catalyzes", "maps_to_reaction", "has_catalytic_activity") and obj in reactions:
             enzymes[obj].append(subject)
             evidence[obj].append(statement.get("qualifiers", {}))
     nodes = []

@@ -16,7 +16,7 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
     for s in network["statements"]:
         if s["predicate"] == "has_reactant" and s["subjectId"] in reactions: reactant_metabolites.add(s["objectEntityId"])
         elif s["predicate"] == "has_product" and s["subjectId"] in reactions: product_metabolites.add(s["objectEntityId"])
-        elif s["predicate"] in ("catalyzes", "maps_to_reaction") and s["objectEntityId"] in reactions: enzyme_reactions.add(s["objectEntityId"])
+        elif s["predicate"] in ("catalyzes", "maps_to_reaction", "has_catalytic_activity") and s["objectEntityId"] in reactions: enzyme_reactions.add(s["objectEntityId"])
     compounds = json.loads(compounds_path.read_text())["compounds"]
     candidate_reactions = set()
     if hypotheses_path and hypotheses_path.exists():
