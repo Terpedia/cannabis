@@ -98,6 +98,7 @@ def main() -> None:
     p_complete.add_argument("--mapping", type=Path)
     p_complete.add_argument("--crosswalk", type=Path)
     p_complete.add_argument("--lineage", type=Path)
+    p_complete.add_argument("--atom-audit", type=Path, default=Path("data/reports/carbon-atom-audit.json"))
     p_complete.add_argument("--out", type=Path, default=Path("data/reports/completeness.json"))
     p_queue = sub.add_parser("candidate-queue")
     p_queue.add_argument("source", type=Path)
@@ -116,6 +117,12 @@ def main() -> None:
     p_lineage.add_argument("compounds", type=Path)
     p_lineage.add_argument("--directions", type=Path, default=Path("data/terpedia/directional-reaction-overrides.json"))
     p_lineage.add_argument("--out", type=Path, default=Path("data/reports/carbon-lineage.json"))
+    p_atom_audit = sub.add_parser("carbon-atom-audit")
+    p_atom_audit.add_argument("network", type=Path)
+    p_atom_audit.add_argument("lineage", type=Path)
+    p_atom_audit.add_argument("crosswalk", type=Path)
+    p_atom_audit.add_argument("compounds", type=Path)
+    p_atom_audit.add_argument("--out", type=Path, default=Path("data/reports/carbon-atom-audit.json"))
     p_networkdb = sub.add_parser("networkdb")
     p_networkdb.add_argument("network", type=Path)
     p_networkdb.add_argument("compounds", type=Path)
@@ -125,6 +132,7 @@ def main() -> None:
     p_networkdb.add_argument("--genome-fasta", type=Path, default=Path("data/raw/UP000583929.fasta"))
     p_networkdb.add_argument("--mapping", type=Path, default=Path("data/reports/reaction-carbon-mapping.json"))
     p_networkdb.add_argument("--lineage", type=Path, default=Path("data/reports/carbon-lineage.json"))
+    p_networkdb.add_argument("--atom-audit", type=Path, default=Path("data/reports/carbon-atom-audit.json"))
     p_networkdb.add_argument("--out", type=Path, default=Path("docs/data/networkdb.json"))
     p_genome = sub.add_parser("genome-search")
     p_genome.add_argument("queue", type=Path)
@@ -160,7 +168,7 @@ def main() -> None:
     elif args.command == "map-reactions":
         print(json.dumps(build_reaction_report(args.source, args.out), indent=2))
     elif args.command == "completeness":
-        result = compute_completeness(args.network, args.compounds, args.mapping, args.crosswalk, args.lineage)
+        result = compute_completeness(args.network, args.compounds, args.mapping, args.crosswalk, args.lineage, args.atom_audit)
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(json.dumps(result, indent=2) + "\n")
         print(json.dumps(result, indent=2))
@@ -172,8 +180,11 @@ def main() -> None:
         print(json.dumps(audit_balances(args.network, args.out), indent=2))
     elif args.command == "carbon-lineage":
         print(json.dumps(build_carbon_lineage(args.network, args.mapping, args.crosswalk, args.compounds, args.out, args.directions), indent=2))
+    elif args.command == "carbon-atom-audit":
+        from .lineage import build_carbon_atom_audit
+        print(json.dumps(build_carbon_atom_audit(args.network, args.lineage, args.crosswalk, args.compounds, args.out), indent=2))
     elif args.command == "networkdb":
-        print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out, args.hypotheses, args.genome_search, args.genome_fasta, args.mapping, args.lineage), indent=2))
+        print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out, args.hypotheses, args.genome_search, args.genome_fasta, args.mapping, args.lineage, args.atom_audit), indent=2))
     elif args.command == "genome-search":
         print(json.dumps(build_genome_search(args.queue, args.fasta, args.out, args.diamond_hits, args.reference_tsv), indent=2))
     elif args.command == "specialty-inventory":

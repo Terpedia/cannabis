@@ -7,7 +7,7 @@ from pathlib import Path
 from .terpedia import load_network
 
 
-def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None, crosswalk_path: Path | None = None, lineage_path: Path | None = None) -> dict:
+def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None, crosswalk_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None) -> dict:
     network = load_network(network_path)
     entities = {e["id"]: e for e in network["entities"]}
     metabolites = {i for i, e in entities.items() if e.get("type") == "metabolite"}
@@ -51,4 +51,7 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
     if lineage_path and lineage_path.exists():
         lineage = json.loads(lineage_path.read_text())
         result["coverage"]["co2_lineage"] = {"target_summary": lineage["target_summary"], "reachable_carbon_nodes": lineage["reachable_carbon_nodes"], "resolved_carbon_edges": lineage["resolved_carbon_edges"], "inferred_carbon_edges": lineage["inferred_carbon_edges"], "candidate_carbon_edges": lineage["candidate_carbon_edges"], "external_carbon_input_entity_count": lineage["external_carbon_input_entity_count"], "carbon_source_policy": lineage["carbon_source_policy"]}
+    if atom_audit_path and atom_audit_path.exists():
+        atom_audit = json.loads(atom_audit_path.read_text())
+        result["coverage"]["carbon_atom_audit"] = {"source": str(atom_audit_path), "carbon_atoms_total": atom_audit.get("carbon_atoms_total"), "status_counts": atom_audit.get("status_counts"), "compound_count": atom_audit.get("compound_count")}
     return result

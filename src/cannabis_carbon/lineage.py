@@ -205,3 +205,107 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
     return {"resolved_carbon_edges": len(edges), "inferred_carbon_edges": sum(e["status"] == "inferred" for e in edges), "candidate_carbon_edges": sum(e["status"] == "candidate" for e in edges), "reachable_carbon_nodes": len(reachable), "target_summary": report["target_summary"]}
+
+
+def build_carbon_atom_audit(network_path: Path, lineage_path: Path, crosswalk_path: Path, compounds_path: Path, output: Path) -> dict:
+    """Partition every CannabisDB carbon atom into an auditable status group.
+
+    The lineage report stores reaction-level edges; this companion artifact
+    projects those edges back onto each CannabisDB structure after explicitly
+    resolving atom-order differences.  Groups contain atom-index lists whose
+    union is exactly the molecule's carbon atom set, so omitted atoms are
+    detectable by validation rather than silently disappearing.
+    """
+    network = load_network(network_path)
+    lineage = json.loads(lineage_path.read_text())
+    crosswalk = json.loads(crosswalk_path.read_text())
+    compounds = json.loads(compounds_path.read_text())["compounds"]
+    entities = {e["id"]: e for e in network["entities"]}
+    co2_id = lineage.get("co2_entity_id", "chebi:16526")
+    co2_smiles = entities.get(co2_id, {}).get("attributes", {}).get("canonicalSmiles")
+    co2_nodes = {(co2_id, i) for i in _carbon_atom_indices(co2_smiles)}
+    reachable = set(co2_nodes)
+    forward = defaultdict(list)
+    for edge in lineage.get("carbon_edges", []):
+        forward[(edge["reactant_entity_id"], edge["reactant_atom"])].append(edge)
+    candidate_reachable = set()
+    queue = deque((node, False) for node in co2_nodes)
+    seen_states = {(node, False) for node in co2_nodes}
+    while queue:
+        node, has_candidate = queue.popleft()
+        for edge in forward.get(node, []):
+            child = (edge["product_entity_id"], edge["product_atom"])
+            child_has_candidate = has_candidate or edge.get("status") == "candidate"
+            reachable.add(child)
+            if child_has_candidate:
+                candidate_reachable.add(child)
+            state = (child, child_has_candidate)
+            if state not in seen_states:
+                seen_states.add(state)
+                queue.append(state)
+    candidate_reachable.difference_update(co2_nodes)
+    incoming = defaultdict(list)
+    for edge in lineage.get("carbon_edges", []):
+        node = (edge["product_entity_id"], edge["product_atom"])
+        incoming[node].append(edge)
+
+    exact_by_cdb = {row["cannabisdb"]["cannabisdb_id"]: row for row in crosswalk.get("matches", [])}
+    candidate_by_cdb = defaultdict(list)
+    for row in crosswalk.get("candidate_matches", []):
+        candidate_by_cdb[row["cannabisdb"]["cannabisdb_id"]].append(row)
+
+    def source_urls(*values):
+        return sorted({str(value) for value in values if value})
+
+    atom_groups = []
+    status_counts = defaultdict(int)
+    for compound in compounds:
+        compound_molecule = Chem.MolFromSmiles(compound.get("smiles", ""))
+        carbon_indices = [atom.GetIdx() for atom in compound_molecule.GetAtoms() if atom.GetAtomicNum() == 6] if compound_molecule else []
+        match = exact_by_cdb.get(compound["id"])
+        identity_status = "exact"
+        if match is None:
+            candidates = candidate_by_cdb.get(compound["id"], [])
+            if len(candidates) == 1:
+                match = candidates[0]
+                identity_status = "candidate"
+            else:
+                match = None
+                identity_status = None
+        terpedia_id = match.get("terpedia_id") if match else None
+        entity_smiles = entities.get(terpedia_id, {}).get("attributes", {}).get("canonicalSmiles") if terpedia_id else None
+        index_map = _entity_atom_index_map(compound_molecule, entity_smiles) if compound_molecule is not None and entity_smiles else None
+        grouped = {}
+        for atom_index in carbon_indices:
+            status = "unresolved"
+            reason = "no-terpedia-identity"
+            entity_atom = None
+            reaction_ids = []
+            provenance = source_urls(compound.get("source_url"), crosswalk_path)
+            if terpedia_id and index_map is None:
+                reason = "identity-atom-order-unresolved"
+                provenance = source_urls(compound.get("source_url"), match.get("method"), entities.get(terpedia_id, {}).get("url"))
+            elif terpedia_id:
+                entity_atom = index_map.get(atom_index)
+                node = (terpedia_id, entity_atom) if entity_atom is not None else None
+                edges = incoming.get(node, []) if node else []
+                reaction_ids = sorted({edge["reaction_id"] for edge in edges})
+                provenance = source_urls(*(edge.get("provenance") for edge in edges), entities.get(terpedia_id, {}).get("url"), compound.get("source_url"))
+                if node in co2_nodes:
+                    status, reason = "supported", "co2-seed"
+                elif node not in reachable:
+                    reason = "entity-carbon-not-reachable-from-co2"
+                elif identity_status == "candidate" or node in candidate_reachable:
+                    status, reason = "candidate", "candidate-co2-lineage-or-identity"
+                else:
+                    status, reason = "inferred", "rdkit-structural-co2-lineage"
+            key = (status, reason, tuple(reaction_ids), tuple(provenance), entity_atom)
+            grouped.setdefault(key, {"status": status, "reason": reason, "atom_indices": [], "entity_atom_indices": [], "reaction_ids": reaction_ids, "provenance": provenance})
+            grouped[key]["atom_indices"].append(atom_index)
+            grouped[key]["entity_atom_indices"].append(entity_atom)
+            status_counts[status] += 1
+        atom_groups.append({"cannabisdb_id": compound["id"], "carbon_atom_count": len(carbon_indices), "identity_status": identity_status, "terpedia_id": terpedia_id, "groups": list(grouped.values()), "claim_boundary": "Each group explicitly accounts for listed CannabisDB carbon atom indices; unresolved atoms are not assigned an origin."})
+    report = {"schema": "cannabis-carbon.carbon-atom-audit.v1", "source_network": str(network_path), "source_lineage": str(lineage_path), "source_crosswalk": str(crosswalk_path), "source_compounds": str(compounds_path), "carbon_source_policy": lineage.get("carbon_source_policy"), "compound_count": len(compounds), "carbon_atoms_total": sum(item["carbon_atom_count"] for item in atom_groups), "status_counts": {status: status_counts[status] for status in ("supported", "candidate", "inferred", "unresolved")}, "compounds": atom_groups, "claim_boundary": "This is a structure-indexed provenance audit. Inferred and candidate statuses are not isotope tracing, enzyme validation, or proof of in-vivo cannabis biosynthesis."}
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
+    return {"compound_count": report["compound_count"], "carbon_atoms_total": report["carbon_atoms_total"], "status_counts": report["status_counts"]}

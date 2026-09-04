@@ -29,6 +29,9 @@ its source, reaction direction, atom-mapping method, and uncertainty.
   blockers, provenance, and proposed recombinant/plant validation assays. The
   target records retain CannabisDB names, aliases, formulas, SMILES, and review
   priority so future experiments can be selected without losing identity context.
+- `docs/data/carbon-atom-audit.json` partitions every one of the 285,623
+  CannabisDB carbon atoms into supported, candidate, inferred, or unresolved
+  groups with atom indices, provenance, and blocker reasons.
 
 ## Genome-to-enzyme discovery
 

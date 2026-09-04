@@ -177,6 +177,14 @@ missing CO₂-assimilation and/or structure-resolved links needed to establish
 the plant-wide carbon path; it is not evidence that Cannabis uses another
 carbon source.
 
+The companion `data/reports/carbon-atom-audit.json` and published
+`docs/data/carbon-atom-audit.json` artifacts partition all **285,623**
+CannabisDB carbon atoms into **1 supported**, **1,042 candidate**, and
+**284,580 unresolved** atoms. Each group retains CannabisDB atom indices,
+resolved Terpedia atom indices when available, reaction references, provenance
+URLs, and the blocking reason; the groups are required to partition the
+complete carbon-atom set for each compound.
+
 These are data-coverage metrics. They do not imply that all CannabisDB
 compounds are endogenous cannabis metabolites or that Terpedia's reaction graph
 constitutes a demonstrated in-vivo pathway.
@@ -192,6 +200,8 @@ namespaces remain separate so an identity match cannot silently collapse distinc
 source records; links are explicit in `identity_links` and `identity_link`.
 NetworkDB also carries 249 connectivity-level candidate identity links and 40
 ambiguous candidate groups as reviewable, non-exact alternatives.
+Each CannabisDB compound record carries its CO₂-lineage status and reachable
+carbon-atom count, and NetworkDB links to the complete atom-level audit.
 Every one of the 1,093 working reaction records also carries a carbon-mapping
 summary from the RDKit report: 109 reactions are fully inferred, 24 retain
 candidate mappings, 500 retain ambiguous carbon mappings, and 460 retain
