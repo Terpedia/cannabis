@@ -108,6 +108,7 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
         compounds.append({"id": entity["id"], "namespace": "terpedia", "label": entity.get("label", entity["id"]), "formula": attrs.get("molecularFormula"), "smiles": attrs.get("canonicalSmiles"), "source_url": entity.get("url"), "carbon_atom_count": sum(atom.GetAtomicNum() == 6 for atom in mol.GetAtoms()) if mol is not None else None})
     hypothetical_connections = []
     hypothetical_reactions = (hypothetical_inventory or {}).get("reactions", [])
+    hypothetical_missing_substrate_nodes = {}
     if hypothetical_inventory:
         existing_compound_ids = {compound["id"] for compound in compounds}
         for product in hypothetical_inventory.get("products", []):
@@ -133,6 +134,25 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
                     compounds.append({"id": compound_id, "namespace": "terpedia_identity_set", "label": terpene_id, "formula": formula, "smiles": smiles, "inchikey": inchikey, "carbon_atom_count": carbon_count, "identity_set_key": identity_set_key, "identity_status": "identity-set-record", "source_url": "https://console.cloud.google.com/bigquery?project=terpedia-489015"})
                     existing_compound_ids.add(compound_id)
             hypothetical_connections.append({**row, "substrate_compound_id": substrate_id, "product_compound_id": product_id, "substrate_identity_resolution": "cannabisdb_exact_inchikey" if substrate_resolution else "terpedia_identity_set", "product_identity_resolution": "cannabisdb_exact_inchikey" if product_resolution else "terpedia_identity_set", "status": "candidate", "layer": "Terpedia hypothesis edge", "claim_boundary": "This source-directed connection is a testable hypothesis and is not included in balanced reaction or CO2 lineage counts."})
+    if hypothetical_inventory:
+        existing_compound_ids = {compound["id"] for compound in compounds}
+        for row in hypothetical_reactions:
+            try:
+                missing_structures = json.loads(row.get("missing_corpus_substrates_json") or "[]")
+            except json.JSONDecodeError:
+                missing_structures = []
+            product_id = cdb_ids_by_inchikey.get(row.get("product_inchikey")) or f"terpedia:hypothesis-product:{row['product_terpene_id']}"
+            for structure in missing_structures:
+                mol = Chem.MolFromSmiles(structure)
+                if mol is None or not any(atom.GetAtomicNum() == 6 for atom in mol.GetAtoms()):
+                    continue
+                digest = hashlib.sha256(structure.encode()).hexdigest()[:16]
+                substrate_id = f"terpedia:hypothesis-missing-substrate:{digest}"
+                if substrate_id not in existing_compound_ids:
+                    compounds.append({"id": substrate_id, "namespace": "terpedia_hypothesis_missing_substrate", "label": f"Unresolved substrate {digest}", "formula": rdMolDescriptors.CalcMolFormula(mol), "smiles": structure, "carbon_atom_count": sum(atom.GetAtomicNum() == 6 for atom in mol.GetAtoms()), "source_url": row.get("source_url"), "hypothesis_status": "unresolved-missing-corpus-substrate", "blocker": "structure is required by the source reaction but has no resolved Terpedia corpus identity"})
+                    existing_compound_ids.add(substrate_id)
+                hypothetical_missing_substrate_nodes[substrate_id] = True
+                hypothetical_connections.append({"reaction_id": row.get("reaction_id"), "substrate_compound_id": substrate_id, "product_compound_id": product_id, "substrate_smiles": structure, "product_terpene_id": row.get("product_terpene_id"), "source_type": row.get("source_type"), "evidence_type": row.get("evidence_type"), "source_dataset": row.get("source_dataset"), "source_url": row.get("source_url"), "reaction_smarts": row.get("reaction_smarts"), "status": "unresolved", "layer": "Terpedia unresolved-substrate hypothesis edge", "blocker": "missing-corpus-substrate", "claim_boundary": "This edge preserves a carbon-containing substrate required by a GCP hypothesis reaction, but the substrate has no resolved corpus identity and is not included in balanced reaction or CO2 lineage counts."})
     candidate_by_reaction = {}
     for item in hypothesis_items:
         if item.get("reaction_id"):
@@ -202,6 +222,7 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
     report["coverage"]["hypothetical_forward_connections"] = len(hypothetical_connections)
     report["coverage"]["hypothetical_reaction_inventory"] = len(hypothetical_reactions)
     report["coverage"]["hypothetical_product_inventory"] = len((hypothetical_inventory or {}).get("products", []))
+    report["coverage"]["hypothetical_missing_substrate_nodes"] = len(hypothetical_missing_substrate_nodes)
     report["coverage"]["hypothetical_identity_compounds"] = sum(compound.get("namespace") == "terpedia_identity_set" for compound in compounds)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
     return report["coverage"]

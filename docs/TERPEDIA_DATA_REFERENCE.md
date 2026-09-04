@@ -355,6 +355,10 @@ SMARTS, source enzyme/protein fields, and its claim boundary.
 The complete companion reaction inventory contains 5,429 GCP hypotheses and
 1,324 distinct products; products without a resolved corpus precursor remain
 visible as explicitly unresolved product-inventory nodes.
+The map also expands these records into 7,249 hypothesis-layer edges, including
+5,348 red unresolved-substrate edges backed by 644 unique carbon-containing
+missing-substrate structures. Those edges preserve the reaction requirement and
+blocker but do not assert that the anonymous substrate is a Cannabis metabolite.
 The companion `docs/data/terpedia-hypothesis-balance-audit.json` classifies
 these SMARTS records as 1,762 balance-ready, 17 imbalanced, and 122 not
 auditable; this is a review gate, not automatic promotion.
