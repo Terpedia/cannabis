@@ -51,6 +51,9 @@ def map_identity_set_upstream(input_path: Path, output: Path) -> dict:
     pair_mapped_atoms = 0
     pair_unresolved_atoms = 0
     missing_precursor_rows_with_candidates = 0
+    candidate_pair_status_counts = Counter()
+    candidate_pair_mapped_atoms = 0
+    candidate_pair_unresolved_atoms = 0
     for row in report.get("rows", []):
         mapped = map_reaction_smiles(row.get("reaction_smarts"))
         product = report.get("identity_records", {}).get(row.get("product_identity_id"), {}).get("smiles")
@@ -59,6 +62,12 @@ def map_identity_set_upstream(input_path: Path, output: Path) -> dict:
         precursor_candidates = [] if precursor else _carbon_bearing_required_substrates(row.get("required_substrate_structures_json"))
         if precursor_candidates:
             missing_precursor_rows_with_candidates += 1
+            for candidate in precursor_candidates:
+                candidate_mapping = map_identity_pair_smiles(candidate["canonical_smiles"], product)
+                candidate["target_pair_carbon_mapping"] = candidate_mapping
+                candidate_pair_status_counts[candidate_mapping.get("status", "unresolved")] += 1
+                candidate_pair_mapped_atoms += len(candidate_mapping.get("mappings", []))
+                candidate_pair_unresolved_atoms += len(candidate_mapping.get("unresolved_product_carbons", []))
         pair_status_counts[pair_mapping.get("status", "unresolved")] += 1
         pair_mapped_atoms += len(pair_mapping.get("mappings", []))
         pair_unresolved_atoms += len(pair_mapping.get("unresolved_product_carbons", []))
@@ -76,6 +85,9 @@ def map_identity_set_upstream(input_path: Path, output: Path) -> dict:
         "target_pair_mapped_carbon_atoms": pair_mapped_atoms,
         "target_pair_unresolved_carbon_atoms": pair_unresolved_atoms,
         "missing_precursor_rows_with_structure_candidates": missing_precursor_rows_with_candidates,
+        "candidate_pair_mapping_status_counts": dict(sorted(candidate_pair_status_counts.items())),
+        "candidate_pair_mapped_carbon_atoms": candidate_pair_mapped_atoms,
+        "candidate_pair_unresolved_carbon_atoms": candidate_pair_unresolved_atoms,
         "rows": rows,
         "claim_boundary": "RDKit mappings conserve structurally matched carbon atoms and retain unresolved product atoms explicitly. They do not establish reaction direction, enzyme function, isotope tracing, or endogenous Cannabis biosynthesis.",
     }

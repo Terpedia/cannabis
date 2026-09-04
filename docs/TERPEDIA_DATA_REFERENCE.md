@@ -315,6 +315,9 @@ whole-reaction mapping when ancillary carbon-bearing substrates may contribute
 to the product. The 354 rows with missing precursor identities now also retain
 537 carbon-bearing required-substrate alternatives from Terpedia; these are
 explicit unresolved candidate structures, not assigned precursor identities.
+RDKit mapped 282 of those alternatives completely and retained 14,252
+candidate/inferred atom correspondences across the alternative layer; 255
+alternatives and 3,629 product atoms remain unresolved.
 Each CannabisDB compound record carries its CO₂-lineage status and reachable
 carbon-atom count, and NetworkDB links to the complete atom-level audit.
 Every one of the 1,107 working reaction records also carries a carbon-mapping
