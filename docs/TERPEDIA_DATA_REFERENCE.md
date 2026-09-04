@@ -357,6 +357,12 @@ The reversible sensitivity artifact
 ordered candidate paths from the CO₂ seed to 79 candidate products through 7
 core anchors. These paths are useful for direction and enzyme experiments but
 are explicitly not directed biological pathways.
+The merged carbon-provenance artifact
+`data/terpene-identity-set-reversible-candidate-lineage-carbon.json` joins
+those paths to the RDKit pair mappings: 2,154 paths have complete product-
+carbon correspondence, covering 132,378 mapped product carbons, while 4,220
+product-carbon rows remain unresolved. These are reversible sensitivity
+hypotheses and do not alter the directed atom audit.
 When available, each CannabisDB record also carries the exact-InChIKey PubChem
 resolution status and CID/structure properties; unresolved PubChem queries are
 retained as explicit negatives rather than being treated as missing data.

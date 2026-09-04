@@ -49,6 +49,10 @@
           ,"reversible_candidate_lineage_paths": 3634
           ,"reversible_candidate_lineage_products": 79
           ,"reversible_candidate_lineage_core_anchors": 7
+          ,"reversible_candidate_lineage_carbon_snapshot": "data/reports/terpene-identity-set-reversible-candidate-lineage-carbon.json"
+          ,"reversible_candidate_lineage_complete_carbon_paths": 2154
+          ,"reversible_candidate_lineage_mapped_product_carbons": 132378
+          ,"reversible_candidate_lineage_unresolved_product_carbons": 4220
         },
         {
           "table": "terpedia-489015.terpedia_core.terpene_biotransformation_hypothetical_connections_current_v2",
