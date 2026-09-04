@@ -12,6 +12,8 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
     entities = {e["id"]: e for e in network["entities"]}
     metabolites = {i for i, e in entities.items() if e.get("type") == "metabolite"}
     reactions = {i for i, e in entities.items() if e.get("type") == "biochemical_reaction"}
+    non_enzymatic_reactions = {i for i in reactions if entities[i].get("attributes", {}).get("reactionClass") == "non-enzymatic-decarboxylation"}
+    enzyme_requiring_reactions = reactions - non_enzymatic_reactions
     reactant_metabolites, product_metabolites, enzyme_reactions = set(), set(), set()
     for s in network["statements"]:
         if s["predicate"] == "has_reactant" and s["subjectId"] in reactions: reactant_metabolites.add(s["objectEntityId"])
@@ -22,7 +24,7 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
     if hypotheses_path and hypotheses_path.exists():
         hypotheses = json.loads(hypotheses_path.read_text())
         candidate_reactions = {item.get("reaction_id") for item in hypotheses.get("items", []) if item.get("reaction_id") and item.get("candidate_proteins")}
-    no_enzyme_reactions = reactions - enzyme_reactions
+    no_enzyme_reactions = enzyme_requiring_reactions - enzyme_reactions
     result = {
         "schema": "cannabis-carbon.completeness.v1",
         "terpedia": {
@@ -30,12 +32,15 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
             "metabolites_in_reactions": len(reactant_metabolites | product_metabolites),
             "metabolites_without_reactions": len(metabolites - reactant_metabolites - product_metabolites),
             "reactions_total": len(reactions),
+            "non_enzymatic_reactions": len(non_enzymatic_reactions),
+            "enzyme_requiring_reactions": len(enzyme_requiring_reactions),
             "reactions_with_enzyme_association": len(enzyme_reactions),
             "reactions_without_enzyme_association": len(no_enzyme_reactions),
             "reactions_without_enzyme_with_candidate_proteins": len(no_enzyme_reactions & candidate_reactions),
             "reactions_without_enzyme_without_candidate_proteins": len(no_enzyme_reactions - candidate_reactions),
             "metabolite_ids_without_reactions": sorted(metabolites - reactant_metabolites - product_metabolites),
-            "reaction_ids_without_enzyme_association": sorted(reactions - enzyme_reactions),
+            "reaction_ids_without_enzyme_association": sorted(no_enzyme_reactions),
+            "non_enzymatic_reaction_ids": sorted(non_enzymatic_reactions),
         },
         "cannabisdb": {
             "compounds_total": len(compounds),

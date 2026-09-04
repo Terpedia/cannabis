@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-import gzip
 import json
 from collections import defaultdict
 from pathlib import Path
 
 from rdkit import Chem
+
+from .terpedia import load_network
 
 
 def build_crosswalk(cannabisdb_sdf: Path, terpedia_network: Path, output: Path) -> dict:
@@ -21,8 +22,7 @@ def build_crosswalk(cannabisdb_sdf: Path, terpedia_network: Path, output: Path) 
         by_key[key].append(record)
         if key and "-" in key:
             by_connectivity[key.split("-", 1)[0]].append(record)
-    with gzip.open(terpedia_network, "rt", encoding="utf-8") as handle:
-        network = json.load(handle)
+    network = load_network(terpedia_network)
     matches, unmatched, ambiguous = [], [], []
     metabolites = [e for e in network["entities"] if e.get("type") == "metabolite"]
     terpedia_by_connectivity = {}

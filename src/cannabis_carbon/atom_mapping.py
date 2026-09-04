@@ -112,6 +112,33 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
     used_reactant_carbons = set()
     product_carbons = [(pi, atom) for pi, product in enumerate(products) for atom in product.GetAtoms() if atom.GetAtomicNum() == 6]
     co2_reactant_indices = [ri for ri, molecule in enumerate(reactants) if Chem.MolToSmiles(molecule) == "O=C=O"]
+    # A unique whole-product substructure match is stronger than repeated
+    # local carbon signatures for cleavage/decarboxylation-like reactions.
+    # It conserves only atoms actually present in the product and does not
+    # invent provenance for any eliminated reactant atom.
+    if len(reactants) == 1 and len(products) == 1:
+        matches = reactants[0].GetSubstructMatches(products[0], uniquify=True)
+        if len(matches) == 1:
+            mappings = [{"product_index": 0, "product_atom": atom.GetIdx(), "reactant_index": 0, "reactant_atom": matches[0][atom.GetIdx()], "method": "rdkit-unique-product-substructure", "status": "inferred"} for _, atom in product_carbons]
+            return {"status": "inferred", "mappings": mappings, "unresolved_product_carbons": [], "product_carbon_atom_count": len(product_carbons), "reactant_count": len(reactants), "product_count": len(products)}
+    # Decarboxylation has one additional product, CO2.  A unique match of the
+    # organic product maps its retained carbons; if exactly one reactant
+    # carbon remains, that carbon is the released CO2 carbon.
+    co2_product_indices = [pi for pi, molecule in enumerate(products) if Chem.MolToSmiles(molecule) == "O=C=O"]
+    if len(reactants) == 1 and len(products) == 2 and len(co2_product_indices) == 1:
+        organic_indices = [pi for pi in range(len(products)) if pi not in co2_product_indices]
+        organic_index = organic_indices[0]
+        matches = reactants[0].GetSubstructMatches(products[organic_index], uniquify=True)
+        if len(matches) == 1:
+            retained = {matches[0][atom.GetIdx()] for atom in products[organic_index].GetAtoms()}
+            reactant_carbons = {atom.GetIdx() for atom in reactants[0].GetAtoms() if atom.GetAtomicNum() == 6}
+            released = reactant_carbons - {idx for idx in retained if idx in reactant_carbons}
+            co2_product = products[co2_product_indices[0]]
+            co2_carbons = [atom.GetIdx() for atom in co2_product.GetAtoms() if atom.GetAtomicNum() == 6]
+            if len(released) == 1 and len(co2_carbons) == 1:
+                mappings = [{"product_index": organic_index, "product_atom": atom.GetIdx(), "reactant_index": 0, "reactant_atom": matches[0][atom.GetIdx()], "method": "rdkit-decarboxylation-substructure", "status": "inferred"} for atom in products[organic_index].GetAtoms() if atom.GetAtomicNum() == 6]
+                mappings.append({"product_index": co2_product_indices[0], "product_atom": co2_carbons[0], "reactant_index": 0, "reactant_atom": next(iter(released)), "method": "rdkit-decarboxylation-released-carbon", "status": "inferred"})
+                return {"status": "inferred", "mappings": mappings, "unresolved_product_carbons": [], "product_carbon_atom_count": len(product_carbons), "reactant_count": len(reactants), "product_count": len(products)}
     # Process constrained product atoms first. A reactant atom may be used only
     # once; this prevents repeated local signatures from fabricating carbon
     # conservation. Non-unique matches are retained as explicit ambiguity.

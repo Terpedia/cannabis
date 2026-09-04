@@ -1,10 +1,12 @@
 {
   "schema": "cannabis-carbon.completeness.v1",
   "terpedia": {
-    "metabolites_total": 1253,
-    "metabolites_in_reactions": 1246,
+    "metabolites_total": 1256,
+    "metabolites_in_reactions": 1249,
     "metabolites_without_reactions": 7,
-    "reactions_total": 1093,
+    "reactions_total": 1096,
+    "non_enzymatic_reactions": 3,
+    "enzyme_requiring_reactions": 1093,
     "reactions_with_enzyme_association": 1086,
     "reactions_without_enzyme_association": 7,
     "reactions_without_enzyme_with_candidate_proteins": 7,
@@ -26,40 +28,45 @@
       "cannabis:reaction:tetraketide-coa-to-olivetolate",
       "cannabis:reaction:tks-hexanoyl-coa-to-tetraketide-coa",
       "rhea:13429"
+    ],
+    "non_enzymatic_reaction_ids": [
+      "cannabis:reaction:cbca-decarboxylation",
+      "cannabis:reaction:cbda-decarboxylation",
+      "cannabis:reaction:thca-decarboxylation"
     ]
   },
   "cannabisdb": {
     "compounds_total": 6220,
     "carbon_atoms_total": 285623,
     "compound_to_terpedia_identity_crosswalk": "exact-inchikey",
-    "compounds_with_exact_terpedia_identity": 136,
+    "compounds_with_exact_terpedia_identity": 143,
     "compounds_with_ambiguous_identity": 1,
-    "compounds_without_exact_terpedia_identity": 6082,
-    "connectivity_candidate_identity_links": 249,
+    "compounds_without_exact_terpedia_identity": 6075,
+    "connectivity_candidate_identity_links": 250,
     "connectivity_candidate_ambiguous": 40,
-    "crosswalk_matched_carbon_atoms": 1257
+    "crosswalk_matched_carbon_atoms": 1408
   },
   "coverage": {
-    "mapped_carbon_atoms": 3910,
-    "unresolved_carbon_atoms": 18298,
+    "mapped_carbon_atoms": 4036,
+    "unresolved_carbon_atoms": 18238,
     "coverage_percent": null,
     "coverage_denominator": "all CannabisDB carbons; no complete pathway crosswalk",
-    "reaction_product_carbon_atoms": 22394,
-    "reaction_mapping_coverage_percent": 17.46,
+    "reaction_product_carbon_atoms": 22460,
+    "reaction_mapping_coverage_percent": 17.9697,
     "reaction_mapping_status_counts": {
-      "inferred": 55,
-      "unresolved": 1038
+      "inferred": 62,
+      "unresolved": 1034
     },
     "co2_lineage": {
       "target_summary": {
         "supported": 1,
-        "candidate": 211,
-        "unresolved": 6008
+        "candidate": 219,
+        "unresolved": 6000
       },
-      "reachable_carbon_nodes": 2843,
-      "resolved_carbon_edges": 101244,
-      "inferred_carbon_edges": 2916,
-      "candidate_carbon_edges": 98328,
+      "reachable_carbon_nodes": 2883,
+      "resolved_carbon_edges": 101160,
+      "inferred_carbon_edges": 3042,
+      "candidate_carbon_edges": 98118,
       "external_carbon_input_entity_count": 397,
       "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2."
     },
@@ -68,9 +75,9 @@
       "carbon_atoms_total": 285623,
       "status_counts": {
         "supported": 1,
-        "candidate": 1042,
+        "candidate": 1149,
         "inferred": 0,
-        "unresolved": 284580
+        "unresolved": 284473
       },
       "compound_count": 6220
     }

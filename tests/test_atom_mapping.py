@@ -28,3 +28,17 @@ def test_unique_mcs_resolves_a_carbon_rearrangement():
     assert result["status"] == "inferred"
     assert all(mapping["status"] == "inferred" for mapping in result["mappings"])
     assert any(mapping["method"] == "rdkit-mcs-carbon-conservation-relaxed-bond" for mapping in result["mappings"])
+
+
+def test_unique_product_substructure_maps_retained_carbons():
+    result = map_reaction_smiles("CC(=O)O>>CC")
+    assert result["status"] == "inferred"
+    assert len(result["mappings"]) == 2
+    assert all(mapping["method"] == "rdkit-unique-product-substructure" for mapping in result["mappings"])
+
+
+def test_decarboxylation_maps_released_carbon_to_co2():
+    result = map_reaction_smiles("CC(=O)O>>C=O.O=C=O")
+    assert result["status"] == "inferred"
+    assert len(result["mappings"]) == 2
+    assert any(mapping["method"] == "rdkit-decarboxylation-released-carbon" for mapping in result["mappings"])

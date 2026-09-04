@@ -33,3 +33,18 @@ def test_crosswalk_retains_connectivity_candidate_separately(tmp_path):
     result = build_crosswalk(sdf, network_path, tmp_path / "out.json")
     assert result["exact_matches"] == 0
     assert result["connectivity_candidate_matches"] == 1
+
+
+def test_crosswalk_includes_source_linked_reaction_addition_entities(tmp_path):
+    sdf = tmp_path / "cdb.sdf"
+    mol = Chem.MolFromSmiles("CCO")
+    mol.SetProp("DATABASE_ID", "CDB1")
+    Chem.SDWriter(str(sdf)).write(mol)
+    network_path = tmp_path / "network.json.gz"
+    with gzip.open(network_path, "wt") as handle:
+        json.dump({"entities": [], "statements": []}, handle)
+    (tmp_path / "reaction-additions.json").write_text(json.dumps({"entities": [
+        {"id": "cannabisdb:CDB1", "type": "metabolite", "label": "ethanol", "attributes": {"canonicalSmiles": "CCO"}}
+    ], "statements": []}))
+    result = build_crosswalk(sdf, network_path, tmp_path / "out.json")
+    assert result["exact_matches"] == 1

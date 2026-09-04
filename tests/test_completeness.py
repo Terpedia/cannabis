@@ -34,6 +34,18 @@ def test_has_catalytic_activity_counts_as_enzyme_association(tmp_path):
     assert result["terpedia"]["reactions_without_enzyme_association"] == 0
 
 
+def test_non_enzymatic_reactions_are_not_enzyme_gaps(tmp_path):
+    network = {"entities": [{"id": "r:1", "type": "biochemical_reaction", "attributes": {"reactionClass": "non-enzymatic-decarboxylation"}}], "statements": []}
+    network_path = tmp_path / "network.json.gz"
+    with gzip.open(network_path, "wt") as handle: json.dump(network, handle)
+    compounds_path = tmp_path / "compounds.json"
+    compounds_path.write_text(json.dumps({"compounds": []}))
+    result = compute_completeness(network_path, compounds_path)
+    assert result["terpedia"]["non_enzymatic_reactions"] == 1
+    assert result["terpedia"]["enzyme_requiring_reactions"] == 0
+    assert result["terpedia"]["reactions_without_enzyme_association"] == 0
+
+
 def test_completeness_can_include_co2_lineage(tmp_path):
     network = {"entities": [], "statements": []}
     network_path = tmp_path / "network.json.gz"
