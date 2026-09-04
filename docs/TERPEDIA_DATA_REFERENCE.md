@@ -253,8 +253,9 @@ constitutes a demonstrated in-vivo pathway.
 ## Unified NetworkDB
 
 The Pages visualization loads `docs/data/network-map-focus.json` by default,
-a compact 1.2 MB view of the 664 CO₂-reachable compounds and their fully
-resolved reaction records. The complete 10,224-compound/1,107-reaction
+a compact view of 1,524 compounds: 664 CO₂-reachable compounds plus one-hop
+hypothesis context, 79 reaction records, and 3,859 hypothesis edges. The
+complete 10,111-compound/1,107-reaction
 projection, including all hypothesis edges, remains available at
 `docs/data/network-map.json`; the browser fallback graph is not the published
 map. Selecting a compound in the map now reports how many of its carbon atoms
@@ -367,12 +368,16 @@ SMARTS, source enzyme/protein fields, and its claim boundary.
 The complete companion reaction inventory contains 5,429 GCP hypotheses and
 1,324 distinct products; products without a resolved corpus precursor remain
 visible as explicitly unresolved product-inventory nodes.
-The map also expands these records into 7,249 hypothesis-layer edges, including
-955 red unresolved-substrate edges backed by 531 unique carbon-containing
+The map also expands these records into 7,249 hypothesis-layer edges: 6,294
+candidate edges and 955 red unresolved-substrate edges backed by 531 unique carbon-containing
 missing-substrate structures. Exact canonical RDKit structure matching resolved
 100 previously anonymous substrate structures, and unique connectivity matching
 resolved a further 110 edge instances with explicit stereochemical uncertainty;
 those edges remain candidate hypotheses and do not assert in-vivo activity.
+Candidate-path atom reports also expose endpoint carbon deltas and the carbon
+count of required or missing cosubstrates. This keeps methylation and other
+multi-substrate steps unresolved when the new carbon is not itself connected
+to the CO₂ lineage.
 The GCP `terpene_enzyme_reaction_gene_evidence` table is preserved in
 `docs/data/terpene-enzyme-reaction-gene-evidence.json` (4,639 records) and
 attached to 502 hypothesis connections by MARTS reaction ID. It includes

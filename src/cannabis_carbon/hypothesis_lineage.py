@@ -13,6 +13,54 @@ from rdkit import RDLogger
 RDLogger.DisableLog("rdApp.*")
 
 
+def _carbon_count(smiles: str | None) -> int:
+    molecule = Chem.MolFromSmiles(smiles or "")
+    return sum(atom.GetAtomicNum() == 6 for atom in molecule.GetAtoms()) if molecule else 0
+
+
+def _carbon_input_accounting(edge: dict, source_carbon_atoms: int, product_carbon_atoms: int) -> dict:
+    """Expose carbon-bearing reaction inputs without claiming atom correspondence.
+
+    The forward-connections table retains the full Rhea reaction SMARTS and the
+    corpus substrates that were or were not resolved.  Counting those inputs
+    lets the report distinguish a genuine carbon-source requirement from a
+    mapping failure.  It deliberately does not infer which input atom becomes
+    which product atom.
+    """
+    try:
+        required = json.loads(edge.get("required_substrate_structures_json") or "[]")
+    except (TypeError, json.JSONDecodeError):
+        required = []
+    try:
+        missing = json.loads(edge.get("missing_corpus_substrates_json") or "[]")
+    except (TypeError, json.JSONDecodeError):
+        missing = []
+    required_carbon_counts = [_carbon_count(smiles) for smiles in required]
+    missing_carbon_counts = [_carbon_count(smiles) for smiles in missing]
+    ancillary_required = sum(required_carbon_counts[1:]) if required_carbon_counts else 0
+    missing_carbon = sum(missing_carbon_counts)
+    endpoint_delta = product_carbon_atoms - source_carbon_atoms
+    if endpoint_delta > 0 and ancillary_required:
+        status = "additional-carbon-input-required"
+    elif endpoint_delta > 0:
+        status = "product-carbon-deficit"
+    elif missing_carbon:
+        status = "missing-carbon-bearing-cosubstrate"
+    else:
+        status = "endpoint-carbon-count-compatible"
+    return {
+        "source_endpoint_carbon_atoms": source_carbon_atoms,
+        "product_carbon_atoms": product_carbon_atoms,
+        "endpoint_carbon_delta": endpoint_delta,
+        "required_input_carbon_atoms": sum(required_carbon_counts),
+        "required_ancillary_carbon_atoms": ancillary_required,
+        "missing_input_carbon_atoms": missing_carbon,
+        "required_input_carbon_counts": required_carbon_counts,
+        "missing_input_carbon_counts": missing_carbon_counts,
+        "status": status,
+    }
+
+
 def _carbon_mcs(source_smiles: str | None, product_smiles: str | None) -> dict:
     source = Chem.MolFromSmiles(source_smiles or "")
     product = Chem.MolFromSmiles(product_smiles or "")
@@ -101,7 +149,15 @@ def build_hypothesis_lineage(networkdb_path: Path, output: Path) -> dict:
             if edge is None:
                 atom_mapping.append({"reaction_id": step["reaction_id"], "status": "unresolved", "reason": "hypothesis-edge-not-found"})
                 continue
-            atom_mapping.append({"reaction_id": step["reaction_id"], **_carbon_mcs(by_id.get(edge.get("substrate_compound_id"), {}).get("smiles"), by_id.get(edge.get("product_compound_id"), {}).get("smiles"))})
+            source_smiles = by_id.get(edge.get("substrate_compound_id"), {}).get("smiles")
+            product_smiles = by_id.get(edge.get("product_compound_id"), {}).get("smiles")
+            mapping = _carbon_mcs(source_smiles, product_smiles)
+            mapping["carbon_input_accounting"] = _carbon_input_accounting(
+                edge,
+                mapping.get("source_carbon_atoms", _carbon_count(source_smiles)),
+                mapping.get("product_carbon_atoms", _carbon_count(product_smiles)),
+            )
+            atom_mapping.append({"reaction_id": step["reaction_id"], **mapping})
         complete_atom_path = bool(path) and all(item.get("status") == "candidate" for item in atom_mapping)
         target_rows.append({
             "cannabisdb_id": compound_id,

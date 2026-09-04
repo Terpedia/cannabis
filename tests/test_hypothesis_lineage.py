@@ -1,6 +1,6 @@
 import json
 
-from cannabis_carbon.hypothesis_lineage import build_hypothesis_lineage
+from cannabis_carbon.hypothesis_lineage import _carbon_input_accounting, build_hypothesis_lineage
 
 
 def test_candidate_lineage_traverses_only_candidate_edges(tmp_path):
@@ -19,3 +19,14 @@ def test_candidate_lineage_traverses_only_candidate_edges(tmp_path):
     report = build_hypothesis_lineage(networkdb, tmp_path / "lineage.json")
     assert report["target_summary"]["counts_by_status"] == {"candidate": 1, "unresolved": 1}
     assert report["blocked_unresolved_hypothesis_edges"] == {"missing-corpus-substrate": 1}
+
+
+def test_carbon_input_accounting_exposes_unresolved_cosubstrate_carbon():
+    accounting = _carbon_input_accounting({
+        "required_substrate_structures_json": '["CC", "C"]',
+        "missing_corpus_substrates_json": '["C"]',
+    }, source_carbon_atoms=2, product_carbon_atoms=3)
+    assert accounting["endpoint_carbon_delta"] == 1
+    assert accounting["required_ancillary_carbon_atoms"] == 1
+    assert accounting["missing_input_carbon_atoms"] == 1
+    assert accounting["status"] == "additional-carbon-input-required"
