@@ -369,3 +369,42 @@ WHERE e.product_terpene_id IN ({literals})
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, separators=(",", ":")) + "\n")
     return {key: result[key] for key in ("seed_product_count", "expanded_edge_count", "expanded_product_count", "expanded_precursor_count")}
+
+
+def build_candidate_expansion_bridges(expansion_path: Path, network_path: Path, lineage_path: Path | None, output: Path) -> dict:
+    """Match expanded identity structures to core metabolites without merging records."""
+    expansion = json.loads(expansion_path.read_text())
+    network = load_network(network_path)
+    core = {}
+    for entity in network.get("entities", []):
+        if entity.get("type") != "metabolite":
+            continue
+        smiles = entity.get("attributes", {}).get("canonicalSmiles")
+        mol = Chem.MolFromSmiles(smiles) if smiles else None
+        if mol is None:
+            continue
+        for isomeric in (True, False):
+            core.setdefault(Chem.MolToSmiles(mol, canonical=True, isomericSmiles=isomeric), set()).add(entity["id"])
+    reachable = set()
+    if lineage_path and lineage_path.exists():
+        reachable = set(json.loads(lineage_path.read_text()).get("reachable_carbon_entity_ids", []))
+    bridges = []
+    for row in expansion.get("rows", []):
+        sides = {}
+        for side in ("product", "precursor"):
+            smiles = row.get(f"{side}_smiles")
+            mol = Chem.MolFromSmiles(smiles) if smiles else None
+            if mol is not None:
+                ids = set()
+                for isomeric in (True, False):
+                    ids.update(core.get(Chem.MolToSmiles(mol, canonical=True, isomericSmiles=isomeric), set()))
+                sides[side] = sorted(ids)
+        for product_id in sides.get("product", []):
+            for precursor_id in sides.get("precursor", []):
+                bridges.append({"product_terpene_id": row.get("product_terpene_id"), "precursor_terpene_id": row.get("precursor_terpene_id"), "core_product_entity_id": product_id, "core_precursor_entity_id": precursor_id, "touches_co2_reachable_core": product_id in reachable or precursor_id in reachable, "reaction_id": row.get("reaction_id"), "source_type": row.get("source_type"), "source_url": row.get("source_url"), "source_uniprot_id": row.get("source_uniprot_id"), "expansion_depth": row.get("expansion_depth"), "status": "candidate", "claim_boundary": "Structure-preserving bridge only; source identity, reaction direction, enzyme activity, and CO2 provenance remain unresolved."})
+    unique = {(r["product_terpene_id"], r["precursor_terpene_id"], r["core_product_entity_id"], r["core_precursor_entity_id"], r["reaction_id"], r["expansion_depth"]): r for r in bridges}
+    bridges = sorted(unique.values(), key=lambda r: (r["expansion_depth"] or 0, r["product_terpene_id"] or "", r["reaction_id"] or ""))
+    result = {"schema": "cannabis-carbon.terpene-identity-set-candidate-expansion-bridges.v1", "source_expansion": str(expansion_path), "source_network": str(network_path), "source_lineage": str(lineage_path) if lineage_path else None, "bridge_count": len(bridges), "distinct_expansion_products": len({r["product_terpene_id"] for r in bridges}), "distinct_expansion_precursors": len({r["precursor_terpene_id"] for r in bridges}), "bridges_touching_co2_reachable_core": sum(r["touches_co2_reachable_core"] for r in bridges), "bridges": bridges, "claim_boundary": "These are candidate structural bridges between the expanded identity-set neighborhood and Terpedia core entities. They do not establish exact identity, physiological direction, enzyme function, isotope tracing, or in-vivo Cannabis biosynthesis."}
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(result, separators=(",", ":")) + "\n")
+    return {key: result[key] for key in ("bridge_count", "distinct_expansion_products", "distinct_expansion_precursors", "bridges_touching_co2_reachable_core")}

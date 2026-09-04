@@ -29,7 +29,7 @@ from .validate import validate_artifacts
 from .pubchem import resolve_pubchem
 from .cannabisdb_xml import enrich_compounds_with_xrefs, extract_terpedia_table
 from .identity_set import refresh_identity_set
-from .identity_set_paths import refresh_identity_set_upstream, refresh_identity_set_connectivity_upstream, refresh_identity_set_candidate_expansion, map_identity_set_upstream, build_identity_set_core_bridges
+from .identity_set_paths import refresh_identity_set_upstream, refresh_identity_set_connectivity_upstream, refresh_identity_set_candidate_expansion, build_candidate_expansion_bridges, map_identity_set_upstream, build_identity_set_core_bridges
 from .pubchem_xrefs import retrieve_pubchem_chebi_xrefs
 
 DOWNLOADS = {
@@ -242,6 +242,11 @@ def main() -> None:
     p_identity_candidate_expansion.add_argument("--out", type=Path, default=Path("data/reports/terpene-identity-set-candidate-expansion.json"))
     p_identity_candidate_expansion.add_argument("--depth", type=int, default=3)
     p_identity_candidate_expansion.add_argument("--bq", default="bq")
+    p_identity_candidate_bridges = sub.add_parser("candidate-expansion-bridges")
+    p_identity_candidate_bridges.add_argument("expansion", type=Path, default=Path("data/reports/terpene-identity-set-candidate-expansion.json"), nargs="?")
+    p_identity_candidate_bridges.add_argument("network", type=Path, default=Path("data/terpedia/cannabis-sativa-metabolic-network.json.gz"), nargs="?")
+    p_identity_candidate_bridges.add_argument("--lineage", type=Path, default=Path("data/reports/carbon-lineage.json"))
+    p_identity_candidate_bridges.add_argument("--out", type=Path, default=Path("data/reports/terpene-identity-set-candidate-expansion-bridges.json"))
     p_identity_map = sub.add_parser("map-identity-set-upstream")
     p_identity_map.add_argument("source", type=Path, default=Path("data/reports/terpedia-identity-set-upstream.json"), nargs="?")
     p_identity_map.add_argument("--out", type=Path, default=Path("data/reports/terpedia-identity-set-upstream-mapped.json"))
@@ -327,6 +332,8 @@ def main() -> None:
         print(json.dumps(refresh_identity_set_connectivity_upstream(args.compounds, args.identity_set, args.out, args.bq), indent=2))
     elif args.command == "refresh-identity-set-candidate-expansion":
         print(json.dumps(refresh_identity_set_candidate_expansion(args.connectivity, args.out, args.bq, args.depth), indent=2))
+    elif args.command == "candidate-expansion-bridges":
+        print(json.dumps(build_candidate_expansion_bridges(args.expansion, args.network, args.lineage, args.out), indent=2))
     elif args.command == "map-identity-set-upstream":
         print(json.dumps(map_identity_set_upstream(args.source, args.out), indent=2))
     elif args.command == "identity-set-core-bridges":
