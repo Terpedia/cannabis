@@ -56,6 +56,7 @@ const cy = cytoscape({container:document.getElementById('cy'),elements,style:[
  {selector:'node[status="candidate"]',style:{'background-color':'#f2bd65','border-color':'#ffe0a1'}}, {selector:'node[status="unresolved"]',style:{'background-color':'#ef7f88','border-color':'#ffc2c7'}},
  {selector:'edge',style:{'line-color':'#7186a8','target-arrow-color':'#7186a8','target-arrow-shape':'triangle','curve-style':'bezier','width':2,'label':'data(label)','font-size':10,'color':'#b8c5d8','text-background-color':'#0b1220','text-background-opacity':.9,'text-wrap':'wrap','text-max-width':130}},
  {selector:'edge[status="candidate"]',style:{'line-color':'#f2bd65','target-arrow-color':'#f2bd65','line-style':'dashed'}}, {selector:'edge[status="non_enzymatic"]',style:{'line-color':'#8ed1ff','target-arrow-color':'#8ed1ff','line-style':'solid'}}, {selector:'edge[status="unresolved"]',style:{'line-color':'#ef7f88','target-arrow-color':'#ef7f88','line-style':'dotted'}},
+ {selector:'.isolated,.out-of-focus',style:{'display':'none'}},
  {selector:'.faded',style:{'opacity':.16}}, {selector:'.selected',style:{'border-width':5,'line-color':'#fff','target-arrow-color':'#fff'}}
 ],layout:{name:'cose',animate:false,padding:35}});
 document.getElementById('count').textContent = `${cy.nodes().length} compounds · ${cy.edges().length} reactions`;
@@ -70,7 +71,7 @@ fetch('data/network-map.json').then(r=>r.json()).then(networkdb=>{
   applyVisibility();
   cy.nodes().filter(n=>n.data().namespace==='cannabisdb' && n.connectedEdges().length===0).addClass('isolated');
   const targets = networkdb.coverage.carbon_lineage_target_status_counts || {};
-  document.getElementById('count').textContent = `${networkdb.focus?.co2_reachable_compounds||nodes.length} focused compounds · ${edges.length} directed edges · ${networkdb.coverage.candidate_proteins_meeting_strong_hit_threshold.toLocaleString()} strong sequence candidates · CO₂ targets ${targets.candidate||0} candidate / ${targets.unresolved||0} unresolved`;
+  document.getElementById('count').textContent = `${nodes.filter(n=>n.data.co2_reachable).length} focused compounds · ${edges.length} directed edges · ${networkdb.coverage.candidate_proteins_meeting_strong_hit_threshold.toLocaleString()} strong sequence candidates · CO₂ targets ${targets.candidate||0} candidate / ${targets.unresolved||0} unresolved`;
   cy.layout({name:'cose',eles:cy.elements(':visible'),animate:false,fit:true,padding:35,nodeRepulsion:9000,idealEdgeLength:90,numIter:500}).run();
   applyVisibility();
 }).catch(()=>{document.getElementById('count').textContent='NetworkDB failed to load';});
