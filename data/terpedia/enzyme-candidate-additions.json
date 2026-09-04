@@ -1,0 +1,76 @@
+{
+  "schema": "cannabis-carbon.enzyme-candidate-additions.v1",
+  "claim_boundary": "These are genome-wide sequence-similarity hypotheses for a reaction edge. They do not establish enzyme function, substrate specificity, localization, or in-vivo flux.",
+  "searches": [
+    {
+      "search_id": "ispd-ec-2.7.7.60-cannabis-proteome",
+      "reaction_id": "rhea:13429",
+      "ec_number": "2.7.7.60",
+      "method": "DIAMOND blastp against reviewed UniProt proteins annotated EC 2.7.7.60",
+      "proteome": "UP000583929",
+      "proteome_fasta": "data/raw/UP000583929.fasta",
+      "proteome_fasta_sha256": "631cd2ba039588a0569bb4bd23edcbb3a6a0b5c5e4bc96bcff143af16d5a775c",
+      "reference_query_url": "https://rest.uniprot.org/uniprotkb/search?query=reviewed%3Atrue%20AND%20ec%3A2.7.7.60",
+      "reference_sequence_count": 455,
+      "reported_hit_count": 42,
+      "strong_candidate_threshold": {
+        "identity_percent_min": 30.0,
+        "query_coverage_percent_min": 50.0,
+        "evalue_max": 1e-05
+      },
+      "candidate_proteins": [
+        {
+          "proteinId": "uniprot:a0a7j6eqa1",
+          "accession": "A0A7J6EQA1",
+          "label": "2-C-methyl-D-erythritol 4-phosphate cytidylyltransferase, chloroplastic",
+          "geneSymbols": ["G4B88_002492"],
+          "candidateOrigin": "Specialized DIAMOND EC 2.7.7.60 search",
+          "specialized_search": {
+            "search_id": "ispd-ec-2.7.7.60-cannabis-proteome",
+            "method": "DIAMOND blastp",
+            "reference_ec_numbers": ["2.7.7.60"],
+            "reference_accession": "P69834",
+            "reference_protein": "ISPD_ARATH",
+            "reference_organism": "Arabidopsis thaliana",
+            "hits": [
+              {
+                "reference_accession": "P69834",
+                "reference_ec_numbers": ["2.7.7.60"],
+                "identity_percent": 63.4,
+                "alignment_length": 243,
+                "query_length": 267,
+                "reference_length": 302,
+                "evalue": 4.8e-97,
+                "bitscore": 281.0,
+                "query_coverage_percent": 77.9,
+                "reference_coverage_percent": 80.5
+              }
+            ],
+            "hit_count_reported": 1,
+            "identity_percent": 63.4,
+            "alignment_length": 243,
+            "query_length": 267,
+            "reference_length": 302,
+            "evalue": 4.8e-97,
+            "bitscore": 281.0,
+            "query_coverage_percent": 77.9,
+            "reference_coverage_percent": 80.5,
+            "thresholds": {
+              "evalue_max": 1e-05,
+              "identity_min_for_strong_candidate": 30.0,
+              "query_coverage_min_for_strong_candidate": 50.0
+            },
+            "source": "data/terpedia/enzyme-candidate-additions.json",
+            "source_urls": [
+              "https://rest.uniprot.org/uniprotkb/P69834.fasta",
+              "https://rest.uniprot.org/uniprotkb/P69834/entry",
+              "https://www.rhea-db.org/rhea/13429"
+            ],
+            "strong_candidate_hit": true,
+            "claim": "The hit supports an IspD enzyme-family candidate in the cannabis reference proteome; it does not establish reaction specificity or in-vivo activity."
+          }
+        }
+      ]
+    }
+  ]
+}

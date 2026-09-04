@@ -171,18 +171,22 @@ carbon mappings, and 562 retain unresolved mappings. These statuses are
 independent of enzyme status and are exposed as a separate Cytoscape filter.
 Each reaction also records its inferred and candidate lineage-edge counts and
 the source report used to derive them.
-It also carries 2,237 candidate hypotheses and 4,042 deduplicated candidate
-protein records; 934 reaction records have one or more attached candidate
-proteins. All 4,042 candidate proteins are present in the 30,304-protein
+It also carries 2,237 candidate hypotheses and 4,043 deduplicated candidate
+protein records; 935 reaction records have one or more attached candidate
+proteins. All 4,043 candidate proteins are present in the 30,304-protein
 UP000583929 reference-proteome FASTA and have sequence length/hash evidence in
 `data/reports/genome-candidate-search.json`. This is proteome membership and
 annotation evidence, not a homology score or confirmation of enzyme function.
 The full proteome was also searched with DIAMOND blastp against 11,424 reviewed
 UniProt reference proteins covering the 70 exact unresolved EC hypotheses. The
-search produced hits for 1,257 candidate proteins; 653 meet the screening
+search produced hits for 1,258 candidate proteins; 654 meet the screening
 threshold of at least 30% identity, 50% query coverage, and e-value at most
 1e-5. These thresholds define candidate evidence only and do not establish
 substrate specificity or in-vivo activity.
+The specialized IspD search for the added Rhea 13429 step found cannabis
+protein A0A7J6EQA1 (gene G4B88_002492), with 63.4% identity, 77.9% query
+coverage, and E-value 4.8e-97 to reviewed Arabidopsis IspD. This is a
+sequence-supported candidate producer, not a confirmed cannabis enzyme.
 
 ## Phase 1 balance gate
 
