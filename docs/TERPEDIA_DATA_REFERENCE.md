@@ -365,6 +365,9 @@ attached to 502 hypothesis connections by MARTS reaction ID. It includes
 source-species enzyme names, UniProt/GenBank identifiers, sequences, and assay
 links; this evidence supports candidate annotation only and is not Cannabis
 functional validation.
+The companion `docs/data/terpene-biotransformation-enzyme-catalog.json`
+preserves 585 curated Rhea enzyme-family records and joins 599 hypothesis-layer
+edges by Rhea reaction ID, including EC, direction, family, and source links.
 The companion `docs/data/terpedia-hypothesis-balance-audit.json` classifies
 these SMARTS records as 1,762 balance-ready, 17 imbalanced, and 122 not
 auditable; this is a review gate, not automatic promotion.
