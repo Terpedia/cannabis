@@ -71,6 +71,93 @@
           }
         }
       ]
+    },
+    {
+      "search_id": "cbdas-cannabis-proteome",
+      "reaction_id": "cannabis:reaction:cbga-to-cbda",
+      "ec_number": "1.21.3.8",
+      "method": "DIAMOND blastp against characterized Cannabis sativa CBDA synthase",
+      "proteome": "UP000583929",
+      "reference_query_url": "https://rest.uniprot.org/uniprotkb/A6P6V9/entry",
+      "reported_hit_count": 1,
+      "candidate_proteins": [{
+        "proteinId": "uniprot:a0a7j6g9c8",
+        "accession": "A0A7J6G9C8",
+        "label": "FAD-binding PCMH-type domain-containing protein",
+        "geneSymbols": ["G4B88_028766"],
+        "candidateOrigin": "Specialized DIAMOND CBDA synthase search",
+        "specialized_search": {
+          "search_id": "cbdas-cannabis-proteome",
+          "method": "DIAMOND blastp",
+          "reference_accession": "A6P6V9",
+          "reference_protein": "CBDAS_CANSA",
+          "reference_ec_numbers": ["1.21.3.8"],
+          "hits": [{"reference_accession": "A6P6V9", "reference_ec_numbers": ["1.21.3.8"], "identity_percent": 84.9, "alignment_length": 485, "query_length": 485, "reference_length": 544, "evalue": 3.53e-320, "bitscore": 860.0, "query_coverage_percent": 100.0, "reference_coverage_percent": 89.0}],
+          "hit_count_reported": 1,
+          "strong_candidate_hit": true,
+          "source": "data/terpedia/enzyme-candidate-additions.json",
+          "source_urls": ["https://rest.uniprot.org/uniprotkb/A6P6V9/entry", "https://doi.org/10.1074/jbc.271.29.17411"],
+          "claim": "The hit supports a cannabis CBDA-synthase-family candidate in the pinned proteome; it does not establish allele-specific activity or in-vivo flux."
+        }
+      }]
+    },
+    {
+      "search_id": "thcas-cannabis-proteome",
+      "reaction_id": "cannabis:reaction:cbga-to-thca",
+      "ec_number": "1.21.3.7",
+      "method": "DIAMOND blastp against characterized Cannabis sativa THCA synthase",
+      "proteome": "UP000583929",
+      "reference_query_url": "https://rest.uniprot.org/uniprotkb/Q8GTB6/entry",
+      "reported_hit_count": 1,
+      "candidate_proteins": [{
+        "proteinId": "uniprot:a0a7j6djs8",
+        "accession": "A0A7J6DJS8",
+        "label": "FAD-binding PCMH-type domain-containing protein",
+        "geneSymbols": ["G4B88_000693"],
+        "candidateOrigin": "Specialized DIAMOND THCA synthase search",
+        "specialized_search": {
+          "search_id": "thcas-cannabis-proteome",
+          "method": "DIAMOND blastp",
+          "reference_accession": "Q8GTB6",
+          "reference_protein": "THCAS_CANSA",
+          "reference_ec_numbers": ["1.21.3.7"],
+          "hits": [{"reference_accession": "Q8GTB6", "reference_ec_numbers": ["1.21.3.7"], "identity_percent": 92.7, "alignment_length": 368, "query_length": 368, "reference_length": 545, "evalue": 2.93e-258, "bitscore": 699.0, "query_coverage_percent": 100.0, "reference_coverage_percent": 67.5}],
+          "hit_count_reported": 1,
+          "strong_candidate_hit": true,
+          "source": "data/terpedia/enzyme-candidate-additions.json",
+          "source_urls": ["https://rest.uniprot.org/uniprotkb/Q8GTB6/entry", "https://pubmed.ncbi.nlm.nih.gov/22766313/"],
+          "claim": "The hit supports a cannabis THCA-synthase-family candidate in the pinned proteome; it does not establish product specificity or in-vivo flux."
+        }
+      }]
+    },
+    {
+      "search_id": "cbcas-cannabis-proteome",
+      "reaction_id": "cannabis:reaction:cbga-to-cbca",
+      "ec_number": "1.21.99.-",
+      "method": "DIAMOND blastp against characterized Cannabis sativa CBCA synthase",
+      "proteome": "UP000583929",
+      "reference_query_url": "https://rest.uniprot.org/uniprotkb/Q33DQ2/entry",
+      "reported_hit_count": 1,
+      "candidate_proteins": [{
+        "proteinId": "uniprot:a0a7j6gda6",
+        "accession": "A0A7J6GDA6",
+        "label": "FAD-binding PCMH-type domain-containing protein",
+        "geneSymbols": ["G4B88_001350"],
+        "candidateOrigin": "Specialized DIAMOND CBCA synthase search",
+        "specialized_search": {
+          "search_id": "cbcas-cannabis-proteome",
+          "method": "DIAMOND blastp",
+          "reference_accession": "Q33DQ2",
+          "reference_protein": "CBCAS_CANSA",
+          "reference_ec_numbers": ["1.21.99.-"],
+          "hits": [{"reference_accession": "Q33DQ2", "reference_ec_numbers": ["1.21.99.-"], "identity_percent": 99.8, "alignment_length": 485, "query_length": 485, "reference_length": 545, "evalue": 0.0, "bitscore": 989.0, "query_coverage_percent": 100.0, "reference_coverage_percent": 89.0}],
+          "hit_count_reported": 1,
+          "strong_candidate_hit": true,
+          "source": "data/terpedia/enzyme-candidate-additions.json",
+          "source_urls": ["https://rest.uniprot.org/uniprotkb/Q33DQ2/entry", "https://www.sciencedirect.com/science/article/pii/S0031942298002787"],
+          "claim": "The hit supports a cannabis CBCA-synthase-family candidate in the pinned proteome; it does not establish product specificity or in-vivo flux."
+        }
+      }]
     }
   ]
 }

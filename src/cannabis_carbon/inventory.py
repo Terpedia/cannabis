@@ -41,6 +41,7 @@ def build_specialty_inventory(compounds_path: Path, crosswalk_path: Path, networ
             continue
         exact = exact_by_cdb.get(compound["id"])
         terpedia_id = exact["terpedia_id"] if exact else None
+        reaction_entity_id = terpedia_id or f"cannabisdb:{compound['id']}"
         records.append({
             "cannabisdb_id": compound["id"],
             "label": compound.get("label", compound["id"]),
@@ -51,7 +52,7 @@ def build_specialty_inventory(compounds_path: Path, crosswalk_path: Path, networ
             "identity_status": "exact" if exact else "candidate" if candidate_by_cdb.get(compound["id"]) else "unresolved",
             "terpedia_id": terpedia_id,
             "identity_candidates": [{"terpedia_id": row["terpedia_id"], "terpedia_label": row.get("terpedia_label")} for row in candidate_by_cdb.get(compound["id"], [])],
-            "reaction_participation": reactions_by_metabolite.get(terpedia_id, []) if terpedia_id else [],
+            "reaction_participation": reactions_by_metabolite.get(reaction_entity_id, []),
             "carbon_status": compound.get("carbon_status", {}),
             "source": compound.get("source"),
             "source_url": compound.get("source_url"),

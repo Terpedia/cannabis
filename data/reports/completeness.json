@@ -1,12 +1,12 @@
 {
   "schema": "cannabis-carbon.completeness.v1",
   "terpedia": {
-    "metabolites_total": 1245,
-    "metabolites_in_reactions": 1238,
+    "metabolites_total": 1249,
+    "metabolites_in_reactions": 1242,
     "metabolites_without_reactions": 7,
-    "reactions_total": 1087,
+    "reactions_total": 1090,
     "reactions_with_enzyme_association": 934,
-    "reactions_without_enzyme_association": 153,
+    "reactions_without_enzyme_association": 156,
     "metabolite_ids_without_reactions": [
       "chebi:139069",
       "chebi:139070",
@@ -17,6 +17,9 @@
       "chebi:57887"
     ],
     "reaction_ids_without_enzyme_association": [
+      "cannabis:reaction:cbga-to-cbca",
+      "cannabis:reaction:cbga-to-cbda",
+      "cannabis:reaction:cbga-to-thca",
       "rhea:10024",
       "rhea:10296",
       "rhea:10868",
@@ -184,15 +187,15 @@
     "crosswalk_matched_carbon_atoms": 1257
   },
   "coverage": {
-    "mapped_carbon_atoms": 3899,
-    "unresolved_carbon_atoms": 18302,
+    "mapped_carbon_atoms": 3905,
+    "unresolved_carbon_atoms": 18362,
     "coverage_percent": null,
     "coverage_denominator": "all CannabisDB carbons; no complete pathway crosswalk",
-    "reaction_product_carbon_atoms": 22202,
-    "reaction_mapping_coverage_percent": 17.5615,
+    "reaction_product_carbon_atoms": 22268,
+    "reaction_mapping_coverage_percent": 17.5364,
     "reaction_mapping_status_counts": {
       "inferred": 55,
-      "unresolved": 1032
+      "unresolved": 1035
     },
     "co2_lineage": {
       "target_summary": {
@@ -201,10 +204,10 @@
         "unresolved": 6211
       },
       "reachable_carbon_nodes": 33,
-      "resolved_carbon_edges": 100011,
-      "inferred_carbon_edges": 2904,
-      "candidate_carbon_edges": 97107,
-      "external_carbon_input_entity_count": 631,
+      "resolved_carbon_edges": 100243,
+      "inferred_carbon_edges": 2910,
+      "candidate_carbon_edges": 97333,
+      "external_carbon_input_entity_count": 632,
       "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2."
     }
   },

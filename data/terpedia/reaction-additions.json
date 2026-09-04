@@ -15,6 +15,72 @@
       "url": "https://www.rhea-db.org/rhea/13429",
       "source": "Rhea directional reaction record 13430",
       "source_url": "https://www.rhea-db.org/rhea/13430"
+    },
+    {
+      "id": "cannabisdb:CDB000018",
+      "type": "metabolite",
+      "label": "Cannabigerolic acid",
+      "attributes": {"molecularFormula": "C22H32O4", "formalCharge": 0, "canonicalSmiles": "CCCCCC1=CC(O)=C(CC=C(C)CCC=C(C)C)C(O)=C1C(O)=O", "sourceRecordId": "CDB000018"},
+      "url": "https://cannabisdatabase.ca",
+      "source": "Cannabis Compound Database",
+      "source_url": "https://cannabisdatabase.ca"
+    },
+    {
+      "id": "cannabisdb:CDB000010",
+      "type": "metabolite",
+      "label": "Cannabidiolic acid",
+      "attributes": {"molecularFormula": "C22H30O4", "formalCharge": 0, "canonicalSmiles": "CCCCCC1=C(C(O)=O)C(O)=C([C@@H]2C=C(C)CC[C@H]2C(C)=C)C(O)=C1", "sourceRecordId": "CDB000010"},
+      "url": "https://cannabisdatabase.ca",
+      "source": "Cannabis Compound Database",
+      "source_url": "https://cannabisdatabase.ca"
+    },
+    {
+      "id": "cannabisdb:CDB000016",
+      "type": "metabolite",
+      "label": "Delta-9-tetrahydrocannabinolic acid A",
+      "attributes": {"molecularFormula": "C22H30O4", "formalCharge": 0, "canonicalSmiles": "[H][C@@]12CCC(C)=C[C@@]1([H])C1=C(OC2(C)C)C=C(CCCCC)C(C(O)=O)=C1O", "sourceRecordId": "CDB000016"},
+      "url": "https://cannabisdatabase.ca",
+      "source": "Cannabis Compound Database",
+      "source_url": "https://cannabisdatabase.ca"
+    },
+    {
+      "id": "cannabisdb:CDB000398",
+      "type": "metabolite",
+      "label": "Cannabichromenic acid",
+      "attributes": {"molecularFormula": "C22H30O4", "formalCharge": 0, "canonicalSmiles": "CCCCCC1=CC2=C(C=C[C@](C)(CCC=C(C)C)O2)C(O)=C1C(O)=O", "sourceRecordId": "CDB000398"},
+      "url": "https://cannabisdatabase.ca",
+      "source": "Cannabis Compound Database",
+      "source_url": "https://cannabisdatabase.ca"
+    },
+    {
+      "id": "cannabis:reaction:cbga-to-cbda",
+      "type": "biochemical_reaction",
+      "label": "Cannabigerolic acid + O2 = cannabidiolic acid + H2O2",
+      "identifiers": {"curationId": "cbga-to-cbda"},
+      "attributes": {"equation": "cannabisdb:CDB000018 + CHEBI:15379 = cannabisdb:CDB000010 + CHEBI:16240", "reactionSmiles": "CCCCCC1=CC(O)=C(CC=C(C)CCC=C(C)C)C(O)=C1C(O)=O.O=O>>CCCCCC1=C(C(O)=O)C(O)=C([C@@H]2C=C(C)CC[C@H]2C(C)=C)C(O)=C1.OO", "ecNumbers": ["1.21.3.8"], "sourceEvidence": "CBGA to CBDA substrate/product conversion is directly characterized; the O2/H2O2 oxidative stoichiometry is retained as a mechanistic representation with conflicting historical evidence and is not treated as settled assay stoichiometry."},
+      "url": "https://doi.org/10.1074/jbc.271.29.17411",
+      "source": "Taura et al. 1996, Journal of Biological Chemistry",
+      "source_url": "https://doi.org/10.1074/jbc.271.29.17411"
+    },
+    {
+      "id": "cannabis:reaction:cbga-to-thca",
+      "type": "biochemical_reaction",
+      "label": "Cannabigerolic acid + O2 = delta-9-tetrahydrocannabinolic acid + H2O2",
+      "identifiers": {"curationId": "cbga-to-thca"},
+      "attributes": {"equation": "cannabisdb:CDB000018 + CHEBI:15379 = cannabisdb:CDB000016 + CHEBI:16240", "reactionSmiles": "CCCCCC1=CC(O)=C(CC=C(C)CCC=C(C)C)C(O)=C1C(O)=O.O=O>>[H][C@@]12CCC(C)=C[C@@]1([H])C1=C(OC2(C)C)C=C(CCCCC)C(C(O)=O)=C1O.OO", "ecNumbers": ["1.21.3.7"], "sourceEvidence": "Direct biochemical characterization of THCA synthase"},
+      "url": "https://pubmed.ncbi.nlm.nih.gov/22766313/",
+      "source": "Sirikantaramas et al. 2012, Journal of Molecular Biology",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/22766313/"
+    },
+    {
+      "id": "cannabis:reaction:cbga-to-cbca",
+      "type": "biochemical_reaction",
+      "label": "Cannabigerolic acid + O2 = cannabichromenic acid + H2O2",
+      "identifiers": {"curationId": "cbga-to-cbca"},
+      "attributes": {"equation": "cannabisdb:CDB000018 + CHEBI:15379 = cannabisdb:CDB000398 + CHEBI:16240", "reactionSmiles": "CCCCCC1=CC(O)=C(CC=C(C)CCC=C(C)C)C(O)=C1C(O)=O.O=O>>CCCCCC1=CC2=C(C=C[C@](C)(CCC=C(C)C)O2)C(O)=C1C(O)=O.OO", "ecNumbers": ["1.3.99.-"], "sourceEvidence": "Direct biochemical characterization of CBCA synthase"},
+      "url": "https://www.sciencedirect.com/science/article/pii/S0031942298002787",
+      "source": "Morimoto et al. 1998, Phytochemistry",
+      "source_url": "https://www.sciencedirect.com/science/article/pii/S0031942298002787"
     }
   ],
   "statements": [
@@ -23,6 +89,21 @@
     {"subjectId": "rhea:13429", "predicate": "has_reactant", "objectEntityId": "chebi:15378", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://www.rhea-db.org/rhea/13429"}]},
     {"subjectId": "rhea:13429", "predicate": "has_product", "objectEntityId": "chebi:57823", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://www.rhea-db.org/rhea/13429"}]},
     {"subjectId": "rhea:13429", "predicate": "has_product", "objectEntityId": "chebi:33019", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://www.rhea-db.org/rhea/13429"}]},
-    {"subjectId": "rhea:13429", "predicate": "physiological_direction_left_to_right", "objectEntityId": "rhea:13430", "sources": [{"url": "https://www.rhea-db.org/rhea/13430", "evidenceType": "Rhea directional record"}]}
+    {"subjectId": "rhea:13429", "predicate": "physiological_direction_left_to_right", "objectEntityId": "rhea:13430", "sources": [{"url": "https://www.rhea-db.org/rhea/13430", "evidenceType": "Rhea directional record"}]},
+    {"subjectId": "cannabis:reaction:cbga-to-cbda", "predicate": "has_reactant", "objectEntityId": "cannabisdb:CDB000018", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://doi.org/10.1074/jbc.271.29.17411", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:cbga-to-cbda", "predicate": "has_reactant", "objectEntityId": "chebi:15379", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://doi.org/10.1074/jbc.271.29.17411", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:cbga-to-cbda", "predicate": "has_product", "objectEntityId": "cannabisdb:CDB000010", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://doi.org/10.1074/jbc.271.29.17411", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:cbga-to-cbda", "predicate": "has_product", "objectEntityId": "chebi:16240", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://doi.org/10.1074/jbc.271.29.17411", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:cbga-to-cbda", "predicate": "physiological_direction_left_to_right", "objectEntityId": "cannabis:reaction:cbga-to-cbda", "sources": [{"url": "https://doi.org/10.1074/jbc.271.29.17411", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:cbga-to-thca", "predicate": "has_reactant", "objectEntityId": "cannabisdb:CDB000018", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/22766313/", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:cbga-to-thca", "predicate": "has_reactant", "objectEntityId": "chebi:15379", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/22766313/", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:cbga-to-thca", "predicate": "has_product", "objectEntityId": "cannabisdb:CDB000016", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/22766313/", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:cbga-to-thca", "predicate": "has_product", "objectEntityId": "chebi:16240", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/22766313/", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:cbga-to-thca", "predicate": "physiological_direction_left_to_right", "objectEntityId": "cannabis:reaction:cbga-to-thca", "sources": [{"url": "https://pubmed.ncbi.nlm.nih.gov/22766313/", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:cbga-to-cbca", "predicate": "has_reactant", "objectEntityId": "cannabisdb:CDB000018", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0031942298002787", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:cbga-to-cbca", "predicate": "has_reactant", "objectEntityId": "chebi:15379", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0031942298002787", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:cbga-to-cbca", "predicate": "has_product", "objectEntityId": "cannabisdb:CDB000398", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0031942298002787", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:cbga-to-cbca", "predicate": "has_product", "objectEntityId": "chebi:16240", "qualifiers": {"stoichiometricCoefficient": 1}, "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0031942298002787", "evidenceType": "direct biochemical characterization"}]},
+    {"subjectId": "cannabis:reaction:cbga-to-cbca", "predicate": "physiological_direction_left_to_right", "objectEntityId": "cannabis:reaction:cbga-to-cbca", "sources": [{"url": "https://www.sciencedirect.com/science/article/pii/S0031942298002787", "evidenceType": "direct biochemical characterization"}]}
   ]
 }
