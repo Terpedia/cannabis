@@ -206,6 +206,33 @@ def _full_carbon_skeleton_mapping(reactants: list[Chem.Mol], products: list[Chem
     return [{"product_index": pi, "product_atom": product_atom, "reactant_index": ri, "reactant_atom": reactant_by_query[next(index for index, atom_index in product_by_query.items() if atom_index == product_atom)], "method": "rdkit-carbon-skeleton-mcs", "status": "inferred"} for product_atom in product_indices]
 
 
+def map_identity_pair_smiles(reactant_smiles: str | None, product_smiles: str | None) -> dict:
+    """Map a single identity-set precursor/product pair without cofactors.
+
+    This is deliberately limited to equal-carbon pairs. A unique carbon-graph
+    isomorphism is inferred; symmetric alternatives are retained as candidates.
+    Carbon gains are left unresolved because the added substrate is not known
+    from the identity pair alone.
+    """
+    if not reactant_smiles or not product_smiles:
+        return {"status": "unresolved", "reason": "missing-identity-pair-structure", "mappings": [], "unresolved_product_carbons": []}
+    reactant, product = Chem.MolFromSmiles(reactant_smiles), Chem.MolFromSmiles(product_smiles)
+    if reactant is None or product is None:
+        return {"status": "unresolved", "reason": "invalid-identity-pair-structure", "mappings": [], "unresolved_product_carbons": []}
+    reactant_skeleton, reactant_indices = _carbon_skeleton(reactant)
+    product_skeleton, product_indices = _carbon_skeleton(product)
+    if len(reactant_indices) != len(product_indices):
+        return {"status": "unresolved", "reason": "identity-pair-carbon-count-delta", "mappings": [], "unresolved_product_carbons": [{"product_atom": atom, "status": "unresolved", "reason": "identity-pair-carbon-count-delta"} for atom in product_indices], "product_carbon_atom_count": len(product_indices)}
+    matches = reactant_skeleton.GetSubstructMatches(product_skeleton, uniquify=True)
+    if not matches:
+        return {"status": "unresolved", "reason": "identity-pair-carbon-skeleton-not-conserved", "mappings": [], "unresolved_product_carbons": [{"product_atom": atom, "status": "unresolved", "reason": "identity-pair-carbon-skeleton-not-conserved"} for atom in product_indices], "product_carbon_atom_count": len(product_indices)}
+    if len(matches) == 1:
+        mapping = [{"product_index": 0, "product_atom": product_atom, "reactant_index": 0, "reactant_atom": reactant_indices[matches[0][skeleton_index]], "method": "rdkit-identity-pair-carbon-skeleton", "status": "inferred"} for skeleton_index, product_atom in enumerate(product_indices)]
+        return {"status": "inferred", "mappings": mapping, "unresolved_product_carbons": [], "product_carbon_atom_count": len(product_indices)}
+    mappings = [{"product_index": 0, "product_atom": product_atom, "method": "rdkit-identity-pair-carbon-skeleton-candidate", "status": "candidate", "alternatives": [{"reactant_index": 0, "reactant_atom": reactant_indices[match[skeleton_index]]} for match in matches]} for skeleton_index, product_atom in enumerate(product_indices)]
+    return {"status": "candidate", "mappings": mappings, "unresolved_product_carbons": [], "product_carbon_atom_count": len(product_indices), "mapping_alternatives": len(matches)}
+
+
 def map_reaction_smiles(reaction_smiles: str) -> dict:
     """Map product carbons to conserved reactant carbons.
 

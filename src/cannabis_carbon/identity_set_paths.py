@@ -9,7 +9,7 @@ from datetime import date
 from pathlib import Path
 
 from .identity_set import SOURCE_TABLE
-from .atom_mapping import map_reaction_smiles
+from .atom_mapping import map_reaction_smiles, map_identity_pair_smiles
 
 
 EDGE_TABLE = "terpedia-489015.terpedia_core.terpene_metabolic_map_edges_current"
@@ -20,9 +20,18 @@ def map_identity_set_upstream(input_path: Path, output: Path) -> dict:
     report = json.loads(input_path.read_text())
     rows = []
     status_counts = Counter()
+    pair_status_counts = Counter()
+    pair_mapped_atoms = 0
+    pair_unresolved_atoms = 0
     for row in report.get("rows", []):
         mapped = map_reaction_smiles(row.get("reaction_smarts"))
-        enriched = {**row, "carbon_mapping": mapped}
+        product = report.get("identity_records", {}).get(row.get("product_identity_id"), {}).get("smiles")
+        precursor = report.get("identity_records", {}).get(row.get("precursor_identity_id"), {}).get("smiles")
+        pair_mapping = map_identity_pair_smiles(precursor, product)
+        pair_status_counts[pair_mapping.get("status", "unresolved")] += 1
+        pair_mapped_atoms += len(pair_mapping.get("mappings", []))
+        pair_unresolved_atoms += len(pair_mapping.get("unresolved_product_carbons", []))
+        enriched = {**row, "carbon_mapping": mapped, "target_pair_carbon_mapping": pair_mapping}
         rows.append(enriched)
         status_counts[mapped.get("status", "unresolved")] += 1
     mapped_report = {
@@ -30,8 +39,11 @@ def map_identity_set_upstream(input_path: Path, output: Path) -> dict:
         "schema": "cannabis-carbon.terpedia-identity-set-upstream-mapped.v1",
         "mapping_method": "RDKit map_reaction_smiles applied to each source reaction SMARTS; mappings are structural provenance candidates, not isotope tracing.",
         "mapping_status_counts": dict(sorted(status_counts.items())),
+        "target_pair_mapping_status_counts": dict(sorted(pair_status_counts.items())),
         "mapped_product_carbon_atoms": sum(len(row["carbon_mapping"].get("mappings", [])) for row in rows),
         "unresolved_product_carbon_atoms": sum(len(row["carbon_mapping"].get("unresolved_product_carbons", [])) for row in rows),
+        "target_pair_mapped_carbon_atoms": pair_mapped_atoms,
+        "target_pair_unresolved_carbon_atoms": pair_unresolved_atoms,
         "rows": rows,
         "claim_boundary": "RDKit mappings conserve structurally matched carbon atoms and retain unresolved product atoms explicitly. They do not establish reaction direction, enzyme function, isotope tracing, or endogenous Cannabis biosynthesis.",
     }

@@ -306,6 +306,11 @@ identity-set target structures, 1,373 precursor identities, and 364 reactions;
 with 29,547 product-carbon atoms explicitly unresolved. It remains separate from
 the balanced reaction catalog and CO₂ lineage until each edge receives
 stoichiometric, direction, enzyme, and mapping review.
+The same report carries a separate target-pair mapping: 2,111 of the 3,401
+precursor/product identity pairs have complete inferred carbon-skeleton mappings,
+while 1,290 remain unresolved. This pair layer is not substituted for
+whole-reaction mapping when ancillary carbon-bearing substrates may contribute
+to the product.
 Each CannabisDB compound record carries its CO₂-lineage status and reachable
 carbon-atom count, and NetworkDB links to the complete atom-level audit.
 Every one of the 1,107 working reaction records also carries a carbon-mapping

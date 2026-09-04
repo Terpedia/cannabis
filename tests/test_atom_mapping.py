@@ -1,4 +1,4 @@
-from cannabis_carbon.atom_mapping import map_reaction_smiles
+from cannabis_carbon.atom_mapping import map_reaction_smiles, map_identity_pair_smiles
 
 
 def test_oxidation_preserves_all_product_carbons():
@@ -62,3 +62,17 @@ def test_equivalent_redox_carbon_skeleton_is_candidate_not_unresolved():
     assert result["status"] == "candidate"
     assert result["unresolved_product_carbons"] == []
     assert any(item["method"] == "rdkit-equivalent-carbon-skeleton-candidate" for item in result["mappings"])
+
+
+def test_identity_pair_mapper_handles_heteroatom_change_without_cofactor_noise():
+    result = map_identity_pair_smiles("CCO", "CC=O")
+    assert result["status"] == "inferred"
+    assert len(result["mappings"]) == 2
+    assert result["unresolved_product_carbons"] == []
+
+
+def test_identity_pair_mapper_keeps_carbon_gain_unresolved():
+    result = map_identity_pair_smiles("CC", "CCC")
+    assert result["status"] == "unresolved"
+    assert result["reason"] == "identity-pair-carbon-count-delta"
+    assert len(result["unresolved_product_carbons"]) == 3
