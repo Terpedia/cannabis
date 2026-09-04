@@ -9,9 +9,14 @@ from pathlib import Path
 def load_network(path: Path, additions_path: Path | None = None) -> dict:
     with gzip.open(path, "rt", encoding="utf-8") as handle:
         network = json.load(handle)
-    additions_path = additions_path or path.parent / "reaction-additions.json"
-    if additions_path.exists():
-        additions = json.loads(additions_path.read_text())
+    addition_paths = [additions_path] if additions_path else [
+        path.parent / "reaction-additions.json",
+        path.parent / "varin-reaction-additions.json",
+    ]
+    for addition_path in addition_paths:
+        if not addition_path.exists():
+            continue
+        additions = json.loads(addition_path.read_text())
         existing_entities = {entity["id"] for entity in network["entities"]}
         existing_statements = {(s.get("subjectId"), s.get("predicate"), s.get("objectEntityId")) for s in network["statements"]}
         for entity in additions.get("entities", []):
