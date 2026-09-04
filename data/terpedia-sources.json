@@ -36,6 +36,13 @@
             "new_edges_after_normalization": 0
           },
           "claim_boundary": "Source-linked candidate edges; not confirmed Cannabis biosynthesis or enzyme activity."
+        },
+        {
+          "table": "terpedia-489015.terpedia_core.terpene_brenda_reaction_smarts_curated_current_v2",
+          "snapshot": "data/terpedia/terpene-brenda-reaction-smarts-curated-current-v2.json",
+          "live_row_count_verified": 86,
+          "rdkit_cannabisdb_product_structure_matches": 0,
+          "claim_boundary": "Curated BRENDA/Rhea reaction templates and enzyme-family context; not evidence of a Cannabis enzyme or target production."
         }
       ]
     },
