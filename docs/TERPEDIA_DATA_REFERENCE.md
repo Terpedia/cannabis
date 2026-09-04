@@ -182,8 +182,10 @@ The companion `data/reports/carbon-atom-audit.json` and published
 CannabisDB carbon atoms into **1 supported**, **1,042 candidate**, and
 **284,580 unresolved** atoms. Each group retains CannabisDB atom indices,
 resolved Terpedia atom indices when available, reaction references, provenance
-URLs, and the blocking reason; the groups are required to partition the
-complete carbon-atom set for each compound.
+URLs, and the blocking reason. The target atom indices are explicitly scoped to
+RDKit atom indices in each CannabisDB SMILES field and are not assumed to equal
+the source-SDF atom ordering. The groups are required to partition the complete
+carbon-atom set for each compound.
 
 These are data-coverage metrics. They do not imply that all CannabisDB
 compounds are endogenous cannabis metabolites or that Terpedia's reaction graph
