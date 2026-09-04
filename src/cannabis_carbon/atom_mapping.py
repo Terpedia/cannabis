@@ -227,11 +227,40 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
                 mappings = [{"product_index": organic_index, "product_atom": atom.GetIdx(), "reactant_index": 0, "reactant_atom": matches[0][atom.GetIdx()], "method": "rdkit-decarboxylation-substructure", "status": "inferred"} for atom in products[organic_index].GetAtoms() if atom.GetAtomicNum() == 6]
                 mappings.append({"product_index": co2_product_indices[0], "product_atom": co2_carbons[0], "reactant_index": 0, "reactant_atom": next(iter(released)), "method": "rdkit-decarboxylation-released-carbon", "status": "inferred"})
                 return {"status": "inferred", "mappings": mappings, "unresolved_product_carbons": [], "product_carbon_atom_count": len(product_carbons), "reactant_count": len(reactants), "product_count": len(products)}
-    # Process constrained product atoms first. A reactant atom may be used only
+    # Process unchanged carbon-containing molecules before local signatures.
+    # Infer only a strict one-to-one molecule occurrence with a unique atom
+    # correspondence; repeated copies remain in the ambiguity path.
+    exact_product_atoms = set()
+    product_keys, reactant_keys = {}, {}
+    for pi, molecule in enumerate(products):
+        product_keys.setdefault(Chem.MolToSmiles(molecule), []).append(pi)
+    for ri, molecule in enumerate(reactants):
+        reactant_keys.setdefault(Chem.MolToSmiles(molecule), []).append(ri)
+    for pi, product in enumerate(products):
+        key = Chem.MolToSmiles(product)
+        if not any(atom.GetAtomicNum() == 6 for atom in product.GetAtoms()):
+            continue
+        matching_reactants = reactant_keys.get(key, [])
+        if len(product_keys.get(key, [])) != 1 or len(matching_reactants) != 1:
+            continue
+        ri = matching_reactants[0]
+        matches = reactants[ri].GetSubstructMatches(product, uniquify=True)
+        if len(matches) != 1:
+            continue
+        for atom in product.GetAtoms():
+            if atom.GetAtomicNum() != 6:
+                continue
+            mappings.append({"product_index": pi, "product_atom": atom.GetIdx(), "reactant_index": ri, "reactant_atom": matches[0][atom.GetIdx()], "method": "rdkit-unchanged-molecule-conservation", "status": "inferred"})
+            exact_product_atoms.add((pi, atom.GetIdx()))
+            used_reactant_carbons.add((ri, matches[0][atom.GetIdx()]))
+
+    # Process constrained product atoms next. A reactant atom may be used only
     # once; this prevents repeated local signatures from fabricating carbon
     # conservation. Non-unique matches are retained as explicit ambiguity.
     candidate_rows = []
     for pi, atom in product_carbons:
+        if (pi, atom.GetIdx()) in exact_product_atoms:
+            continue
         choices = [(ri, ra) for ri, ra, signature in reactant_carbons if signature == _carbon_signature(atom)]
         candidate_rows.append((len(choices), pi, atom, choices))
     for _, pi, atom, choices in sorted(candidate_rows, key=lambda row: (row[0], row[1], row[2].GetIdx())):
