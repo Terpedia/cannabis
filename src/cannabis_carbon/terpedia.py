@@ -6,9 +6,22 @@ from collections import defaultdict
 from pathlib import Path
 
 
-def load_network(path: Path) -> dict:
+def load_network(path: Path, additions_path: Path | None = None) -> dict:
     with gzip.open(path, "rt", encoding="utf-8") as handle:
-        return json.load(handle)
+        network = json.load(handle)
+    additions_path = additions_path or path.parent / "reaction-additions.json"
+    if additions_path.exists():
+        additions = json.loads(additions_path.read_text())
+        existing_entities = {entity["id"] for entity in network["entities"]}
+        existing_statements = {(s.get("subjectId"), s.get("predicate"), s.get("objectEntityId")) for s in network["statements"]}
+        for entity in additions.get("entities", []):
+            if entity["id"] not in existing_entities:
+                network["entities"].append(entity)
+        for statement in additions.get("statements", []):
+            key = (statement.get("subjectId"), statement.get("predicate"), statement.get("objectEntityId"))
+            if key not in existing_statements:
+                network["statements"].append(statement)
+    return network
 
 
 def cytoscape_elements(network: dict) -> dict:

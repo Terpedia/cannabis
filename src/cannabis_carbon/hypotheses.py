@@ -25,6 +25,14 @@ def build_candidate_queue(path: Path, output: Path) -> dict:
         reaction = row.get("reaction", {})
         target = row.get("targetMetabolite", {})
         queue.append({"id": row["hypothesisId"], "kind": row["hypothesisType"], "status": row["status"], "reaction_id": reaction.get("reactionId"), "ec_number": None, "target_metabolite": target, "candidate_proteins": row.get("candidateEnzymes", []), "source": row.get("claimBoundary")})
+    additions_path = path.parent / "reaction-additions.json"
+    if additions_path.exists():
+        additions = json.loads(additions_path.read_text())
+        known_reactions = {item.get("reaction_id") for item in queue}
+        for reaction in additions.get("entities", []):
+            if reaction.get("type") != "biochemical_reaction" or reaction.get("id") in known_reactions:
+                continue
+            queue.append({"id": f"missing-producer:{reaction['id']}", "kind": "curated-reaction-addition-missing-producer", "status": "candidate", "reaction_id": reaction["id"], "ec_number": (reaction.get("attributes", {}).get("ecNumbers") or [None])[0], "target_metabolite": None, "candidate_proteins": [], "source": reaction.get("source_url") or reaction.get("url")})
     report = {"schema": "cannabis-carbon.candidate-work-queue.v1", "source": str(path), "summary": {"total": len(queue), "with_candidate_proteins": sum(bool(row["candidate_proteins"]) for row in queue), "missing_producer": len(source["hypotheses"].get("missingProducers", [])), "unresolved_ec": len(source["hypotheses"].get("unresolvedExactEc", [])) + len(source["hypotheses"].get("unresolvedPartialEc", [])), "blocked_reaction": len(source["hypotheses"].get("blockedKnownReactions", []))}, "items": queue, "claim_boundary": source["summary"]["coverageBoundary"]}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")

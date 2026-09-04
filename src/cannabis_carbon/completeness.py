@@ -4,10 +4,11 @@ import json
 from collections import Counter
 from pathlib import Path
 
+from .terpedia import load_network
+
 
 def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None, crosswalk_path: Path | None = None, lineage_path: Path | None = None) -> dict:
-    with __import__("gzip").open(network_path, "rt", encoding="utf-8") as handle:
-        network = json.load(handle)
+    network = load_network(network_path)
     entities = {e["id"]: e for e in network["entities"]}
     metabolites = {i for i, e in entities.items() if e.get("type") == "metabolite"}
     reactions = {i for i, e in entities.items() if e.get("type") == "biochemical_reaction"}

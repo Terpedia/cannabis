@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-import gzip
 import json
 from pathlib import Path
 from collections import defaultdict
 from rdkit import Chem
 from rdkit.Chem import rdMolDescriptors
+
+from .terpedia import load_network
 
 
 def _structure_formula(entity: dict) -> tuple[dict[str, int] | None, int | None]:
@@ -53,8 +54,7 @@ def _computed_balance(reaction_id: str, entities: dict, statements: list[dict]) 
 
 
 def audit_balances(network_path: Path, output: Path) -> dict:
-    with gzip.open(network_path, "rt", encoding="utf-8") as handle:
-        network = json.load(handle)
+    network = load_network(network_path)
     rows = []
     entities = {e["id"]: e for e in network["entities"]}
     for entity in (e for e in network["entities"] if e.get("type") == "biochemical_reaction"):

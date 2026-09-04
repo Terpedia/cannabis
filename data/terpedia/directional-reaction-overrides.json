@@ -10,5 +10,11 @@
     "orientation": "reverse_master",
     "source": "https://www.rhea-db.org/rhea/10298",
     "reason": "Calvin-Benson-Bassham reduction direction: (2R)-3-phospho-glyceroyl phosphate + NADPH + H(+) => D-glyceraldehyde 3-phosphate + phosphate + NADP(+)"
+  },
+  "rhea:26119": {
+    "directional_rhea_id": "rhea:26121",
+    "orientation": "reverse_master",
+    "source": "https://www.rhea-db.org/rhea/26121",
+    "reason": "Rhea directional record for GcpE/IspG: 2-C-methyl-D-erythritol 2,4-cyclic diphosphate + reduced ferredoxin + H(+) => (2E)-4-hydroxy-3-methylbut-2-enyl diphosphate + oxidized ferredoxin + H2O"
   }
 }
