@@ -18,6 +18,7 @@ from .hypotheses import build_candidate_queue, build_carbon_mapping_queue
 from .crosswalk import build_crosswalk
 from .balance import audit_balances
 from .hypothesis_balance import audit_hypothesis_balances
+from .hypothesis_mapping import build_hypothesis_mapping
 from .lineage import build_carbon_lineage
 from .networkdb import build_networkdb, build_map_snapshot
 from .genome import build_genome_search
@@ -124,6 +125,9 @@ def main() -> None:
     p_hypothesis_balance = sub.add_parser("hypothesis-balance-audit")
     p_hypothesis_balance.add_argument("source", type=Path, default=Path("data/terpedia/hypothetical-forward-connections.json"), nargs="?")
     p_hypothesis_balance.add_argument("--out", type=Path, default=Path("data/reports/terpedia-hypothesis-balance-audit.json"))
+    p_hypothesis_mapping = sub.add_parser("hypothesis-carbon-mapping")
+    p_hypothesis_mapping.add_argument("source", type=Path, default=Path("data/terpedia/hypothetical-forward-connections.json"), nargs="?")
+    p_hypothesis_mapping.add_argument("--out", type=Path, default=Path("data/reports/terpedia-hypothesis-carbon-mapping.json"))
     p_lineage = sub.add_parser("carbon-lineage")
     p_lineage.add_argument("network", type=Path)
     p_lineage.add_argument("mapping", type=Path)
@@ -233,6 +237,8 @@ def main() -> None:
         print(json.dumps(audit_balances(args.network, args.out), indent=2))
     elif args.command == "hypothesis-balance-audit":
         print(json.dumps(audit_hypothesis_balances(args.source, args.out), indent=2))
+    elif args.command == "hypothesis-carbon-mapping":
+        print(json.dumps(build_hypothesis_mapping(args.source, args.out), indent=2))
     elif args.command == "carbon-lineage":
         print(json.dumps(build_carbon_lineage(args.network, args.mapping, args.crosswalk, args.compounds, args.out, args.directions), indent=2))
     elif args.command == "carbon-atom-audit":

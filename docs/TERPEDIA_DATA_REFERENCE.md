@@ -354,6 +354,12 @@ SMARTS, source enzyme/protein fields, and its claim boundary.
 The companion `docs/data/terpedia-hypothesis-balance-audit.json` classifies
 these SMARTS records as 1,762 balance-ready, 17 imbalanced, and 122 not
 auditable; this is a review gate, not automatic promotion.
+The companion `docs/data/terpedia-hypothesis-carbon-mapping.json` applies a
+bounded RDKit exact-substructure correspondence to the substrate/product
+identity structures: 388 connections are structurally inferred for 9,885
+product carbon atoms, 12 retain candidate correspondences, and 1,501 remain
+unresolved (39,621 product carbon atoms). Non-matches are retained explicitly;
+the report does not use atom order or an unbounded MCS to fill gaps.
 
 ## Phase 1 balance gate
 
