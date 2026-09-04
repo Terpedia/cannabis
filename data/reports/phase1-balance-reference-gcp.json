@@ -1,0 +1,12 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_balance_reference_20260904_v1",
+  "load_job_id": "bqjob_r1ee5e944bc25be2_000001a06e8c595a_1",
+  "source": "data/reports/phase1-balance-reference.ndjson",
+  "report_sha256": "bf164ff7e3229b956ea0547055b44b4968357000182e4056eade98a2ee33436a",
+  "verified_variants": 199,
+  "verified_variants_with_balanced_alternatives": 108,
+  "verified_variants_with_matching_carbon_stoichiometry": 96,
+  "verified_alternatives": 108,
+  "verified_report_snapshots": 1,
+  "claim_boundary": "Separate source-backed balanced equations; original records and enzyme/direction uncertainty are preserved."
+}

@@ -133,6 +133,25 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [source-backed balance alternatives](data/phase1-balance-reference.json)
+compare all 199 non-balanced expansion variants against 36,552 Rhea equations
+in Terpedia's normalized reaction catalog. Matching preserves stereochemistry,
+isotopes, formal charge and the carbon-containing species on each reaction side.
+There are 108 balanced full-equation alternatives for imbalanced MARTS variants:
+96 preserve carbon-compound coefficients, while 12 require coefficient changes.
+Every alternative passes an element-and-charge audit and explicitly records
+added/removed participants and coefficient differences. Original records remain
+unchanged. These source equations are candidate alternatives, not automatic
+confirmation of MARTS enzyme associations or physiological direction.
+The remaining 42 imbalanced and 49 generic/unauditable variants have no exact
+concrete source alternative in this audit.
+
+GCP snapshot:
+`terpedia-489015.terpedia_core.cannabis_phase1_balance_reference_20260904_v1`.
+It retains all 199 gaps with original equations, reference equations, structured
+participants, balance results, differences and provenance; local load source:
+`data/reports/phase1-balance-reference.ndjson`.
+
 The separate [direction-unresolved family search](data/phase1-family-protein-search.json)
 searched all 30,304 Cannabis proteome sequences against all 168 retrieved reviewed
 reference proteins using DIAMOND's sensitive mode. Among 282 retained gap variants,
