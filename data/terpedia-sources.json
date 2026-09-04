@@ -45,6 +45,10 @@
           ,"candidate_expansion_carbon_mapping_pairs": 6607
           ,"candidate_expansion_carbon_mapped_atoms": 251320
           ,"candidate_expansion_carbon_unresolved_atoms": 4060
+          ,"reversible_candidate_lineage_snapshot": "data/reports/terpene-identity-set-reversible-candidate-lineage.json"
+          ,"reversible_candidate_lineage_paths": 3634
+          ,"reversible_candidate_lineage_products": 79
+          ,"reversible_candidate_lineage_core_anchors": 7
         },
         {
           "table": "terpedia-489015.terpedia_core.terpene_biotransformation_hypothetical_connections_current_v2",

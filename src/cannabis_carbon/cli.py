@@ -251,6 +251,10 @@ def main() -> None:
     p_identity_candidate_mapping.add_argument("expansion", type=Path, default=Path("data/reports/terpene-identity-set-candidate-expansion.json"), nargs="?")
     p_identity_candidate_mapping.add_argument("bridges", type=Path, default=Path("data/reports/terpene-identity-set-candidate-expansion-bridges.json"), nargs="?")
     p_identity_candidate_mapping.add_argument("--out", type=Path, default=Path("data/reports/terpene-identity-set-candidate-expansion-carbon-mapping.json"))
+    p_candidate_lineage = sub.add_parser("reversible-candidate-lineage")
+    p_candidate_lineage.add_argument("bridges", type=Path, default=Path("data/reports/terpene-identity-set-candidate-expansion-bridges.json"), nargs="?")
+    p_candidate_lineage.add_argument("lineage", type=Path, default=Path("data/reports/carbon-lineage.json"), nargs="?")
+    p_candidate_lineage.add_argument("--out", type=Path, default=Path("data/reports/terpene-identity-set-reversible-candidate-lineage.json"))
     p_identity_map = sub.add_parser("map-identity-set-upstream")
     p_identity_map.add_argument("source", type=Path, default=Path("data/reports/terpedia-identity-set-upstream.json"), nargs="?")
     p_identity_map.add_argument("--out", type=Path, default=Path("data/reports/terpedia-identity-set-upstream-mapped.json"))
@@ -340,6 +344,9 @@ def main() -> None:
         print(json.dumps(build_candidate_expansion_bridges(args.expansion, args.network, args.lineage, args.out), indent=2))
     elif args.command == "candidate-expansion-carbon-mapping":
         print(json.dumps(build_candidate_expansion_carbon_mapping(args.expansion, args.bridges, args.out), indent=2))
+    elif args.command == "reversible-candidate-lineage":
+        from .candidate_lineage import build_reversible_candidate_lineage
+        print(json.dumps(build_reversible_candidate_lineage(args.bridges, args.lineage, args.out), indent=2))
     elif args.command == "map-identity-set-upstream":
         print(json.dumps(map_identity_set_upstream(args.source, args.out), indent=2))
     elif args.command == "identity-set-core-bridges":

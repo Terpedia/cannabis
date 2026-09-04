@@ -352,6 +352,11 @@ applies RDKit identity-pair carbon correspondence to 6,607 unique bridge pairs:
 251,320 product-carbon correspondences are mapped, 5,143 pairs are fully
 inferred, and 4,060 product-carbon rows remain unresolved. These mappings are
 candidate structural evidence and are not added to the directed CO₂ lineage.
+The reversible sensitivity artifact
+`data/terpene-identity-set-reversible-candidate-lineage.json` enumerates 3,634
+ordered candidate paths from the CO₂ seed to 79 candidate products through 7
+core anchors. These paths are useful for direction and enzyme experiments but
+are explicitly not directed biological pathways.
 When available, each CannabisDB record also carries the exact-InChIKey PubChem
 resolution status and CID/structure properties; unresolved PubChem queries are
 retained as explicit negatives rather than being treated as missing data.
