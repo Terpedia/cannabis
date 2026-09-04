@@ -8,11 +8,38 @@ from collections import Counter
 from datetime import date
 from pathlib import Path
 
+from rdkit import Chem
+
 from .identity_set import SOURCE_TABLE
 from .atom_mapping import map_reaction_smiles, map_identity_pair_smiles
 
 
 EDGE_TABLE = "terpedia-489015.terpedia_core.terpene_metabolic_map_edges_current"
+
+
+def _carbon_bearing_required_substrates(value: str | None) -> list[dict]:
+    """Return carbon-bearing required substrates as unresolved alternatives."""
+    try:
+        structures = json.loads(value or "[]")
+    except json.JSONDecodeError:
+        return []
+    candidates = []
+    for index, structure in enumerate(structures):
+        molecule = Chem.MolFromSmiles(structure) if isinstance(structure, str) else None
+        if molecule is None:
+            continue
+        carbon_count = sum(atom.GetAtomicNum() == 6 for atom in molecule.GetAtoms())
+        if not carbon_count:
+            continue
+        candidates.append({
+            "input_index": index,
+            "smiles": structure,
+            "canonical_smiles": Chem.MolToSmiles(molecule, canonical=True, isomericSmiles=True),
+            "carbon_count": carbon_count,
+            "source": "Terpedia required_substrate_structures_json",
+            "identity_status": "unresolved-candidate-structure",
+        })
+    return candidates
 
 
 def map_identity_set_upstream(input_path: Path, output: Path) -> dict:
@@ -23,15 +50,19 @@ def map_identity_set_upstream(input_path: Path, output: Path) -> dict:
     pair_status_counts = Counter()
     pair_mapped_atoms = 0
     pair_unresolved_atoms = 0
+    missing_precursor_rows_with_candidates = 0
     for row in report.get("rows", []):
         mapped = map_reaction_smiles(row.get("reaction_smarts"))
         product = report.get("identity_records", {}).get(row.get("product_identity_id"), {}).get("smiles")
         precursor = report.get("identity_records", {}).get(row.get("precursor_identity_id"), {}).get("smiles")
         pair_mapping = map_identity_pair_smiles(precursor, product)
+        precursor_candidates = [] if precursor else _carbon_bearing_required_substrates(row.get("required_substrate_structures_json"))
+        if precursor_candidates:
+            missing_precursor_rows_with_candidates += 1
         pair_status_counts[pair_mapping.get("status", "unresolved")] += 1
         pair_mapped_atoms += len(pair_mapping.get("mappings", []))
         pair_unresolved_atoms += len(pair_mapping.get("unresolved_product_carbons", []))
-        enriched = {**row, "carbon_mapping": mapped, "target_pair_carbon_mapping": pair_mapping}
+        enriched = {**row, "carbon_mapping": mapped, "target_pair_carbon_mapping": pair_mapping, "precursor_structure_candidates": precursor_candidates}
         rows.append(enriched)
         status_counts[mapped.get("status", "unresolved")] += 1
     mapped_report = {
@@ -44,6 +75,7 @@ def map_identity_set_upstream(input_path: Path, output: Path) -> dict:
         "unresolved_product_carbon_atoms": sum(len(row["carbon_mapping"].get("unresolved_product_carbons", [])) for row in rows),
         "target_pair_mapped_carbon_atoms": pair_mapped_atoms,
         "target_pair_unresolved_carbon_atoms": pair_unresolved_atoms,
+        "missing_precursor_rows_with_structure_candidates": missing_precursor_rows_with_candidates,
         "rows": rows,
         "claim_boundary": "RDKit mappings conserve structurally matched carbon atoms and retain unresolved product atoms explicitly. They do not establish reaction direction, enzyme function, isotope tracing, or endogenous Cannabis biosynthesis.",
     }

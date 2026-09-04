@@ -312,7 +312,9 @@ precursor/product identity pairs have complete inferred or candidate
 carbon-skeleton mappings, while 834 remain unresolved; 77,640 target-pair
 carbon atoms are mapped and 2,297 remain unresolved. This pair layer is not substituted for
 whole-reaction mapping when ancillary carbon-bearing substrates may contribute
-to the product.
+to the product. The 354 rows with missing precursor identities now also retain
+537 carbon-bearing required-substrate alternatives from Terpedia; these are
+explicit unresolved candidate structures, not assigned precursor identities.
 Each CannabisDB compound record carries its CO₂-lineage status and reachable
 carbon-atom count, and NetworkDB links to the complete atom-level audit.
 Every one of the 1,107 working reaction records also carries a carbon-mapping
