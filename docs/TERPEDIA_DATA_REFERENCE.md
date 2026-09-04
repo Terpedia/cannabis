@@ -133,6 +133,34 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [full-Terpedia-Rhea participation audit](data/phase1-target-rhea-coverage.json)
+extends the working-network audit below with all 36,552 Rhea source equations
+from the checksum-verified Terpedia catalog snapshot. It retains all 6,220
+CannabisDB records: **430** match participants in balanced equations (**321 new**
+relative to the working network), six match only balance-unresolved equations,
+and 5,784 have no exact encoded-structure match. New leads include eugenol,
+nerol, methyl salicylate, xylitol, and vanillic acid. These are source-database
+reaction leads, not evidence of Cannabis enzyme activity or complete CO₂ routes.
+
+Across the overlapping core, expansion, and full-Rhea source layers, 38,150
+scoped equation records were independently audited: 29,310 balanced, 42
+imbalanced, and 8,798 not auditable with concrete structures. These are **not
+deduplicated biochemical reaction counts**. The downloadable report retains
+the 29,538 equations with at least one exact target participant, preserving full
+source equations and all required participants. A right-side match is not a
+physiological producer assignment; all-input availability remains unestablished.
+Unspecified stereochemistry is flagged and never upgraded to an exact known
+stereoisomer. Atom tracing remains deferred.
+
+GCP snapshot:
+`terpedia-489015.terpedia_core.cannabis_phase1_target_rhea_coverage_20260904_v1`.
+It contains 6,220 target rows and 29,538 matching equation rows. Regenerate the
+report and local NDJSON load file using
+`PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_target_rhea_coverage`.
+The large derived NDJSON is ignored by Git; source checksums and the GCP load
+receipt are retained. The static report is approximately 58 MiB and is not
+automatically loaded into Cytoscape or silently promoted into its working map.
+
 The [whole-CannabisDB strict participation audit](data/phase1-target-coverage.json)
 retains all 6,220 source records (6,203 distinct canonical encoded structures).
 Against the core NetworkDB and balanced expansion catalog, 109 records match

@@ -1,0 +1,17 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_target_rhea_coverage_20260904_v1",
+  "load_job_id": "bqjob_r5e9e21543f9992ba_000001a06ea69af1_1",
+  "source": "data/reports/phase1-target-rhea-coverage.ndjson",
+  "report_sha256": "4aa0fa63323d76e79daaa7c4a5f1684f164182e038b6c5b2e62088984a4f3b31",
+  "verified_target_records": 6220,
+  "verified_target_statuses": {
+    "balanced-reaction-participant": 430,
+    "reaction-participant-balance-unresolved": 6,
+    "no-exact-encoded-reaction-match": 5784
+  },
+  "verified_reaction_records": 29538,
+  "verified_reaction_statuses": {"balanced": 22828, "imbalanced": 38, "not-auditable": 6672},
+  "verified_report_snapshots_per_group": 1,
+  "verified_unique_ids_equal_record_count_in_each_group": true,
+  "claim_boundary": "Exact encoded-structure participation, not Cannabis enzyme activity or CO2 pathway completeness. Reaction ledger retains matching equations; full scanned counts remain in report summary."
+}

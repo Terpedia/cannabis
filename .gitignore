@@ -4,4 +4,5 @@ __pycache__/
 .venv/
 data/raw/
 data/derived/
+data/reports/phase1-target-rhea-coverage.ndjson
 .DS_Store

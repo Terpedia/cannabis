@@ -22,10 +22,13 @@ def encoded_structure(smiles):
         'stereo-unspecified-or-unknown' if unspecified else 'no-unassigned-stereo-detected')
 
 
-def audit_targets(targets, network, catalog):
+def audit_targets(targets, network, catalog, additional_sources=(), matching_ledger_only=False):
     if len({t['id'] for t in targets}) != len(targets):
         raise ValueError('Duplicate CannabisDB source identifier')
     index, reaction_ledger = defaultdict(list), []
+    target_structures = [encoded_structure(t.get('smiles')) for t in targets]
+    target_keys = {identity for identity, _ in target_structures if identity}
+    balance_counts = Counter()
     xref_index = defaultdict(set)
     sources = []
     for reaction in network['reactions']:
@@ -41,31 +44,33 @@ def audit_targets(targets, network, catalog):
                         'reaction_smiles': reaction['reaction_smarts'], 'source_urls': reaction['source_urls'],
                         'source_layer': 'phase1-expansion-catalog', 'direction_evidence': {},
                         'orientation_boundary': reaction['equation_orientation']})
+    sources.extend(additional_sources)
     if len({r['id'] for r in sources}) != len(sources):
         raise ValueError('Duplicate scoped reaction record')
     for source in sources:
         smiles = source['reaction_smiles']
         element, charge = _reaction_smiles_balance(smiles) if smiles and smiles.count('>>') == 1 else (None, None)
         status = 'balanced' if element and charge and element['status'] == charge['status'] == 'balanced' else 'imbalanced' if element and charge else 'not-auditable'
-        reaction_ledger.append({**source, 'computed_balance_status': status, 'element_balance': element, 'charge_balance': charge,
-                                'claim_boundary': 'Independently audited source equation; a structure match or balanced equation does not establish physiological direction, enzyme activity, all-input availability or a CO2 pathway.'})
+        balance_counts[status] += 1
         participants = defaultdict(list)
         if smiles and smiles.count('>>') == 1:
             for side_name, side in zip(('left', 'right'), smiles.split('>>')):
                 counts = Counter()
                 for component in side.split('.'):
                     identity, _ = encoded_structure(component)
-                    if identity:
+                    if identity in target_keys:
                         counts[identity] += 1
                 for identity, coefficient in counts.items():
                     participants[identity].append({'equation_side': side_name, 'coefficient': coefficient})
+        if participants or not matching_ledger_only:
+            reaction_ledger.append({**source, 'computed_balance_status': status, 'element_balance': element, 'charge_balance': charge,
+                                    'claim_boundary': 'Independently audited source equation; a structure match or balanced equation does not establish physiological direction, enzyme activity, all-input availability or a CO2 pathway.'})
         for identity, roles in participants.items():
             index[identity].append({'reaction_record_id': source['id'], 'source_reaction_id': source['source_reaction_id'],
                                     'computed_balance_status': status, 'roles': roles,
                                     'direction_status': 'not-established-by-structure-match'})
     rows = []
-    for target in targets:
-        identity, structure_status = encoded_structure(target.get('smiles'))
+    for target, (identity, structure_status) in zip(targets, target_structures):
         matches = index.get(identity, []) if identity else []
         balanced = [r for r in matches if r['computed_balance_status'] == 'balanced']
         chebi = (target.get('external_ids') or {}).get('chebi')
@@ -84,8 +89,9 @@ def audit_targets(targets, network, catalog):
             'summary': {'cannabisdb_records': len(rows), 'coverage_status_counts': dict(Counter(r['coverage_status'] for r in rows)),
                         'structure_status_counts': dict(Counter(r['structure_status'] for r in rows)),
                         'unique_encoded_target_structures': len({r['canonical_isomeric_smiles'] for r in rows if r['canonical_isomeric_smiles']}),
-                        'source_reaction_records': len(reaction_ledger),
-                        'reaction_balance_status_counts': dict(Counter(r['computed_balance_status'] for r in reaction_ledger))},
+                        'source_reaction_records': len(sources),
+                        'reaction_balance_status_counts': dict(balance_counts)},
+            'reaction_ledger_scope': 'Only source records with exact target structure participation' if matching_ledger_only else 'All audited source records',
             'targets': rows, 'reaction_ledger': reaction_ledger,
             'metric_scope': 'Every CannabisDB source record is retained. Reaction counts are scoped source records, not deduplicated biochemical reactions. No protonation, tautomer, salt, connectivity-only, or name-based identity merging.',
             'claim_boundary': 'This is reaction-participation coverage, not a complete metabolic map or a claim that carbon comes from CO2. Generic/unbalanced equations and xref-only leads are kept separate; atom tracing remains deferred.'}
