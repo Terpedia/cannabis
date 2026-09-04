@@ -254,13 +254,12 @@ constitutes a demonstrated in-vivo pathway.
 
 ## Unified NetworkDB
 
-The Pages visualization loads `docs/data/network-map-focus.json` by default,
-a compact view of 1,261 compounds: the current CO₂-focused set plus one-hop
-hypothesis context, 65 reaction records, and 3,450 hypothesis edges. The
-complete 10,111-compound/1,107-reaction
-projection, including all hypothesis edges, remains available at
-`docs/data/network-map.json`; the browser fallback graph is not the published
-map. Selecting a compound in the map now reports how many of its carbon atoms
+The Pages visualization loads the complete `docs/data/network-map.json` by
+default: 10,111 compounds, 1,107 reaction records, and 7,384 hypothesis edges.
+The compact CO₂-focused projection remains available at
+`docs/data/network-map-focus.json` (1,261 compounds, 65 reaction records, and
+3,450 hypothesis edges) and through `?full=0`; the browser fallback graph is
+not the published map. Selecting a compound in the map now reports how many of its carbon atoms
 have explicit serialized CO₂ paths and the maximum number of reaction steps;
 the corresponding atom-by-atom chains remain in the downloadable audit.
 The separate `docs/data/hypothesis-lineage.json` artifact traverses only
