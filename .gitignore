@@ -5,4 +5,5 @@ __pycache__/
 data/raw/
 data/derived/
 data/reports/phase1-target-rhea-coverage.ndjson
+data/reports/phase1-target-hypotheses.ndjson
 .DS_Store

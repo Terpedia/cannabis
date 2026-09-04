@@ -1,0 +1,23 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_target_hypotheses_20260904_v1",
+  "load_job_id": "bqjob_r380da63b369b49ca_000001a06eb0b020_1",
+  "source": "data/reports/phase1-target-hypotheses.ndjson",
+  "report_sha256": "add8debb94ae5ed4fa20a564882fd9d9fe2ef8ad71986002d8f4bb3efcd07aca",
+  "verified_record_counts": {
+    "target": 6220,
+    "compound": 15669,
+    "reaction": 10875,
+    "hypothesis": 19772,
+    "enzyme_evidence": 963
+  },
+  "verified_target_statuses": {
+    "net-production-hypotheses-found": 424,
+    "balanced-participation-only-no-net-production": 6,
+    "reaction-participant-balance-unresolved": 6,
+    "no-exact-encoded-reaction-match": 5784
+  },
+  "verified_hypothesis_statuses": {"blocked": 19772},
+  "verified_unique_ids_equal_record_count_in_each_group": true,
+  "verified_report_snapshots_per_group": 1,
+  "claim_boundary": "All-input one-step net-production hypotheses, not complete CO2 pathways. Direction, input supply, compartment compatibility and Cannabis enzyme activity remain unconfirmed."
+}

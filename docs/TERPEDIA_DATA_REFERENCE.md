@@ -133,6 +133,42 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [full-inventory one-step hypothesis catalog](data/phase1-target-hypotheses.json)
+distinguishes reaction participation from **net production**. Of 6,220 CannabisDB
+records, 424 have balanced net-production hypotheses, six occur only unchanged
+on both sides of balanced equations, six match only balance-unresolved equations,
+and 5,784 have no exact structure match. The unchanged group is aldehydo-L-rhamnose
+plus five inorganic elements; their occurrence does not establish a producing step.
+Transport and compartment distinctions are not inferred from identical structures.
+
+The carbon-specific denominator is **6,186 carbon-bearing records**, with **409**
+having net-production hypotheses; 34 carbon-free records remain explicitly tracked
+for nutrient uptake, transport, and input supply. There are 3,231 carbon-bearing
+target hypotheses out of 19,772 hypotheses overall. Water and ion reactions dominate
+the latter count, which must not be presented as carbon-pathway completeness.
+
+The catalog retains 15,669 exact compound structures, including every resolved
+CannabisDB target and every participant in the retained balanced equations.
+Its 10,875 full-equation records deduplicate exact equations and reversed encodings
+from 22,828 source records while retaining each source orientation and provenance.
+Coefficients and participants are not canceled away or rescaled for deduplication.
+Every hypothesis includes full inputs/outputs, a positive net target coefficient,
+source-linked candidate enzyme evidence, explicit blockers, and proposed tests.
+There are 1,036 hypotheses with attached candidate enzyme evidence and 18,736
+without it; neither count establishes enzyme activity. Nine hypotheses require
+the target itself as an input and are flagged as needing a bootstrap supply.
+All hypotheses remain blocked: physiological direction, all-input supply,
+compartment compatibility, and Cannabis enzyme activity are unconfirmed.
+Both directions are examined only as a structural hypothesis scenario. No seeds,
+including intracellular currencies, are silently provided; atom tracing is deferred.
+
+GCP snapshot:
+`terpedia-489015.terpedia_core.cannabis_phase1_target_hypotheses_20260904_v1`.
+Regenerate with
+`PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_target_hypotheses`;
+the module's `export_table` function produces the local NDJSON load artifact.
+The roughly 65 MiB static download is separate from the Cytoscape working map.
+
 The [full-Terpedia-Rhea participation audit](data/phase1-target-rhea-coverage.json)
 extends the working-network audit below with all 36,552 Rhea source equations
 from the checksum-verified Terpedia catalog snapshot. It retains all 6,220
