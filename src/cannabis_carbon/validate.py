@@ -36,6 +36,30 @@ def validate_artifacts(atom_audit_path: Path, mapping_path: Path, balance_path: 
             status = group.get("status")
             if status in observed_status_counts:
                 observed_status_counts[status] += len(group.get("atom_indices", []))
+        if record is not None and record.get("co2_paths") is not None:
+            target_entity_atoms = {
+                entity_atom
+                for group in record.get("groups", [])
+                for entity_atom in group.get("entity_atom_indices", [])
+                if entity_atom is not None
+            }
+            for atom_index, path in record.get("co2_paths", {}).items():
+                if path is None or not path:
+                    continue
+                previous = None
+                for step_index, step in enumerate(path):
+                    required = ("from_entity_id", "from_atom", "to_entity_id", "to_atom", "status", "provenance")
+                    if any(not step.get(field) and step.get(field) != 0 for field in required) or step.get("status") not in {"inferred", "candidate"}:
+                        failures.append({"kind": "carbon-path-evidence-missing", "compound_id": compound.get("id"), "atom_index": atom_index, "step": step_index})
+                    current_start = (step.get("from_entity_id"), step.get("from_atom"))
+                    if previous is None:
+                        if step.get("from_entity_id") != "chebi:16526":
+                            failures.append({"kind": "carbon-path-does-not-start-at-co2", "compound_id": compound.get("id"), "atom_index": atom_index})
+                    elif current_start != previous:
+                        failures.append({"kind": "carbon-path-discontinuity", "compound_id": compound.get("id"), "atom_index": atom_index, "step": step_index})
+                    previous = (step.get("to_entity_id"), step.get("to_atom"))
+                if previous and previous[1] not in target_entity_atoms:
+                    failures.append({"kind": "carbon-path-target-mismatch", "compound_id": compound.get("id"), "atom_index": atom_index, "target": previous})
         if record is None:
             failures.append({"kind": "missing-compound-audit", "compound_id": compound.get("id")})
         elif len(observed) != len(set(observed)) or set(observed) != expected:
@@ -60,7 +84,7 @@ def validate_artifacts(atom_audit_path: Path, mapping_path: Path, balance_path: 
         failures.append({"kind": "global-carbon-status-accounting-mismatch", "expected": expected_total, "observed": sum(observed_status_counts.values()), "status_counts": observed_status_counts})
     if audit.get("status_counts") is not None and audit.get("status_counts") != observed_status_counts:
         failures.append({"kind": "reported-carbon-status-count-mismatch", "reported": audit.get("status_counts"), "observed": observed_status_counts})
-    result = {"schema": "cannabis-carbon.artifact-validation.v1", "valid": not failures, "checks": {"carbon_atom_partition": not any(f["kind"] in ("missing-compound-audit", "carbon-atom-partition-mismatch", "duplicate-compound-audit") for f in failures), "atom_evidence_fields": not any(f["kind"] == "atom-evidence-fields-missing" for f in failures), "global_carbon_accounting": not any(f["kind"] in ("global-carbon-total-mismatch", "global-carbon-status-accounting-mismatch", "reported-carbon-status-count-mismatch") for f in failures), "reaction_product_carbon_rows": not any(f["kind"] == "missing-reaction-product-carbon-row" for f in failures), "reaction_mapping_classification": not any(f["kind"] in ("invalid-reaction-carbon-status", "reaction-carbon-blocker-missing") for f in failures), "no_imbalanced_reactions": not imbalanced}, "compounds_checked": len(compounds), "carbon_atoms_expected": expected_total, "carbon_atoms_audited": audit.get("carbon_atoms_total"), "carbon_atom_status_counts": observed_status_counts, "reactions_checked": len(mapping.get("reactions", [])), "imbalanced_reaction_count": len(imbalanced), "failures": failures, "claim_boundary": "This gate validates artifact accounting, evidence-field presence, and stoichiometric status. It does not establish enzyme function, isotope tracing, or in-vivo flux."}
+    result = {"schema": "cannabis-carbon.artifact-validation.v1", "valid": not failures, "checks": {"carbon_atom_partition": not any(f["kind"] in ("missing-compound-audit", "carbon-atom-partition-mismatch", "duplicate-compound-audit") for f in failures), "atom_evidence_fields": not any(f["kind"] == "atom-evidence-fields-missing" for f in failures), "global_carbon_accounting": not any(f["kind"] in ("global-carbon-total-mismatch", "global-carbon-status-accounting-mismatch", "reported-carbon-status-count-mismatch") for f in failures), "carbon_path_integrity": not any(f["kind"].startswith("carbon-path-") for f in failures), "reaction_product_carbon_rows": not any(f["kind"] == "missing-reaction-product-carbon-row" for f in failures), "reaction_mapping_classification": not any(f["kind"] in ("invalid-reaction-carbon-status", "reaction-carbon-blocker-missing") for f in failures), "no_imbalanced_reactions": not imbalanced}, "compounds_checked": len(compounds), "carbon_atoms_expected": expected_total, "carbon_atoms_audited": audit.get("carbon_atoms_total"), "carbon_atom_status_counts": observed_status_counts, "reactions_checked": len(mapping.get("reactions", [])), "imbalanced_reaction_count": len(imbalanced), "failures": failures, "claim_boundary": "This gate validates artifact accounting, evidence-field presence, path continuity, and stoichiometric status. It does not establish enzyme function, isotope tracing, or in-vivo flux."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2) + "\n")
     return result
