@@ -11,7 +11,7 @@ from .terpedia import load_network
 _SPECIALTY_NAME = re.compile(r"cannab|tetrahydrocannabin|cannabidiol|cannabiger|cannabichrom|cannabinol|cannabicycl|cannabielso|cannabifuran|cannabitriol|cannabid|cannabivarin|cannabistilbene|cannabisativine", re.IGNORECASE)
 
 
-def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None, crosswalk_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None, hypotheses_path: Path | None = None) -> dict:
+def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None, crosswalk_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None, hypotheses_path: Path | None = None, pubchem_path: Path | None = None) -> dict:
     network = load_network(network_path)
     entities = {e["id"]: e for e in network["entities"]}
     metabolites = {i for i, e in entities.items() if e.get("type") == "metabolite"}
@@ -50,6 +50,7 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
             "compounds_total": len(compounds),
             "carbon_atoms_total": sum(c["carbon_atom_count"] for c in compounds),
             "compound_to_terpedia_identity_crosswalk": "not_yet_available",
+            "pubchem_resolution": "not_yet_available",
         },
         "coverage": {"mapped_carbon_atoms": 0, "unresolved_carbon_atoms": sum(c["carbon_atom_count"] for c in compounds), "coverage_percent": None, "coverage_denominator": "all CannabisDB carbons; no complete pathway crosswalk"},
         "claim_boundary": "These are database-coverage metrics, not evidence that every listed compound is biosynthesized by Cannabis.",
@@ -59,6 +60,9 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
         matched_ids = {row["cannabisdb"]["cannabisdb_id"] for row in crosswalk["matches"]}
         matched_carbons = sum(c["carbon_atom_count"] for c in compounds if c["id"] in matched_ids)
         result["cannabisdb"].update(compounds_with_exact_terpedia_identity=len(matched_ids), compounds_with_ambiguous_identity=crosswalk["ambiguous"], compounds_without_exact_terpedia_identity=len(compounds) - len(matched_ids), compounds_without_any_identity_resolution=crosswalk.get("cannabisdb_unmatched", crosswalk["unmatched"]), connectivity_candidate_identity_links=crosswalk.get("connectivity_candidate_matches", 0), connectivity_candidate_ambiguous=crosswalk.get("connectivity_candidate_ambiguous", 0), tautomer_candidate_identity_links=crosswalk.get("tautomer_candidate_matches", 0), tautomer_candidate_ambiguous=crosswalk.get("tautomer_candidate_ambiguous", 0), name_candidate_identity_links=crosswalk.get("name_candidate_matches", 0), name_candidate_ambiguous=crosswalk.get("name_candidate_ambiguous", 0), crosswalk_matched_carbon_atoms=matched_carbons, compound_to_terpedia_identity_crosswalk="exact-inchikey-plus-candidate-tautomer-and-formula-compatible-name-layers")
+    if pubchem_path and pubchem_path.exists():
+        pubchem = json.loads(pubchem_path.read_text())
+        result["cannabisdb"]["pubchem_resolution"] = pubchem.get("summary", {})
     if mapping_path and mapping_path.exists():
         mapping = json.loads(mapping_path.read_text())
         mapped = mapping["carbon_counts"]["mapped_carbon_atoms"]

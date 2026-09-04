@@ -230,6 +230,9 @@ NetworkDB also carries 250 connectivity-level candidate identity links and 41
 ambiguous candidate groups as reviewable, non-exact alternatives, including
 the canonical-tautomer candidate layer. These links do not override exact
 identity.
+When available, each CannabisDB record also carries the exact-InChIKey PubChem
+resolution status and CID/structure properties; unresolved PubChem queries are
+retained as explicit negatives rather than being treated as missing data.
 Each CannabisDB compound record carries its CO₂-lineage status and reachable
 carbon-atom count, and NetworkDB links to the complete atom-level audit.
 Every one of the 1,106 working reaction records also carries a carbon-mapping
