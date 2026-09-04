@@ -359,6 +359,12 @@ The map also expands these records into 7,249 hypothesis-layer edges, including
 5,348 red unresolved-substrate edges backed by 644 unique carbon-containing
 missing-substrate structures. Those edges preserve the reaction requirement and
 blocker but do not assert that the anonymous substrate is a Cannabis metabolite.
+The GCP `terpene_enzyme_reaction_gene_evidence` table is preserved in
+`docs/data/terpene-enzyme-reaction-gene-evidence.json` (4,639 records) and
+attached to 502 hypothesis connections by MARTS reaction ID. It includes
+source-species enzyme names, UniProt/GenBank identifiers, sequences, and assay
+links; this evidence supports candidate annotation only and is not Cannabis
+functional validation.
 The companion `docs/data/terpedia-hypothesis-balance-audit.json` classifies
 these SMARTS records as 1,762 balance-ready, 17 imbalanced, and 122 not
 auditable; this is a review gate, not automatic promotion.

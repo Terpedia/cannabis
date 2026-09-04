@@ -41,7 +41,7 @@ def build_map_snapshot(networkdb_path: Path, output: Path, lineage_path: Path | 
     return {"compounds": len(compounds), "reactions": len(reactions), "bytes": output.stat().st_size}
 
 
-def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Path, output: Path, hypotheses_path: Path | None = None, genome_search_path: Path | None = None, genome_fasta_path: Path | None = None, mapping_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None, pubchem_path: Path | None = None, identity_set_path: Path | None = None, hypothetical_connections_path: Path | None = None, hypothetical_reactions_path: Path | None = None) -> dict:
+def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Path, output: Path, hypotheses_path: Path | None = None, genome_search_path: Path | None = None, genome_fasta_path: Path | None = None, mapping_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None, pubchem_path: Path | None = None, identity_set_path: Path | None = None, hypothetical_connections_path: Path | None = None, hypothetical_reactions_path: Path | None = None, hypothesis_enzyme_evidence_path: Path | None = None) -> dict:
     network = load_network(network_path)
     directions_path = network_path.parent / "directional-reaction-overrides.json"
     directions = json.loads(directions_path.read_text()) if directions_path.exists() else {}
@@ -53,6 +53,7 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
     identity_set_by_id = {r["cannabisdb_id"]: r for r in (identity_set or {}).get("records", [])}
     hypothetical = json.loads(hypothetical_connections_path.read_text()) if hypothetical_connections_path and hypothetical_connections_path.exists() else None
     hypothetical_inventory = json.loads(hypothetical_reactions_path.read_text()) if hypothetical_reactions_path and hypothetical_reactions_path.exists() else None
+    hypothesis_enzyme_evidence = json.loads(hypothesis_enzyme_evidence_path.read_text()) if hypothesis_enzyme_evidence_path and hypothesis_enzyme_evidence_path.exists() else None
     hypotheses = json.loads(hypotheses_path.read_text()) if hypotheses_path and hypotheses_path.exists() else {"items": []}
     hypothesis_items = hypotheses.get("items") or hypotheses.get("hypotheses", [])
     genome_search = json.loads(genome_search_path.read_text()) if genome_search_path and genome_search_path.exists() else None
@@ -153,6 +154,12 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
                     existing_compound_ids.add(substrate_id)
                 hypothetical_missing_substrate_nodes[substrate_id] = True
                 hypothetical_connections.append({"reaction_id": row.get("reaction_id"), "substrate_compound_id": substrate_id, "product_compound_id": product_id, "substrate_smiles": structure, "product_terpene_id": row.get("product_terpene_id"), "source_type": row.get("source_type"), "evidence_type": row.get("evidence_type"), "source_dataset": row.get("source_dataset"), "source_url": row.get("source_url"), "reaction_smarts": row.get("reaction_smarts"), "status": "unresolved", "layer": "Terpedia unresolved-substrate hypothesis edge", "blocker": "missing-corpus-substrate", "claim_boundary": "This edge preserves a carbon-containing substrate required by a GCP hypothesis reaction, but the substrate has no resolved corpus identity and is not included in balanced reaction or CO2 lineage counts."})
+    evidence_by_reaction = {}
+    for record in (hypothesis_enzyme_evidence or {}).get("records", []):
+        reaction_id = f"MARTS:{record.get('marts_reaction_id')}"
+        evidence_by_reaction.setdefault(reaction_id, []).append({key: record.get(key) for key in ("marts_reaction_enzyme_id", "marts_enzyme_id", "enzyme_name", "species", "kingdom", "uniprot_id", "genbank_id", "uniprot_ec_numbers", "evidence_type", "reaction_link", "mechanism_link", "condition_tags_json", "source_dataset")})
+    for connection in hypothetical_connections:
+        connection["enzyme_evidence"] = evidence_by_reaction.get(connection.get("reaction_id"), [])
     candidate_by_reaction = {}
     for item in hypothesis_items:
         if item.get("reaction_id"):
@@ -219,10 +226,13 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
     report["hypothetical_connections"] = hypothetical_connections
     report["hypothetical_reactions"] = hypothetical_reactions
     report["sources"]["terpedia_hypothetical_forward_connections"] = str(hypothetical_connections_path) if hypothetical_connections_path else None
+    report["sources"]["terpedia_hypothesis_enzyme_evidence"] = str(hypothesis_enzyme_evidence_path) if hypothesis_enzyme_evidence_path else None
     report["coverage"]["hypothetical_forward_connections"] = len(hypothetical_connections)
     report["coverage"]["hypothetical_reaction_inventory"] = len(hypothetical_reactions)
     report["coverage"]["hypothetical_product_inventory"] = len((hypothetical_inventory or {}).get("products", []))
     report["coverage"]["hypothetical_missing_substrate_nodes"] = len(hypothetical_missing_substrate_nodes)
+    report["coverage"]["hypothesis_enzyme_evidence_records"] = len((hypothesis_enzyme_evidence or {}).get("records", []))
+    report["coverage"]["hypothesis_connections_with_enzyme_evidence"] = sum(bool(connection.get("enzyme_evidence")) for connection in hypothetical_connections)
     report["coverage"]["hypothetical_identity_compounds"] = sum(compound.get("namespace") == "terpedia_identity_set" for compound in compounds)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
     return report["coverage"]
