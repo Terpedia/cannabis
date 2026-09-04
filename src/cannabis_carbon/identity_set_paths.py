@@ -294,10 +294,15 @@ SELECT e.product_terpene_id, e.precursor_terpene_id, e.reaction_id,
        e.source_uniprot_id, e.source_genbank_id, e.source_ec_number,
        e.claim_boundary, t.inchikey AS product_inchikey, t.inchi AS product_inchi,
        t.smiles AS product_smiles, t.molecular_formula AS product_molecular_formula,
-       t.carbon_count AS product_carbon_count, t.source_crossrefs AS product_source_crossrefs
+       t.carbon_count AS product_carbon_count, t.source_crossrefs AS product_source_crossrefs,
+       p.inchikey AS precursor_inchikey, p.inchi AS precursor_inchi,
+       p.smiles AS precursor_smiles, p.molecular_formula AS precursor_molecular_formula,
+       p.carbon_count AS precursor_carbon_count, p.source_crossrefs AS precursor_source_crossrefs
 FROM `terpedia-489015.terpedia_core.terpene_metabolic_map_edges_current` e
 JOIN `terpedia-489015.terpedia_core.terpene_identity_set` t
   ON t.terpene_id = e.product_terpene_id
+LEFT JOIN `terpedia-489015.terpedia_core.terpene_identity_set` p
+  ON p.terpene_id = e.precursor_terpene_id
 WHERE e.source_type = 'MARTS-DB'
   AND SUBSTR(t.inchikey, 1, 14) IN ({prefix_literals})
   AND t.inchikey NOT IN ({exact_literals})

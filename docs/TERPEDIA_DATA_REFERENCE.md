@@ -287,10 +287,12 @@ constitutes a demonstrated in-vivo pathway.
 ## Unified NetworkDB
 
 The Pages visualization loads the complete `docs/data/network-map.json` by
-default: 10,111 compounds, 1,107 reaction records, and 7,384 hypothesis edges.
+default: 10,148 compounds, 1,107 reaction records, 7,384 general hypothesis
+edges, and 2,495 distinct connectivity-candidate producer edges. The latter
+are rendered as a separate purple dashed layer and remain candidate-only.
 The compact CO₂-focused projection remains available at
 `docs/data/network-map-focus.json` (1,261 compounds, 65 reaction records, and
-3,450 hypothesis edges) and through `?full=0`; the browser fallback graph is
+3,450 general hypothesis edges) and through `?full=0`; the browser fallback graph is
 not the published map. Selecting a compound in the map now reports how many of its carbon atoms
 have explicit serialized CO₂ paths and the maximum number of reaction steps;
 the corresponding atom-by-atom chains remain in the downloadable audit.
@@ -327,6 +329,11 @@ snapshot contains 246 exact matches. Connectivity-only alternatives are
 retained separately in `terpedia_identity_set_candidates` and are never
 merged into exact identity. This table is an identity resource, not evidence
 of endogenous Cannabis biosynthesis or pathway direction.
+The NetworkDB field `identity_candidate_upstream_connections` adds 2,495
+source-linked producer hypotheses generated from the 2,463-row MARTS-DB queue;
+multiple CannabisDB candidates are retained when one connectivity prefix maps
+to more than one compound. These edges are intentionally excluded from the
+balanced reaction and CO₂-lineage counts.
 When available, each CannabisDB record also carries the exact-InChIKey PubChem
 resolution status and CID/structure properties; unresolved PubChem queries are
 retained as explicit negatives rather than being treated as missing data.

@@ -24,6 +24,31 @@ def test_networkdb_contains_all_source_records(tmp_path):
     assert result["reactions"][0]["carbon_mapping"]["lineage_edge_counts"] == {"inferred": 0, "candidate": 0}
 
 
+def test_networkdb_preserves_identity_candidate_upstream_layer(tmp_path):
+    network_path = tmp_path / "network.json.gz"
+    with gzip.open(network_path, "wt") as handle:
+        json.dump({"entities": [], "statements": []}, handle)
+    compounds_path = tmp_path / "compounds.json"
+    compounds_path.write_text(json.dumps({"compounds": [{"id": "CDB1", "label": "Candidate product", "smiles": "CCC"}]}))
+    crosswalk_path = tmp_path / "crosswalk.json"
+    crosswalk_path.write_text(json.dumps({"matches": [], "ambiguous": 0, "unmatched": 1}))
+    upstream_path = tmp_path / "upstream.json"
+    upstream_path.write_text(json.dumps({"rows": [{
+        "precursor_terpene_id": "T1", "precursor_smiles": "CC",
+        "precursor_molecular_formula": "C2H6", "precursor_carbon_count": 2,
+        "reaction_id": "MARTS:1", "source_url": "https://example.test",
+        "source_uniprot_id": "P12345", "reaction_smarts": "CC>>CCC",
+        "candidate_cannabisdb_ids": ["CDB1"],
+        "product_terpene_id": "T2", "claim_boundary": "hypothesis",
+    }]}))
+    output = tmp_path / "networkdb.json"
+    build_networkdb(network_path, compounds_path, crosswalk_path, output, identity_set_connectivity_upstream_path=upstream_path)
+    result = json.loads(output.read_text())
+    assert result["coverage"]["terpedia_identity_set_connectivity_upstream_connections"] == 1
+    assert result["identity_candidate_upstream_connections"][0]["status"] == "candidate"
+    assert result["compounds"][-1]["id"] == "terpedia:identity-set-candidate:T1"
+
+
 def test_networkdb_reads_object_reaction_enzyme_associations(tmp_path):
     network_path = tmp_path / "network.json.gz"
     network = {"entities": [
