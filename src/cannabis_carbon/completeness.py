@@ -11,7 +11,7 @@ from .terpedia import load_network
 _SPECIALTY_NAME = re.compile(r"cannab|tetrahydrocannabin|cannabidiol|cannabiger|cannabichrom|cannabinol|cannabicycl|cannabielso|cannabifuran|cannabitriol|cannabid|cannabivarin|cannabistilbene|cannabisativine", re.IGNORECASE)
 
 
-def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None, crosswalk_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None, hypotheses_path: Path | None = None, pubchem_path: Path | None = None, networkdb_path: Path | None = None) -> dict:
+def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None, crosswalk_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None, hypotheses_path: Path | None = None, pubchem_path: Path | None = None, networkdb_path: Path | None = None, hypothesis_lineage_path: Path | None = None) -> dict:
     network = load_network(network_path)
     entities = {e["id"]: e for e in network["entities"]}
     metabolites = {i for i, e in entities.items() if e.get("type") == "metabolite"}
@@ -109,5 +109,16 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
             "hypothesis_product_inventory": networkdb.get("coverage", {}).get("hypothetical_product_inventory", 0),
             "missing_substrate_nodes": networkdb.get("coverage", {}).get("hypothetical_missing_substrate_nodes", 0),
             "claim_boundary": "Hypothesis-layer counts are separate from balanced reaction and CO2 lineage metrics; they represent source-linked candidates and unresolved structures, not confirmed Cannabis metabolism.",
+        }
+    if hypothesis_lineage_path and hypothesis_lineage_path.exists():
+        hypothesis_lineage = json.loads(hypothesis_lineage_path.read_text())
+        result.setdefault("hypothesis_layer", {})["candidate_lineage"] = {
+            "source": str(hypothesis_lineage_path),
+            "seed_core_reachable_compounds": hypothesis_lineage.get("seed_core_reachable_compounds", 0),
+            "candidate_edges_traversed": hypothesis_lineage.get("candidate_edges_traversed", 0),
+            "candidate_reachable_entities": hypothesis_lineage.get("candidate_reachable_entities", 0),
+            "target_summary": hypothesis_lineage.get("target_summary", {}),
+            "blocked_unresolved_hypothesis_edges": hypothesis_lineage.get("blocked_unresolved_hypothesis_edges", {}),
+            "claim_boundary": hypothesis_lineage.get("claim_boundary"),
         }
     return result

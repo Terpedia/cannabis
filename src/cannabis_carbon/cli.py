@@ -19,6 +19,7 @@ from .crosswalk import build_crosswalk
 from .balance import audit_balances
 from .hypothesis_balance import audit_hypothesis_balances
 from .hypothesis_mapping import build_hypothesis_mapping
+from .hypothesis_lineage import build_hypothesis_lineage
 from .lineage import build_carbon_lineage
 from .networkdb import build_networkdb, build_map_snapshot
 from .genome import build_genome_search
@@ -107,6 +108,7 @@ def main() -> None:
     p_complete.add_argument("--hypotheses", type=Path, default=Path("data/reports/candidate-work-queue.json"))
     p_complete.add_argument("--pubchem", type=Path, default=Path("data/reports/pubchem-resolution.json"))
     p_complete.add_argument("--networkdb", type=Path, default=Path("docs/data/networkdb.json"))
+    p_complete.add_argument("--hypothesis-lineage", type=Path, default=Path("data/reports/hypothesis-lineage.json"))
     p_complete.add_argument("--out", type=Path, default=Path("data/reports/completeness.json"))
     p_queue = sub.add_parser("candidate-queue")
     p_queue.add_argument("source", type=Path)
@@ -166,6 +168,9 @@ def main() -> None:
     p_map_snapshot.add_argument("--lineage", type=Path, default=Path("data/reports/carbon-lineage.json"))
     p_map_snapshot.add_argument("--focus-out", type=Path)
     p_map_snapshot.add_argument("--out", type=Path, default=Path("docs/data/network-map.json"))
+    p_hyp_lineage = sub.add_parser("hypothesis-lineage")
+    p_hyp_lineage.add_argument("networkdb", type=Path, default=Path("docs/data/networkdb.json"), nargs="?")
+    p_hyp_lineage.add_argument("--out", type=Path, default=Path("data/reports/hypothesis-lineage.json"))
     p_genome = sub.add_parser("genome-search")
     p_genome.add_argument("queue", type=Path)
     p_genome.add_argument("fasta", type=Path)
@@ -228,7 +233,7 @@ def main() -> None:
     elif args.command == "map-reactions":
         print(json.dumps(build_reaction_report(args.source, args.out), indent=2))
     elif args.command == "completeness":
-        result = compute_completeness(args.network, args.compounds, args.mapping, args.crosswalk, args.lineage, args.atom_audit, args.hypotheses, args.pubchem, args.networkdb)
+        result = compute_completeness(args.network, args.compounds, args.mapping, args.crosswalk, args.lineage, args.atom_audit, args.hypotheses, args.pubchem, args.networkdb, args.hypothesis_lineage)
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(json.dumps(result, indent=2) + "\n")
         print(json.dumps(result, indent=2))
@@ -253,6 +258,8 @@ def main() -> None:
         print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out, args.hypotheses, args.genome_search, args.genome_fasta, args.mapping, args.lineage, args.atom_audit, args.pubchem, args.identity_set, args.hypothetical_connections, args.hypothetical_reactions, args.hypothesis_enzyme_evidence, args.hypothesis_enzyme_catalog, args.hypothesis_balance), indent=2))
     elif args.command == "map-snapshot":
         print(json.dumps(build_map_snapshot(args.networkdb, args.out, args.lineage, args.focus_out), indent=2))
+    elif args.command == "hypothesis-lineage":
+        print(json.dumps(build_hypothesis_lineage(args.networkdb, args.out), indent=2))
     elif args.command == "genome-search":
         print(json.dumps(build_genome_search(args.queue, args.fasta, args.out, args.diamond_hits, args.reference_tsv), indent=2))
     elif args.command == "specialty-inventory":

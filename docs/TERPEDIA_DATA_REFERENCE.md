@@ -260,6 +260,10 @@ projection, including all hypothesis edges, remains available at
 map. Selecting a compound in the map now reports how many of its carbon atoms
 have explicit serialized CO₂ paths and the maximum number of reaction steps;
 the corresponding atom-by-atom chains remain in the downloadable audit.
+The separate `docs/data/hypothesis-lineage.json` artifact traverses only
+candidate hypothesis edges from the core CO₂-reachable set. It currently adds
+17 provisional CannabisDB targets (387 carbon atoms); 5,348 unresolved edges
+remain excluded because their substrate structures are missing.
 
 The complete CannabisDB XML export is preserved at
 `data/terpedia/cannabisdb-compounds.xml.gz` with its retrieval URL and SHA-256
