@@ -26,7 +26,12 @@
           "exact_cannabisdb_matches": 246,
           "connectivity_candidate_cannabisdb_compounds": 104,
           "connectivity_candidate_records": 437,
-          "match_policy": "Full InChIKey is exact; first InChIKey block is candidate-only and preserves stereochemical alternatives."
+          "match_policy": "Full InChIKey is exact; first InChIKey block is candidate-only and preserves stereochemical alternatives.",
+          "connectivity_upstream_hypothesis_snapshot": "data/reports/terpene-identity-set-connectivity-upstream.json",
+          "connectivity_upstream_hypothesis_edges": 2463,
+          "connectivity_upstream_hypothesis_products": 74,
+          "connectivity_upstream_hypothesis_reactions": 31,
+          "connectivity_upstream_source_filter": "MARTS-DB directly characterized records"
         },
         {
           "table": "terpedia-489015.terpedia_core.terpene_biotransformation_hypothetical_connections_current_v2",

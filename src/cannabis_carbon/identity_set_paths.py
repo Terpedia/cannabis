@@ -258,3 +258,59 @@ LEFT JOIN identity AS product_identity
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
     return {key: report[key] for key in ("cannabisdb_compounds", "identity_set_target_count", "edge_count", "precursor_identity_count", "reaction_count")}
+
+
+def refresh_identity_set_connectivity_upstream(compounds_path: Path, identity_set_path: Path, output: Path, bq_binary: str = "bq") -> dict:
+    """Extract directly characterized upstream edges for connectivity candidates.
+
+    Candidate identity rows share only the first InChIKey block with CannabisDB
+    and therefore remain a hypothesis layer. Restricting this queue to MARTS
+    records keeps the first producer search tied to source-linked characterized
+    enzyme records instead of importing the much larger Rhea-only neighborhood.
+    """
+    catalog = json.loads(compounds_path.read_text())
+    compounds = catalog.get("compounds", catalog if isinstance(catalog, list) else [])
+    by_prefix = {}
+    exact_keys = set()
+    for compound in compounds:
+        key = compound.get("inchikey")
+        if not key:
+            continue
+        by_prefix.setdefault(key.split("-")[0], []).append(compound)
+        exact_keys.add(key)
+    identity_report = json.loads(identity_set_path.read_text())
+    prefixes = sorted({record["cannabisdb_inchikey"].split("-")[0] for record in identity_report.get("candidate_records", [])})
+    if not prefixes:
+        result = {"schema": "cannabis-carbon.terpene-identity-set-connectivity-upstream.v1", "edge_count": 0, "rows": [], "claim_boundary": "No candidate identity prefixes were available."}
+        output.write_text(json.dumps(result, separators=(",", ":")) + "\n")
+        return {"edge_count": 0, "product_count": 0}
+    prefix_literals = ",".join("'" + prefix.replace("'", "\\'") + "'" for prefix in prefixes)
+    exact_literals = ",".join("'" + key.replace("'", "\\'") + "'" for key in sorted(exact_keys))
+    query = f"""
+SELECT e.product_terpene_id, e.precursor_terpene_id, e.reaction_id,
+       e.source_type, e.evidence_type, e.structure_match_mode,
+       e.reaction_smarts, e.required_substrate_structures_json,
+       e.missing_corpus_substrates_json, e.source_dataset, e.source_url,
+       e.source_uniprot_id, e.source_genbank_id, e.source_ec_number,
+       e.claim_boundary, t.inchikey AS product_inchikey, t.inchi AS product_inchi,
+       t.smiles AS product_smiles, t.molecular_formula AS product_molecular_formula,
+       t.carbon_count AS product_carbon_count, t.source_crossrefs AS product_source_crossrefs
+FROM `terpedia-489015.terpedia_core.terpene_metabolic_map_edges_current` e
+JOIN `terpedia-489015.terpedia_core.terpene_identity_set` t
+  ON t.terpene_id = e.product_terpene_id
+WHERE e.source_type = 'MARTS-DB'
+  AND SUBSTR(t.inchikey, 1, 14) IN ({prefix_literals})
+  AND t.inchikey NOT IN ({exact_literals})
+"""
+    completed = subprocess.run([bq_binary, "query", "--project_id=terpedia-489015", "--use_legacy_sql=false", "--format=prettyjson", "--max_rows=20000", query], check=True, capture_output=True, text=True)
+    raw_rows = json.loads(completed.stdout)
+    rows = []
+    for row in raw_rows:
+        prefix = (row.get("product_inchikey") or "").split("-")[0]
+        candidates = by_prefix.get(prefix, [])
+        rows.append({**row, "product_identity_match_status": "candidate-connectivity-inchikey", "candidate_cannabisdb_ids": sorted({c["id"] for c in candidates}), "candidate_cannabisdb_names": sorted({c.get("label") for c in candidates if c.get("label")}), "candidate_carbon_counts": sorted({c.get("carbon_atom_count") for c in candidates}), "claim_boundary": "Directly characterized Terpedia/MARTS edge joined to a connectivity-only CannabisDB identity candidate; this is a testable producer hypothesis, not exact identity or proof of endogenous Cannabis biosynthesis."})
+    rows.sort(key=lambda row: (row.get("product_terpene_id") or "", row.get("reaction_id") or "", row.get("precursor_terpene_id") or ""))
+    result = {"schema": "cannabis-carbon.terpene-identity-set-connectivity-upstream.v1", "source_table": EDGE_TABLE, "identity_set_table": SOURCE_TABLE, "source_identity_candidates": str(identity_set_path), "retrieved_at": date.today().isoformat(), "method": "MARTS-DB edges whose product identity shares only the first InChIKey block with a CannabisDB compound; all candidate CannabisDB IDs are retained.", "candidate_prefix_count": len(prefixes), "edge_count": len(rows), "product_count": len({row.get("product_terpene_id") for row in rows}), "reaction_count": len({row.get("reaction_id") for row in rows if row.get("reaction_id")}), "rows": rows, "claim_boundary": "These are source-linked directly characterized producer hypotheses for connectivity-only identity candidates. They do not establish stereochemical identity, reaction direction in Cannabis, enzyme specificity, endogenous biosynthesis, isotope tracing, or CO2 carbon provenance."}
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(result, separators=(",", ":")) + "\n")
+    return {"edge_count": result["edge_count"], "product_count": result["product_count"], "reaction_count": result["reaction_count"]}
