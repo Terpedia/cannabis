@@ -35,6 +35,7 @@
             "normalized_exact_edge_matches": 193,
             "new_edges_after_normalization": 0
           },
+          "identity_set_pathway_gap_queue": "data/reports/identity-set-pathway-gap-queue.json",
           "claim_boundary": "Source-linked candidate edges; not confirmed Cannabis biosynthesis or enzyme activity."
         },
         {
