@@ -262,6 +262,10 @@ independent of enzyme status and are exposed as a separate Cytoscape filter.
 Each reaction also records its inferred and candidate lineage-edge counts and
 the source report used to derive them. The Pages Cytoscape view exposes
 `non_enzymatic` as a separate evidence-status filter.
+The lineage report also carries a direction-agnostic structural sensitivity
+run. It is an upper bound for prioritizing reaction-direction curation, not a
+physiological route: the directed result remains the authoritative pathway
+view, and the reversible run never upgrades evidence status.
 It also carries 2,264 candidate hypotheses and 4,063 deduplicated candidate
 protein records; 946 reaction records have one or more attached candidate
 proteins. All 4,063 candidate proteins are present in the 30,304-protein

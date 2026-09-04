@@ -170,6 +170,23 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
     # through candidate edges, but that downstream occurrence must not demote
     # the seed's own identity from supported to candidate.
     candidate_reachable.difference_update(co2_atoms)
+    # Structural sensitivity run: allow every mapped carbon edge in both
+    # directions, but keep it separate from the directed physiological result.
+    # This is an upper bound for direction-curation work, not a flux claim.
+    reversible_forward = defaultdict(set)
+    for edge in edges:
+        source = (edge["reactant_entity_id"], edge["reactant_atom"])
+        target = (edge["product_entity_id"], edge["product_atom"])
+        reversible_forward[source].add((target, edge["status"]))
+        reversible_forward[target].add((source, edge["status"]))
+    reversible_reachable = set(co2_atoms)
+    reversible_queue = deque(co2_atoms)
+    while reversible_queue:
+        node = reversible_queue.popleft()
+        for child, _edge_status in reversible_forward[node]:
+            if child not in reversible_reachable:
+                reversible_reachable.add(child)
+                reversible_queue.append(child)
 
     carbon_reactant_entities = set()
     for reaction in (e for e in network["entities"] if e.get("type") == "biochemical_reaction"):
@@ -191,7 +208,7 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
         if match is None:
             identity_candidates = candidate_by_cdb.get(compound["id"], [])
             if len(identity_candidates) != 1:
-                targets.append({"cannabisdb_id": compound["id"], "status": "unresolved", "reason": "ambiguous-connectivity-identity" if len(identity_candidates) > 1 else "no-terpedia-identity", "identity_candidates": [{"terpedia_id": row["terpedia_id"], "label": row.get("terpedia_label"), "method": row.get("method")} for row in identity_candidates], "carbon_atom_count": compound["carbon_atom_count"], "reachable_carbon_atoms": 0})
+                targets.append({"cannabisdb_id": compound["id"], "status": "unresolved", "reason": "ambiguous-connectivity-identity" if len(identity_candidates) > 1 else "no-terpedia-identity", "identity_candidates": [{"terpedia_id": row["terpedia_id"], "label": row.get("terpedia_label"), "method": row.get("method")} for row in identity_candidates], "carbon_atom_count": compound["carbon_atom_count"], "reachable_carbon_atoms": 0, "reversible_upper_bound_reachable_carbon_atoms": 0})
                 continue
             match = identity_candidates[0]
             identity_status = "candidate"
@@ -210,8 +227,9 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
             status, reason = "candidate", "partial-entity-product-carbon-reachability"
         else:
             status, reason = "unresolved", "entity-not-reachable-from-CO2-through-inferred-carbon-edges"
-        targets.append({"cannabisdb_id": compound["id"], "terpedia_id": entity_id, "identity_status": identity_status, "status": status, "reason": reason, "carbon_atom_count": compound["carbon_atom_count"], "entity_product_carbon_atoms": len(product_nodes), "reachable_carbon_atoms": reachable_count})
-    report = {"schema": "cannabis-carbon.carbon-lineage.v1", "source": str(network_path), "direction_overrides": directions, "direction_conflicts": direction_conflicts, "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2.", "co2_entity_id": co2_id, "resolved_carbon_edges": len(edges), "inferred_carbon_edges": sum(e["status"] == "inferred" for e in edges), "candidate_carbon_edges": sum(e["status"] == "candidate" for e in edges), "reachable_carbon_nodes": len(reachable), "reachable_carbon_entity_ids": sorted({node[0] for node in reachable}), "external_carbon_input_entity_count": len(external_carbon_inputs), "external_carbon_input_entity_ids": external_carbon_inputs, "edge_block_counts": dict(edge_blocks), "target_summary": {status: sum(t["status"] == status for t in targets) for status in ("supported", "candidate", "unresolved")}, "carbon_edges": edges, "targets": targets, "claim_boundary": "Reachability is based on one-to-one structural RDKit mappings and exact identity crosswalks. It is not isotope tracing, enzyme validation, or proof of in-vivo biosynthesis; all unresolved reasons are retained."}
+        reversible_count = len(product_nodes & reversible_reachable)
+        targets.append({"cannabisdb_id": compound["id"], "terpedia_id": entity_id, "identity_status": identity_status, "status": status, "reason": reason, "carbon_atom_count": compound["carbon_atom_count"], "entity_product_carbon_atoms": len(product_nodes), "reachable_carbon_atoms": reachable_count, "reversible_upper_bound_reachable_carbon_atoms": reversible_count})
+    report = {"schema": "cannabis-carbon.carbon-lineage.v1", "source": str(network_path), "direction_overrides": directions, "direction_conflicts": direction_conflicts, "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2.", "co2_entity_id": co2_id, "resolved_carbon_edges": len(edges), "inferred_carbon_edges": sum(e["status"] == "inferred" for e in edges), "candidate_carbon_edges": sum(e["status"] == "candidate" for e in edges), "reachable_carbon_nodes": len(reachable), "reversible_upper_bound_reachable_carbon_nodes": len(reversible_reachable), "reachable_carbon_entity_ids": sorted({node[0] for node in reachable}), "reversible_upper_bound_reachable_carbon_entity_ids": sorted({node[0] for node in reversible_reachable}), "external_carbon_input_entity_count": len(external_carbon_inputs), "external_carbon_input_entity_ids": external_carbon_inputs, "edge_block_counts": dict(edge_blocks), "target_summary": {status: sum(t["status"] == status for t in targets) for status in ("supported", "candidate", "unresolved")}, "reversible_upper_bound_target_summary": {"fully_reachable": sum(t.get("reversible_upper_bound_reachable_carbon_atoms", 0) == t.get("entity_product_carbon_atoms", -1) and t.get("entity_product_carbon_atoms", 0) > 0 for t in targets), "partially_reachable": sum(0 < t.get("reversible_upper_bound_reachable_carbon_atoms", 0) < t.get("entity_product_carbon_atoms", 0) for t in targets), "not_reachable": sum(t.get("reversible_upper_bound_reachable_carbon_atoms", 0) == 0 for t in targets)}, "carbon_edges": edges, "targets": targets, "claim_boundary": "Reachability is based on one-to-one structural RDKit mappings and exact identity crosswalks. The reversible upper bound ignores reaction direction only as a structural sensitivity analysis; neither result is isotope tracing, enzyme validation, or proof of in-vivo biosynthesis; all unresolved reasons are retained."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
     return {"resolved_carbon_edges": len(edges), "inferred_carbon_edges": sum(e["status"] == "inferred" for e in edges), "candidate_carbon_edges": sum(e["status"] == "candidate" for e in edges), "reachable_carbon_nodes": len(reachable), "target_summary": report["target_summary"]}
