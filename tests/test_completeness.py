@@ -58,6 +58,20 @@ def test_completeness_can_include_co2_lineage(tmp_path):
     assert result["coverage"]["co2_lineage"]["target_summary"]["supported"] == 1
 
 
+def test_completeness_distinguishes_nonexact_from_unresolved_identity(tmp_path):
+    network = {"entities": [], "statements": []}
+    network_path = tmp_path / "network.json.gz"
+    with gzip.open(network_path, "wt") as handle: json.dump(network, handle)
+    compounds_path = tmp_path / "compounds.json"
+    compounds_path.write_text(json.dumps({"compounds": [{"id": "CDB1", "carbon_atom_count": 1}, {"id": "CDB2", "carbon_atom_count": 1}]}))
+    crosswalk = tmp_path / "crosswalk.json"
+    crosswalk.write_text(json.dumps({"matches": [{"cannabisdb": {"cannabisdb_id": "CDB1"}}], "ambiguous": 0, "unmatched": 1, "cannabisdb_unmatched": 1, "connectivity_candidate_matches": 1, "connectivity_candidate_ambiguous": 0, "tautomer_candidate_matches": 1, "tautomer_candidate_ambiguous": 0}))
+    result = compute_completeness(network_path, compounds_path, crosswalk_path=crosswalk)
+    assert result["cannabisdb"]["compounds_without_exact_terpedia_identity"] == 1
+    assert result["cannabisdb"]["compounds_without_any_identity_resolution"] == 1
+    assert result["cannabisdb"]["tautomer_candidate_identity_links"] == 1
+
+
 def test_completeness_splits_unannotated_reactions_by_candidate_proteins(tmp_path):
     network = {"entities": [
         {"id": "m:a", "type": "metabolite"}, {"id": "m:b", "type": "metabolite"},
