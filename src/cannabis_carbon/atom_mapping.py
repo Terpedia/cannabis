@@ -301,8 +301,17 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
         existing = [mapping for mapping in mappings if mapping.get("product_index") == pi and mapping.get("product_atom") == product_atom]
         if any(mapping.get("status") == "inferred" for mapping in existing):
             continue
+        existing_choices = []
+        for mapping in existing:
+            if mapping.get("reactant_index") is not None and mapping.get("reactant_atom") is not None:
+                existing_choices.append((mapping["reactant_index"], mapping["reactant_atom"]))
+            existing_choices.extend(
+                (alternative["reactant_index"], alternative["reactant_atom"])
+                for alternative in mapping.get("alternatives", [])
+                if alternative.get("reactant_index") is not None and alternative.get("reactant_atom") is not None
+            )
         mappings = [mapping for mapping in mappings if not (mapping.get("product_index") == pi and mapping.get("product_atom") == product_atom)]
-        alternatives = [{"reactant_index": ri, "reactant_atom": ra} for ri, ra in sorted(set(choices))]
+        alternatives = [{"reactant_index": ri, "reactant_atom": ra} for ri, ra in sorted(set(choices) | set(existing_choices))]
         mappings.append({"product_index": pi, "product_atom": product_atom, "method": "rdkit-equivalent-carbon-skeleton-candidate", "status": "candidate", "alternatives": alternatives})
         skeleton_product_atoms.add((pi, product_atom))
 

@@ -253,8 +253,8 @@ constitutes a demonstrated in-vivo pathway.
 ## Unified NetworkDB
 
 The Pages visualization loads `docs/data/network-map-focus.json` by default,
-a compact view of 1,524 compounds: 664 CO₂-reachable compounds plus one-hop
-hypothesis context, 79 reaction records, and 3,859 hypothesis edges. The
+a compact view of 1,255 compounds: 196 CO₂-reachable compounds plus one-hop
+hypothesis context, 65 reaction records, and 3,438 hypothesis edges. The
 complete 10,111-compound/1,107-reaction
 projection, including all hypothesis edges, remains available at
 `docs/data/network-map.json`; the browser fallback graph is not the published
@@ -342,7 +342,7 @@ reaction set contains 2,264 records: 1,726 candidate records and 538 blocked
 records; 1,347 are attached to a working reaction, including eight explicit
 non-enzymatic conversion hypotheses. It also contains
 6,220 target-level hypotheses, one for every CannabisDB compound, including
-5,978 unresolved CO₂-lineage targets. TKS and OAC have dedicated coupled or
+6,024 unresolved CO₂-lineage targets. TKS and OAC have dedicated coupled or
 substrate-specificity assay plans in addition to recombinant-enzyme and
 plant-validation steps. Target records retain CannabisDB identity fields and a
 review priority: 88 explicit cannabinoid/Cannabis specialty records are high
