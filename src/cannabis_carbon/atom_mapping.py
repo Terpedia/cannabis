@@ -142,9 +142,6 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
     used_reactant_carbons = set()
     product_carbons = [(pi, atom) for pi, product in enumerate(products) for atom in product.GetAtoms() if atom.GetAtomicNum() == 6]
     co2_reactant_indices = [ri for ri, molecule in enumerate(reactants) if Chem.MolToSmiles(molecule) == "O=C=O"]
-    full_carbon_mcs = _full_carbon_mcs_mapping(reactants, products)
-    if full_carbon_mcs is not None and (len(reactants) > 1 or len(products) > 1):
-        return {"status": "inferred", "mappings": full_carbon_mcs, "unresolved_product_carbons": [], "product_carbon_atom_count": len(product_carbons), "reactant_count": len(reactants), "product_count": len(products)}
     # A unique whole-product substructure match is stronger than repeated
     # local carbon signatures for cleavage/decarboxylation-like reactions.
     # It conserves only atoms actually present in the product and does not
@@ -154,6 +151,13 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
         if len(matches) == 1:
             mappings = [{"product_index": 0, "product_atom": atom.GetIdx(), "reactant_index": 0, "reactant_atom": matches[0][atom.GetIdx()], "method": "rdkit-unique-product-substructure", "status": "inferred"} for _, atom in product_carbons]
             return {"status": "inferred", "mappings": mappings, "unresolved_product_carbons": [], "product_carbon_atom_count": len(product_carbons), "reactant_count": len(reactants), "product_count": len(products)}
+    # If no exact retained-product match exists, accept a complete, unique
+    # full-carbon MCS even for simple one-to-one reactions. Equal carbon
+    # counts and uniqueness prevent assigning provenance across a carbon gain
+    # or an interchangeable structural match.
+    full_carbon_mcs = _full_carbon_mcs_mapping(reactants, products)
+    if full_carbon_mcs is not None:
+        return {"status": "inferred", "mappings": full_carbon_mcs, "unresolved_product_carbons": [], "product_carbon_atom_count": len(product_carbons), "reactant_count": len(reactants), "product_count": len(products)}
     # Decarboxylation has one additional product, CO2.  A unique match of the
     # organic product maps its retained carbons; if exactly one reactant
     # carbon remains, that carbon is the released CO2 carbon.

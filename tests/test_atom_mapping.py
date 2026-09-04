@@ -27,7 +27,7 @@ def test_unique_mcs_resolves_a_carbon_rearrangement():
     )
     assert result["status"] == "inferred"
     assert all(mapping["status"] == "inferred" for mapping in result["mappings"])
-    assert any(mapping["method"] == "rdkit-mcs-carbon-conservation-relaxed-bond" for mapping in result["mappings"])
+    assert any(mapping["method"] in ("rdkit-mcs-carbon-conservation-relaxed-bond", "rdkit-full-carbon-mcs-conservation") for mapping in result["mappings"])
 
 
 def test_unique_product_substructure_maps_retained_carbons():
