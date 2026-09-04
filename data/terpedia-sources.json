@@ -29,6 +29,12 @@
           "table": "terpedia-489015.terpedia_core.terpene_biotransformation_hypothetical_connections_current_v2",
           "snapshot": "data/terpedia/terpene-biohypothetical-connections-current-v2.json",
           "live_row_count_verified": 193,
+          "reconciled_to_hypothesis_layer": {
+            "source": "terpedia-489015.terpedia_core.terpene_hypothetical_forward_connections",
+            "source_snapshot": "data/terpedia/hypothetical-forward-connections.json",
+            "normalized_exact_edge_matches": 193,
+            "new_edges_after_normalization": 0
+          },
           "claim_boundary": "Source-linked candidate edges; not confirmed Cannabis biosynthesis or enzyme activity."
         }
       ]
