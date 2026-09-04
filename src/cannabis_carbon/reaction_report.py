@@ -4,7 +4,7 @@ import gzip
 import json
 from pathlib import Path
 
-from .atom_mapping import map_reaction_smiles
+from .atom_mapping import apply_reaction_specific_candidate_mapping, map_reaction_smiles
 from .terpedia import load_network
 
 
@@ -14,7 +14,7 @@ def build_reaction_report(source: Path, output: Path) -> dict:
     rows = []
     for reaction in reactions:
         attrs = reaction.get("attributes", {})
-        mapping = map_reaction_smiles(attrs.get("reactionSmiles"))
+        mapping = apply_reaction_specific_candidate_mapping(reaction["id"], attrs.get("reactionSmiles"), map_reaction_smiles(attrs.get("reactionSmiles")))
         rows.append({"reaction_id": reaction["id"], "rhea_url": reaction.get("url"), "equation": attrs.get("equation"), "reaction_smiles": attrs.get("reactionSmiles"), **mapping})
     mapped = sum(sum(m["status"] == "inferred" for m in row["mappings"]) for row in rows)
     ambiguous = sum(sum(m["status"] == "ambiguous" for m in row["mappings"]) for row in rows)

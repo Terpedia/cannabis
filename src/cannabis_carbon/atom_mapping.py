@@ -470,3 +470,36 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
     else:
         status = "inferred"
     return {"status": status, "mappings": mappings, "unresolved_product_carbons": unresolved, "product_carbon_atom_count": sum(atom.GetAtomicNum() == 6 for product in products for atom in product.GetAtoms()), "reactant_count": len(reactants), "product_count": len(products)}
+
+
+def apply_reaction_specific_candidate_mapping(reaction_id: str, reaction_smiles: str | None, mapping: dict) -> dict:
+    """Add a narrowly scoped candidate mapping for the Cannabis OAC assembly.
+
+    The generic mapper intentionally rejects several cyclization correspondences.
+    For tetraketide-CoA → olivetolate, bounded pairwise carbon MCS identifies
+    seven unique retained product-carbon candidates. They remain candidates,
+    not inferred or confirmed mechanistic assignments.
+    """
+    if reaction_id != "cannabis:reaction:tetraketide-coa-to-olivetolate" or not reaction_smiles or ">>" not in reaction_smiles:
+        return mapping
+    left, right = reaction_smiles.split(">>", 1)
+    reactants, products = _molecules(left), _molecules(right)
+    for row in mapping.get("mappings", []):
+        if row.get("status") != "unresolved" or row.get("product_index") != 0:
+            continue
+        choices = set()
+        product = products[row["product_index"]]
+        for ri, reactant in enumerate(reactants):
+            for _, atom in _mcs_carbon_candidates_cached(Chem.MolToSmiles(reactant), Chem.MolToSmiles(product), row["product_atom"]):
+                choices.add((ri, atom))
+        if len(choices) != 1:
+            continue
+        ri, atom = next(iter(choices))
+        row.update({"reactant_index": ri, "reactant_atom": atom, "status": "candidate", "method": "rdkit-targeted-pairwise-mcs-candidate", "alternatives": [{"reactant_index": ri, "reactant_atom": atom}]})
+        row.pop("reason", None)
+    unresolved = [{"product_index": row["product_index"], "product_atom": row["product_atom"], "status": row["status"], "reason": row.get("reason")} for row in mapping.get("mappings", []) if row.get("status") not in ("inferred", "candidate")]
+    mapping["unresolved_product_carbons"] = unresolved
+    mapping["status"] = "unresolved" if unresolved else "candidate" if any(row.get("status") == "candidate" for row in mapping.get("mappings", [])) else mapping.get("status", "inferred")
+    if any(row.get("method") == "rdkit-targeted-pairwise-mcs-candidate" for row in mapping.get("mappings", [])):
+        mapping["targeted_mapping"] = "rdkit-targeted-pairwise-mcs-candidate"
+    return mapping
