@@ -314,7 +314,10 @@ plant-validation steps. Target records retain CannabisDB identity fields and a
 review priority: 88 explicit cannabinoid/Cannabis specialty records are high
 priority, 152 exact-identity records are medium priority, and the remainder
 stay normal priority until identity or route evidence improves. These are
-future tests, not claims of confirmed activity.
+future tests, not claims of confirmed activity. Each target hypothesis also
+carries total, reachable, unresolved, and reversible-upper-bound carbon counts
+plus the lineage blocker, so the assay queue can be ranked by missing carbon
+rather than compound count alone.
 
 ## Phase 1 balance gate
 

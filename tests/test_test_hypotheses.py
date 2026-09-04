@@ -23,6 +23,8 @@ def test_test_hypotheses_include_assay_plan(tmp_path):
     assert summary["metabolite_targets_total"] == 1
     assert report["metabolite_target_hypotheses"][0]["proposed_tests"][2]["step"] == "13CO2_lineage_validation"
     assert report["metabolite_target_hypotheses"][0]["label"] == "Test cannabinoid"
+    assert report["metabolite_target_hypotheses"][0]["unresolved_carbon_atoms"] == 2
+    assert report["metabolite_target_hypotheses"][0]["carbon_lineage_blocker"] == "no-terpedia-identity"
 
 
 def test_test_hypotheses_include_non_enzymatic_conversion_plan(tmp_path):
