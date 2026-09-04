@@ -37,6 +37,9 @@
           ,"candidate_expansion_edges": 32904
           ,"candidate_expansion_products": 729
           ,"candidate_expansion_precursors": 1032
+          ,"candidate_expansion_bridges": 15266
+          ,"candidate_expansion_bridges_touching_directed_co2": 0
+          ,"candidate_expansion_bridges_touching_reversible_co2": 2308
         },
         {
           "table": "terpedia-489015.terpedia_core.terpene_biotransformation_hypothetical_connections_current_v2",

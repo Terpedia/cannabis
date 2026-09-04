@@ -343,7 +343,10 @@ The bridge audit `data/terpene-identity-set-candidate-expansion-bridges.json`
 finds 15,266 structure-preserving links from this neighborhood to 117 product
 and 147 precursor identities matching Terpedia core structures. None currently
 touches the directed CO₂-reachable core, so these branches remain explicitly
-blocked at carbon-source connection.
+blocked at carbon-source connection. Under the separate all-reactions-reversible
+sensitivity run, 2,308 bridge records touch the reversible CO₂ upper bound; this
+identifies reaction-direction curation as a concrete next discriminator without
+claiming physiological reversibility.
 When available, each CannabisDB record also carries the exact-InChIKey PubChem
 resolution status and CID/structure properties; unresolved PubChem queries are
 retained as explicit negatives rather than being treated as missing data.
