@@ -184,7 +184,7 @@ come from ambiguous one-to-one RDKit mappings and pairwise MCS candidates for
 small multi-substrate reactions; they are visible for review but are not
 promoted to confirmed provenance. This uses 22 explicit Terpedia
 physiological direction assertions plus source-backed Rubisco and Calvin-cycle
-direction records. There are 397 carbon-containing reactant entities outside
+direction records. There are 390 carbon-containing reactant entities outside
 that lineage and therefore reported as external-carbon-source blockers. The
 current target summary is 1 supported, 241 candidate, and 5,978 unresolved
 CannabisDB compounds. The one supported target is the CannabisDB CO₂ record
@@ -196,10 +196,17 @@ missing CO₂-assimilation and/or structure-resolved links needed to establish
 the plant-wide carbon path; it is not evidence that Cannabis uses another
 carbon source.
 
+The completeness artifact now includes `co2_lineage.target_triage`: 5,810
+targets have no Terpedia identity, 168 have an exact or candidate identity but
+remain unresolved for CO₂ reachability, and 242 identity-resolved targets are
+already candidate or supported. Of the 88 specialty-name targets, 17 are
+candidate and 71 remain unresolved. This partitions the next work into identity
+resolution versus reaction/pathway reconstruction.
+
 The companion `data/reports/carbon-atom-audit.json` and published
 `docs/data/carbon-atom-audit.json` artifacts partition all **285,623**
-CannabisDB carbon atoms into **1 supported**, **1,287 candidate**, and
-**284,335 unresolved** atoms. Each group retains CannabisDB atom indices,
+CannabisDB carbon atoms into **1 supported**, **1,402 candidate**, and
+**284,220 unresolved** atoms. Each group retains CannabisDB atom indices,
 resolved Terpedia atom indices when available, reaction references, provenance
 URLs, and the blocking reason. The target atom indices are explicitly scoped to
 RDKit atom indices in each CannabisDB SMILES field and are not assumed to equal

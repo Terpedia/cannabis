@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 import json
+import re
 from collections import Counter
 from pathlib import Path
 
 from .terpedia import load_network
+
+
+_SPECIALTY_NAME = re.compile(r"cannab|tetrahydrocannabin|cannabidiol|cannabiger|cannabichrom|cannabinol|cannabicycl|cannabielso|cannabifuran|cannabitriol|cannabid|cannabivarin|cannabistilbene|cannabisativine", re.IGNORECASE)
 
 
 def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None, crosswalk_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None, hypotheses_path: Path | None = None) -> dict:
@@ -62,7 +66,21 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
         result["coverage"].update(mapped_carbon_atoms=mapped, unresolved_carbon_atoms=unresolved, reaction_product_carbon_atoms=mapping["carbon_counts"]["product_carbon_atoms"], reaction_mapping_coverage_percent=mapping["carbon_counts"]["mapping_coverage_percent"], reaction_mapping_status_counts=mapping["status_counts"])
     if lineage_path and lineage_path.exists():
         lineage = json.loads(lineage_path.read_text())
-        result["coverage"]["co2_lineage"] = {"target_summary": lineage["target_summary"], "reachable_carbon_nodes": lineage["reachable_carbon_nodes"], "resolved_carbon_edges": lineage["resolved_carbon_edges"], "inferred_carbon_edges": lineage["inferred_carbon_edges"], "candidate_carbon_edges": lineage["candidate_carbon_edges"], "external_carbon_input_entity_count": lineage["external_carbon_input_entity_count"], "carbon_source_policy": lineage["carbon_source_policy"]}
+        status_identity = Counter()
+        carbon_status = Counter()
+        specialty_status = Counter()
+        blocking_reasons = Counter()
+        compound_index = {c.get("id"): c for c in compounds}
+        for target in lineage.get("targets", []):
+            status = target.get("status", "unresolved")
+            identity = target.get("identity_status") or "unresolved"
+            status_identity[f"{status}:{identity}"] += 1
+            carbon_status[status] += target.get("carbon_atom_count", 0)
+            record = compound_index.get(target.get("cannabisdb_id"), {})
+            if any(_SPECIALTY_NAME.search(name or "") for name in [record.get("label", ""), *record.get("aliases", [])]):
+                specialty_status[status] += 1
+            blocking_reasons[target.get("reason") or "unspecified"] += 1
+        result["coverage"]["co2_lineage"] = {"target_summary": lineage["target_summary"], "reachable_carbon_nodes": lineage["reachable_carbon_nodes"], "resolved_carbon_edges": lineage["resolved_carbon_edges"], "inferred_carbon_edges": lineage["inferred_carbon_edges"], "candidate_carbon_edges": lineage["candidate_carbon_edges"], "external_carbon_input_entity_count": lineage["external_carbon_input_entity_count"], "carbon_source_policy": lineage["carbon_source_policy"], "target_triage": {"target_counts_by_status_and_identity": dict(sorted(status_identity.items())), "carbon_atoms_by_target_status": dict(sorted(carbon_status.items())), "specialty_target_counts_by_status": dict(sorted(specialty_status.items())), "blocking_reason_counts": dict(sorted(blocking_reasons.items()))}}
     if atom_audit_path and atom_audit_path.exists():
         atom_audit = json.loads(atom_audit_path.read_text())
         result["coverage"]["carbon_atom_audit"] = {"source": str(atom_audit_path), "carbon_atoms_total": atom_audit.get("carbon_atoms_total"), "status_counts": atom_audit.get("status_counts"), "compound_count": atom_audit.get("compound_count")}

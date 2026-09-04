@@ -83,7 +83,35 @@
       "inferred_carbon_edges": 4768,
       "candidate_carbon_edges": 87885,
       "external_carbon_input_entity_count": 390,
-      "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2."
+      "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2.",
+      "target_triage": {
+        "target_counts_by_status_and_identity": {
+          "candidate:candidate": 167,
+          "candidate:exact": 74,
+          "supported:exact": 1,
+          "unresolved:candidate": 91,
+          "unresolved:exact": 77,
+          "unresolved:unresolved": 5810
+        },
+        "carbon_atoms_by_target_status": {
+          "candidate": 2572,
+          "supported": 1,
+          "unresolved": 283050
+        },
+        "specialty_target_counts_by_status": {
+          "candidate": 17,
+          "unresolved": 71
+        },
+        "blocking_reason_counts": {
+          "all-entity-product-carbons-reachable-from-CO2": 1,
+          "candidate-connectivity-identity-and-all-entity-product-carbons-reachable-from-CO2": 31,
+          "candidate-connectivity-identity-not-reachable-from-co2": 91,
+          "candidate-connectivity-identity-with-partial-co2-lineage": 136,
+          "entity-not-reachable-from-CO2-through-inferred-carbon-edges": 77,
+          "no-terpedia-identity": 5810,
+          "partial-entity-product-carbon-reachability": 74
+        }
+      }
     },
     "carbon_atom_audit": {
       "source": "data/reports/carbon-atom-audit.json",

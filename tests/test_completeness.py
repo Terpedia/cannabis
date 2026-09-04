@@ -93,3 +93,17 @@ def test_completeness_splits_unannotated_reactions_by_candidate_proteins(tmp_pat
     assert result["terpedia"]["reactions_without_enzyme_association"] == 2
     assert result["terpedia"]["reactions_without_enzyme_with_candidate_proteins"] == 1
     assert result["terpedia"]["reactions_without_enzyme_without_candidate_proteins"] == 1
+
+
+def test_completeness_reports_co2_target_triage(tmp_path):
+    network_path = tmp_path / "network.json.gz"
+    with gzip.open(network_path, "wt") as handle: json.dump({"entities": [], "statements": []}, handle)
+    compounds_path = tmp_path / "compounds.json"
+    compounds_path.write_text(json.dumps({"compounds": [{"id": "CDB1", "label": "Cannabifoo", "aliases": [], "carbon_atom_count": 3}]}))
+    lineage_path = tmp_path / "lineage.json"
+    lineage_path.write_text(json.dumps({"target_summary": {"supported": 0, "candidate": 1, "unresolved": 0}, "reachable_carbon_nodes": 1, "resolved_carbon_edges": 1, "inferred_carbon_edges": 1, "candidate_carbon_edges": 0, "external_carbon_input_entity_count": 0, "carbon_source_policy": "CO2 only", "targets": [{"cannabisdb_id": "CDB1", "status": "candidate", "identity_status": "exact", "carbon_atom_count": 3, "reason": "partial"}]}))
+    result = compute_completeness(network_path, compounds_path, lineage_path=lineage_path)
+    triage = result["coverage"]["co2_lineage"]["target_triage"]
+    assert triage["target_counts_by_status_and_identity"] == {"candidate:exact": 1}
+    assert triage["carbon_atoms_by_target_status"] == {"candidate": 3}
+    assert triage["specialty_target_counts_by_status"] == {"candidate": 1}
