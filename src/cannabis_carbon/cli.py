@@ -174,6 +174,9 @@ def main() -> None:
     p_map_snapshot.add_argument("--lineage", type=Path, default=Path("data/reports/carbon-lineage.json"))
     p_map_snapshot.add_argument("--focus-out", type=Path)
     p_map_snapshot.add_argument("--out", type=Path, default=Path("docs/data/network-map.json"))
+    p_enzyme_gaps = sub.add_parser("enzyme-gap-audit")
+    p_enzyme_gaps.add_argument("networkdb", type=Path, default=Path("docs/data/networkdb.json"), nargs="?")
+    p_enzyme_gaps.add_argument("--out", type=Path, default=Path("data/reports/enzyme-gap-audit.json"))
     p_hyp_lineage = sub.add_parser("hypothesis-lineage")
     p_hyp_lineage.add_argument("networkdb", type=Path, default=Path("docs/data/networkdb.json"), nargs="?")
     p_hyp_lineage.add_argument("--out", type=Path, default=Path("data/reports/hypothesis-lineage.json"))
@@ -289,6 +292,9 @@ def main() -> None:
         print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out, args.hypotheses, args.genome_search, args.genome_fasta, args.mapping, args.lineage, args.atom_audit, args.pubchem, args.identity_set, args.hypothetical_connections, args.hypothetical_reactions, args.hypothesis_enzyme_evidence, args.hypothesis_enzyme_catalog, args.hypothesis_balance, args.identity_set_bridges, args.identity_set_connectivity_upstream), indent=2))
     elif args.command == "map-snapshot":
         print(json.dumps(build_map_snapshot(args.networkdb, args.out, args.lineage, args.focus_out), indent=2))
+    elif args.command == "enzyme-gap-audit":
+        from .enzyme_gaps import build_enzyme_gap_audit
+        print(json.dumps(build_enzyme_gap_audit(args.networkdb, args.out), indent=2))
     elif args.command == "hypothesis-lineage":
         print(json.dumps(build_hypothesis_lineage(args.networkdb, args.out), indent=2))
     elif args.command == "genome-search":

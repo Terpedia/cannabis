@@ -399,6 +399,11 @@ The specialized IspD search for the added Rhea 13429 step found cannabis
 protein A0A7J6EQA1 (gene G4B88_002492), with 63.4% identity, 77.9% query
 coverage, and E-value 4.8e-97 to reviewed Arabidopsis IspD. This is a
 sequence-supported candidate producer, not a confirmed cannabis enzyme.
+The standalone `data/reports/enzyme-gap-audit.json` artifact audits the 12
+enzyme-less reactions individually: all 12 have candidates, covering 27
+candidate proteins; all 27 have reference-proteome sequence evidence, 7 have
+DIAMOND hits, and 15 meet the current strong-candidate threshold. This audit
+does not promote any candidate to a confirmed enzyme edge.
 
 ## Testable hypothesis set
 
