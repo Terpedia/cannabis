@@ -14,6 +14,13 @@ def test_lineage_remaps_reaction_atom_order_to_entity_atom_order():
     assert atom_map[3] == 0
 
 
+def test_lineage_uses_unique_relaxed_mcs_for_charge_serialization_difference():
+    reaction_molecule = Chem.MolFromSmiles("O=C(O)C")
+    atom_map = _entity_atom_index_map(reaction_molecule, "CC(=O)[O-]")
+    assert atom_map is not None
+    assert len(atom_map) == reaction_molecule.GetNumAtoms()
+
+
 def test_lineage_marks_unmatched_cannabisdb_compounds(tmp_path):
     network = {"entities": [{"id": "chebi:16526", "type": "metabolite", "attributes": {"canonicalSmiles": "O=C=O"}}], "statements": []}
     network_path = tmp_path / "network.json.gz"
