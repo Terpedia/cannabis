@@ -128,6 +128,7 @@ def main() -> None:
     p_atom_audit.add_argument("lineage", type=Path)
     p_atom_audit.add_argument("crosswalk", type=Path)
     p_atom_audit.add_argument("compounds", type=Path)
+    p_atom_audit.add_argument("--networkdb", type=Path, default=Path("data/reports/networkdb.json"))
     p_atom_audit.add_argument("--out", type=Path, default=Path("data/reports/carbon-atom-audit.json"))
     p_networkdb = sub.add_parser("networkdb")
     p_networkdb.add_argument("network", type=Path)
@@ -221,7 +222,7 @@ def main() -> None:
         print(json.dumps(build_carbon_lineage(args.network, args.mapping, args.crosswalk, args.compounds, args.out, args.directions), indent=2))
     elif args.command == "carbon-atom-audit":
         from .lineage import build_carbon_atom_audit
-        print(json.dumps(build_carbon_atom_audit(args.network, args.lineage, args.crosswalk, args.compounds, args.out), indent=2))
+        print(json.dumps(build_carbon_atom_audit(args.network, args.lineage, args.crosswalk, args.compounds, args.out, args.networkdb), indent=2))
     elif args.command == "networkdb":
         print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out, args.hypotheses, args.genome_search, args.genome_fasta, args.mapping, args.lineage, args.atom_audit, args.pubchem), indent=2))
     elif args.command == "map-snapshot":

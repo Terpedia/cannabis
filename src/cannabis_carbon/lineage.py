@@ -250,7 +250,7 @@ def build_carbon_lineage(network_path: Path, mapping_path: Path, crosswalk_path:
     return {"resolved_carbon_edges": len(edges), "inferred_carbon_edges": sum(e["status"] == "inferred" for e in edges), "candidate_carbon_edges": sum(e["status"] == "candidate" for e in edges), "reachable_carbon_nodes": len(reachable), "target_summary": report["target_summary"]}
 
 
-def build_carbon_atom_audit(network_path: Path, lineage_path: Path, crosswalk_path: Path, compounds_path: Path, output: Path) -> dict:
+def build_carbon_atom_audit(network_path: Path, lineage_path: Path, crosswalk_path: Path, compounds_path: Path, output: Path, networkdb_path: Path | None = None) -> dict:
     """Partition every CannabisDB carbon atom into an auditable status group.
 
     The lineage report stores reaction-level edges; this companion artifact
@@ -263,6 +263,8 @@ def build_carbon_atom_audit(network_path: Path, lineage_path: Path, crosswalk_pa
     lineage = json.loads(lineage_path.read_text())
     crosswalk = json.loads(crosswalk_path.read_text())
     compounds = json.loads(compounds_path.read_text())["compounds"]
+    networkdb = json.loads(networkdb_path.read_text()) if networkdb_path and networkdb_path.exists() else {}
+    reaction_metadata = {reaction["id"]: reaction for reaction in networkdb.get("reactions", [])}
     entities = {e["id"]: e for e in network["entities"]}
     co2_id = lineage.get("co2_entity_id", "chebi:16526")
     co2_smiles = entities.get(co2_id, {}).get("attributes", {}).get("canonicalSmiles")
@@ -297,7 +299,8 @@ def build_carbon_atom_audit(network_path: Path, lineage_path: Path, crosswalk_pa
         path = []
         while state in predecessors:
             previous, edge = predecessors[state]
-            path.append({"reaction_id": edge.get("reaction_id"), "from_entity_id": edge.get("reactant_entity_id"), "from_atom": edge.get("reactant_atom"), "to_entity_id": edge.get("product_entity_id"), "to_atom": edge.get("product_atom"), "status": edge.get("status"), "provenance": edge.get("provenance"), "directional_rhea_id": edge.get("directional_rhea_id")})
+            reaction = reaction_metadata.get(edge.get("reaction_id"), {})
+            path.append({"reaction_id": edge.get("reaction_id"), "from_entity_id": edge.get("reactant_entity_id"), "from_atom": edge.get("reactant_atom"), "to_entity_id": edge.get("product_entity_id"), "to_atom": edge.get("product_atom"), "status": edge.get("status"), "provenance": edge.get("provenance"), "directional_rhea_id": edge.get("directional_rhea_id"), "reaction_status": reaction.get("status"), "enzyme_ids": reaction.get("enzyme_ids", []), "candidate_protein_ids": sorted({protein.get("proteinId") for protein in reaction.get("candidate_proteins", []) if protein.get("proteinId")})})
             state = previous
         path.reverse()
         return path if state[0] in co2_nodes else None
@@ -366,7 +369,7 @@ def build_carbon_atom_audit(network_path: Path, lineage_path: Path, crosswalk_pa
             grouped[key]["entity_atom_indices"].append(entity_atom)
             status_counts[status] += 1
         atom_groups.append({"cannabisdb_id": compound["id"], "atom_index_namespace": "RDKit atom indices in the CannabisDB SMILES field", "carbon_atom_count": len(carbon_indices), "identity_status": identity_status, "terpedia_id": terpedia_id, "groups": list(grouped.values()), "co2_paths": atom_paths, "claim_boundary": "Each group explicitly accounts for listed CannabisDB carbon atom indices; unresolved atoms are not assigned an origin."})
-    report = {"schema": "cannabis-carbon.carbon-atom-audit.v1", "source_network": str(network_path), "source_lineage": str(lineage_path), "source_crosswalk": str(crosswalk_path), "source_compounds": str(compounds_path), "atom_index_namespace": "RDKit atom indices in each compound's CannabisDB SMILES field; these are not assumed to equal source-SDF atom ordering", "carbon_source_policy": lineage.get("carbon_source_policy"), "compound_count": len(compounds), "carbon_atoms_total": sum(item["carbon_atom_count"] for item in atom_groups), "status_counts": {status: status_counts[status] for status in ("supported", "candidate", "inferred", "unresolved")}, "compounds": atom_groups, "claim_boundary": "This is a structure-indexed provenance audit. Inferred and candidate statuses are not isotope tracing, enzyme validation, or proof of in-vivo cannabis biosynthesis."}
+    report = {"schema": "cannabis-carbon.carbon-atom-audit.v1", "source_network": str(network_path), "source_networkdb": str(networkdb_path) if networkdb_path else None, "source_lineage": str(lineage_path), "source_crosswalk": str(crosswalk_path), "source_compounds": str(compounds_path), "atom_index_namespace": "RDKit atom indices in each compound's CannabisDB SMILES field; these are not assumed to equal source-SDF atom ordering", "carbon_source_policy": lineage.get("carbon_source_policy"), "compound_count": len(compounds), "carbon_atoms_total": sum(item["carbon_atom_count"] for item in atom_groups), "status_counts": {status: status_counts[status] for status in ("supported", "candidate", "inferred", "unresolved")}, "compounds": atom_groups, "claim_boundary": "This is a structure-indexed provenance audit. Inferred and candidate statuses are not isotope tracing, enzyme validation, or proof of in-vivo cannabis biosynthesis; enzyme and candidate-protein fields are annotations, not functional proof."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
     return {"compound_count": report["compound_count"], "carbon_atoms_total": report["carbon_atoms_total"], "status_counts": report["status_counts"]}

@@ -226,8 +226,10 @@ RDKit atom indices in each CannabisDB SMILES field and are not assumed to equal
 the source-SDF atom ordering. The groups are required to partition the complete
 carbon-atom set for each compound. For every reachable atom, `co2_paths` now
 serializes one CO₂-to-atom chain with entity-local atom indices, reaction IDs,
-edge evidence status, and provenance; unresolved atoms have no fabricated path
-and retain their blocker.
+edge evidence status, provenance, known enzyme IDs, and genome candidate-protein
+IDs from NetworkDB; unresolved atoms have no fabricated path and retain their
+blocker. These enzyme and protein annotations remain hypotheses or source
+associations, not functional validation.
 
 These are data-coverage metrics. They do not imply that all CannabisDB
 compounds are endogenous cannabis metabolites or that Terpedia's reaction graph
