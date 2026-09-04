@@ -94,7 +94,7 @@ def resolve_pubchem(compounds_path: Path, output: Path, batch_size: int = 25, pa
     """Resolve every CannabisDB record by exact InChIKey and retain negatives."""
     source = json.loads(compounds_path.read_text())
     compounds = source.get("compounds", source if isinstance(source, list) else [])
-    records = [{"cannabisdb_id": c["id"], "inchikey": c.get("inchikey"), "smiles": c.get("smiles"), "status": "unresolved", "provenance": ["https://pubchem.ncbi.nlm.nih.gov/"]} for c in compounds]
+    records = [{"cannabisdb_id": c["id"], "inchikey": c.get("inchikey"), "smiles": c.get("smiles"), "cannabisdb_external_ids": c.get("external_ids", {}), "cannabisdb_pubchem_cid": c.get("external_ids", {}).get("pubchem"), "status": "unresolved", "provenance": ["https://pubchem.ncbi.nlm.nih.gov/", "https://cannabisdatabase.ca/simple/download_compound_as_xml"]} for c in compounds]
     by_key = {r["inchikey"]: [] for r in records if r.get("inchikey")}
     cached = json.loads(cache_path.read_text()) if cache_path and cache_path.exists() else {}
     negative_keys = set(cached.get("negative_keys", []))
@@ -161,6 +161,8 @@ def resolve_pubchem(compounds_path: Path, output: Path, batch_size: int = 25, pa
         "candidate_connectivity": sum(r["status"] == "candidate_connectivity" for r in records),
         "unresolved": sum(r["status"] == "unresolved" for r in records),
         "missing_inchikey": sum(not r.get("inchikey") for r in records),
+        "cannabisdb_pubchem_xref": sum(bool(r.get("cannabisdb_pubchem_cid")) for r in records),
+        "xref_without_exact_resolution": sum(bool(r.get("cannabisdb_pubchem_cid")) and r["status"] not in {"resolved", "ambiguous"} for r in records),
     }
     report = {
         "schema": "cannabis-carbon.pubchem-resolution.v1",

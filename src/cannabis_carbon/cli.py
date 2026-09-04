@@ -24,6 +24,7 @@ from .inventory import build_specialty_inventory
 from .test_hypotheses import build_test_hypotheses
 from .validate import validate_artifacts
 from .pubchem import resolve_pubchem
+from .cannabisdb_xml import enrich_compounds_with_xrefs, extract_terpedia_table
 
 DOWNLOADS = {
     "compounds.sdf": "https://cannabisdatabase.ca/simple/download_compound_as_sdf",
@@ -170,6 +171,15 @@ def main() -> None:
     p_pubchem.add_argument("--workers", type=int, default=4)
     p_pubchem.add_argument("--cache", type=Path, default=Path("data/reports/pubchem-cache.json"))
     p_pubchem.add_argument("--method", choices=("bulk", "batch"), default="bulk")
+    p_xrefs = sub.add_parser("enrich-cannabisdb-xrefs")
+    p_xrefs.add_argument("xml", type=Path)
+    p_xrefs.add_argument("compounds", type=Path, default=Path("docs/data/compounds.json"), nargs="?")
+    p_xrefs.add_argument("--out", type=Path, default=Path("docs/data/compounds.json"))
+    p_xrefs.add_argument("--report", type=Path, default=Path("data/reports/cannabisdb-xrefs.json"))
+    p_table = sub.add_parser("extract-cannabisdb-table")
+    p_table.add_argument("xml", type=Path)
+    p_table.add_argument("--out", type=Path, default=Path("data/terpedia/cannabisdb-compounds.json"))
+    p_table.add_argument("--report", type=Path, default=Path("data/reports/cannabisdb-table.json"))
     args = parser.parse_args()
     if args.command == "download":
         download(args.out, args.insecure_download)
@@ -217,6 +227,10 @@ def main() -> None:
             raise SystemExit(1)
     elif args.command == "pubchem-resolve":
         print(json.dumps(resolve_pubchem(args.compounds, args.out, args.batch_size, args.pause, args.workers, args.cache, args.method), indent=2))
+    elif args.command == "enrich-cannabisdb-xrefs":
+        print(json.dumps(enrich_compounds_with_xrefs(args.xml, args.compounds, args.out, args.report), indent=2))
+    elif args.command == "extract-cannabisdb-table":
+        print(json.dumps(extract_terpedia_table(args.xml, args.out, args.report), indent=2))
 
 
 if __name__ == "__main__":

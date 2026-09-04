@@ -1,0 +1,16 @@
+{
+  "schema": "cannabis-carbon.cannabisdb-source-manifest.v1",
+  "source": "Cannabis Compound Database",
+  "retrieved_at": "2026-09-04",
+  "files": [
+    {
+      "name": "cannabisdb-compounds.xml.gz",
+      "url": "https://cannabisdatabase.ca/simple/download_compound_as_xml",
+      "compression": "gzip",
+      "sha256": "7b0fde701219c82782affe4be6c9252e8204c3cbcf1427793b6e6a85d00d12ec",
+      "compressed_bytes": 3072292,
+      "uncompressed_bytes": 51830336
+    }
+  ],
+  "claim_boundary": "This is a versioned source snapshot. CannabisDB records and external identifiers do not by themselves establish endogenous Cannabis biosynthesis or carbon provenance."
+}

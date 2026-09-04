@@ -55,7 +55,9 @@
       "ambiguous": 130,
       "candidate_connectivity": 10,
       "unresolved": 2494,
-      "missing_inchikey": 0
+      "missing_inchikey": 0,
+      "cannabisdb_pubchem_xref": 3399,
+      "xref_without_exact_resolution": 32
     },
     "compounds_with_exact_terpedia_identity": 152,
     "compounds_with_ambiguous_identity": 1,

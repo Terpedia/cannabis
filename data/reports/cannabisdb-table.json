@@ -1,0 +1,8 @@
+{
+  "schema": "cannabis-carbon.terpedia-cannabisdb-table-report.v1",
+  "source": "/tmp/cannabis-compounds.xml",
+  "compound_count": 6220,
+  "records_with_external_ids": 3737,
+  "records_with_references": 807,
+  "claim_boundary": "This normalized table preserves CannabisDB source assertions and identifiers. It does not establish endogenous Cannabis biosynthesis, enzyme function, reaction direction, or carbon provenance."
+}

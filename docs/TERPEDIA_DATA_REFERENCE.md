@@ -222,6 +222,15 @@ constitutes a demonstrated in-vivo pathway.
 
 ## Unified NetworkDB
 
+The complete CannabisDB XML export is preserved at
+`data/terpedia/cannabisdb-compounds.xml.gz` with its retrieval URL and SHA-256
+in `data/terpedia/cannabisdb-source-manifest.json`. The normalized table at
+`data/terpedia/cannabisdb-compounds.json` contains all 6,220 accessions and
+retains source structures, descriptions, synonyms, external identifiers, and
+general references. The XML export contains first-party cross-references to
+PubChem, ChEBI, KEGG, ChemSpider, FoodDB, BioCyc, and other databases; these
+are now extracted rather than discarded by the SDF-only importer.
+
 `docs/data/networkdb.json` is the published normalized inventory used for
 cross-source reconciliation. It contains 6,220 CannabisDB compound records,
 1,267 working Terpedia metabolite records, 1,106 working biochemical reaction records,
