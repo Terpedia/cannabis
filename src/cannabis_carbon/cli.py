@@ -133,6 +133,9 @@ def main() -> None:
     p_hypothesis_balance = sub.add_parser("hypothesis-balance-audit")
     p_hypothesis_balance.add_argument("source", type=Path, default=Path("data/terpedia/hypothetical-forward-connections.json"), nargs="?")
     p_hypothesis_balance.add_argument("--out", type=Path, default=Path("data/reports/terpedia-hypothesis-balance-audit.json"))
+    p_candidate_balance = sub.add_parser("candidate-expansion-balance-audit")
+    p_candidate_balance.add_argument("source", type=Path, default=Path("data/reports/terpene-identity-set-candidate-expansion.json"), nargs="?")
+    p_candidate_balance.add_argument("--out", type=Path, default=Path("data/reports/terpene-identity-set-candidate-expansion-balance-audit.json"))
     p_hypothesis_mapping = sub.add_parser("hypothesis-carbon-mapping")
     p_hypothesis_mapping.add_argument("source", type=Path, default=Path("data/terpedia/hypothetical-forward-connections.json"), nargs="?")
     p_hypothesis_mapping.add_argument("--out", type=Path, default=Path("data/reports/terpedia-hypothesis-carbon-mapping.json"))
@@ -304,6 +307,9 @@ def main() -> None:
         print(json.dumps(audit_balances(args.network, args.out), indent=2))
     elif args.command == "hypothesis-balance-audit":
         print(json.dumps(audit_hypothesis_balances(args.source, args.out), indent=2))
+    elif args.command == "candidate-expansion-balance-audit":
+        from .candidate_balance import audit_candidate_expansion_balances
+        print(json.dumps(audit_candidate_expansion_balances(args.source, args.out), indent=2))
     elif args.command == "hypothesis-carbon-mapping":
         print(json.dumps(build_hypothesis_mapping(args.source, args.out), indent=2))
     elif args.command == "carbon-lineage":
