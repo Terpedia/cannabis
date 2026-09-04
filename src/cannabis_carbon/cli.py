@@ -159,6 +159,7 @@ def main() -> None:
     p_networkdb.add_argument("--hypothetical-reactions", type=Path, default=Path("data/terpedia/hypothetical-reaction-inventory.json"))
     p_networkdb.add_argument("--hypothesis-enzyme-evidence", type=Path, default=Path("data/terpedia/terpene-enzyme-reaction-gene-evidence.json"))
     p_networkdb.add_argument("--hypothesis-enzyme-catalog", type=Path, default=Path("data/terpedia/terpene-biotransformation-enzyme-catalog.json"))
+    p_networkdb.add_argument("--hypothesis-balance", type=Path, default=Path("data/reports/terpedia-hypothesis-balance-audit.json"))
     p_networkdb.add_argument("--out", type=Path, default=Path("docs/data/networkdb.json"))
     p_map_snapshot = sub.add_parser("map-snapshot")
     p_map_snapshot.add_argument("networkdb", type=Path)
@@ -249,7 +250,7 @@ def main() -> None:
         from .lineage import build_carbon_atom_audit
         print(json.dumps(build_carbon_atom_audit(args.network, args.lineage, args.crosswalk, args.compounds, args.out, args.networkdb), indent=2))
     elif args.command == "networkdb":
-        print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out, args.hypotheses, args.genome_search, args.genome_fasta, args.mapping, args.lineage, args.atom_audit, args.pubchem, args.identity_set, args.hypothetical_connections, args.hypothetical_reactions, args.hypothesis_enzyme_evidence, args.hypothesis_enzyme_catalog), indent=2))
+        print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out, args.hypotheses, args.genome_search, args.genome_fasta, args.mapping, args.lineage, args.atom_audit, args.pubchem, args.identity_set, args.hypothetical_connections, args.hypothetical_reactions, args.hypothesis_enzyme_evidence, args.hypothesis_enzyme_catalog, args.hypothesis_balance), indent=2))
     elif args.command == "map-snapshot":
         print(json.dumps(build_map_snapshot(args.networkdb, args.out, args.lineage, args.focus_out), indent=2))
     elif args.command == "genome-search":
