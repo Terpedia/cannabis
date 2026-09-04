@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from collections import defaultdict
 from rdkit import Chem
@@ -59,6 +60,27 @@ def _computed_balance(reaction_id: str, entities: dict, statements: list[dict]) 
     return {"status": "balanced" if not differences else "imbalanced", "differences": differences}, {"status": "balanced" if charges["left"] == charges["right"] else "imbalanced", "left": charges["left"], "right": charges["right"], "difference": charges["right"] - charges["left"]}
 
 
+def _reaction_smiles_balance(reaction_smiles: str | None) -> tuple[dict | None, dict | None]:
+    """Audit a concrete Rhea reaction SMILES when entity formulas are absent."""
+    if not reaction_smiles or ">>" not in reaction_smiles or "*" in reaction_smiles:
+        return None, None
+    totals = {"left": defaultdict(int), "right": defaultdict(int)}
+    charges = {"left": 0, "right": 0}
+    for side_name, side in zip(("left", "right"), reaction_smiles.split(">>")):
+        for component in side.split("."):
+            molecule = Chem.MolFromSmiles(component)
+            if molecule is None or any(atom.GetAtomicNum() == 0 for atom in molecule.GetAtoms()):
+                return None, None
+            formula = rdMolDescriptors.CalcMolFormula(molecule)
+            for element, count in re.findall(r"([A-Z][a-z]?)(\d*)", formula):
+                totals[side_name][element] += int(count or 1)
+            charges[side_name] += Chem.GetFormalCharge(molecule)
+    differences = {element: totals["right"][element] - totals["left"][element] for element in sorted(set(totals["left"]) | set(totals["right"])) if totals["right"][element] != totals["left"][element]}
+    element_result = {"status": "balanced" if not differences else "imbalanced", "differences": differences, "source": "reactionSmiles"}
+    charge_result = {"status": "balanced" if charges["left"] == charges["right"] else "imbalanced", "left": charges["left"], "right": charges["right"], "difference": charges["right"] - charges["left"], "source": "reactionSmiles"}
+    return element_result, charge_result
+
+
 def audit_balances(network_path: Path, output: Path) -> dict:
     network = load_network(network_path)
     rows = []
@@ -68,9 +90,10 @@ def audit_balances(network_path: Path, output: Path) -> dict:
         element = attrs.get("elementBalance") or {"status": "missing"}
         charge = attrs.get("chargeBalance") or {"status": "missing"}
         computed_element, computed_charge = _computed_balance(entity["id"], entities, network["statements"])
-        computed_status = "balanced" if computed_element and computed_charge and computed_element["status"] == "balanced" and computed_charge["status"] == "balanced" else "imbalanced" if computed_element and computed_charge else "not_auditable"
-        rows.append({"reaction_id": entity["id"], "label": entity.get("label"), "equation": attrs.get("equation"), "element_balance": element, "charge_balance": charge, "computed_element_balance": computed_element, "computed_charge_balance": computed_charge, "status": "balanced" if element.get("status") == "balanced" and charge.get("status") == "balanced" else computed_status})
-    report = {"schema": "cannabis-carbon.phase1-balance-audit.v1", "phase": "Phase 1", "reaction_count": len(rows), "summary": {"fully_balanced": sum(r["status"] == "balanced" for r in rows), "imbalanced": sum(r["status"] == "imbalanced" for r in rows), "not_auditable": sum(r["status"] == "not_auditable" for r in rows), "element_balanced": sum(r["element_balance"].get("status") == "balanced" for r in rows), "charge_balanced": sum(r["charge_balance"].get("status") == "balanced" for r in rows), "computed_fully_balanced": sum(bool(r["computed_element_balance"] and r["computed_charge_balance"] and r["computed_element_balance"].get("status") == "balanced" and r["computed_charge_balance"].get("status") == "balanced") for r in rows), "computed_imbalanced": sum(bool(r["computed_element_balance"] and r["computed_charge_balance"] and (r["computed_element_balance"].get("status") == "imbalanced" or r["computed_charge_balance"].get("status") == "imbalanced")) for r in rows)}, "reactions": rows, "claim_boundary": "Balance is a Phase 1 stoichiometric validity gate; it does not establish enzyme identity, direction, carbon atom mapping, or in-vivo flux."}
+        smiles_element, smiles_charge = _reaction_smiles_balance(attrs.get("reactionSmiles"))
+        computed_status = "balanced" if computed_element and computed_charge and computed_element["status"] == "balanced" and computed_charge["status"] == "balanced" else "imbalanced" if computed_element and computed_charge else "balanced" if smiles_element and smiles_charge and smiles_element["status"] == "balanced" and smiles_charge["status"] == "balanced" else "imbalanced" if smiles_element and smiles_charge else "not_auditable"
+        rows.append({"reaction_id": entity["id"], "label": entity.get("label"), "equation": attrs.get("equation"), "element_balance": element, "charge_balance": charge, "computed_element_balance": computed_element, "computed_charge_balance": computed_charge, "reaction_smiles_element_balance": smiles_element, "reaction_smiles_charge_balance": smiles_charge, "balance_source": "terpedia-participant-structures" if computed_element and computed_charge else "reactionSmiles" if smiles_element and smiles_charge else None, "status": "balanced" if element.get("status") == "balanced" and charge.get("status") == "balanced" else computed_status})
+    report = {"schema": "cannabis-carbon.phase1-balance-audit.v1", "phase": "Phase 1", "reaction_count": len(rows), "summary": {"fully_balanced": sum(r["status"] == "balanced" for r in rows), "imbalanced": sum(r["status"] == "imbalanced" for r in rows), "not_auditable": sum(r["status"] == "not_auditable" for r in rows), "element_balanced": sum(r["element_balance"].get("status") == "balanced" for r in rows), "charge_balanced": sum(r["charge_balance"].get("status") == "balanced" for r in rows), "computed_fully_balanced": sum(bool(r["computed_element_balance"] and r["computed_charge_balance"] and r["computed_element_balance"].get("status") == "balanced" and r["computed_charge_balance"].get("status") == "balanced") for r in rows), "computed_imbalanced": sum(bool(r["computed_element_balance"] and r["computed_charge_balance"] and (r["computed_element_balance"].get("status") == "imbalanced" or r["computed_charge_balance"].get("status") == "imbalanced")) for r in rows), "reaction_smiles_fully_balanced": sum(bool(r["reaction_smiles_element_balance"] and r["reaction_smiles_charge_balance"] and r["reaction_smiles_element_balance"].get("status") == "balanced" and r["reaction_smiles_charge_balance"].get("status") == "balanced") for r in rows), "reaction_smiles_imbalanced": sum(bool(r["reaction_smiles_element_balance"] and r["reaction_smiles_charge_balance"] and (r["reaction_smiles_element_balance"].get("status") == "imbalanced" or r["reaction_smiles_charge_balance"].get("status") == "imbalanced")) for r in rows)}, "reactions": rows, "claim_boundary": "Balance is a Phase 1 stoichiometric validity gate; it does not establish enzyme identity, direction, carbon atom mapping, or in-vivo flux."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
     return report["summary"]
