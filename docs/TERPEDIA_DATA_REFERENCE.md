@@ -178,10 +178,13 @@ The import now preserves CannabisDB source names and aliases in
 `docs/data/compounds.json`. The generated
 `data/reports/named-specialty-inventory.json` identifies 88 records (1,910
 carbon atoms) by an explicit cannabinoid/cannabis specialty-name selection
-rule. Twelve now have exact Terpedia identities and explicit curated reaction
+rule. Sixteen have exact Terpedia identities and explicit reaction
 participation, including the CBGA oxidocyclization and acid-decarboxylation
-edges. The remaining records are documented curation gaps, not an inference
-that the compounds are absent from Cannabis or that they share one route.
+edges. Its v2 `review_queue` ranks all 88 records by unresolved carbon atoms
+and retains PubChem status, the lineage blocker, and the reversible structural
+upper bound for each record. The remaining records are documented curation
+gaps, not an inference that the compounds are absent from Cannabis or that
+they share one route.
 
 ## CO₂-only carbon lineage
 
@@ -228,6 +231,12 @@ compounds are endogenous cannabis metabolites or that Terpedia's reaction graph
 constitutes a demonstrated in-vivo pathway.
 
 ## Unified NetworkDB
+
+The Pages visualization loads `docs/data/network-map-focus.json` by default,
+a 2.4 MB view of reaction-connected and CO₂-reachable records. The complete
+7,487-compound/1,107-reaction projection remains available at
+`docs/data/network-map.json`; the browser fallback graph is not the published
+map.
 
 The complete CannabisDB XML export is preserved at
 `data/terpedia/cannabisdb-compounds.xml.gz` with its retrieval URL and SHA-256

@@ -144,6 +144,7 @@ def main() -> None:
     p_map_snapshot = sub.add_parser("map-snapshot")
     p_map_snapshot.add_argument("networkdb", type=Path)
     p_map_snapshot.add_argument("--lineage", type=Path, default=Path("data/reports/carbon-lineage.json"))
+    p_map_snapshot.add_argument("--focus-out", type=Path)
     p_map_snapshot.add_argument("--out", type=Path, default=Path("docs/data/network-map.json"))
     p_genome = sub.add_parser("genome-search")
     p_genome.add_argument("queue", type=Path)
@@ -155,6 +156,8 @@ def main() -> None:
     p_inventory.add_argument("compounds", type=Path)
     p_inventory.add_argument("crosswalk", type=Path)
     p_inventory.add_argument("network", type=Path)
+    p_inventory.add_argument("--lineage", type=Path, default=Path("data/reports/carbon-lineage.json"))
+    p_inventory.add_argument("--pubchem", type=Path, default=Path("data/reports/pubchem-resolution.json"))
     p_inventory.add_argument("--out", type=Path, default=Path("data/reports/named-specialty-inventory.json"))
     p_tests = sub.add_parser("test-hypotheses")
     p_tests.add_argument("queue", type=Path)
@@ -222,11 +225,11 @@ def main() -> None:
     elif args.command == "networkdb":
         print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out, args.hypotheses, args.genome_search, args.genome_fasta, args.mapping, args.lineage, args.atom_audit, args.pubchem), indent=2))
     elif args.command == "map-snapshot":
-        print(json.dumps(build_map_snapshot(args.networkdb, args.out, args.lineage), indent=2))
+        print(json.dumps(build_map_snapshot(args.networkdb, args.out, args.lineage, args.focus_out), indent=2))
     elif args.command == "genome-search":
         print(json.dumps(build_genome_search(args.queue, args.fasta, args.out, args.diamond_hits, args.reference_tsv), indent=2))
     elif args.command == "specialty-inventory":
-        print(json.dumps(build_specialty_inventory(args.compounds, args.crosswalk, args.network, args.out), indent=2))
+        print(json.dumps(build_specialty_inventory(args.compounds, args.crosswalk, args.network, args.out, args.lineage, args.pubchem), indent=2))
     elif args.command == "test-hypotheses":
         print(json.dumps(build_test_hypotheses(args.queue, args.network, args.out, args.lineage, args.compounds), indent=2))
     elif args.command == "validate-artifacts":

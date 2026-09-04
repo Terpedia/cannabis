@@ -11,7 +11,7 @@ from rdkit import Chem
 from .terpedia import load_network
 
 
-def build_map_snapshot(networkdb_path: Path, output: Path, lineage_path: Path | None = None) -> dict:
+def build_map_snapshot(networkdb_path: Path, output: Path, lineage_path: Path | None = None, focus_output: Path | None = None) -> dict:
     """Write a compact visualization snapshot containing reaction-connected records."""
     networkdb = json.loads(networkdb_path.read_text())
     reaction_connected_ids = {p["compound_id"] for r in networkdb.get("reactions", []) for p in r.get("reactants", []) + r.get("products", [])}
@@ -26,6 +26,15 @@ def build_map_snapshot(networkdb_path: Path, output: Path, lineage_path: Path | 
     report = {"schema": "cannabis-carbon.network-map.v1", "source_networkdb": str(networkdb_path), "source_lineage": str(lineage_path) if lineage_path else None, "claim_boundary": "This is a compact visualization projection containing the complete compound inventory and all reaction records. It is not proof of in-vivo flux.", "compounds": compounds, "reactions": reactions, "coverage": networkdb.get("coverage", {}), "focus": {"co2_reachable_compounds": sum(c["co2_reachable"] for c in compounds), "reaction_connected_compounds": sum(c["reaction_connected"] for c in compounds), "all_inventory_compounds": len(compounds)}}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, separators=(",", ":")) + "\n")
+    if focus_output:
+        focused_ids = {c["id"] for c in compounds if c["reaction_connected"] or c["co2_reachable"]}
+        focused_reactions = [
+            reaction for reaction in reactions
+            if any(p["compound_id"] in focused_ids for p in reaction.get("reactants", []) + reaction.get("products", []))
+        ]
+        focused = {**report, "schema": "cannabis-carbon.network-map-focus.v1", "compounds": [c for c in compounds if c["id"] in focused_ids], "reactions": focused_reactions, "focus": {**report["focus"], "focused_compounds": len(focused_ids)}}
+        focus_output.parent.mkdir(parents=True, exist_ok=True)
+        focus_output.write_text(json.dumps(focused, separators=(",", ":")) + "\n")
     return {"compounds": len(compounds), "reactions": len(reactions), "bytes": output.stat().st_size}
 
 
