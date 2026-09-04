@@ -1,0 +1,16 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_target_coverage_20260904_v1",
+  "load_job_id": "bqjob_r37485e8d52e152c3_000001a06e9c7b82_1",
+  "source": "data/reports/phase1-target-coverage.ndjson",
+  "report_sha256": "a0ce9091806b988c9e9abaf9a09fdca43ecaee7584eba0213c1802c31723aad7",
+  "verified_target_records": 6220,
+  "verified_target_statuses": {
+    "balanced-reaction-participant": 109,
+    "reaction-participant-balance-unresolved": 4,
+    "no-exact-encoded-reaction-match": 6107
+  },
+  "verified_reaction_records": 1598,
+  "verified_reaction_statuses": {"balanced": 1208, "not-auditable": 390},
+  "verified_report_snapshots_per_group": 1,
+  "claim_boundary": "Strict encoded-structure participation coverage, not biosynthetic or CO2-pathway completeness."
+}

@@ -133,6 +133,32 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [whole-CannabisDB strict participation audit](data/phase1-target-coverage.json)
+retains all 6,220 source records (6,203 distinct canonical encoded structures).
+Against the core NetworkDB and balanced expansion catalog, 109 records match
+participants in independently balanced equations, four match only balance-unresolved
+equations, and 6,107 have no exact encoded-structure match in these reaction sets.
+Two of the 109 matched records have unspecified/unknown potential stereochemistry,
+which remains flagged. Matching does not relax protonation, salts, isotopes,
+tautomers or stereochemical encoding. Twelve additional records have only
+source-supplied ChEBI reaction links; those are not structural confirmation.
+These are participation and data-linking metrics, not demonstrated biosynthetic
+coverage or evidence that unmatched compounds cannot be made by Cannabis.
+
+The audit preserves 1,598 scoped reaction records, not necessarily distinct
+biochemical reactions: 717 core equations pass a concrete structure-based balance
+audit, 390 core equations are not auditable by that method, and all 491 expansion
+catalog equations pass. Generic participants are not labeled imbalanced merely
+because their concrete formulas are unavailable. Equation left/right roles are
+not automatically physiological direction. No CO₂ reachability is asserted.
+
+GCP table:
+`terpedia-489015.terpedia_core.cannabis_phase1_target_coverage_20260904_v1`.
+Its 7,818 records retain both the 6,220 targets and 1,598 source reaction audits,
+with source checksums, structure flags, roles and coefficients, xref-only leads,
+and explicit unmatched outcomes. Load source:
+`data/reports/phase1-target-coverage.ndjson`.
+
 The [consolidated Phase 1 reaction catalog](data/phase1-reaction-catalog.json)
 contains 491 balanced source-reaction variants, 215 exact compound structures,
 and an audit ledger retaining all 690 original expansion variants. Reactions
