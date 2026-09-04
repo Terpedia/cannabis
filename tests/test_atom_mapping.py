@@ -8,11 +8,10 @@ def test_oxidation_preserves_all_product_carbons():
     assert result["unresolved_product_carbons"] == []
 
 
-def test_carboxylation_like_new_carbon_is_unresolved():
+def test_heteroatom_addition_with_conserved_carbon_skeleton_is_inferred():
     result = map_reaction_smiles("CCO>>CC(=O)O")
-    assert result["status"] == "unresolved"
-    assert len(result["mappings"]) == result["product_carbon_atom_count"]
-    assert len(result["unresolved_product_carbons"]) >= 1
+    assert result["status"] == "inferred"
+    assert {row["method"] for row in result["mappings"]} == {"rdkit-carbon-skeleton-mcs"}
 
 
 def test_explicit_co2_carbon_source_is_mapped_to_carboxyl_carbon():

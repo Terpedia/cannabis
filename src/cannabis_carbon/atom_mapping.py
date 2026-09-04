@@ -127,6 +127,50 @@ def _full_carbon_mcs_mapping(reactants: list[Chem.Mol], products: list[Chem.Mol]
     return [{"product_index": pi, "product_atom": product_atom, "reactant_index": ri, "reactant_atom": reactant_by_query[next(index for index, atom_index in product_by_query.items() if atom_index == product_atom)], "method": "rdkit-full-carbon-mcs-conservation", "status": "inferred"} for product_atom in product_carbons]
 
 
+def _carbon_skeleton(molecule: Chem.Mol) -> tuple[Chem.Mol, list[int]]:
+    """Build a carbon-only graph while retaining its source atom indices."""
+    skeleton = Chem.RWMol()
+    source_indices = []
+    for atom in molecule.GetAtoms():
+        if atom.GetAtomicNum() == 6:
+            source_indices.append(atom.GetIdx())
+            skeleton.AddAtom(Chem.Atom(6))
+    source_to_skeleton = {source: index for index, source in enumerate(source_indices)}
+    for bond in molecule.GetBonds():
+        begin, end = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
+        if begin in source_to_skeleton and end in source_to_skeleton:
+            skeleton.AddBond(source_to_skeleton[begin], source_to_skeleton[end], Chem.BondType.SINGLE)
+    return skeleton.GetMol(), source_indices
+
+
+def _full_carbon_skeleton_mapping(reactants: list[Chem.Mol], products: list[Chem.Mol]) -> list[dict] | None:
+    """Map a unique conserved carbon skeleton when heteroatom chemistry changes."""
+    carbon_reactants = [(i, mol) for i, mol in enumerate(reactants) if any(a.GetAtomicNum() == 6 for a in mol.GetAtoms())]
+    carbon_products = [(i, mol) for i, mol in enumerate(products) if any(a.GetAtomicNum() == 6 for a in mol.GetAtoms())]
+    if len(carbon_reactants) != 1 or len(carbon_products) != 1:
+        return None
+    ri, reactant = carbon_reactants[0]
+    pi, product = carbon_products[0]
+    reactant_skeleton, reactant_indices = _carbon_skeleton(reactant)
+    product_skeleton, product_indices = _carbon_skeleton(product)
+    if len(reactant_indices) != len(product_indices):
+        return None
+    result = rdFMCS.FindMCS([reactant_skeleton, product_skeleton], atomCompare=rdFMCS.AtomCompare.CompareElements, bondCompare=rdFMCS.BondCompare.CompareAny, ringMatchesRingOnly=False, completeRingsOnly=False, timeout=2)
+    if result.canceled or result.numAtoms != len(product_indices):
+        return None
+    query = Chem.MolFromSmarts(result.smartsString)
+    if query is None:
+        return None
+    reactant_matches = reactant_skeleton.GetSubstructMatches(query, uniquify=True)
+    product_matches = product_skeleton.GetSubstructMatches(query, uniquify=True)
+    if len(reactant_matches) != 1 or len(product_matches) != 1:
+        return None
+    reactant_match, product_match = reactant_matches[0], product_matches[0]
+    reactant_by_query = {query_index: reactant_indices[atom_index] for query_index, atom_index in enumerate(reactant_match)}
+    product_by_query = {query_index: product_indices[atom_index] for query_index, atom_index in enumerate(product_match)}
+    return [{"product_index": pi, "product_atom": product_atom, "reactant_index": ri, "reactant_atom": reactant_by_query[next(index for index, atom_index in product_by_query.items() if atom_index == product_atom)], "method": "rdkit-carbon-skeleton-mcs", "status": "inferred"} for product_atom in product_indices]
+
+
 def map_reaction_smiles(reaction_smiles: str) -> dict:
     """Map product carbons to conserved reactant carbons.
 
@@ -158,6 +202,13 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
     full_carbon_mcs = _full_carbon_mcs_mapping(reactants, products)
     if full_carbon_mcs is not None:
         return {"status": "inferred", "mappings": full_carbon_mcs, "unresolved_product_carbons": [], "product_carbon_atom_count": len(product_carbons), "reactant_count": len(reactants), "product_count": len(products)}
+    # If only heteroatom connectivity changed, compare the complete carbon
+    # skeleton independently.  A unique full skeleton match is still a
+    # structural inference; symmetry or carbon rearrangement remains
+    # unresolved rather than being assigned by atom order.
+    full_carbon_skeleton = _full_carbon_skeleton_mapping(reactants, products)
+    if full_carbon_skeleton is not None:
+        return {"status": "inferred", "mappings": full_carbon_skeleton, "unresolved_product_carbons": [], "product_carbon_atom_count": len(product_carbons), "reactant_count": len(reactants), "product_count": len(products)}
     # Decarboxylation has one additional product, CO2.  A unique match of the
     # organic product maps its retained carbons; if exactly one reactant
     # carbon remains, that carbon is the released CO2 carbon.
