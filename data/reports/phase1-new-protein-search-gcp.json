@@ -1,0 +1,20 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_new_protein_search_20260904_v1",
+  "load_job_id": "bqjob_r63934576c39d1c85_000001a06ecac7b7_1",
+  "source": "data/reports/phase1-new-protein-search.ndjson",
+  "report_sha256": "821f596cf7c2c2923684ee24d040efed988d2896aed7a686adce9eb5ad6747e6",
+  "verified_equation_gap_statuses": {
+    "screened-candidates": 633,
+    "weak-hits-only": 228,
+    "no-hits": 279,
+    "no-reference-sequence": 1427
+  },
+  "verified_cannabis_candidates": 1074,
+  "verified_reference_sequences": 4653,
+  "verified_passing_alignments": 17407,
+  "verified_retrieved_batches": 78,
+  "verified_metadata_rows": 1,
+  "verified_unique_ids_equal_record_count_in_each_group": true,
+  "verified_report_snapshots_per_group": 1,
+  "claim_boundary": "Direction-unresolved homology candidates, not experimentally characterized Cannabis enzymes or complete CO2 pathways."
+}

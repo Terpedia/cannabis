@@ -133,6 +133,36 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [new reference-driven Cannabis proteome screen](data/phase1-new-protein-search.json)
+retrieved and validated all 4,653 reference sequences, then searched all 30,304
+proteins in the checksum-verified Cannabis reference proteome using DIAMOND
+sensitive mode with unlimited reported targets and one HSP per pair. Of 56,294
+pairwise alignments, 17,407 pass the declared screen: identity at least 30%, both
+query and reference coverage at least 50%, and E-value at most 1e-5.
+
+The screen identifies **1,074 distinct Cannabis candidate proteins**, producing
+8,651 protein–reaction hypotheses across 633 balanced equation gaps. Of the 330
+priority carbon-bearing targets previously lacking any candidate-supported
+alternative, **210** now have screened homology candidates. This is not experimental
+enzyme confirmation or increased CO₂ reachability. Reaction direction, exact
+substrate specificity, catalytic residues/domains, tissue/compartment compatibility,
+and all-input availability remain unresolved. All 2,567 original equation gaps
+are retained, including missing-reference, weak-only, and no-hit outcomes.
+
+The report embeds passing alignments once, with per-equation alignment IDs,
+reference annotations, complete candidate/reference sequences and hashes, retrieval
+URLs, the exact search command/version, and validation blockers. The complete raw
+alignment output (including weak hits) is checksummed separately; per-equation raw
+counts distinguish weak evidence from no hits. The focused map still uses its
+previous candidate-evidence snapshot pending explicit integration of this new layer.
+
+GCP snapshot:
+`terpedia-489015.terpedia_core.cannabis_phase1_new_protein_search_20260904_v1`.
+Its 25,780 records include equation gaps, reference sequences, Cannabis candidates,
+passing alignments, retrieval provenance, and search metadata. Reproduce via
+`PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_new_protein_search`.
+Atom tracing remains deferred.
+
 The [new carbon-target enzyme-reference discovery](data/phase1-new-references.json)
 retains all 3,000 carbon-bearing one-step hypotheses lacking attached candidate
 enzyme evidence, grouped into 2,567 balanced equations. It prioritizes the 330
