@@ -29,7 +29,7 @@ from .validate import validate_artifacts
 from .pubchem import resolve_pubchem
 from .cannabisdb_xml import enrich_compounds_with_xrefs, extract_terpedia_table
 from .identity_set import refresh_identity_set
-from .identity_set_paths import refresh_identity_set_upstream, map_identity_set_upstream
+from .identity_set_paths import refresh_identity_set_upstream, map_identity_set_upstream, build_identity_set_core_bridges
 
 DOWNLOADS = {
     "compounds.sdf": "https://cannabisdatabase.ca/simple/download_compound_as_sdf",
@@ -164,6 +164,7 @@ def main() -> None:
     p_networkdb.add_argument("--hypothesis-enzyme-evidence", type=Path, default=Path("data/terpedia/terpene-enzyme-reaction-gene-evidence.json"))
     p_networkdb.add_argument("--hypothesis-enzyme-catalog", type=Path, default=Path("data/terpedia/terpene-biotransformation-enzyme-catalog.json"))
     p_networkdb.add_argument("--hypothesis-balance", type=Path, default=Path("data/reports/terpedia-hypothesis-balance-audit.json"))
+    p_networkdb.add_argument("--identity-set-bridges", type=Path, default=Path("data/reports/terpedia-identity-set-core-bridges.json"))
     p_networkdb.add_argument("--out", type=Path, default=Path("docs/data/networkdb.json"))
     p_map_snapshot = sub.add_parser("map-snapshot")
     p_map_snapshot.add_argument("networkdb", type=Path)
@@ -223,6 +224,10 @@ def main() -> None:
     p_identity_map = sub.add_parser("map-identity-set-upstream")
     p_identity_map.add_argument("source", type=Path, default=Path("data/reports/terpedia-identity-set-upstream.json"), nargs="?")
     p_identity_map.add_argument("--out", type=Path, default=Path("data/reports/terpedia-identity-set-upstream-mapped.json"))
+    p_identity_bridges = sub.add_parser("identity-set-core-bridges")
+    p_identity_bridges.add_argument("source", type=Path, default=Path("data/reports/terpedia-identity-set-upstream-mapped.json"), nargs="?")
+    p_identity_bridges.add_argument("network", type=Path, default=Path("data/terpedia/cannabis-sativa-metabolic-network.json.gz"), nargs="?")
+    p_identity_bridges.add_argument("--out", type=Path, default=Path("data/reports/terpedia-identity-set-core-bridges.json"))
     p_table = sub.add_parser("extract-cannabisdb-table")
     p_table.add_argument("xml", type=Path)
     p_table.add_argument("--out", type=Path, default=Path("data/terpedia/cannabisdb-compounds.json"))
@@ -268,7 +273,7 @@ def main() -> None:
         from .lineage import build_carbon_atom_audit
         print(json.dumps(build_carbon_atom_audit(args.network, args.lineage, args.crosswalk, args.compounds, args.out, args.networkdb), indent=2))
     elif args.command == "networkdb":
-        print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out, args.hypotheses, args.genome_search, args.genome_fasta, args.mapping, args.lineage, args.atom_audit, args.pubchem, args.identity_set, args.hypothetical_connections, args.hypothetical_reactions, args.hypothesis_enzyme_evidence, args.hypothesis_enzyme_catalog, args.hypothesis_balance), indent=2))
+        print(json.dumps(build_networkdb(args.network, args.compounds, args.crosswalk, args.out, args.hypotheses, args.genome_search, args.genome_fasta, args.mapping, args.lineage, args.atom_audit, args.pubchem, args.identity_set, args.hypothetical_connections, args.hypothetical_reactions, args.hypothesis_enzyme_evidence, args.hypothesis_enzyme_catalog, args.hypothesis_balance, args.identity_set_bridges), indent=2))
     elif args.command == "map-snapshot":
         print(json.dumps(build_map_snapshot(args.networkdb, args.out, args.lineage, args.focus_out), indent=2))
     elif args.command == "hypothesis-lineage":
@@ -294,6 +299,8 @@ def main() -> None:
         print(json.dumps(refresh_identity_set_upstream(args.compounds, args.out, args.bq), indent=2))
     elif args.command == "map-identity-set-upstream":
         print(json.dumps(map_identity_set_upstream(args.source, args.out), indent=2))
+    elif args.command == "identity-set-core-bridges":
+        print(json.dumps(build_identity_set_core_bridges(args.source, args.network, args.out), indent=2))
     elif args.command == "extract-cannabisdb-table":
         print(json.dumps(extract_terpedia_table(args.xml, args.out, args.report), indent=2))
 

@@ -12,6 +12,7 @@ from rdkit import Chem
 
 from .identity_set import SOURCE_TABLE
 from .atom_mapping import map_reaction_smiles, map_identity_pair_smiles
+from .terpedia import load_network
 
 
 EDGE_TABLE = "terpedia-489015.terpedia_core.terpene_metabolic_map_edges_current"
@@ -94,6 +95,65 @@ def map_identity_set_upstream(input_path: Path, output: Path) -> dict:
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(mapped_report, separators=(",", ":")) + "\n")
     return {key: mapped_report[key] for key in ("edge_count", "mapped_product_carbon_atoms", "unresolved_product_carbon_atoms", "mapping_status_counts")}
+
+
+def build_identity_set_core_bridges(mapped_path: Path, network_path: Path, output: Path) -> dict:
+    """Find candidate bridges from core Terpedia metabolites to CDB targets."""
+    report = json.loads(mapped_path.read_text())
+    network = load_network(network_path)
+    core_by_key = {}
+    for entity in network.get("entities", []):
+        if entity.get("type") != "metabolite":
+            continue
+        smiles = entity.get("attributes", {}).get("canonicalSmiles")
+        molecule = Chem.MolFromSmiles(smiles) if smiles else None
+        if molecule is not None:
+            core_by_key.setdefault(Chem.MolToInchiKey(molecule), []).append(entity["id"])
+    identity_keys = {}
+    for identity_id, record in report.get("identity_records", {}).items():
+        molecule = Chem.MolFromSmiles(record.get("smiles")) if record.get("smiles") else None
+        if molecule is not None:
+            identity_keys[identity_id] = Chem.MolToInchiKey(molecule)
+    cdb_by_terpene = report.get("product_cannabisdb_ids", {})
+    bridges = []
+    for row in report.get("rows", []):
+        precursor_id = row.get("precursor_identity_id")
+        product_id = row.get("product_identity_id")
+        core_entities = core_by_key.get(identity_keys.get(precursor_id), [])
+        cdb_ids = cdb_by_terpene.get(product_id, [])
+        if not core_entities or not cdb_ids:
+            continue
+        for core_id in core_entities:
+            for cdb_id in cdb_ids:
+                bridges.append({
+                    "cannabisdb_id": cdb_id,
+                    "core_entity_id": core_id,
+                    "precursor_identity_id": precursor_id,
+                    "product_identity_id": product_id,
+                    "reaction_id": row.get("reaction_id"),
+                    "source_type": row.get("source_type"),
+                    "evidence_type": row.get("evidence_type"),
+                    "source_url": row.get("source_url"),
+                    "reaction_smarts": row.get("reaction_smarts"),
+                    "target_pair_carbon_mapping": row.get("target_pair_carbon_mapping"),
+                    "status": "candidate",
+                    "claim_boundary": "This exact-structure bridge connects a Terpedia core metabolite to a CannabisDB identity-set target through a source-linked reaction edge. It is a candidate hypothesis, not proof of reaction direction, enzyme activity, endogenous biosynthesis, or CO2 carbon provenance.",
+                })
+    bridges.sort(key=lambda bridge: (bridge["cannabisdb_id"], bridge["reaction_id"] or "", bridge["core_entity_id"]))
+    result = {
+        "schema": "cannabis-carbon.identity-set-core-bridges.v1",
+        "source_mapped_upstream": str(mapped_path),
+        "source_network": str(network_path),
+        "method": "Exact InChIKey matching of identity-set precursor structures to Terpedia core metabolite structures, retaining source edge and target-pair RDKit evidence.",
+        "bridge_count": len(bridges),
+        "target_count": len({bridge["cannabisdb_id"] for bridge in bridges}),
+        "core_entity_count": len({bridge["core_entity_id"] for bridge in bridges}),
+        "bridges": bridges,
+        "claim_boundary": "Candidate bridges are structural/source links only; they do not establish enzyme function, physiological direction, isotope tracing, or in-vivo Cannabis biosynthesis.",
+    }
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(result, separators=(",", ":")) + "\n")
+    return {key: result[key] for key in ("bridge_count", "target_count", "core_entity_count")}
 
 
 def refresh_identity_set_upstream(compounds_path: Path, output: Path, bq_binary: str = "bq") -> dict:

@@ -318,6 +318,11 @@ explicit unresolved candidate structures, not assigned precursor identities.
 RDKit mapped 282 of those alternatives completely and retained 14,252
 candidate/inferred atom correspondences across the alternative layer; 255
 alternatives and 3,629 product atoms remain unresolved.
+An additional core-bridge projection joins 135 of these candidate precursor
+structures to 25 exact-matched Terpedia core metabolite entities, spanning 28
+CannabisDB target compounds. These gold dashed graph edges are a reviewable
+bridge between the identity-set evidence and the core reaction inventory; they
+remain outside balanced-reaction and CO₂-lineage metrics.
 Each CannabisDB compound record carries its CO₂-lineage status and reachable
 carbon-atom count, and NetworkDB links to the complete atom-level audit.
 Every one of the 1,107 working reaction records also carries a carbon-mapping
