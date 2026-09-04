@@ -55,3 +55,10 @@ def test_full_carbon_mcs_maps_oxidation_with_oxygen_only_cofactor():
     assert result["status"] == "inferred"
     assert len(result["mappings"]) == 22
     assert all(row["method"] == "rdkit-full-carbon-mcs-conservation" for row in result["mappings"])
+
+
+def test_equivalent_redox_carbon_skeleton_is_candidate_not_unresolved():
+    result = map_reaction_smiles("CC(=O)O.CC>>CC(O)O.CC")
+    assert result["status"] == "candidate"
+    assert result["unresolved_product_carbons"] == []
+    assert any(item["method"] == "rdkit-equivalent-carbon-skeleton-candidate" for item in result["mappings"])

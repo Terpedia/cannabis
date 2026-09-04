@@ -143,6 +143,41 @@ def _carbon_skeleton(molecule: Chem.Mol) -> tuple[Chem.Mol, list[int]]:
     return skeleton.GetMol(), source_indices
 
 
+def _carbon_skeleton_key(molecule: Chem.Mol) -> str:
+    """Canonical key for carbon connectivity, ignoring heteroatom chemistry."""
+    skeleton, _ = _carbon_skeleton(molecule)
+    return Chem.MolToSmiles(skeleton, canonical=True)
+
+
+def _equivalent_carbon_skeleton_candidates(reactants: list[Chem.Mol], products: list[Chem.Mol]) -> dict[tuple[int, int], list[tuple[int, int]]]:
+    """Map carbon atoms across equivalent skeletons as candidate provenance.
+
+    Redox and protonation changes can alter the heteroatom and bond-order
+    representation of a cofactor while leaving its carbon connectivity intact.
+    When the carbon-only skeleton is identical, retain every graph-isomorphism
+    alternative. Repeated equivalent reactant copies are therefore candidate,
+    not inferred, assignments.
+    """
+    reactant_groups = {}
+    for ri, molecule in enumerate(reactants):
+        if any(atom.GetAtomicNum() == 6 for atom in molecule.GetAtoms()):
+            reactant_skeleton, reactant_indices = _carbon_skeleton(molecule)
+            reactant_groups.setdefault(_carbon_skeleton_key(molecule), []).append((ri, reactant_skeleton, reactant_indices))
+    candidates = {}
+    for pi, product in enumerate(products):
+        if not any(atom.GetAtomicNum() == 6 for atom in product.GetAtoms()):
+            continue
+        product_skeleton, product_indices = _carbon_skeleton(product)
+        groups = reactant_groups.get(_carbon_skeleton_key(product), [])
+        for ri, reactant_skeleton, reactant_indices in groups:
+            if reactant_skeleton.GetNumAtoms() != product_skeleton.GetNumAtoms():
+                continue
+            for match in reactant_skeleton.GetSubstructMatches(product_skeleton, uniquify=True):
+                for skeleton_index, product_atom in enumerate(product_indices):
+                    candidates.setdefault((pi, product_atom), []).append((ri, reactant_indices[match[skeleton_index]]))
+    return candidates
+
+
 def _full_carbon_skeleton_mapping(reactants: list[Chem.Mol], products: list[Chem.Mol]) -> list[dict] | None:
     """Map a unique conserved carbon skeleton when heteroatom chemistry changes."""
     carbon_reactants = [(i, mol) for i, mol in enumerate(reactants) if any(a.GetAtomicNum() == 6 for a in mol.GetAtoms())]
@@ -254,12 +289,29 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
             exact_product_atoms.add((pi, atom.GetIdx()))
             used_reactant_carbons.add((ri, matches[0][atom.GetIdx()]))
 
+    # Preserve carbon provenance through redox/protonation changes in a
+    # cofactor's carbon skeleton, but only for product atoms that the
+    # conservative mappings above could not resolve. Existing inferred
+    # correspondences must not be demoted by this broader candidate layer.
+    skeleton_candidates = _equivalent_carbon_skeleton_candidates(reactants, products)
+    skeleton_product_atoms = set()
+    for (pi, product_atom), choices in skeleton_candidates.items():
+        if not choices:
+            continue
+        existing = [mapping for mapping in mappings if mapping.get("product_index") == pi and mapping.get("product_atom") == product_atom]
+        if any(mapping.get("status") == "inferred" for mapping in existing):
+            continue
+        mappings = [mapping for mapping in mappings if not (mapping.get("product_index") == pi and mapping.get("product_atom") == product_atom)]
+        alternatives = [{"reactant_index": ri, "reactant_atom": ra} for ri, ra in sorted(set(choices))]
+        mappings.append({"product_index": pi, "product_atom": product_atom, "method": "rdkit-equivalent-carbon-skeleton-candidate", "status": "candidate", "alternatives": alternatives})
+        skeleton_product_atoms.add((pi, product_atom))
+
     # Process constrained product atoms next. A reactant atom may be used only
     # once; this prevents repeated local signatures from fabricating carbon
     # conservation. Non-unique matches are retained as explicit ambiguity.
     candidate_rows = []
     for pi, atom in product_carbons:
-        if (pi, atom.GetIdx()) in exact_product_atoms:
+        if (pi, atom.GetIdx()) in exact_product_atoms or (pi, atom.GetIdx()) in skeleton_product_atoms:
             continue
         choices = [(ri, ra) for ri, ra, signature in reactant_carbons if signature == _carbon_signature(atom)]
         candidate_rows.append((len(choices), pi, atom, choices))
@@ -284,6 +336,8 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
     if len(reactants) > 1 and sum(m.GetNumAtoms() for m in reactants + products) <= 60:
         mcs_candidates = _mcs_pair_carbon_candidates(reactants, products)
         for mapping in mappings:
+            if mapping.get("method") == "rdkit-equivalent-carbon-skeleton-candidate":
+                continue
             key = (mapping["product_index"], mapping["product_atom"])
             choices = mcs_candidates.get(key, set())
             if not choices:
@@ -347,5 +401,10 @@ def map_reaction_smiles(reaction_smiles: str) -> dict:
             mapping.pop("alternatives", None)
             break
     unresolved = [{"product_index": m["product_index"], "product_atom": m["product_atom"], "status": m["status"], "reason": m.get("reason")} for m in mappings if m["status"] not in ("inferred", "candidate")]
-    status = "inferred" if not unresolved and all(m["status"] == "inferred" for m in mappings) else "unresolved"
+    if unresolved:
+        status = "unresolved"
+    elif any(mapping["status"] == "candidate" for mapping in mappings):
+        status = "candidate"
+    else:
+        status = "inferred"
     return {"status": status, "mappings": mappings, "unresolved_product_carbons": unresolved, "product_carbon_atom_count": sum(atom.GetAtomicNum() == 6 for product in products for atom in product.GetAtoms()), "reactant_count": len(reactants), "product_count": len(products)}

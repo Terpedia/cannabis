@@ -200,18 +200,18 @@ they share one route.
 
 The report `data/reports/carbon-lineage.json` applies the plant carbon-source
 constraint explicitly: CO₂ is the only admissible carbon input. In the current
-working network, 3,165 carbon atom nodes across the reachable metabolite
-entities are reachable from the CO₂ seed through 4,768 inferred structural
-edges and 87,885 explicitly retained candidate alternative edges. Candidate alternatives
+working network, 2,641 carbon atom nodes across the reachable metabolite
+entities are reachable from the CO₂ seed through 3,990 inferred structural
+edges and 54,509 explicitly retained candidate alternative edges. Candidate alternatives
 come from ambiguous one-to-one RDKit mappings and pairwise MCS candidates for
 small multi-substrate reactions; they are visible for review but are not
 promoted to confirmed provenance. This uses 22 explicit Terpedia
 physiological direction assertions plus source-backed Rubisco and Calvin-cycle
-direction records. There are 390 carbon-containing reactant entities outside
+direction records. There are 460 carbon-containing reactant entities outside
 that lineage and therefore reported as external-carbon-source blockers. The
-current target summary is 1 supported, 241 candidate, and 5,978 unresolved
+current target summary is 1 supported, 195 candidate, and 6,024 unresolved
 CannabisDB compounds. The one supported target is the CannabisDB CO₂ record
-itself; 241 candidate targets have exact or candidate identities with partial
+itself; 195 candidate targets have exact or candidate identities with partial
 or complete CO₂-reachable carbon atoms. The remaining connectivity identity
 candidates remain unresolved because they are not yet reachable from CO₂. This
 indicates that the imported reaction network is
@@ -225,13 +225,13 @@ remain unresolved for CO₂ reachability, and 242 identity-resolved targets are
 already candidate or supported. Of the 88 specialty-name targets, 17 are
 candidate and 71 remain unresolved. This partitions the next work into identity
 resolution versus reaction/pathway reconstruction.
-It also reports `carbon_mapping_blockers`: 765 reactions and 16,406 product
+It also reports `carbon_mapping_blockers`: 493 reactions and 8,864 product
 carbon rows currently require ambiguity or unresolved-mapping curation.
 
 The companion `data/reports/carbon-atom-audit.json` and published
 `docs/data/carbon-atom-audit.json` artifacts partition all **285,623**
-CannabisDB carbon atoms into **1 supported**, **1,579 candidate**, and
-**284,043 unresolved** atoms. Each group retains CannabisDB atom indices,
+CannabisDB carbon atoms into **1 supported**, **1,356 candidate**, and
+**284,266 unresolved** atoms. Each group retains CannabisDB atom indices,
 resolved Terpedia atom indices when available, reaction references, provenance
 URLs, and the blocking reason. The target atom indices are explicitly scoped to
 RDKit atom indices in each CannabisDB SMILES field and are not assumed to equal
@@ -243,8 +243,8 @@ IDs from NetworkDB; unresolved atoms have no fabricated path and retain their
 blocker. These enzyme and protein annotations remain hypotheses or source
 associations, not functional validation.
 The completeness artifact reports the same denominator as percentages:
-0.000350% strict-supported, 0.553177% evidence-bearing when candidate atoms
-are included, and 99.446823% unresolved.
+0.000350% strict-supported, 0.475102% evidence-bearing when candidate atoms
+are included, and 99.524898% unresolved.
 
 These are data-coverage metrics. They do not imply that all CannabisDB
 compounds are endogenous cannabis metabolites or that Terpedia's reaction graph
@@ -298,15 +298,15 @@ retained as explicit negatives rather than being treated as missing data.
 Each CannabisDB compound record carries its CO₂-lineage status and reachable
 carbon-atom count, and NetworkDB links to the complete atom-level audit.
 Every one of the 1,107 working reaction records also carries a carbon-mapping
-summary from the RDKit report: 332 reactions are fully inferred, 10 retain
-candidate mappings, 380 retain ambiguous carbon mappings, 385 retain
+summary from the RDKit report: 332 reactions are fully inferred, 282 retain
+candidate mappings, 243 retain ambiguous carbon mappings, 250 retain
 unresolved mappings, and 0 are unavailable. These statuses are
 independent of enzyme status and are exposed as a separate Cytoscape filter.
 Each reaction also records its inferred and candidate lineage-edge counts and
 the source report used to derive them. The Pages Cytoscape view exposes
 `non_enzymatic` as a separate evidence-status filter.
-The generated `data/reports/carbon-mapping-work-queue.json` ranks the 765
-reactions with unresolved or ambiguous product-carbon rows: 16,406 carbon
+The generated `data/reports/carbon-mapping-work-queue.json` ranks the 493
+reactions with unresolved or ambiguous product-carbon rows: 8,864 carbon
 rows currently require mapping curation. Ranking prioritizes unresolved rows,
 then ambiguous rows, then total blocked carbon weight. Each item retains
 reaction source, mapping methods, known enzyme IDs, and attached genome

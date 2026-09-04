@@ -92,51 +92,52 @@
     "crosswalk_matched_carbon_atoms": 1585
   },
   "coverage": {
-    "mapped_carbon_atoms": 6294,
-    "unresolved_carbon_atoms": 16351,
+    "mapped_carbon_atoms": 5225,
+    "unresolved_carbon_atoms": 8864,
     "coverage_percent": null,
     "coverage_denominator": "all CannabisDB carbons; no complete pathway crosswalk",
     "reaction_product_carbon_atoms": 22751,
-    "reaction_mapping_coverage_percent": 27.6647,
+    "reaction_mapping_coverage_percent": 22.966,
     "reaction_mapping_status_counts": {
       "inferred": 279,
-      "unresolved": 828
+      "candidate": 281,
+      "unresolved": 547
     },
     "carbon_mapping_blockers": {
-      "reactions_with_blocked_product_carbon_rows": 764,
+      "reactions_with_blocked_product_carbon_rows": 493,
       "product_carbon_row_status_counts": {
-        "ambiguous": 15179,
-        "candidate": 106,
-        "inferred": 6294,
-        "unresolved": 1172
+        "ambiguous": 8440,
+        "candidate": 8662,
+        "inferred": 5225,
+        "unresolved": 424
       },
-      "blocked_product_carbon_rows": 16351
+      "blocked_product_carbon_rows": 8864
     },
     "co2_lineage": {
       "target_summary": {
         "supported": 1,
-        "candidate": 241,
-        "unresolved": 5978
+        "candidate": 195,
+        "unresolved": 6024
       },
-      "reachable_carbon_nodes": 3160,
-      "resolved_carbon_edges": 92065,
-      "inferred_carbon_edges": 4926,
-      "candidate_carbon_edges": 87139,
-      "external_carbon_input_entity_count": 392,
+      "reachable_carbon_nodes": 2641,
+      "resolved_carbon_edges": 58499,
+      "inferred_carbon_edges": 3990,
+      "candidate_carbon_edges": 54509,
+      "external_carbon_input_entity_count": 460,
       "carbon_source_policy": "CO2 is the only admissible carbon source for a Cannabis plant; every other carbon-containing reactant is an explicit external-carbon-source blocker until connected to CO2.",
       "target_triage": {
         "target_counts_by_status_and_identity": {
-          "candidate:candidate": 167,
-          "candidate:exact": 74,
+          "candidate:candidate": 135,
+          "candidate:exact": 60,
           "supported:exact": 1,
-          "unresolved:candidate": 91,
-          "unresolved:exact": 77,
+          "unresolved:candidate": 123,
+          "unresolved:exact": 91,
           "unresolved:unresolved": 5810
         },
         "carbon_atoms_by_target_status": {
-          "candidate": 2572,
+          "candidate": 2047,
           "supported": 1,
-          "unresolved": 283050
+          "unresolved": 283575
         },
         "specialty_target_counts_by_status": {
           "candidate": 17,
@@ -144,12 +145,12 @@
         },
         "blocking_reason_counts": {
           "all-entity-product-carbons-reachable-from-CO2": 1,
-          "candidate-connectivity-identity-and-all-entity-product-carbons-reachable-from-CO2": 31,
-          "candidate-connectivity-identity-not-reachable-from-co2": 91,
-          "candidate-connectivity-identity-with-partial-co2-lineage": 136,
-          "entity-not-reachable-from-CO2-through-inferred-carbon-edges": 77,
+          "candidate-connectivity-identity-and-all-entity-product-carbons-reachable-from-CO2": 25,
+          "candidate-connectivity-identity-not-reachable-from-co2": 123,
+          "candidate-connectivity-identity-with-partial-co2-lineage": 110,
+          "entity-not-reachable-from-CO2-through-inferred-carbon-edges": 91,
           "no-terpedia-identity": 5810,
-          "partial-entity-product-carbon-reachability": 74
+          "partial-entity-product-carbon-reachability": 60
         }
       }
     },
@@ -158,14 +159,14 @@
       "carbon_atoms_total": 285623,
       "status_counts": {
         "supported": 1,
-        "candidate": 1579,
+        "candidate": 1356,
         "inferred": 0,
-        "unresolved": 284043
+        "unresolved": 284266
       },
       "compound_count": 6220,
       "strict_supported_percent": 0.00035,
-      "evidence_bearing_percent": 0.553177,
-      "unresolved_percent": 99.446823
+      "evidence_bearing_percent": 0.475102,
+      "unresolved_percent": 99.524898
     }
   },
   "claim_boundary": "These are database-coverage metrics, not evidence that every listed compound is biosynthesized by Cannabis.",
@@ -184,24 +185,24 @@
     "claim_boundary": "Hypothesis-layer counts are separate from balanced reaction and CO2 lineage metrics; they represent source-linked candidates and unresolved structures, not confirmed Cannabis metabolism.",
     "candidate_lineage": {
       "source": "data/reports/hypothesis-lineage.json",
-      "seed_core_reachable_compounds": 242,
+      "seed_core_reachable_compounds": 196,
       "candidate_edges_traversed": 6294,
-      "candidate_reachable_entities": 343,
+      "candidate_reachable_entities": 58,
       "target_summary": {
         "counts_by_status": {
-          "candidate": 17,
-          "core": 242,
-          "unresolved": 5961
+          "candidate": 5,
+          "core": 196,
+          "unresolved": 6019
         },
         "carbon_atoms_by_status": {
-          "candidate": 387,
-          "core": 2573,
-          "unresolved": 282663
+          "candidate": 50,
+          "core": 2048,
+          "unresolved": 283525
         },
-        "candidate_cannabisdb_targets": 17,
-        "candidate_cannabisdb_carbon_atoms": 387,
-        "candidate_targets_with_complete_atom_paths": 12,
-        "candidate_carbon_atoms_with_complete_atom_paths": 241
+        "candidate_cannabisdb_targets": 5,
+        "candidate_cannabisdb_carbon_atoms": 50,
+        "candidate_targets_with_complete_atom_paths": 5,
+        "candidate_carbon_atoms_with_complete_atom_paths": 50
       },
       "blocked_unresolved_hypothesis_edges": {
         "ambiguous-connectivity-match": 6,
