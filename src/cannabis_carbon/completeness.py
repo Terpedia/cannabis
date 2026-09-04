@@ -11,7 +11,7 @@ from .terpedia import load_network
 _SPECIALTY_NAME = re.compile(r"cannab|tetrahydrocannabin|cannabidiol|cannabiger|cannabichrom|cannabinol|cannabicycl|cannabielso|cannabifuran|cannabitriol|cannabid|cannabivarin|cannabistilbene|cannabisativine", re.IGNORECASE)
 
 
-def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None, crosswalk_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None, hypotheses_path: Path | None = None, pubchem_path: Path | None = None, networkdb_path: Path | None = None, hypothesis_lineage_path: Path | None = None) -> dict:
+def compute_completeness(network_path: Path, compounds_path: Path, mapping_path: Path | None = None, crosswalk_path: Path | None = None, lineage_path: Path | None = None, atom_audit_path: Path | None = None, hypotheses_path: Path | None = None, pubchem_path: Path | None = None, networkdb_path: Path | None = None, hypothesis_lineage_path: Path | None = None, candidate_path_carbon_path: Path | None = None) -> dict:
     network = load_network(network_path)
     entities = {e["id"]: e for e in network["entities"]}
     metabolites = {i for i, e in entities.items() if e.get("type") == "metabolite"}
@@ -120,5 +120,23 @@ def compute_completeness(network_path: Path, compounds_path: Path, mapping_path:
             "target_summary": hypothesis_lineage.get("target_summary", {}),
             "blocked_unresolved_hypothesis_edges": hypothesis_lineage.get("blocked_unresolved_hypothesis_edges", {}),
             "claim_boundary": hypothesis_lineage.get("claim_boundary"),
+        }
+    if candidate_path_carbon_path and candidate_path_carbon_path.exists():
+        candidate_paths = json.loads(candidate_path_carbon_path.read_text())
+        path_rows = candidate_paths.get("rows", [])
+        candidate_statuses = Counter(row.get("carbon_mapping", {}).get("status", "unresolved") for row in path_rows)
+        candidate_products = {row.get("candidate_product_terpene_id") for row in path_rows if row.get("candidate_product_terpene_id")}
+        candidate_core_edges = sum(len(row.get("core_path_carbon_edges", [])) for row in path_rows)
+        result["coverage"]["candidate_co2_path_carbon_layer"] = {
+            "source": str(candidate_path_carbon_path),
+            "path_count": candidate_paths.get("path_count", len(path_rows)),
+            "candidate_product_count": len(candidate_products),
+            "complete_product_carbon_paths": candidate_paths.get("paths_with_complete_product_carbon_mapping", 0),
+            "mapped_product_carbon_atoms": candidate_paths.get("mapped_product_carbon_atoms", 0),
+            "unresolved_product_carbon_atoms": candidate_paths.get("unresolved_product_carbon_atoms", 0),
+            "carbon_mapping_status_counts": dict(sorted(candidate_statuses.items())),
+            "atom_level_core_path_edges": candidate_core_edges,
+            "path_mode": "all-reactions-reversible-upper-bound",
+            "claim_boundary": "These are source-linked, structurally mapped candidate paths. Reversible traversal is an upper bound and does not establish physiological direction, enzyme activity, isotope tracing, or in-vivo Cannabis biosynthesis.",
         }
     return result

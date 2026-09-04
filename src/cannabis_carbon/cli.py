@@ -112,6 +112,7 @@ def main() -> None:
     p_complete.add_argument("--pubchem", type=Path, default=Path("data/reports/pubchem-resolution.json"))
     p_complete.add_argument("--networkdb", type=Path, default=Path("docs/data/networkdb.json"))
     p_complete.add_argument("--hypothesis-lineage", type=Path, default=Path("data/reports/hypothesis-lineage.json"))
+    p_complete.add_argument("--candidate-path-carbon", type=Path, default=Path("data/reports/terpene-identity-set-reversible-candidate-lineage-carbon.json"))
     p_complete.add_argument("--out", type=Path, default=Path("data/reports/completeness.json"))
     p_queue = sub.add_parser("candidate-queue")
     p_queue.add_argument("source", type=Path)
@@ -289,7 +290,7 @@ def main() -> None:
     elif args.command == "map-reactions":
         print(json.dumps(build_reaction_report(args.source, args.out), indent=2))
     elif args.command == "completeness":
-        result = compute_completeness(args.network, args.compounds, args.mapping, args.crosswalk, args.lineage, args.atom_audit, args.hypotheses, args.pubchem, args.networkdb, args.hypothesis_lineage)
+        result = compute_completeness(args.network, args.compounds, args.mapping, args.crosswalk, args.lineage, args.atom_audit, args.hypotheses, args.pubchem, args.networkdb, args.hypothesis_lineage, args.candidate_path_carbon)
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(json.dumps(result, indent=2) + "\n")
         print(json.dumps(result, indent=2))

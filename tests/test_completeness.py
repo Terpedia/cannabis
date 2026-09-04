@@ -143,3 +143,27 @@ def test_completeness_reports_hypothesis_layer_separately(tmp_path):
     assert result["hypothesis_layer"]["hypothesis_edges"] == 2
     assert result["hypothesis_layer"]["hypothesis_edges_with_enzyme_evidence"] == 1
     assert result["hypothesis_layer"]["hypothesis_reaction_inventory"] == 3
+
+
+def test_completeness_reports_candidate_path_carbon_layer(tmp_path):
+    network_path = tmp_path / "network.json.gz"
+    with gzip.open(network_path, "wt") as handle: json.dump({"entities": [], "statements": []}, handle)
+    compounds_path = tmp_path / "compounds.json"
+    compounds_path.write_text(json.dumps({"compounds": []}))
+    candidate_path = tmp_path / "candidate-path-carbon.json"
+    candidate_path.write_text(json.dumps({
+        "path_count": 2,
+        "paths_with_complete_product_carbon_mapping": 1,
+        "mapped_product_carbon_atoms": 4,
+        "unresolved_product_carbon_atoms": 1,
+        "rows": [
+            {"candidate_product_terpene_id": "T1", "carbon_mapping": {"status": "inferred"}, "core_path_carbon_edges": [{"from_atom": None}]},
+            {"candidate_product_terpene_id": "T2", "carbon_mapping": {"status": "unresolved"}, "core_path_carbon_edges": []},
+        ],
+    }))
+    result = compute_completeness(network_path, compounds_path, candidate_path_carbon_path=candidate_path)
+    layer = result["coverage"]["candidate_co2_path_carbon_layer"]
+    assert layer["path_count"] == 2
+    assert layer["candidate_product_count"] == 2
+    assert layer["carbon_mapping_status_counts"] == {"inferred": 1, "unresolved": 1}
+    assert layer["atom_level_core_path_edges"] == 1
