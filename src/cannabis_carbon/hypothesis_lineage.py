@@ -18,6 +18,11 @@ def _carbon_count(smiles: str | None) -> int:
     return sum(atom.GetAtomicNum() == 6 for atom in molecule.GetAtoms()) if molecule else 0
 
 
+def _structure_key(smiles: str | None) -> str:
+    molecule = Chem.MolFromSmiles(smiles or "")
+    return Chem.MolToSmiles(molecule, canonical=True) if molecule else (smiles or "")
+
+
 def _carbon_input_accounting(edge: dict, source_carbon_atoms: int, product_carbon_atoms: int) -> dict:
     """Expose carbon-bearing reaction inputs without claiming atom correspondence.
 
@@ -39,6 +44,27 @@ def _carbon_input_accounting(edge: dict, source_carbon_atoms: int, product_carbo
     missing_carbon_counts = [_carbon_count(smiles) for smiles in missing]
     ancillary_required = sum(required_carbon_counts[1:]) if required_carbon_counts else 0
     missing_carbon = sum(missing_carbon_counts)
+    missing_by_structure = Counter(_structure_key(smiles) for smiles in missing)
+    input_sources = []
+    for index, smiles in enumerate(required):
+        carbon_count = required_carbon_counts[index]
+        if not carbon_count:
+            continue
+        structure_key = _structure_key(smiles)
+        missing_count = min(1, missing_by_structure.get(structure_key, 0))
+        if missing_count:
+            missing_by_structure[structure_key] -= missing_count
+        input_sources.append({
+            "input_index": index,
+            "carbon_atom_count": carbon_count,
+            "structure": smiles,
+            "canonical_structure": structure_key,
+            "corpus_status": "missing" if missing_count else "represented-or-unresolved-by-structure",
+        })
+    single_carbon_ancillary_inputs = [
+        item for item in input_sources
+        if item["input_index"] > 0 and item["carbon_atom_count"] == 1
+    ]
     endpoint_delta = product_carbon_atoms - source_carbon_atoms
     if endpoint_delta > 0 and ancillary_required:
         status = "additional-carbon-input-required"
@@ -57,6 +83,8 @@ def _carbon_input_accounting(edge: dict, source_carbon_atoms: int, product_carbo
         "missing_input_carbon_atoms": missing_carbon,
         "required_input_carbon_counts": required_carbon_counts,
         "missing_input_carbon_counts": missing_carbon_counts,
+        "carbon_bearing_input_sources": input_sources,
+        "unique_single_carbon_ancillary_input": single_carbon_ancillary_inputs[0] if len(single_carbon_ancillary_inputs) == 1 else None,
         "status": status,
     }
 

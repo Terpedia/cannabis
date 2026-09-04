@@ -29,4 +29,5 @@ def test_carbon_input_accounting_exposes_unresolved_cosubstrate_carbon():
     assert accounting["endpoint_carbon_delta"] == 1
     assert accounting["required_ancillary_carbon_atoms"] == 1
     assert accounting["missing_input_carbon_atoms"] == 1
+    assert accounting["unique_single_carbon_ancillary_input"]["input_index"] == 1
     assert accounting["status"] == "additional-carbon-input-required"
