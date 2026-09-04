@@ -49,6 +49,13 @@
     "compounds_total": 6220,
     "carbon_atoms_total": 285623,
     "compound_to_terpedia_identity_crosswalk": "exact-inchikey-plus-candidate-tautomer-and-formula-compatible-name-layers",
+    "pubchem_resolution": {
+      "total": 6220,
+      "resolved": 3586,
+      "ambiguous": 130,
+      "unresolved": 2504,
+      "missing_inchikey": 0
+    },
     "compounds_with_exact_terpedia_identity": 152,
     "compounds_with_ambiguous_identity": 1,
     "compounds_without_exact_terpedia_identity": 6068,

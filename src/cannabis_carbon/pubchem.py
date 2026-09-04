@@ -8,6 +8,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+import re
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
@@ -15,6 +16,7 @@ from pathlib import Path
 
 PROPERTIES = "InChIKey,Title,IUPACName,CanonicalSMILES,IsomericSMILES,MolecularFormula,InChI"
 BASE_URL = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/inchikey"
+ID_EXCHANGE_URL = "https://pubchem.ncbi.nlm.nih.gov/idexchange/idexchange.cgi"
 
 
 def _fetch_batch(keys: list[str], retries: int = 3) -> list[dict]:
@@ -41,7 +43,54 @@ def _fetch_batch(keys: list[str], retries: int = 3) -> list[dict]:
     return []
 
 
-def resolve_pubchem(compounds_path: Path, output: Path, batch_size: int = 25, pause: float = 0.25, workers: int = 4, cache_path: Path | None = None) -> dict:
+def _fetch_bulk(keys: list[str], poll_seconds: int = 5, timeout_seconds: int = 1800) -> list[dict]:
+    """Use PubChem's queued Identifier Exchange service for large key sets."""
+    payload = urllib.parse.urlencode({
+        "inputtype": "inchikey", "inputdsn": "", "idinput": "str",
+        "idstr": "\n".join(keys), "operatortype": "samecid", "outputtype": "cid",
+        "outputdsn": "", "method": "file-pair", "compression": "none",
+        "submitjob": "Submit Job",
+    }).encode()
+    request = urllib.request.Request(ID_EXCHANGE_URL, data=payload, headers={"Content-Type": "application/x-www-form-urlencoded"})
+    with urllib.request.urlopen(request, timeout=60) as response:
+        html = response.read().decode("utf-8", "replace")
+    download_match = re.search(r"https://pubchem\.ncbi\.nlm\.nih\.gov/rest/download/[^\"< ]+", html)
+    reqid_match = re.search(r"reqid=(\d+)", html)
+    if download_match:
+        download_url = download_match.group(0).replace("&amp;", "&")
+    elif reqid_match:
+        download_url = None
+    else:
+        raise RuntimeError("PubChem Identifier Exchange did not return a request ID or download URL")
+    reqid = reqid_match.group(1) if reqid_match else None
+    start = re.search(r"start=([^&\"]+)", html)
+    query = {"reqid": reqid, "inputtype": "inchikey", "inputdsn": "", "operatortype": "samecid", "outputtype": "cid", "outputdsn": "", "method": "file-pair", "compression": "none", "progress": "1"}
+    if start:
+        query["start"] = urllib.parse.unquote(start.group(1))
+    if not download_url:
+        status_url = f"{ID_EXCHANGE_URL}?{urllib.parse.urlencode(query)}"
+        deadline = time.monotonic() + timeout_seconds
+        while time.monotonic() < deadline:
+            with urllib.request.urlopen(status_url, timeout=60) as response:
+                status_html = response.read().decode("utf-8", "replace")
+            found = re.search(r"https://pubchem\.ncbi\.nlm\.nih\.gov/rest/download/[^\"< ]+", status_html)
+            if found:
+                download_url = found.group(0).replace("&amp;", "&")
+                break
+            time.sleep(poll_seconds)
+    if not download_url:
+        raise TimeoutError(f"PubChem Identifier Exchange request {reqid} exceeded {timeout_seconds}s")
+    with urllib.request.urlopen(download_url, timeout=60) as response:
+        text = response.read().decode("utf-8", "replace")
+    rows = []
+    for line in text.splitlines():
+        parts = line.split("\t")
+        if len(parts) >= 2 and parts[1].isdigit():
+            rows.append({"InChIKey": parts[0], "CID": int(parts[1])})
+    return rows
+
+
+def resolve_pubchem(compounds_path: Path, output: Path, batch_size: int = 25, pause: float = 0.25, workers: int = 4, cache_path: Path | None = None, method: str = "batch") -> dict:
     """Resolve every CannabisDB record by exact InChIKey and retain negatives."""
     source = json.loads(compounds_path.read_text())
     compounds = source.get("compounds", source if isinstance(source, list) else [])
@@ -54,20 +103,30 @@ def resolve_pubchem(compounds_path: Path, output: Path, batch_size: int = 25, pa
             if key in by_key:
                 by_key[key] = hits
     keys = sorted(key for key, hits in by_key.items() if not hits and key not in negative_keys)
-    batches = [keys[start:start + batch_size] for start in range(0, len(keys), batch_size)]
-    with ThreadPoolExecutor(max_workers=max(1, workers)) as executor:
-        results = executor.map(_fetch_batch, batches)
-        for batch, returned in zip(batches, results):
-            for item in returned:
-                key = item.get("InChIKey")
-                if key in by_key:
-                    by_key[key].append(item)
-            negative_keys.update(key for key in batch if not by_key[key])
-            if cache_path:
-                cache_path.parent.mkdir(parents=True, exist_ok=True)
-                cache_path.write_text(json.dumps({"schema": "cannabis-carbon.pubchem-cache.v1", "by_inchikey": by_key, "negative_keys": sorted(negative_keys)}, separators=(",", ":")) + "\n")
-            if pause and batch is not batches[-1]:
-                time.sleep(pause)
+    if method == "bulk" and keys:
+        returned = _fetch_bulk(keys)
+        for item in returned:
+            if item.get("InChIKey") in by_key:
+                by_key[item["InChIKey"]].append(item)
+        negative_keys.update(key for key in keys if not by_key[key])
+    else:
+        batches = [keys[start:start + batch_size] for start in range(0, len(keys), batch_size)]
+        with ThreadPoolExecutor(max_workers=max(1, workers)) as executor:
+            results = executor.map(_fetch_batch, batches)
+            for batch, returned in zip(batches, results):
+                for item in returned:
+                    key = item.get("InChIKey")
+                    if key in by_key:
+                        by_key[key].append(item)
+                negative_keys.update(key for key in batch if not by_key[key])
+                if cache_path:
+                    cache_path.parent.mkdir(parents=True, exist_ok=True)
+                    cache_path.write_text(json.dumps({"schema": "cannabis-carbon.pubchem-cache.v1", "by_inchikey": by_key, "negative_keys": sorted(negative_keys)}, separators=(",", ":")) + "\n")
+                if pause and batch is not batches[-1]:
+                    time.sleep(pause)
+    if cache_path:
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        cache_path.write_text(json.dumps({"schema": "cannabis-carbon.pubchem-cache.v1", "by_inchikey": by_key, "negative_keys": sorted(negative_keys)}, separators=(",", ":")) + "\n")
     for record in records:
         hits = by_key.get(record.get("inchikey"), [])
         if len(hits) == 1:

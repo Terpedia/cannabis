@@ -169,6 +169,7 @@ def main() -> None:
     p_pubchem.add_argument("--pause", type=float, default=0.25)
     p_pubchem.add_argument("--workers", type=int, default=4)
     p_pubchem.add_argument("--cache", type=Path, default=Path("data/reports/pubchem-cache.json"))
+    p_pubchem.add_argument("--method", choices=("bulk", "batch"), default="bulk")
     args = parser.parse_args()
     if args.command == "download":
         download(args.out, args.insecure_download)
@@ -215,7 +216,7 @@ def main() -> None:
         if not result["valid"]:
             raise SystemExit(1)
     elif args.command == "pubchem-resolve":
-        print(json.dumps(resolve_pubchem(args.compounds, args.out, args.batch_size, args.pause, args.workers, args.cache), indent=2))
+        print(json.dumps(resolve_pubchem(args.compounds, args.out, args.batch_size, args.pause, args.workers, args.cache, args.method), indent=2))
 
 
 if __name__ == "__main__":
