@@ -23,3 +23,20 @@ def test_test_hypotheses_include_assay_plan(tmp_path):
     assert summary["metabolite_targets_total"] == 1
     assert report["metabolite_target_hypotheses"][0]["proposed_tests"][2]["step"] == "13CO2_lineage_validation"
     assert report["metabolite_target_hypotheses"][0]["label"] == "Test cannabinoid"
+
+
+def test_test_hypotheses_include_non_enzymatic_conversion_plan(tmp_path):
+    queue = tmp_path / "queue.json"
+    network = tmp_path / "network.json"
+    output = tmp_path / "hypotheses.json"
+    queue.write_text(json.dumps({"items": []}))
+    network.write_text(json.dumps({"entities": [
+        {"id": "r1", "type": "biochemical_reaction", "label": "acid = neutral + CO2", "url": "https://example.test", "attributes": {"reactionClass": "non-enzymatic-decarboxylation", "conditions": "heat", "reactionSmiles": "CC(=O)O>>C=O.O=C=O"}},
+        {"id": "a", "type": "metabolite", "label": "acid"}, {"id": "b", "type": "metabolite", "label": "neutral"}, {"id": "co2", "type": "metabolite", "label": "CO2"},
+    ], "statements": [
+        {"subjectId": "r1", "predicate": "has_reactant", "objectEntityId": "a"}, {"subjectId": "r1", "predicate": "has_product", "objectEntityId": "b"}, {"subjectId": "r1", "predicate": "has_product", "objectEntityId": "co2"},
+    ]}))
+    summary = build_test_hypotheses(queue, network, output)
+    report = json.loads(output.read_text())
+    assert summary["non_enzymatic_conversion_hypotheses"] == 1
+    assert report["hypotheses"][0]["proposed_tests"][0]["step"] == "controlled_decarboxylation"

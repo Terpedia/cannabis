@@ -23,8 +23,9 @@ its source, reaction direction, atom-mapping method, and uncertainty.
   working reactions, participant coefficients, enzyme associations, exact/candidate
   identity links, and reaction-level carbon-mapping summaries are retained in
   one source-linked artifact.
-- `docs/data/testable-hypotheses.json` turns the unresolved queue into 2,243
-  falsifiable reaction records and adds one target-level hypothesis for each
+- `docs/data/testable-hypotheses.json` turns the unresolved queue and six
+  source-linked non-enzymatic conversions into 2,249 falsifiable reaction
+  records and adds one target-level hypothesis for each
   of the 6,220 CannabisDB compounds, with candidate proteins, required inputs,
   blockers, provenance, and proposed recombinant/plant validation assays. The
   target records retain CannabisDB names, aliases, formulas, SMILES, and review
