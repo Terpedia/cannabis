@@ -5,6 +5,7 @@
     "carbon_atom_partition": true,
     "atom_evidence_fields": true,
     "global_carbon_accounting": true,
+    "carbon_path_integrity": true,
     "reaction_product_carbon_rows": true,
     "reaction_mapping_classification": true,
     "no_imbalanced_reactions": true
@@ -14,12 +15,12 @@
   "carbon_atoms_audited": 285623,
   "carbon_atom_status_counts": {
     "unresolved": 284220,
+    "candidate": 1402,
     "supported": 1,
-    "inferred": 0,
-    "candidate": 1402
+    "inferred": 0
   },
   "reactions_checked": 1107,
   "imbalanced_reaction_count": 0,
   "failures": [],
-  "claim_boundary": "This gate validates artifact accounting, evidence-field presence, and stoichiometric status. It does not establish enzyme function, isotope tracing, or in-vivo flux."
+  "claim_boundary": "This gate validates artifact accounting, evidence-field presence, path continuity, and stoichiometric status. It does not establish enzyme function, isotope tracing, or in-vivo flux."
 }

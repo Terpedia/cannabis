@@ -297,7 +297,7 @@ def build_carbon_atom_audit(network_path: Path, lineage_path: Path, crosswalk_pa
         path = []
         while state in predecessors:
             previous, edge = predecessors[state]
-            path.append({key: edge.get(key) for key in ("reaction_id", "reactant_entity_id", "reactant_atom", "product_entity_id", "product_atom", "status", "provenance", "directional_rhea_id")})
+            path.append({"reaction_id": edge.get("reaction_id"), "from_entity_id": edge.get("reactant_entity_id"), "from_atom": edge.get("reactant_atom"), "to_entity_id": edge.get("product_entity_id"), "to_atom": edge.get("product_atom"), "status": edge.get("status"), "provenance": edge.get("provenance"), "directional_rhea_id": edge.get("directional_rhea_id")})
             state = previous
         path.reverse()
         return path if state[0] in co2_nodes else None
