@@ -71,7 +71,7 @@ fetch('data/network-map.json?v=all-inventory-1').then(r=>r.json()).then(networkd
   applyVisibility();
   cy.nodes().filter(n=>n.data().namespace==='cannabisdb' && n.connectedEdges().length===0).addClass('isolated');
   const targets = networkdb.coverage.carbon_lineage_target_status_counts || {};
-  document.getElementById('count').textContent = `${nodes.filter(n=>n.data.co2_reachable).length} focused compounds · ${edges.length} directed edges · ${networkdb.coverage.candidate_proteins_meeting_strong_hit_threshold.toLocaleString()} strong sequence candidates · CO₂ targets ${targets.candidate||0} candidate / ${targets.unresolved||0} unresolved`;
+  document.getElementById('count').textContent = `${nodes.filter(n=>n.data.co2_reachable).length} focused · ${nodes.filter(n=>n.data.reaction_connected).length} connected · ${nodes.length} inventory compounds · ${edges.length} directed edges · ${networkdb.coverage.candidate_proteins_meeting_strong_hit_threshold.toLocaleString()} strong sequence candidates · CO₂ targets ${targets.candidate||0} candidate / ${targets.unresolved||0} unresolved`;
   cy.layout({name:'cose',eles:cy.elements(':visible'),animate:false,fit:true,padding:35,nodeRepulsion:9000,idealEdgeLength:90,numIter:500}).run();
   applyVisibility();
 }).catch(()=>{document.getElementById('count').textContent='NetworkDB failed to load';});
