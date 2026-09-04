@@ -99,3 +99,29 @@ def test_map_snapshot_includes_isolated_catalog_records(tmp_path):
     payload = json.loads(output.read_text())
     assert [c["id"] for c in payload["compounds"]] == ["m:a", "m:b", "c:isolated"]
     assert payload["focus"] == {"co2_reachable_compounds": 0, "reaction_connected_compounds": 2, "hypothesis_connected_compounds": 0, "all_inventory_compounds": 3}
+
+
+def test_networkdb_bridges_hypothesis_endpoints_by_exact_inchikey(tmp_path):
+    network_path = tmp_path / "network.json.gz"
+    with gzip.open(network_path, "wt") as handle:
+        json.dump({"entities": [], "statements": []}, handle)
+    compounds_path = tmp_path / "compounds.json"
+    compounds_path.write_text(json.dumps({"compounds": [{"id": "CDB1", "label": "A", "inchikey": "A-B", "smiles": "CC"}]}))
+    crosswalk_path = tmp_path / "crosswalk.json"
+    crosswalk_path.write_text(json.dumps({"matches": [], "ambiguous": 0, "unmatched": 1}))
+    hypothetical_path = tmp_path / "hypothetical.json"
+    hypothetical_path.write_text(json.dumps({"connections": [{
+        "normalized_substrate_terpene_id": "T1", "normalized_product_terpene_id": "T2",
+        "substrate_inchikey": "A-B", "product_inchikey": "C-D",
+        "substrate_identity_smiles": "CC", "product_identity_smiles": "CCC",
+        "substrate_identity_formula": "C2H6", "product_identity_formula": "C3H8",
+        "substrate_identity_set_key": "inchi:one", "product_identity_set_key": "inchi:two",
+        "substrate_carbon_count": "2", "product_carbon_count": "3",
+        "reaction_id": "R1", "source_type": "Rhea"
+    }]}))
+    output = tmp_path / "networkdb.json"
+    build_networkdb(network_path, compounds_path, crosswalk_path, output, hypothetical_connections_path=hypothetical_path)
+    result = json.loads(output.read_text())
+    edge = result["hypothetical_connections"][0]
+    assert edge["substrate_compound_id"] == "CDB1"
+    assert edge["product_compound_id"] == "terpedia:identity-set:T2"

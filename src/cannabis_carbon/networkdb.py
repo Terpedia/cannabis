@@ -90,11 +90,14 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
         for ec in attrs.get("exactEcNumbers", []):
             proteins_by_ec.setdefault(ec, []).append(record)
     compounds = []
+    cdb_ids_by_inchikey = {}
     for compound in catalog:
         candidates = candidate_identity_by_cdb.get(compound["id"], [])
         target = lineage_targets.get(compound["id"], {})
         pubchem_record = pubchem_by_id.get(compound["id"], {})
         compounds.append({**compound, "namespace": "cannabisdb", "identity_link": identity_by_cdb.get(compound["id"]), "identity_link_candidates": candidates, "identity_status": "exact" if compound["id"] in identity_by_cdb else "candidate" if candidates else "unresolved", "terpedia_identity_set": identity_set_by_id.get(compound["id"]), "pubchem": pubchem_record.get("pubchem"), "pubchem_status": pubchem_record.get("status", "not-queried"), "pubchem_reason": pubchem_record.get("reason"), "carbon_lineage_status": target.get("status", "unresolved"), "co2_reachable_carbon_atoms": target.get("reachable_carbon_atoms", 0), "carbon_lineage_reason": target.get("reason", "no-lineage-record")})
+        if compound.get("inchikey") and compound["inchikey"] not in cdb_ids_by_inchikey:
+            cdb_ids_by_inchikey[compound["inchikey"]] = compound["id"]
     for entity in network["entities"]:
         if entity.get("type") != "metabolite":
             continue
@@ -105,16 +108,18 @@ def build_networkdb(network_path: Path, compounds_path: Path, crosswalk_path: Pa
     if hypothetical:
         existing_compound_ids = {compound["id"] for compound in compounds}
         for row in hypothetical.get("connections", []):
-            substrate_id = f"terpedia:identity-set:{row['normalized_substrate_terpene_id']}"
-            product_id = f"terpedia:identity-set:{row['normalized_product_terpene_id']}"
+            substrate_resolution = cdb_ids_by_inchikey.get(row.get("substrate_inchikey"))
+            product_resolution = cdb_ids_by_inchikey.get(row.get("product_inchikey"))
+            substrate_id = substrate_resolution or f"terpedia:identity-set:{row['normalized_substrate_terpene_id']}"
+            product_id = product_resolution or f"terpedia:identity-set:{row['normalized_product_terpene_id']}"
             for compound_id, terpene_id, smiles, formula, inchikey, carbon_count, identity_set_key in (
                 (substrate_id, row["normalized_substrate_terpene_id"], row["substrate_identity_smiles"], row["substrate_identity_formula"], row["substrate_inchikey"], row["substrate_carbon_count"], row["substrate_identity_set_key"]),
                 (product_id, row["normalized_product_terpene_id"], row["product_identity_smiles"], row["product_identity_formula"], row["product_inchikey"], row["product_carbon_count"], row["product_identity_set_key"]),
             ):
-                if compound_id not in existing_compound_ids:
+                if compound_id not in existing_compound_ids and compound_id.startswith("terpedia:identity-set:"):
                     compounds.append({"id": compound_id, "namespace": "terpedia_identity_set", "label": terpene_id, "formula": formula, "smiles": smiles, "inchikey": inchikey, "carbon_atom_count": carbon_count, "identity_set_key": identity_set_key, "identity_status": "identity-set-record", "source_url": "https://console.cloud.google.com/bigquery?project=terpedia-489015"})
                     existing_compound_ids.add(compound_id)
-            hypothetical_connections.append({**row, "substrate_compound_id": substrate_id, "product_compound_id": product_id, "status": "candidate", "layer": "Terpedia hypothesis edge", "claim_boundary": "This source-directed connection is a testable hypothesis and is not included in balanced reaction or CO2 lineage counts."})
+            hypothetical_connections.append({**row, "substrate_compound_id": substrate_id, "product_compound_id": product_id, "substrate_identity_resolution": "cannabisdb_exact_inchikey" if substrate_resolution else "terpedia_identity_set", "product_identity_resolution": "cannabisdb_exact_inchikey" if product_resolution else "terpedia_identity_set", "status": "candidate", "layer": "Terpedia hypothesis edge", "claim_boundary": "This source-directed connection is a testable hypothesis and is not included in balanced reaction or CO2 lineage counts."})
     candidate_by_reaction = {}
     for item in hypothesis_items:
         if item.get("reaction_id"):
