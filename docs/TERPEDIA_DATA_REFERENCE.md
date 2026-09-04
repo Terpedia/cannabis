@@ -216,7 +216,8 @@ candidate mappings, 496 retain ambiguous carbon mappings, 460 retain
 unresolved mappings, and 71 are unavailable. These statuses are
 independent of enzyme status and are exposed as a separate Cytoscape filter.
 Each reaction also records its inferred and candidate lineage-edge counts and
-the source report used to derive them.
+the source report used to derive them. The Pages Cytoscape view exposes
+`non_enzymatic` as a separate evidence-status filter.
 It also carries 2,243 candidate hypotheses and 4,063 deduplicated candidate
 protein records; 941 reaction records have one or more attached candidate
 proteins. All 4,063 candidate proteins are present in the 30,304-protein
