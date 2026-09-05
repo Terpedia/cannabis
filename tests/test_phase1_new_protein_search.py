@@ -20,7 +20,7 @@ def test_retains_missing_and_weak_hits_without_enzyme_confirmation():
     assert all('physiological-direction-unverified' in r['validation_blockers'] for r in annotated)
 
 
-@pytest.mark.parametrize('report_name', ['phase1-new-protein-search', 'phase1-route-protein-search', 'phase1-completion-protein-search', 'phase1-archived-protein-search'])
+@pytest.mark.parametrize('report_name', ['phase1-new-protein-search', 'phase1-route-protein-search', 'phase1-completion-protein-search', 'phase1-archived-protein-search', 'phase1-catalog-protein-search'])
 def test_published_search_preserves_gap_scope_thresholds_sequences_and_joins(report_name):
     root = Path(__file__).resolve().parents[1]
     path = root / f'data/reports/{report_name}.json'
@@ -63,3 +63,7 @@ def test_published_search_preserves_gap_scope_thresholds_sequences_and_joins(rep
         recovered = {hashlib.sha256(json.dumps(h, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
                      for group in raw_hits.values() for h in group if h['passes_screen']}
         assert recovered == alignments.keys()
+        replayed, _ = annotate({'rows': source_rows}, refs, raw_hits)
+        for actual, expected in zip(report['rows'], replayed):
+            for key in ('search_status', 'raw_alignment_count', 'passing_alignment_ids', 'screened_cannabis_proteins'):
+                assert actual[key] == expected[key]

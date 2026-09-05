@@ -65,6 +65,56 @@ was read back and matched exactly to its local export. The service-account
 identity, load job and verification are recorded in
 `data/reports/phase1-catalog-net-gaps-gcp.json`.
 
+## Protein discovery for previously unscreened catalog gaps
+
+The 465 selected-certificate enzyme gaps were compared by exact reaction ID
+against both earlier full-proteome screens. Existing results for 266 equations
+are retained; 199 equations were not previously screened. No failed or weak
+search was silently promoted or resubmitted. The new queue preserves full
+equations, original source IDs, and selected-target membership.
+
+Eight successful reviewed, non-fragment UniProt lookups using explicit
+published Rhea families returned 2,184 reference proteins for 166 equations;
+33 equations returned no reviewed reference. All 2,184 sequences were retrieved
+and searched against all 30,304 Cannabis reference-proteome proteins with
+DIAMOND sensitive mode. Thresholds remain E-value ≤ 1e-5, identity ≥ 30%, and
+both query and reference coverage ≥ 50%; no target-count truncation was used.
+
+Of 9,452 raw alignments, 2,924 passed. They yield 296 Cannabis proteins and
+595 protein–reaction hypotheses across 97 equations. The other new equations
+retain 44 weak-hit-only, 25 no-hit and 33 no-reference-sequence results.
+The reference records, full sequences, alignments and retrieval snapshots
+retain checksums and reaction-level joins. Candidate status is not an assay,
+exact substrate specificity, physiological direction, or tissue compatibility.
+
+As a separate evidence comparison, these 97 equations occur in selected net
+certificates for 181 target records. Of the 203 records with enzyme gaps,
+only **uric acid (CDB004839)** has all its selected missing steps covered by
+the new candidates. Across the catalog diagnostic, 368 distinct selected gap
+equations still lack candidates. This comparison does not establish a new
+physiological pathway, zero-pool startup, or necessity of a selected step.
+**The published baseline and catalog graph snapshots have not yet been updated
+with this new evidence supplement.** Atom tracing remains deferred.
+
+Reproduce reference discovery with
+`PYTHONPATH=src python -m cannabis_carbon.phase1_catalog_references` and screening
+with `PYTHONPATH=src python -m cannabis_carbon.phase1_catalog_protein_search`.
+Reference lookup caches retain unsuccessful retrievals explicitly. Scientific
+tests replay exact-family joins, the prior/new queue partition, sequence hashes,
+alignment thresholds, reaction joins and raw-hit outcomes.
+
+| Report | SHA-256 | Verified GCP rows |
+| --- | --- | ---: |
+| `phase1-catalog-references.json` | `cd230249677b4c5775d910777f285be2218c9d0c91ba6177908d7c33120f97e9` | 2,857 |
+| `phase1-catalog-protein-search.json` | `2f31678e51e644a5787cfb4fdf8cd14131f837ae06d139575cff20b5706025e9` | 5,641 |
+
+Tables in `terpedia-489015.terpedia_core` are
+`cannabis_phase1_catalog_references_20260904_v1` and
+`cannabis_phase1_catalog_protein_search_20260904_v1`. Every complete stored
+record was read back and matched exactly to the local export. Load jobs and
+service-account verification are recorded in
+`data/reports/phase1-catalog-protein-gcp.json`.
+
 ## Imported Terpedia snapshot
 
 Source repository: [Terpedia/terpedia-knowledge](https://github.com/Terpedia/terpedia-knowledge)
