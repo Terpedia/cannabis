@@ -8,8 +8,9 @@ const context = {}; vm.runInNewContext(script, context);
 const {project, matchingTargets, createLoader} = context.NetView;
 const bundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json')));
 const sensitivityBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/completion-net-view/bundle.json')));
+const catalogBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/catalog-net-view/bundle.json')));
 
-for (const bundle of [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), sensitivityBundle]) {
+for (const bundle of [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), sensitivityBundle, catalogBundle]) {
 test(`every ${bundle.view_scenario || 'baseline'} net certificate projects all participants, coefficients, extents and candidate evidence`, () => {
   let count = 0;
   for (const target of bundle.targets.filter(t => t.certificate_compound_id)) {
@@ -30,6 +31,8 @@ test(`every ${bundle.view_scenario || 'baseline'} net certificate projects all p
         assert.equal(edge.data.required_inputs, step.required_inputs);
         assert.equal(edge.data.outputs, step.outputs);
         assert.equal(edge.data.is_completion_sensitivity, !!source.is_completion_sensitivity);
+        assert.equal(edge.data.missing_candidate_evidence, !!source.missing_candidate_evidence);
+        if(source.missing_candidate_evidence) assert.equal(step.evidence.length, 0);
         assert.ok(proteins.every(p => edge.data.candidate_protein_ids.includes(p)));
       }
       const selected = project(bundle, target.cannabisdb_id, step.step_id);
@@ -48,6 +51,7 @@ test(`every ${bundle.view_scenario || 'baseline'} net certificate projects all p
   assert.equal(project(bundle, gap.cannabisdb_id).nodes.length, 0);
   assert.equal(matchingTargets(bundle.targets, '', 'all').length, bundle.targets.length);
   assert.equal(matchingTargets(bundle.targets, '', 'certificates').length, count);
+  assert.equal(matchingTargets(bundle.targets, '', 'enzyme-gaps').length, bundle.targets.filter(t=>t.certificate_compound_id && t.missing_candidate_reaction_ids?.length).length);
   assert.throws(()=>project(bundle,'missing'), /Unknown target/);
 });
 }
@@ -69,7 +73,7 @@ test('loader revalidates manifest, versions bundles, rejects external paths and 
   assert.deepEqual(sensitivityCalls,['data/completion-net-view/index.json','data/completion-net-view/bundle.json?v='+'b'.repeat(16)]);
 });
 
-for (const [bundle, scenario] of [[JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149']]) {
+for (const [bundle, scenario] of [[JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target='+catalogBundle.targets.find(t=>t.missing_candidate_reaction_ids?.length).cannabisdb_id]]) {
 test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highlight without hiding, and recover from load errors`, async () => {
   class Field {
     constructor(){this.value='';this.textContent='';this.children=[];this.hidden=false;}
@@ -80,22 +84,43 @@ test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highl
   }
   const ids=['netCy','netFit','poolHighlight','netSearch','netScope','netTarget','netReaction','netRetry','netCounts','netBalance','netEquation','netSources','netEvidence','netDetails','netTitle','netStatus','netMessage','netMetrics','netMatches','netBoundary'];
   const fields=Object.fromEntries(ids.map(id=>[id,new Field()]));fields.netScope.value='certificates';fields.poolHighlight.value='all';
-  const cy={items:[],elements(){return {remove:()=>{this.items=[];},removeClass(){}};},nodes(){return {filter(){return {addClass(){}};}};},add(items){this.items.push(...items);},layout(){return {run(){}};},fit(){},on(){}};
-  let fail=true;
-  const ui={URLSearchParams,location:{search:scenario},document:{getElementById:id=>fields[id],createElement:()=>new Field()},cytoscape:()=>cy,
-    fetch:async url=>{if(fail){fail=false;return {ok:false,status:503};}return {ok:true,json:async()=>url.endsWith('index.json')?{file:'bundle.json',sha256:'a'.repeat(64)}:bundle};}};
+  const cy={items:[],muted:[],elements(){return {remove:()=>{this.items=[];},removeClass:()=>{this.muted=[];}};},nodes(){return {filter(){return {addClass(){}};}};},edges(){return {filter:predicate=>({addClass:()=>{this.muted=this.items.filter(e=>e.data.source && predicate({data:key=>e.data[key]}));}})};},add(items){this.items.push(...items);},layout(){return {run(){}};},fit(){},on(){}};
+  let fail=true, cyOptions; const fetched=[];
+  const ui={URLSearchParams,location:{search:scenario},document:{getElementById:id=>fields[id],createElement:()=>new Field()},cytoscape:options=>{cyOptions=options;return cy;},
+    fetch:async url=>{fetched.push(url);if(fail){fail=false;return {ok:false,status:503};}return {ok:true,json:async()=>url.endsWith('index.json')?{file:'bundle.json',sha256:'a'.repeat(64)}:bundle};}};
   vm.runInNewContext(script,ui); const app=ui.NetView.mount(); await new Promise(setImmediate);
   assert.equal(fields.netRetry.hidden,false);
   await app.load(); assert.equal(fields.netRetry.hidden,true); assert.ok(cy.items.length>0);
-  if (scenario) {
+  if (scenario.includes('completions')) {
     assert.equal(fields.netTarget.value,'CDB006149');
     assert.match(fields.netBoundary.textContent,/Completion sensitivity/);
     assert.match(fields.netMessage.textContent,/unverified completion chemistry/);
     assert.ok(cy.items.some(e=>e.data.is_completion_sensitivity));
   }
+  if (scenario.includes('catalog')) {
+    assert.equal(fetched.at(-1),'data/catalog-net-view/bundle.json?v='+'a'.repeat(16));
+    assert.equal(cyOptions.style.find(s=>s.selector==='edge').style['target-arrow-shape'],'triangle');
+    const gapStyle=cyOptions.style.find(s=>s.selector==='edge[?missing_candidate_evidence]').style;
+    assert.equal(gapStyle['line-color'],'#ff7777');
+    assert.equal(gapStyle['target-arrow-color'],'#ff7777');
+    assert.match(fields.netBoundary.textContent,/Chemistry-only/);
+    assert.match(fields.netMetrics.textContent,/304 \/ 6220.*enzyme gaps included/);
+    assert.ok(cy.items.some(e=>e.data.missing_candidate_evidence));
+    const originalCount=cy.items.length;
+    fields.poolHighlight.value='enzyme-gaps';fields.poolHighlight.change();
+    assert.equal(cy.items.length,originalCount);
+    assert.ok(cy.muted.every(e=>!e.data.missing_candidate_evidence));
+    assert.equal(cy.muted.length,cy.items.filter(e=>e.data.source && !e.data.missing_candidate_evidence).length);
+    fields.netScope.value='enzyme-gaps';fields.netScope.change();
+    assert.match(fields.netMatches.textContent,/203 matches/);
+    const selected=project(bundle,fields.netTarget.value);
+    fields.netReaction.value=selected.steps.find(s=>!s.evidence.length).step_id;fields.netReaction.change();
+    assert.match(fields.netEvidence.textContent,/No candidate enzyme evidence/);
+    fields.netReaction.value='';fields.netReaction.change();
+  }
   const fullCount=cy.items.length;
   fields.poolHighlight.value='pools';fields.poolHighlight.change();assert.equal(cy.items.length,fullCount);
-  fields.netReaction.value=fields.netReaction.children[1].value;fields.netReaction.change();
+  fields.netReaction.value=project(bundle,fields.netTarget.value).steps.find(s=>s.evidence.length).step_id;fields.netReaction.change();
   assert.match(fields.netCounts.textContent,/1 directed reactions shown/);
   assert.ok(fields.netBalance.children.length);assert.match(fields.netEvidence.textContent,/"id"/);
   fields.netScope.value='all';fields.netSearch.value=bundle.targets.find(t=>!t.certificate_compound_id).cannabisdb_id;fields.netSearch.input();

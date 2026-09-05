@@ -27,6 +27,7 @@
         direction_mode: step.direction_mode, extent: step.extent, required_inputs: inputs, outputs,
         enzyme_evidence_ids: reaction.enzyme_evidence_ids, candidate_protein_ids: proteins,
         is_completion_sensitivity: !!reaction.is_completion_sensitivity,
+        missing_candidate_evidence: !!reaction.missing_candidate_evidence,
         claim_boundary: 'Every input is required. Projected arrows are not separate reactions, atom flow or a startup sequence.'
       }})));
     }
@@ -42,10 +43,10 @@
   }
   function matchingTargets(targets, query, scope) {
     const q = query.trim().toLowerCase();
-    return targets.filter(t => (scope === 'all' || t.certificate_compound_id) && `${t.label} ${t.cannabisdb_id}`.toLowerCase().includes(q));
+    return targets.filter(t => (scope === 'all' || (t.certificate_compound_id && (scope !== 'enzyme-gaps' || t.missing_candidate_reaction_ids?.length))) && `${t.label} ${t.cannabisdb_id}`.toLowerCase().includes(q));
   }
   function createLoader(fetcher, folder = 'net-view') {
-    if (!['net-view', 'completion-net-view'].includes(folder)) throw new Error('Invalid scenario folder');
+    if (!['net-view', 'completion-net-view', 'catalog-net-view'].includes(folder)) throw new Error('Invalid scenario folder');
     return async function() {
       const response = await fetcher(`data/${folder}/index.json`, {cache: 'no-cache'});
       if (!response.ok) throw new Error(`Manifest unavailable (HTTP ${response.status})`);
@@ -57,8 +58,9 @@
     };
   }
   function mount() {
-    const sensitivity = new URLSearchParams(location.search).get('scenario') === 'completions';
-    const $ = id => document.getElementById(id), loader = createLoader((...args) => fetch(...args), sensitivity ? 'completion-net-view' : 'net-view');
+    const scenario = new URLSearchParams(location.search).get('scenario');
+    const folder = scenario === 'catalog' ? 'catalog-net-view' : scenario === 'completions' ? 'completion-net-view' : 'net-view';
+    const $ = id => document.getElementById(id), loader = createLoader((...args) => fetch(...args), folder);
     if (typeof cytoscape !== 'function') { $('netMessage').textContent = 'The graph library could not load. Reload the page or use the downloadable certificates below.'; return; }
     let bundle, current, generation = 0;
     const cy = cytoscape({container: $('netCy'), elements: [], layout: {name: 'preset'}, style: [
@@ -69,6 +71,7 @@
       {selector: 'node[?is_target]', style: {'border-width': 5, 'border-color': '#fff'}},
       {selector: 'edge', style: {'line-color': '#c78cff', 'target-arrow-color': '#c78cff', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier', 'line-style': 'dashed', 'width': 2}},
       {selector: 'edge[?is_completion_sensitivity]', style: {'line-color': '#f2a65a', 'target-arrow-color': '#f2a65a', 'width': 4}},
+      {selector: 'edge[?missing_candidate_evidence]', style: {'line-color': '#ff7777', 'target-arrow-color': '#ff7777', 'width': 4}},
       {selector: '.muted', style: {'opacity': .25}}
     ]});
     function options(select, rows) {select.replaceChildren(...rows.map(([value, label]) => {const e = document.createElement('option'); e.value = value; e.textContent = label; return e;}));}
@@ -78,14 +81,17 @@
     function describe(step) {
       const equation = side => side.map(m => `${m.coefficient} × ${label(m.compound_id)}`).join(' + ');
       lines('netEquation', 'Full directed equation', [equation(step.required_inputs) + ' → ' + equation(step.outputs), `Relative extent: ${step.extent}`, 'Hypothetical direction; all listed inputs are required.']);
-      $('netEvidence').textContent = JSON.stringify(step.evidence, null, 2);
+      $('netEvidence').textContent = JSON.stringify(step.evidence.length ? step.evidence : {
+        status: 'No candidate enzyme evidence in this snapshot', reaction_id: step.reaction_id,
+        claim_boundary: 'Chemistry-only step. Determine whether it is enzymatic, spontaneous or a catalog transformation; do not infer activity from connectivity.'
+      }, null, 2);
       const heading = document.createElement('h2'); heading.textContent = 'Reaction sources'; $('netSources').replaceChildren(heading);
       for (const url of [...new Set(step.reaction.sources.flatMap(s => s.source_urls || []))]) {
         if (!/^https?:\/\//i.test(url)) continue;
         const p = document.createElement('p'), a = document.createElement('a'); a.href = url; a.textContent = url; a.target = '_blank'; a.rel = 'noopener noreferrer'; p.appendChild(a); $('netSources').appendChild(p);
       }
     }
-    function highlight() {cy.elements().removeClass('muted'); if ($('poolHighlight').value === 'pools') cy.nodes().filter(n => !n.data('is_pool')).addClass('muted');}
+    function highlight() {cy.elements().removeClass('muted'); if ($('poolHighlight').value === 'pools') cy.nodes().filter(n => !n.data('is_pool')).addClass('muted'); else if ($('poolHighlight').value === 'enzyme-gaps') cy.edges().filter(e => !e.data('missing_candidate_evidence')).addClass('muted');}
     function draw() {
       clear(); if (!bundle || !$('netTarget').value) return;
       current = project(bundle, $('netTarget').value, $('netReaction').value);
@@ -124,7 +130,8 @@
       try {
         const loaded = await loader(); if (token !== generation) return; bundle = loaded;
         if ($('netBoundary') && bundle.view_boundary) $('netBoundary').textContent = bundle.view_boundary + ' ' + bundle.claim_boundary;
-        $('netMetrics').textContent = `${bundle.summary.target_status_counts['exact-net-conversion-hypothesis']} / ${bundle.summary.target_records} target records have candidate-linked net certificates · not confirmed pathway completeness`;
+        const evidenceLabel = bundle.view_scenario === 'full-catalog-chemistry-only' ? 'chemistry-only net certificates (enzyme gaps included)' : 'candidate-linked net certificates';
+        $('netMetrics').textContent = `${bundle.summary.target_status_counts['exact-net-conversion-hypothesis']} / ${bundle.summary.target_records} target records have ${evidenceLabel} · not confirmed pathway completeness`;
         const requested = new URLSearchParams(location.search).get('target');
         if (requested) {
           $('netScope').value = 'all';

@@ -4,6 +4,67 @@ This file is the source contract for the cannabis carbon-provenance project.
 It records what has actually been imported, how entities are identified, and
 which fields are required before a reaction can contribute carbon provenance.
 
+## Full balanced-catalog net diagnostic
+
+The [chemistry-only net graph](net.html?scenario=catalog) keeps all 6,220
+CannabisDB records searchable and admits the full 13,995 balanced-equation
+catalog for a separate diagnostic. It does not change the 101-record
+candidate-enzyme baseline or the 112-record inferred-completion sensitivity.
+
+| Diagnostic result | Target records |
+| --- | ---: |
+| Exact net-conversion hypothesis | 304 |
+| No net-producing equation in either hypothetical direction | 5,777 |
+| Solver-reported infeasible under the exchange boundary | 104 |
+| Explicit exchange species, not a synthesis target | 35 |
+
+The 304 records correspond to 303 exact structures. Existing baseline
+certificates are retained unchanged. The 203 additional target records require
+reactions lacking baseline candidate-enzyme evidence. Across the selected
+certificates, 465 distinct equations have that gap. Red directed edges identify
+them; the target filter selects affected records, and highlighting dims other
+edges without hiding compounds, cofactors, or coproducts. Selecting a reaction
+shows the complete equation, relative extent, source links, and either its
+candidate evidence or an explicit missing-evidence warning.
+
+These are exact net stoichiometric certificates, not demonstrated Cannabis
+pathways or zero-pool startup sequences. CO₂ remains the only carbon exchange;
+the same 101 carbon-free exchange species and hypothetical bidirectionality
+are retained. Internal pools may pre-exist but cannot be depleted overall.
+Energy, thermodynamics, physiological direction, compartment compatibility,
+enzyme activity and pool origin remain unverified. Inferred completion and
+proton-transfer hypotheses and subsequent archive evidence supplements are
+not silently added to this comparison. Atom tracing remains deferred.
+
+The ranked gap list counts membership in selected certificates, not reaction
+necessity, a minimum gene set, or a guaranteed gain from finding one enzyme.
+Each gap calls for exact reaction-reference review, classification as enzymatic
+versus spontaneous/catalog chemistry, correctly linked reference-protein
+searches, and exact-substrate/product assays. The both-directions reactant
+denominator is 11,162 distinct compounds, separate from the target denominator.
+
+Download the [full report and ranked gaps](data/catalog-net-view/bundle.json).
+Its SHA-256 is `4fdc58d257093a70c9b495b865d5b97f1477ed66b4a49887abcf89f903860e14`.
+The static bundle is byte-identical to `data/reports/phase1-catalog-net-gaps.json`
+and pins seven source reports. Independent tests replay all positive certificates
+with rational arithmetic, audit full-equation isotope/element/charge balance,
+verify target identity, candidate evidence and gap membership, and check
+no-producer statuses against the full catalog. Infeasibility remains a retained
+numerical solver result, not an exact impossibility proof.
+
+Reproduce with `PYTHONPATH=src python -m cannabis_carbon.phase1_catalog_net_gaps`
+then `PYTHONPATH=src python -m cannabis_carbon.phase1_catalog_net_view`.
+The full-catalog solve may take several minutes. The static report is stored
+only once in Pages to avoid duplicate large downloads.
+
+GCP table `terpedia-489015.terpedia_core.cannabis_phase1_catalog_net_gaps_20260904_v1`
+contains 9,159 verified records: 6,220 targets, 303 certificates, 880 selected
+reactions, 855 compounds, 465 ranked gaps, 435 evidence records and one metadata
+row. The destination was absent before loading; every complete stored record
+was read back and matched exactly to its local export. The service-account
+identity, load job and verification are recorded in
+`data/reports/phase1-catalog-net-gaps-gcp.json`.
+
 ## Imported Terpedia snapshot
 
 Source repository: [Terpedia/terpedia-knowledge](https://github.com/Terpedia/terpedia-knowledge)

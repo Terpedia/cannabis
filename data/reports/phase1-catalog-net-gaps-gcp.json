@@ -1,0 +1,19 @@
+{
+  "schema": "cannabis-carbon.phase1-catalog-net-gaps-gcp.v1",
+  "status": "loaded-and-full-record-readback-verified",
+  "verified_date": "2026-09-04",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "table": "cannabis_phase1_catalog_net_gaps_20260904_v1",
+  "authenticated_principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "load_job_id": "cannabis_sa_catalog_net_gaps_20260904_v1",
+  "destination_preflight": "Destination returned NOT_FOUND before loading; no existing table was replaced.",
+  "report": "data/reports/phase1-catalog-net-gaps.json",
+  "report_sha256": "4fdc58d257093a70c9b495b865d5b97f1477ed66b4a49887abcf89f903860e14",
+  "export": "data/derived/phase1-catalog-net-gaps.ndjson",
+  "schema_fields": "record_kind:STRING,record_id:STRING,record_json:STRING,report_sha256:STRING",
+  "row_count": 9159,
+  "record_kind_counts": {"metadata": 1, "target": 6220, "certificate": 303, "reaction": 880, "compound": 855, "gap_priority": 465, "enzyme_evidence": 435},
+  "verification": "Local report hash, row hashes, per-kind counts and unique (record_kind, record_id) pairs checked before loading. Load job inspected: DONE without error, exact destination and service-account identity verified, outputRows 9159. SELECT * readback matched the local export as a sorted multiset of every complete record, including record_json and report_sha256.",
+  "claim_boundary": "Chemistry-only balanced-catalog diagnostic, not demonstrated Cannabis pathways. Missing candidate enzyme evidence, hypothetical direction, internal-pool origin and physiological constraints remain explicit. Gap ranking is selected-certificate membership, not necessity. Atom tracing remains deferred."
+}
