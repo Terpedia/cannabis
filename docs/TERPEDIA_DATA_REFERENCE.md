@@ -133,6 +133,37 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [route certificates and enzyme-gap queue](data/phase1-route-certificates.json)
+expand all prerequisites for each of the 304 structurally reachable targets.
+Each certificate retains full directed equations, exact rational reaction
+extents, initial seed quantities, final inventory, and reaction-level candidate
+evidence IDs. Independent replay requires every input quantity to be present
+before any output is credited; every intermediate inventory stays nonnegative.
+Tests additionally check total carbon and charge conservation. The only
+carbon-containing initial reagent is exact CO₂. Atom tracing remains deferred.
+
+These are deterministic first-witness routes, not shortest or optimal routes.
+Conservative seed budgets ignore incidental coproduct credits when planning
+upstream quantities; all coproducts are retained during replay. The 304 routes
+use 740 distinct equations, of which 510 lack attached candidate-enzyme evidence.
+Every selected route has at least one such gap. The largest certificate contains
+172 reaction steps. The gap queue ranks equations by affected selected targets
+and links their original reaction sources; it does not establish unavoidable
+bottlenecks across alternative pathways. Candidate evidence is not direct activity.
+
+Finite sequential stoichiometric feasibility is stronger than graph adjacency,
+but it does not validate physiological direction, thermodynamics, compartments,
+enzyme activity, or the highly permissive carbon-free seed reservoir. Every
+route remains biologically unestablished. All 12,440 target/scenario records are
+preserved, including blocked targets and explicit seeds. The full network and
+scope reports are pinned by checksum. Reproduce with
+`PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_routes`.
+The report and export are published to
+`terpedia-489015.terpedia_core.cannabis_phase1_route_certificates_20260904_v1`:
+12,440 target records, 304 routes, 510 enzyme gaps, and one metadata record.
+The static map remains a one-step view; this release publishes downloadable
+multi-step certificates rather than a route-explorer UI.
+
 The [all-reactant scope audit](data/phase1-all-reactants-scope.json) moves beyond
 single-edge participation: a reaction can expand the available-compound set only
 when **every** input is already available. It uses the

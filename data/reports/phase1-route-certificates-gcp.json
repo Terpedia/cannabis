@@ -1,0 +1,12 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_route_certificates_20260904_v1",
+  "location": "us-central1",
+  "load_job_id": "bqjob_r2d6de771c7aad533_000001a06eee9474_1",
+  "source": "data/reports/phase1-route-certificates.ndjson",
+  "report_sha256": "5a5fedcec988bfa29bb5e04d42fe3be8c20d910068f4fb2e3b03aa491d52459f",
+  "verified_records_by_kind": {"metadata": 1, "target": 12440, "route": 304, "enzyme_gap": 510},
+  "verified_total_records": 13255,
+  "verified_unique_ids_equal_record_count_in_each_group": true,
+  "verified_min_and_max_report_hash_match_local_report_in_each_group": true,
+  "claim_boundary": "Exact rational finite sequential execution under hypothetical directions and explicit nonphysiological seeds. Not established Cannabis routes or atom tracing."
+}
