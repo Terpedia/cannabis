@@ -15,7 +15,9 @@ def run():
     manifest = {'schema': 'cannabis-carbon.phase1-catalog-net-view.v1', 'file': 'bundle.json',
         'bytes': len(payload), 'sha256': hashlib.sha256(payload).hexdigest(),
         'source_sha256': {str(source): hashlib.sha256(payload).hexdigest()}, 'summary': report['summary']}
-    evidence_path = Path('data/reports/phase1-catalog-evidence.json')
+    previous_path = Path('data/reports/phase1-catalog-evidence.json')
+    (folder / 'evidence-v1.json').write_bytes(previous_path.read_bytes())
+    evidence_path = Path('data/reports/phase1-combined-catalog-evidence.json')
     evidence_bytes = evidence_path.read_bytes(); evidence = json.loads(evidence_bytes)
     for path, digest in evidence['source_sha256'].items():
         if hashlib.sha256(Path(path).read_bytes()).hexdigest() != digest:

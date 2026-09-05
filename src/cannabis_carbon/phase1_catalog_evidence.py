@@ -17,6 +17,21 @@ def build(catalog, search):
         if evidence['id'] in existing or reactions[evidence['reaction_id']]['enzyme_evidence_ids']:
             raise ValueError('Supplement overlaps existing candidate evidence')
         evidence['evidence_class'] = 'catalog-net-gap-direction-unresolved-reference-homology'
+    return assemble(catalog, added)
+
+
+def assemble(catalog, added):
+    """Combine validated evidence records while preserving frozen net chemistry."""
+    by_reaction = {e['reaction_id']: e for e in added['enzyme_evidence']}
+    if len(by_reaction) != len(added['enzyme_evidence']):
+        raise ValueError('Duplicate supplement reaction')
+    reactions = {r['id']: r for r in catalog['reactions']}
+    existing = {e['id'] for e in catalog['enzyme_evidence']}
+    if len({e['id'] for e in added['enzyme_evidence']}) != len(by_reaction):
+        raise ValueError('Duplicate supplement evidence ID')
+    for e in added['enzyme_evidence']:
+        if e['reaction_id'] not in reactions or e['id'] in existing or reactions[e['reaction_id']]['enzyme_evidence_ids']:
+            raise ValueError('Supplement overlaps existing evidence or unknown reaction')
     updates = []
     for cert in catalog['certificates']:
         before = cert['missing_candidate_reaction_ids']

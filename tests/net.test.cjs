@@ -23,8 +23,8 @@ test('catalog supplement loader preserves chemistry, fails closed, and retains o
   for(const [i,c] of updated.certificates.entries()) {
     for(const k of ['steps','net_exports','external_net_consumption','zero_net_internal_participants']) assert.equal(c[k],catalogBundle.certificates[i][k]);
   }
-  assert.equal(updated.reactions.filter(r=>r.is_new_catalog_candidate).length,97);
-  assert.equal(updated.reactions.filter(r=>r.missing_candidate_evidence).length,368);
+  assert.equal(updated.reactions.filter(r=>r.is_new_catalog_candidate).length,116);
+  assert.equal(updated.reactions.filter(r=>r.missing_candidate_evidence).length,349);
   assert.equal(matchingTargets(updated.targets,'','enzyme-gaps').length,202);
   const uric=project(updated,'CDB004839');
   assert.equal(uric.certificate.missing_candidate_reaction_ids.length,0);

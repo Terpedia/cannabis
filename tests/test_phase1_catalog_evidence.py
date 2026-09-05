@@ -35,10 +35,7 @@ def test_supplement_exact_rebuild_preserves_every_frozen_certificate():
     assert supplement['summary']['remaining_missing_candidate_equations'] == 368
     assert supplement['summary']['newly_candidate_linked_selected_certificate_target_ids'] == ['CDB004839']
     payload = (ROOT / 'data/reports/phase1-catalog-evidence.json').read_bytes()
-    assert payload == (ROOT / 'docs/data/catalog-net-view/evidence.json').read_bytes()
-    manifest = json.loads((ROOT / 'docs/data/catalog-net-view/index.json').read_text())
-    assert manifest['evidence']['sha256'] == hashlib.sha256(payload).hexdigest()
-    assert manifest['evidence']['bytes'] == len(payload)
+    assert payload == (ROOT / 'docs/data/catalog-net-view/evidence-v1.json').read_bytes()
 
 
 def test_supplement_rejects_existing_evidence_and_mismatched_proteins():

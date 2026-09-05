@@ -94,13 +94,13 @@ the new candidates. Across the catalog diagnostic, 368 distinct selected gap
 equations still lack candidates. This comparison does not establish a new
 physiological pathway, zero-pool startup, or necessity of a selected step.
 The baseline and original catalog chemistry snapshots remain unchanged. The
-catalog graph now loads a separately versioned evidence supplement: 97 reactions
-with new candidates have blue arrows, 368 remaining gaps have red arrows, and
+first catalog evidence supplement added candidates to 97 reactions, leaving
+368 gaps. The current combined supplement below includes the backfill results;
 the affected-target filter uses the remaining gaps. All full equations,
 extents, participants, external exchanges and startup results are unchanged.
 Atom tracing remains deferred.
 
-The [downloadable evidence supplement](data/catalog-net-view/evidence.json)
+The [earlier evidence supplement](data/catalog-net-view/evidence-v1.json)
 has SHA-256 `ff242379d6c77127f112a8e170b4210284ef78b7e94f174d1faf30860dff0840`.
 It contains 97 candidate-evidence records, 181 exact-structure certificate
 updates and 181 target updates, plus metadata. It retains the original missing
@@ -165,8 +165,9 @@ physiological direction or complete Cannabis pathways.
 
 An evidence-only comparison reduces the distinct remaining reaction gaps
 from 368 to 349, but **does not close any additional selected net certificate**.
-The catalog graph has not yet incorporated this backfill; its published
-368-gap evidence snapshot remains unchanged. Original chemistry, atom
+The catalog graph now incorporates this backfill through the separately
+versioned combined supplement below; its earlier 368-gap evidence snapshot
+remains downloadable. Original chemistry, atom
 accounting and all prior search results are preserved; atom tracing remains
 deferred.
 
@@ -186,6 +187,38 @@ Both exports are verified in `terpedia-489015.terpedia_core`, in tables
 `cannabis_phase1_backfill_protein_search_20260904_v1`. Every complete record
 was read back and matched to its local export. The receipt is
 `data/reports/phase1-reference-backfill-gcp.json`.
+
+### Combined catalog evidence snapshot
+
+The [current graph evidence supplement](data/catalog-net-view/evidence.json)
+preserves all 97 earlier reaction-evidence records verbatim and adds the 19
+backfill candidates. Its 116 reaction records contain 385 distinct Cannabis
+candidate proteins (deduplicated across screens). There are 349 remaining
+reaction gaps. Candidate evidence improves for 191 target records relative to
+the original catalog diagnostic, but the number of selected certificates with
+candidates for every step stays at 102; 202 still have gaps.
+
+This is a union applied once to the original catalog bundle, not a second
+application on top of the first supplement. All equations, coefficients,
+relative extents, metabolites, exchange assumptions, and startup labels remain
+unchanged. Each backfill record retains its own search-report link and evidence
+class. Blue arrows denote screened candidates, not demonstrated activity;
+red arrows identify the remaining enzyme-candidate gaps.
+
+SHA-256: `9cf7e4c5e9b8b47058aeb90eded2f5bd8faa4741901178630c43a8b08860435e`.
+The report `data/reports/phase1-combined-catalog-evidence.json` contains 499
+export records: 116 enzyme-evidence records, 191 certificate updates, 191
+target updates and one metadata record. The previous report remains unchanged
+at `data/reports/phase1-catalog-evidence.json` and downloadable as
+`data/catalog-net-view/evidence-v1.json`.
+
+Reproduce with `PYTHONPATH=src python -m cannabis_carbon.phase1_combined_catalog_evidence`
+then `PYTHONPATH=src python -m cannabis_carbon.phase1_catalog_net_view`.
+Tests check exact prior-record preservation, duplicate rejection, complete gap
+recalculation, source hashes, static data identity and all graph participants.
+GCP table `terpedia-489015.terpedia_core.cannabis_phase1_combined_catalog_evidence_20260904_v1`
+contains all 499 records, verified by full-record readback. The receipt is
+`data/reports/phase1-combined-catalog-evidence-gcp.json`.
 
 ## Imported Terpedia snapshot
 
