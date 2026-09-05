@@ -1,0 +1,10 @@
+{
+  "schema": "cannabis-carbon.gcp-verification.v1",
+  "table": "terpedia-489015.terpedia_core.cannabis_priority_occurrence_review_20260905_v1",
+  "job_id": "cannabis_sa_priority_occurrence_review_20260905_v1",
+  "principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "rows": 5,
+  "report_sha256": "c90a4b8853841b86d0c98ee3d392610213cf4b5f9eb9c17b7fb1b9666cc7a923",
+  "verified": true,
+  "verification": "Load completed without error under the service account; exact project/dataset/table destination checked. Full readback matched the complete local NDJSON record multiset; record-kind/id pairs are unique and all review checksums match."
+}

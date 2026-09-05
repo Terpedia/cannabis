@@ -2299,6 +2299,35 @@ the report records checksums of its registry review, balanced network and candid
 model inputs. Before promoting a provisional structure, verify the primary Cannabis
 identification evidence; ribitol additionally requires stereochemical reconciliation.
 
+### Priority occurrence evidence, separate from structure and pathways
+
+The four-accession review is preserved in
+`data/curation/priority-occurrence-review.json`. Its complete metadata and four
+occurrence records are verified by full GCP readback in
+`terpedia_core.cannabis_priority_occurrence_review_20260905_v1`.
+The original source PDFs and five input checksums remain in the repository.
+
+- **Glycerol:** the archived CannabisDB record supplies no general reference;
+  this is a citation gap in that record, not evidence of biological absence.
+- **Ribitol:** CannabisDB cites [Groce and Jones (1973)](https://doi.org/10.1021/jf60186a003),
+  but primary identification and stereochemical discrimination have not been
+  independently inspected. Both disputed structures remain unresolved.
+- **D-arabitol:** CannabisDB cites the [1980 constituent review](https://doi.org/10.1021/np50008a001).
+  The review-to-primary-experiment chain and enantiomer-specific identification
+  remain unresolved; the record's unrelated organism references are not transferred
+  into Cannabis occurrence support.
+- **Acetamide:** [Rice and Koziel (2015)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0144160)
+  lists tentative headspace assignments in S2 and S3, both on PDF page 8, after
+  68 hours, with net library matches of 70% and 87%. Source PDFs were visually
+  checked. The unusual S3 Models entry is preserved verbatim for raw-data review.
+  These assignments do not demonstrate authentic-standard confirmation, endogenous
+  plant origin, the XML tautomer, or biosynthesis.
+
+No occurrence claim is upgraded by a registry name match or a net pathway
+certificate. Historical targets and completeness counts remain unchanged.
+Replay validation/export with
+`PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.priority_occurrence_export`.
+
 ### Working-network balance audit
 
 The Phase 1 audit is stored in

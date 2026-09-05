@@ -1,0 +1,83 @@
+{
+  "schema": "cannabis-carbon.priority-occurrence-review.v1",
+  "reviewed_on": "2026-09-05",
+  "source_sha256": {
+    "data/terpedia/cannabisdb-compounds.json": "520f4fd526c6568fec1523fb2a495a5323514d53c65ef3abc2de06e756dc79ee",
+    "data/reports/phase1-identity-branches.json": "83ad54428739edf1db3f9c7e2ad99bc447ec11b94d9d0ab959094431c08e0dbe",
+    "data/raw/phase1-priority-occurrence/plos-0144160-s007.pdf": "9bc1e34272abd8fe1ea9476bddabeed5225550b8f37091d611d6efad0cc718ac",
+    "data/raw/phase1-priority-occurrence/plos-0144160-s008.pdf": "49d41a062f041d222259bda8c098aa88fe0ff68ebf5a23167b51525a96ff0f35",
+    "data/raw/phase1-priority-occurrence/plos-0144160-s013.pdf": "0a3b7207ae565bff612a095774633f11ce3256e1597cb4b7ee2a4bf6ed4d806a"
+  },
+  "rows": [
+    {
+      "cannabisdb_id": "CDB006156",
+      "name": "Glycerol",
+      "occurrence_status": "no-citation-in-reviewed-CannabisDB-record",
+      "source_reference_pmids": [],
+      "interpretation": "The archived XML record has no general references. Its generic description does not supply primary Cannabis occurrence evidence. This is a source-record evidence gap, not evidence of absence from Cannabis.",
+      "next_action": "Locate primary Cannabis measurements with explicit glycerol identification and sample handling before promoting the provisional XML identity."
+    },
+    {
+      "cannabisdb_id": "CDB006169",
+      "name": "Ribitol",
+      "occurrence_status": "CannabisDB-assertion-with-primary-citation-not-independently-verified",
+      "source_reference_pmids": ["4688907"],
+      "occurrence_citation": "https://doi.org/10.1021/jf60186a003",
+      "interpretation": "CannabisDB explicitly cites Groce and Jones (1973) for ribitol in Cannabis. Primary identification methods and stereochemical discrimination have not been inspected. Neither disputed encoded structure is selected.",
+      "retrieval_status": "PubMed returned a browser check; publisher DOI retrieval failed. No primary full text was obtained through these routes.",
+      "next_action": "Obtain the cited carbohydrate/cyclitol paper and examine standards, derivatization and chromatographic discrimination of pentitols."
+    },
+    {
+      "cannabisdb_id": "CDB000142",
+      "name": "D-arabitol",
+      "occurrence_status": "CannabisDB-assertion-with-review-citation-primary-chain-unresolved",
+      "source_reference_pmids": ["6991645", "32376967", "18987987", "16435225", "15183861", "10647119", "25809659"],
+      "occurrence_citation": "https://doi.org/10.1021/np50008a001",
+      "interpretation": "CannabisDB assigns its Cannabis occurrence statement to the Turner et al. (1980) constituent review. Its other references concern different organisms or broader metabolism and are not automatically evidence for Cannabis occurrence. The review-to-primary-experiment chain and D/L discrimination are unresolved.",
+      "retrieval_status": "PubMed returned a browser check; publisher DOI retrieval failed. Review full text was not obtained through these routes.",
+      "next_action": "Trace the constituent review to the original Cannabis measurement and verify enantiomer-specific identification."
+    },
+    {
+      "cannabisdb_id": "CDB000546",
+      "name": "Acetamide",
+      "occurrence_status": "primary-paper-tentative-headspace-identification",
+      "source_reference_pmids": ["10507919", "26657499", "29186951", "31470077"],
+      "occurrence_citation": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0144160",
+      "method_boundary": "The article describes the S2/S3 identifications as tentative MDGC-MS assignments using AMDIS libraries with a 65% minimum net match. These inspected rows do not establish authentic-standard confirmation, endogenous plant origin, biosynthesis or the XML encoded tautomer.",
+      "observations": [
+        {
+          "table": "S2",
+          "pdf_page_one_based": 8,
+          "snapshot": "data/raw/phase1-priority-occurrence/plos-0144160-s007.pdf",
+          "url": "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0144160.s007&type=supplementary",
+          "sample_context": "Marijuana headspace sampled through plastic packaging",
+          "reported_name": "Acetamide",
+          "reported_cas": "60-35-5",
+          "extraction_hours": 68,
+          "peak_number": 73,
+          "retention_minutes": 17.88,
+          "net_match_percent": 70,
+          "models_cell_verbatim": "1: 43",
+          "verification": "Text extraction and complete page visual inspection agree."
+        },
+        {
+          "table": "S3",
+          "pdf_page_one_based": 8,
+          "snapshot": "data/raw/phase1-priority-occurrence/plos-0144160-s008.pdf",
+          "url": "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0144160.s008&type=supplementary",
+          "sample_context": "Unpackaged marijuana headspace",
+          "reported_name": "Acetamide",
+          "reported_cas": "60-35-5",
+          "extraction_hours": 68,
+          "peak_number": 63,
+          "retention_minutes": 17.89,
+          "net_match_percent": 87,
+          "models_cell_verbatim": "10: 146 69 128 87 117 120 45 115 105 161 134",
+          "verification": "Text extraction and complete page visual inspection agree, including the unusual Models cell. It is preserved as printed, not repaired or interpreted as a validated acetamide fragment spectrum."
+        }
+      ],
+      "next_action": "Review raw chromatograms, spectral assignments and controls; clarify the S3 Models entry and seek authentic-standard confirmation before upgrading identity or endogenous-origin evidence."
+    }
+  ],
+  "claim_boundary": "Occurrence evidence is independent of registry identity corroboration and net pathway certificates. All original records and historical carbon accounting remain unchanged. No source citation, library match or pathway feasibility result is promoted to confirmed endogenous Cannabis biosynthesis. Atom tracing remains deferred."
+}
