@@ -1,0 +1,12 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_route_references_20260904_v1",
+  "location": "us-central1",
+  "load_job_id": "bqjob_r22d69d2aa819bf67_000001a06ef5cb9d_1",
+  "source": "data/reports/phase1-route-references.ndjson",
+  "report_sha256": "760a292fbe1bb7e1af4f2738611ad47fcdc47fd7a6c205db3906f09e1ccb6cf4",
+  "verified_records_by_kind": {"metadata": 1, "equation_gap": 510, "reference_protein": 11487, "lookup": 59},
+  "verified_total_records": 12057,
+  "verified_unique_ids_equal_record_count_in_each_group": true,
+  "verified_min_and_max_report_hash_match_local_report_in_each_group": true,
+  "claim_boundary": "Reviewed reaction-family reference annotations, not confirmed Cannabis enzymes or physiological direction."
+}

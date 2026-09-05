@@ -2,6 +2,7 @@ import hashlib
 import json
 from collections import defaultdict
 from pathlib import Path
+import pytest
 from cannabis_carbon.phase1_new_protein_search import annotate
 from cannabis_carbon.phase1_family_search import parse_hits
 from cannabis_carbon.genome import _fasta
@@ -19,9 +20,10 @@ def test_retains_missing_and_weak_hits_without_enzyme_confirmation():
     assert all('physiological-direction-unverified' in r['validation_blockers'] for r in annotated)
 
 
-def test_published_search_preserves_gap_scope_thresholds_sequences_and_joins():
+@pytest.mark.parametrize('report_name', ['phase1-new-protein-search', 'phase1-route-protein-search'])
+def test_published_search_preserves_gap_scope_thresholds_sequences_and_joins(report_name):
     root = Path(__file__).resolve().parents[1]
-    path = root / 'data/reports/phase1-new-protein-search.json'
+    path = root / f'data/reports/{report_name}.json'
     report = json.loads(path.read_text())
     discovery = root / report['source_discovery']
     assert hashlib.sha256(discovery.read_bytes()).hexdigest() == report['source_discovery_sha256']

@@ -1,0 +1,12 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_route_protein_search_20260904_v1",
+  "location": "us-central1",
+  "load_job_id": "bqjob_r3b046866849873ac_000001a06ef8f60f_1",
+  "source": "data/reports/phase1-route-protein-search.ndjson",
+  "report_sha256": "fcf431bc76ed45da5c824782607a788170f273d582e295898d13a48ff55b2704",
+  "verified_records_by_kind": {"equation_gap": 510, "reference_sequence": 11487, "cannabis_candidate": 619, "passing_alignment": 11522, "retrieval": 192, "metadata": 1},
+  "verified_total_records": 24331,
+  "verified_unique_ids_equal_record_count_in_each_group": true,
+  "verified_min_and_max_report_hash_match_local_report_in_each_group": true,
+  "claim_boundary": "Whole-proteome homology candidates only. No confirmed Cannabis activity, physiological direction or complete pathway is established."
+}

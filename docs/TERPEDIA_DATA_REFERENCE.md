@@ -133,6 +133,54 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [selected-route whole-proteome screen](data/phase1-route-protein-search.json)
+compares all 30,304 pinned Cannabis proteins against all 11,487 retrieved
+reference sequences (192 successful batches). DIAMOND sensitive search returned
+34,100 alignments; 11,522 pass identity ≥30%, query coverage ≥50%, reference
+coverage ≥50%, and E-value ≤10⁻⁵. These yield 619 distinct Cannabis candidates
+and 1,197 protein–reaction hypotheses across 167 of the 510 selected-route gaps.
+The remaining outcomes are 104 weak-hit-only equations, 118 no-hit equations,
+and 121 without a reference sequence. Missing annotation or a failed homology
+screen is not evidence that the reaction is biologically absent.
+
+The newly candidate-linked equations occur in selected routes for 298 targets.
+**All 304 routes still contain at least one equation without candidate evidence**
+after this result is joined by exact balanced-equation ID. These counts do not
+establish any complete Cannabis pathway. Direction, substrate specificity,
+catalytic residues/domains, compartments and expression remain unverified.
+Each result retains reaction-specific reference annotations, passing alignment
+IDs, full reference and candidate sequences, exact search settings, source hashes,
+weak-hit counts and proposed biochemical tests. The original route certificates
+and Cytoscape evidence layer remain unchanged snapshots; this new report is a
+separate evidence layer pending map integration.
+
+The verified GCP snapshot is
+`terpedia-489015.terpedia_core.cannabis_phase1_route_protein_search_20260904_v1`
+(24,331 records). Reproduce with:
+
+```python
+from pathlib import Path
+from cannabis_carbon.phase1_new_protein_search import run
+run(Path('data/reports/phase1-route-references.json'),
+    Path('data/raw/phase1-route-protein-search'),
+    Path('data/reports/phase1-route-protein-search.json'))
+```
+
+The [selected-route reference discovery](data/phase1-route-references.json)
+retains all 510 enzyme-evidence gaps from the finite route certificates. Published
+Rhea family mappings resolve 505 master families. Forty-three checksummed prior
+lookup batches were reused and 16 new batches retrieved successfully. There are
+11,487 distinct reviewed, nonfragment reference-protein leads spanning 389 of the
+510 equations; the remaining 121 have no attached reference lead in this pass.
+Exact source-ID matches are kept separate from direction-family matches. Reviewed
+annotations are not necessarily direct assays and never establish Cannabis
+activity or physiological direction. Full equations, route membership, lookup
+URLs, snapshots and checksums remain attached. Reproduce with
+`PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_route_references`.
+The verified GCP snapshot is
+`terpedia-489015.terpedia_core.cannabis_phase1_route_references_20260904_v1`
+(12,057 records: 510 gaps, 11,487 references, 59 lookups and one metadata record).
+
 The [route certificates and enzyme-gap queue](data/phase1-route-certificates.json)
 expand all prerequisites for each of the 304 structurally reachable targets.
 Each certificate retains full directed equations, exact rational reaction

@@ -44,14 +44,15 @@ def annotate(discovery, references, hits):
     return rows, list(passing.values())
 
 
-def run():
-    source = Path('data/reports/phase1-new-references.json')
+def run(source=Path('data/reports/phase1-new-references.json'),
+        raw=Path('data/raw/phase1-new-protein-search'),
+        output=Path('data/reports/phase1-new-protein-search.json')):
     discovery = json.loads(source.read_text())
     for filename, digest in discovery['source_sha256'].items():
         if hashlib.sha256(Path(filename).read_bytes()).hexdigest() != digest:
             raise ValueError('Discovery source checksum mismatch')
     ids = sorted({m['accession'] for r in discovery['rows'] for m in r['reference_matches']})
-    raw = Path('data/raw/phase1-new-protein-search'); raw.mkdir(parents=True, exist_ok=True)
+    raw.mkdir(parents=True, exist_ok=True)
     def retrieve(batch):
         url = 'https://rest.uniprot.org/uniprotkb/stream?' + urllib.parse.urlencode({
             'query': ' OR '.join('accession:' + accession for accession in batch), 'format': 'fasta'})
@@ -121,7 +122,7 @@ def run():
         'cannabis_candidates': [{'accession': p, 'source_header': query_headers[p], 'sequence': queries[p],
             'sequence_sha256': hashlib.sha256(queries[p].encode()).hexdigest(), 'source_url': f'https://www.uniprot.org/uniprotkb/{p}/entry'} for p in candidates],
         'claim_boundary': 'Whole-proteome homology screening, not experimental enzyme confirmation. Only passing alignments are embedded; the full alignment output is checksummed and per-equation raw counts retain weak-hit outcomes. Exact specificity, physiological direction and full CO2 pathways remain unestablished. Atom tracing is deferred.'}
-    Path('data/reports/phase1-new-protein-search.json').write_text(json.dumps(result, separators=(',', ':')) + '\n')
+    output.write_text(json.dumps(result, separators=(',', ':')) + '\n')
     print(json.dumps(result['summary']), flush=True)
 
 
