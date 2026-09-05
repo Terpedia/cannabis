@@ -24,14 +24,20 @@
       id: `${hypothesis.id}:${i}:${j}`, source: a.compound_id, target: b.compound_id,
       hypothesis_id: hypothesis.id, reaction_id: hypothesis.balanced_equation_id,
       required_inputs: inputs, outputs, inferred_inorganic_participants: hypothesis.inferred_inorganic_participants_in_MARTS_orientation,
-      direction_status: hypothesis.direction_status, evidence_class: hypothesis.status, claim_boundary: hypothesis.claim_boundary
+      direction_status: hypothesis.direction_status, evidence_class: hypothesis.status, claim_boundary: hypothesis.claim_boundary,
+      protein_evidence: hypothesis.protein_evidence
     }})));
     const label = p => `${p.coefficient === 1 ? '' : p.coefficient + ' × '}${labels.get(p.compound_id) || compounds.get(p.compound_id).formula}${inferred.has(p.compound_id) ? ' [inferred]' : ''}`;
     return {target, hypothesis, nodes, edges, inputs, outputs, equation: inputs.map(label).join(' + ') + ' → ' + outputs.map(label).join(' + ')};
   }
-  function matching(bundle, query, scope) {
+  function matchesProtein(h, filter) {
+    if(filter === 'all') return true;
+    return !!h && (filter === 'with' ? h.protein_evidence?.has_candidate_lead === true : h.protein_evidence?.has_candidate_lead === false);
+  }
+  function matching(bundle, query, scope, proteinFilter='all') {
     query = query.trim().toLowerCase();
-    return bundle.targets.filter(t => (scope === 'all' || t.completion_ids.length) && `${t.cannabisdb_id} ${t.label}`.toLowerCase().includes(query));
+    return bundle.targets.filter(t => (scope === 'all' || t.completion_ids.length) && `${t.cannabisdb_id} ${t.label}`.toLowerCase().includes(query) &&
+      (proteinFilter === 'all' || t.completion_ids.some(id=>matchesProtein(bundle.completions.find(h=>h.id===id),proteinFilter))));
   }
   function createLoader(fetcher) {
     return async function() {
@@ -52,6 +58,7 @@
       if(cy) {cy.destroy(); cy=null;}
       for(const name of ['Equation','Status','Counts','Evidence','Details']) el(name).textContent='';
       el('Sources').replaceChildren(); el('Title').textContent='Choose a target';
+      el('Protein').replaceChildren();
     }
     function link(parent,url,label) {
       if(!/^https?:\/\//i.test(url||'')) return;
@@ -67,6 +74,16 @@
       el('Equation').textContent=view.equation;
       el('Status').textContent='Balanced stoichiometric hypothesis; enzyme, direction, product assignment and all-input supply require review.';
       el('Evidence').textContent=JSON.stringify(h,null,2);
+      const protein=h.protein_evidence;
+      const note=doc.createElement('p');
+      note.textContent=protein?.category === 'existing-exact-equation-candidate-evidence' ? 'Existing candidate evidence for the exact same full equation; not confirmed activity.' :
+        protein?.has_candidate_lead ? `${protein.screened_cannabis_proteins.length} Cannabis homology candidates · source product identity and inferred stoichiometry remain unverified.` :
+        'No screened candidate lead. Missing annotation or a negative screen is not biological absence.';
+      el('Protein').append(note);
+      for(const a of protein?.representative_alignments || []) {
+        link(el('Protein'),'https://www.uniprot.org/uniprotkb/'+encodeURIComponent(a.cannabis_accession),
+          `${a.cannabis_accession} · ${a.identity_percent}% identity · query/reference coverage ${a.query_coverage_percent}%/${a.reference_coverage_percent}% · E=${a.evalue} · reference ${a.reference_accession}`);
+      }
       el('Counts').textContent=`${view.nodes.length} compounds · 1 completion hypothesis · ${view.edges.length} projected arrows`;
       const variant=bundle.variants.find(v=>v.id===h.variant_id);
       const details=doc.createElement('details'), summary=doc.createElement('summary'); summary.textContent='Original MARTS source records'; details.append(summary);
@@ -95,11 +112,12 @@
     function choose() {
       el('Choice').replaceChildren();
       const target=bundle.targets.find(t=>t.cannabisdb_id===el('Target').value);
-      for(const [i,id] of (target?.completion_ids||[]).entries()) option(el('Choice'),id,'Hypothesis '+(i+1)+' · inferred stoichiometry');
-      el('Choice').disabled=!target?.completion_ids.length; render();
+      const ids=(target?.completion_ids||[]).filter(id=>matchesProtein(bundle.completions.find(h=>h.id===id),el('ProteinFilter').value));
+      for(const [i,id] of ids.entries()) option(el('Choice'),id,'Hypothesis '+(i+1)+' · inferred stoichiometry');
+      el('Choice').disabled=!ids.length; render();
     }
     function filter(preferred) {
-      const rows=matching(bundle,el('Search').value,el('Scope').value), shown=rows.slice(0,100);
+      const rows=matching(bundle,el('Search').value,el('Scope').value,el('ProteinFilter').value), shown=rows.slice(0,100);
       const selected=rows.find(t=>t.cannabisdb_id===preferred);
       if(selected&&!shown.includes(selected)) shown.push(selected);
       el('Target').replaceChildren(); shown.forEach(t=>option(el('Target'),t.cannabisdb_id,`${t.label} · ${t.cannabisdb_id}`));
@@ -115,6 +133,7 @@
       try {
         const result=await loader(); if(ticket!==generation)return; bundle=result;
         el('Metrics').textContent=`${bundle.summary.completion_hypotheses} full-catalog hypotheses · ${bundle.summary.targets_with_completions} targets with hypotheses · ${bundle.targets.length} total targets`;
+        if(bundle.protein_summary) el('Metrics').textContent+=` · ${bundle.protein_summary.targets_with_any_candidate_lead} targets with candidate leads`;
         el('Message').textContent='';
         const requested=new URLSearchParams(root.location?.search||'').get('target');
         if(requested) {el('Scope').value='all';el('Search').value=requested;}
@@ -122,6 +141,7 @@
       } catch(error) {if(ticket!==generation)return;bundle=null;clear();el('Target').replaceChildren();el('Choice').replaceChildren();el('Target').disabled=true;el('Choice').disabled=true;el('Metrics').textContent='Data unavailable';el('Message').textContent='Unable to load hypotheses. Retry or use the report links below.';el('Retry').hidden=false;}
     }
     el('Search').addEventListener('input',()=>{if(bundle)filter();}); el('Scope').addEventListener('change',()=>{if(bundle)filter();});
+    el('ProteinFilter').addEventListener('change',()=>{if(bundle)filter();});
     el('Target').addEventListener('change',()=>{if(bundle)choose();}); el('Choice').addEventListener('change',render);
     el('Fit').addEventListener('click',()=>{if(cy)cy.fit(undefined,50);}); el('Retry').addEventListener('click',load);
     return load();

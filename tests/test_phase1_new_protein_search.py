@@ -20,7 +20,7 @@ def test_retains_missing_and_weak_hits_without_enzyme_confirmation():
     assert all('physiological-direction-unverified' in r['validation_blockers'] for r in annotated)
 
 
-@pytest.mark.parametrize('report_name', ['phase1-new-protein-search', 'phase1-route-protein-search'])
+@pytest.mark.parametrize('report_name', ['phase1-new-protein-search', 'phase1-route-protein-search', 'phase1-completion-protein-search'])
 def test_published_search_preserves_gap_scope_thresholds_sequences_and_joins(report_name):
     root = Path(__file__).resolve().parents[1]
     path = root / f'data/reports/{report_name}.json'

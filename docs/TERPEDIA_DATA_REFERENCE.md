@@ -133,6 +133,48 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+Atom tracing is deferred for Phase 1. Acceptance requires full element and charge
+balance; candidate enzyme evidence and CO₂ connectivity are separate metrics.
+
+The completion graph now includes a separate, evidence-only protein overlay.
+An exact full-equation join retains existing candidate evidence for 64 of 765
+completion hypotheses. The remaining 701 equations were screened using only
+their original MARTS protein references, never enzymes borrowed from an inorganic
+stoichiometry template. Of 915 requested UniProt identifiers, 869 sequences were
+retrieved and 46 unreturned identifiers remain explicit. All 30,304 proteins in
+the Cannabis reference proteome were searched. Passing thresholds were identity
+at least 30%, query and reference coverage each at least 50%, and E-value at most
+1e-5. The screen retained 10,155 passing alignments involving 55 Cannabis proteins,
+321 equations and 6,072 protein–reaction hypotheses. These are homology leads,
+not verified exact-product activity or validated inorganic stoichiometry.
+
+Across all completions, 64 have existing exact-equation candidate evidence,
+321 have new original-source homology leads, and 380 have no screened candidate
+lead. Of the 67 target records with completions, 62 have at least one lead and
+five have none. Eight targets have an unsupported alternative, including three
+mixed-evidence targets; the graph's protein filter operates on individual
+hypotheses so these alternatives remain visible. Nine of the ten priority target
+records have passing new candidates. No CO₂-pathway completeness metric changes.
+Inactive, missing and unsupported source references and previous product/stereo
+warnings remain explicit. Representative alignments are chosen by bit score for
+display, not as a ranking of functional specificity.
+
+Reports: [discovery queue](data/phase1-completion-protein-discovery.json),
+[full proteome screen](data/phase1-completion-protein-search.json), and
+[evidence overlay](data/phase1-completion-protein-evidence.json).
+Reproduce with `PYTHONPATH=src python -m cannabis_carbon.` followed by each module
+name in order: `phase1_completion_protein_discovery`,
+`phase1_completion_protein_search`, `phase1_completion_protein_evidence`, and
+`phase1_completion_view` (the module prefix and name form one argument).
+
+Versioned tables in `terpedia-489015.terpedia_core`:
+
+| Table | Rows | Report SHA-256 |
+| --- | ---: | --- |
+| `cannabis_phase1_completion_protein_discovery_20260904_v1` | 1,135 | `cad0025e3031ca15425d691786163cbfb419657dc6b463f38ed834a7c2db7e49` |
+| `cannabis_phase1_completion_protein_search_20260904_v1` | 11,797 | `c3b1412f9901e808549db69fd9ace9e5f6d9659d41a4aa2764247d294c60197d` |
+| `cannabis_phase1_completion_protein_evidence_20260904_v1` | 766 | `8b3180990d046ea52fedbe3527a6ffb4bc80d02d28e6c8f44efd149cccba815a` |
+
 The [stoichiometric completion graph](completions.html) is a separate,
 review-only Cytoscape view of [765 balanced completion hypotheses](data/phase1-marts-completions.json).
 They cover 67 CannabisDB target records, including all ten newly identified
@@ -155,7 +197,9 @@ is independently checked for element, isotope and charge balance.
 
 These are inspectable hypotheses, not silent repairs: original MARTS equations
 remain unbalanced in their immutable audit. Reference directions are hypothetical,
-all-input supply is unestablished, and enzyme evidence is empty on each completion.
+all-input supply is unestablished, and enzyme evidence remains empty in the
+immutable chemistry report. Candidate leads are attached only through the
+separate protein-evidence overlay described above.
 Source product identity, full coproduct stoichiometry, protein specificity and
 compartment conditions require review or experiments. The earlier stereochemical
 and product-label warnings remain in force.
@@ -165,7 +209,7 @@ hypotheses or all targets, and shows one complete equation at a time. Amber node
 are inferred inorganic species; green nodes are unchanged organic compounds.
 Directed dashed arrows project input/output pairs and are not additional
 reactions or atom-flow claims. Full coefficients, source references and review
-requirements remain available. A versioned 5.23 MB bundle contains only the
+requirements remain available. A versioned 5.48 MB bundle contains only the
 target-linked subset; the complete 16.38 MB report preserves all 765 hypotheses,
 355 reference equations and 779 participating/reference compound structures.
 

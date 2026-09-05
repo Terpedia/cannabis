@@ -15,6 +15,10 @@ test('all target completion graphs retain full coefficients and explicit inferre
   }
   assert.ok(count>=67); assert.equal(matching(bundle,'','all').length,6220);
   assert.equal(matching(bundle,'','hypotheses').length,67);
+  assert.equal(matching(bundle,'','hypotheses','with').length,62);
+  const without=matching(bundle,'','hypotheses','without');
+  assert.equal(without.length,8); // Three targets have both supported and unsupported alternatives.
+  assert.equal(without.filter(t=>t.completion_ids.every(id=>!bundle.completions.find(h=>h.id===id).protein_evidence.has_candidate_lead)).length,5);
   const gap=bundle.targets.find(t=>!t.completion_ids.length);assert.equal(project(bundle,gap.cannabisdb_id).nodes.length,0);
   assert.throws(()=>project(bundle,gap.cannabisdb_id,bundle.completions[0].id),/belong/);
 });
@@ -27,13 +31,19 @@ test('loader revalidates and versions local data and rejects external paths',asy
 });
 test('controls select a target, clear gaps, and retry without unsafe HTML',async()=>{
   class Field{constructor(){this.value='';this.children=[];this.textContent='';}addEventListener(e,f){this[e]=f;}replaceChildren(){this.children=[];this.value='';}append(x){this.children.push(x);if(!this.value&&x.value)this.value=x.value;}set innerHTML(x){throw Error('unsafe HTML');}}
-  const names=['Search','Scope','Target','Choice','Metrics','Matches','Title','Message','Equation','Status','Counts','Evidence','Details','Sources','Cy','Fit','Retry'];
+  const names=['Search','Scope','Target','Choice','Metrics','Matches','Title','Message','Equation','Status','Counts','Evidence','Details','Sources','Cy','Fit','Retry','Protein','ProteinFilter'];
   const fields=Object.fromEntries(names.map(n=>['completion'+n,new Field()]));fields.completionScope.value='hypotheses';
+  fields.completionProteinFilter.value='all';
   let failure=true, destroyed=0;
   const env={URLSearchParams,location:{search:''},document:{getElementById:id=>fields[id],createElement:()=>new Field()},
     cytoscape:()=>({on(){},fit(){},destroy(){destroyed++;}}),fetch:async url=>{if(failure){failure=false;return {ok:false};}return {ok:true,json:async()=>url.endsWith('index.json')?{file:'bundle.json',sha256:'a'.repeat(64)}:bundle};}};
   vm.runInNewContext(script,env);await env.CompletionView.mount();assert.equal(fields.completionRetry.hidden,false);
   await fields.completionRetry.click();assert.ok(fields.completionEquation.textContent.includes('[inferred]'));
+  fields.completionProteinFilter.value='without';fields.completionProteinFilter.change();
+  assert.equal(JSON.parse(fields.completionEvidence.textContent).protein_evidence.has_candidate_lead,false);
+  fields.completionProteinFilter.value='with';fields.completionProteinFilter.change();
+  assert.equal(JSON.parse(fields.completionEvidence.textContent).protein_evidence.has_candidate_lead,true);
+  fields.completionProteinFilter.value='all';fields.completionProteinFilter.change();
   const gap=bundle.targets.find(t=>!t.completion_ids.length);fields.completionScope.value='all';fields.completionSearch.value=gap.cannabisdb_id;fields.completionSearch.input();
   assert.equal(fields.completionEquation.textContent,'');assert.ok(fields.completionStatus.textContent.startsWith('No completion'));assert.ok(destroyed>0);
 });

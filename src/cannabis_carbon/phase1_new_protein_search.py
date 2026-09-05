@@ -1,4 +1,4 @@
-"""Screen new exact-source Rhea-family reference leads against the full proteome."""
+"""Screen source-reference leads against the full proteome with explicit evidence context."""
 import hashlib
 import json
 import math
@@ -46,7 +46,8 @@ def annotate(discovery, references, hits):
 
 def run(source=Path('data/reports/phase1-new-references.json'),
         raw=Path('data/raw/phase1-new-protein-search'),
-        output=Path('data/reports/phase1-new-protein-search.json')):
+        output=Path('data/reports/phase1-new-protein-search.json'),
+        evidence_class=None, additional_blockers=(), claim_boundary=None):
     discovery = json.loads(source.read_text())
     for filename, digest in discovery['source_sha256'].items():
         if hashlib.sha256(Path(filename).read_bytes()).hexdigest() != digest:
@@ -102,6 +103,11 @@ def run(source=Path('data/reports/phase1-new-references.json'),
             if any(not math.isfinite(hit[k]) or not 0 <= hit[k] <= 100 for k in ['identity_percent', 'query_coverage_percent', 'reference_coverage_percent']):
                 raise ValueError('Invalid alignment percentages')
     rows, alignments = annotate(discovery, references, hits)
+    if evidence_class:
+        for row in rows:
+            if row['screened_cannabis_proteins']:
+                row['evidence_class'] = evidence_class
+            row['validation_blockers'].extend(additional_blockers)
     candidates = sorted({p for r in rows for p in r['screened_cannabis_proteins']})
     result = {'schema': 'cannabis-carbon.phase1-new-protein-search.v1',
         'generated_at': datetime.now(timezone.utc).isoformat(),
@@ -122,6 +128,8 @@ def run(source=Path('data/reports/phase1-new-references.json'),
         'cannabis_candidates': [{'accession': p, 'source_header': query_headers[p], 'sequence': queries[p],
             'sequence_sha256': hashlib.sha256(queries[p].encode()).hexdigest(), 'source_url': f'https://www.uniprot.org/uniprotkb/{p}/entry'} for p in candidates],
         'claim_boundary': 'Whole-proteome homology screening, not experimental enzyme confirmation. Only passing alignments are embedded; the full alignment output is checksummed and per-equation raw counts retain weak-hit outcomes. Exact specificity, physiological direction and full CO2 pathways remain unestablished. Atom tracing is deferred.'}
+    if claim_boundary:
+        result['claim_boundary'] = claim_boundary
     output.write_text(json.dumps(result, separators=(',', ':')) + '\n')
     print(json.dumps(result['summary']), flush=True)
 
