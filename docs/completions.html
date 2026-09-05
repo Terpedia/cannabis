@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stoichiometric completion hypotheses · Terpedia Cannabis</title>
+<script src="https://unpkg.com/cytoscape@3.31.2/dist/cytoscape.min.js"></script>
+<link rel="stylesheet" href="hypotheses.css"><style>#completionCy{height:65vh;min-height:420px}#completionDetails{overflow-wrap:anywhere}</style></head>
+<body><header><h1>Cannabis · Stoichiometric completion hypotheses</h1><nav><a href="index.html">Whole network</a> · <a href="hypotheses.html">One-step evidence</a> · <a href="net.html">Net CO₂ conversions</a></nav></header>
+<section class="controls" aria-label="Choose a completion hypothesis"><div>
+<label for="completionSearch">Find a compound or CannabisDB ID</label><input id="completionSearch" type="search" placeholder="Caryophyllene, sabinene…">
+<label for="completionScope">Target records</label><select id="completionScope"><option value="hypotheses">With completion hypotheses</option><option value="all">All targets, including gaps</option></select>
+<label for="completionTarget">Matching targets</label><select id="completionTarget" disabled></select><p id="completionMatches"></p></div><div>
+<label for="completionChoice">Completion hypothesis</label><select id="completionChoice" disabled></select><p id="completionMetrics">Loading…</p></div></section>
+<p class="boundary">Inferred stoichiometry—not confirmed reactions or CO₂ pathways. Original organic structures are unchanged. Amber nodes are inferred carbon-free participants; dashed arrows are reaction projections, not atom flow. No enzyme evidence transfers automatically.</p>
+<p id="completionMessage" class="banner" role="status"></p><button id="completionRetry" hidden>Retry loading</button>
+<main><section class="graph-panel"><div id="completionCy" role="img" aria-label="Full reaction with inferred participants; a text equation is provided alongside"></div><button id="completionFit">Fit graph</button><p id="completionCounts"></p><p>Green: original organic compounds · Amber: inferred inorganic participants · White border: selected target</p></section>
+<aside><h2 id="completionTitle">Choose a target</h2><p id="completionEquation"></p><p id="completionStatus"></p><h2>Source and template provenance</h2><div id="completionSources"></div><details><summary>Full hypothesis and review requirements</summary><pre id="completionEvidence"></pre></details><h2>Selected compound or edge</h2><pre id="completionDetails">Select a node or edge for exact details.</pre></aside></main>
+<footer><a href="data/phase1-marts-completions.json">All completion hypotheses</a> · <a href="data/phase1-marts-audit.json">Unchanged original MARTS audit</a> · <a href="data/phase1-marts-gap-references.json">Target-specific reference review</a> · Atom tracing deferred.</footer>
+<script src="completions.js?v=20260904"></script><script>CompletionView.mount();</script></body></html>

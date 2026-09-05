@@ -1,0 +1,12 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_marts_completions_20260904_v1",
+  "location": "us-central1",
+  "load_job_id": "bqjob_r6e8066cfa4ba5021_000001a06f54b97f_1",
+  "source": "data/derived/phase1-marts-completions.ndjson",
+  "report_sha256": "ecd10d6bccac52643be2eead4e6d57291d87d05ab546b4fb4d80ae698c2222fe",
+  "verified_records_by_kind": {"metadata": 1, "variant": 834, "completion": 765, "target": 6220, "reference_reaction": 355, "compound": 779},
+  "verified_total_records": 8954,
+  "verified_unique_ids_equal_record_count_in_each_group": true,
+  "verified_min_and_max_report_hash_match_local_report_in_each_group": true,
+  "claim_boundary": "Separate stoichiometric hypotheses only. Exact original organic identities retained; inferred carbon-free participants explicit. No automatic enzyme transfer, source repair or completed CO2 pathway. Atom tracing deferred."
+}

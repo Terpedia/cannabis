@@ -133,6 +133,51 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [stoichiometric completion graph](completions.html) is a separate,
+review-only Cytoscape view of [765 balanced completion hypotheses](data/phase1-marts-completions.json).
+They cover 67 CannabisDB target records, including all ten newly identified
+MARTS target gaps. Of the 765 distinct balanced equations, 310 already exist
+in the full-network baseline and 455 are additional inferred equations. These
+counts do **not** change candidate-enzyme or CO₂-pathway completeness.
+
+The generator retains all 4,315 unbalanced source rows grouped into 834 recorded
+equation variants: 765 receive a hypothesis, 17 fall outside the single-organic-
+substrate/product scope, and 52 have no compatible reference template. It scans
+6,114 eligible orientations of independently balanced Rhea-backed equations.
+Every hypothesis preserves the original MARTS organic substrate and product,
+including charge, isotope and stereochemical encoding. It copies complete
+carbon-free participant lists only when the reference has the **same exact
+organic substrate** and a sole organic product with the same elemental/isotopic
+composition and formal charge. The reference product can be a different isomer;
+that compatibility is explicitly **not an identity, mechanism or enzyme join**.
+No carbon-bearing cofactor, donor or seed is inserted. Every resulting equation
+is independently checked for element, isotope and charge balance.
+
+These are inspectable hypotheses, not silent repairs: original MARTS equations
+remain unbalanced in their immutable audit. Reference directions are hypothetical,
+all-input supply is unestablished, and enzyme evidence is empty on each completion.
+Source product identity, full coproduct stoichiometry, protein specificity and
+compartment conditions require review or experiments. The earlier stereochemical
+and product-label warnings remain in force.
+
+The static view retains all 6,220 target records, filters to targets with
+hypotheses or all targets, and shows one complete equation at a time. Amber nodes
+are inferred inorganic species; green nodes are unchanged organic compounds.
+Directed dashed arrows project input/output pairs and are not additional
+reactions or atom-flow claims. Full coefficients, source references and review
+requirements remain available. A versioned 5.23 MB bundle contains only the
+target-linked subset; the complete 16.38 MB report preserves all 765 hypotheses,
+355 reference equations and 779 participating/reference compound structures.
+
+Reproduce with `PYTHONPATH=src python -m cannabis_carbon.phase1_marts_completions`
+and `PYTHONPATH=src python -m cannabis_carbon.phase1_completion_view`.
+Terpedia table:
+`terpedia-489015.terpedia_core.cannabis_phase1_marts_completions_20260904_v1`,
+8,954 rows (834 variants, 765 completions, 6,220 targets, 355 reference reactions,
+779 compounds, one metadata record). Report SHA-256:
+`ecd10d6bccac52643be2eead4e6d57291d87d05ab546b4fb4d80ae698c2222fe`.
+Atom tracing remains deferred.
+
 The [MARTS gap reference review](data/phase1-marts-gap-references.json) follows
 all **32 source rows for the ten newly identified stoichiometry-gap targets**.
 It resolves 23 active UniProtKB records, preserves one inactive entry and its
