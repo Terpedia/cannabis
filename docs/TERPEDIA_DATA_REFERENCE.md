@@ -1922,6 +1922,53 @@ including element/isotope/charge balance, exact net coefficients, permitted
 exchanges and forbidden directions. Published whole-metabolome completeness
 counts and map scenarios remain unchanged. Atom tracing remains deferred.
 
+### Previously unscreened purine-alternative reactions (2026-09-04)
+
+`data/reports/phase1-purine-gap-references.json` audits all 70 reactions in the
+restricted catalog precursor queue against nine pinned prior search reports.
+It preserves previous results for 48 equations and identifies **22 previously
+unscreened equations**, all with explicit published Rhea family mappings.
+One successful reviewed, nonfragment UniProt query returns 833 exact-family
+reference proteins covering 16 equations. Six equations return no reviewed
+reference; that is an annotation gap, not evidence of spontaneous chemistry or
+biological absence. Raw annotations, query provenance and checksums are retained.
+
+`data/reports/phase1-purine-gap-search.json` screens all **30,304 Cannabis
+proteins** against all 833 retrieved reference sequences. Fourteen sequence
+retrieval batches completed without failure. Of 1,247 raw alignments, 257 pass
+the existing 30% identity and 50% query/reference coverage thresholds.
+
+| Equation search outcome | Equations |
+| --- | ---: |
+| Candidate proteins found | 10 |
+| Weak hits only | 4 |
+| No hits despite available references | 2 |
+| No reference sequence | 6 |
+
+The passing alignments identify **29 distinct Cannabis proteins** and **36
+protein–reaction hypotheses** across the ten equations. Four focused targets
+have a selected catalog certificate containing at least one of these new
+candidate-linked reactions; this is not a count of rescued pathways.
+Each equation retains its full participant lists and exact source-family joins;
+each candidate retains sequence and alignment provenance. Review substrate
+specificity, catalytic residues, domains, complex partners and direction before
+designing exact-input/product assays with reference and no-enzyme controls.
+
+This release adds evidence reports, not an automatic change to a pathway
+scenario. Net conversion must be re-solved after admitting the new hypotheses;
+the full-catalog certificates are not automatically candidate-supported.
+The pathway-inference evidence rules keep reviewed reference annotation,
+Cannabis homology, biochemical activity and pathway execution separate.
+Published map completeness counts remain unchanged. Atom tracing is deferred.
+
+Terpedia tables `cannabis_phase1_purine_gap_references_20260904_v1` (927 records)
+and `cannabis_phase1_purine_gap_search_20260904_v1` (1,156 records) preserve these
+artifacts in `terpedia_core`. Replay modules are
+`cannabis_carbon.phase1_purine_gap_references` and
+`cannabis_carbon.phase1_purine_gap_search`; raw public inputs use the corresponding
+`data/raw/phase1-purine-gap-references/` and `data/raw/phase1-purine-gap-search/`
+directories. Prior results are retained rather than overwritten.
+
 ### Working-network balance audit
 
 The Phase 1 audit is stored in
