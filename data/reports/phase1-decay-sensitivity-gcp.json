@@ -1,0 +1,18 @@
+{
+  "schema": "cannabis-carbon.phase1-decay-sensitivity-gcp.v1",
+  "status": "loaded-and-full-record-readback-verified",
+  "verified_date": "2026-09-05",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "table": "cannabis_phase1_decay_sensitivity_20260905_v1",
+  "load_job_id": "cannabis_sa_decay_sensitivity_20260905_v1",
+  "authenticated_principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "destination_preflight": "Exact destination returned NOT_FOUND before loading. No existing table replaced.",
+  "report": "data/reports/phase1-decay-sensitivity.json",
+  "report_sha256": "ea8a7b8a5f5a9d7b0d7ba6a5d53b6e872de00cecc54303827b0013ef47492bc8",
+  "export": "data/derived/phase1-decay-sensitivity.ndjson",
+  "row_count": 474,
+  "record_kind_counts": {"metadata": 1, "result": 39, "reaction": 139, "compound": 229, "candidate_gap": 66},
+  "verification": "Job DONE without error; exact destination and service-account identity verified. Every local row has the report checksum and a unique kind/id pair. Full SELECT * readback matched the complete local export as a sorted multiset, including JSON payloads.",
+  "claim_boundary": "Full-catalog chemistry sensitivity only. Alternative certificates do not establish Cannabis enzymes, physiology or startup. Historical candidate scenarios and completeness counts unchanged."
+}

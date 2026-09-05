@@ -2064,6 +2064,40 @@ tests require explicit skipped-discovery evidence before recovering a row.
 This release changes neither map scenarios nor pathway counts. Atom tracing
 remains deferred.
 
+### Ureidoglycine direction review and alternative-route sensitivity
+
+The reviewed RHEA:33871 equation describes ureidoglycine decay, but all 20
+selected precursor certificates that used it required the opposite direction.
+The [primary paper abstract](https://www.nature.com/articles/nchembio.445)
+reports spontaneous decay supplying glyoxylate in a bacterial transamination
+study; it does not establish reverse synthesis or Cannabis activity. Missing
+EC or reviewed sequence alone is not evidence of spontaneous chemistry.
+The exact identities, source-direction joins, literature-access limitations
+and proposed experiments are preserved in
+`data/curation/ureidoglycine-direction-review.json`.
+
+`phase1-decay-sensitivity.json` independently re-solves all 39 exact probes
+from the precursor audit in the 13,995-equation balanced catalog. It preserves
+the five previous direction restrictions and excludes only reverse
+ureidoglycine synthesis as a sixth sensitivity constraint; decay remains
+available. CO2 remains the sole carbon exchange.
+
+All 20 affected probes have alternative exact net-conversion certificates.
+Overall, 34 probes have certificates and five are explicit exchange species;
+all seven focused target structures retain chemistry-only certificates.
+The selected routes use 139 equations and contain 66 equations without
+candidate links in the current 1,601-equation model. These are witness-specific
+gaps, not required plant reactions or a change in whole-metabolome completeness.
+Other directions, regenerated internal pools, compartments and enzyme activity
+remain unverified. No candidate is promoted by this sensitivity analysis.
+
+The 474-record export is stored in
+`terpedia_core.cannabis_phase1_decay_sensitivity_20260905_v1`.
+Replay: `python -m cannabis_carbon.phase1_decay_sensitivity`.
+Tests independently check exact stoichiometry, isotope/element/charge balance,
+CO2-only carbon input, all six restrictions, source hashes and gap membership.
+Existing map scenarios and atom-accounting artifacts remain unchanged.
+
 ### Working-network balance audit
 
 The Phase 1 audit is stored in
