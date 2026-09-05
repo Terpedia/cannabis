@@ -1,0 +1,13 @@
+{
+  "query": "SELECT ?s ?p ?o WHERE { VALUES ?s { <http://rdf.rhea-db.org/19029> <http://rdf.rhea-db.org/20896> <http://rdf.rhea-db.org/33871> } ?s ?p ?o } ORDER BY ?s ?p ?o",
+  "url": "https://sparql.rhea-db.org/sparql?query=SELECT+%3Fs+%3Fp+%3Fo+WHERE+%7B+VALUES+%3Fs+%7B+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F19029%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F20896%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F33871%3E+%7D+%3Fs+%3Fp+%3Fo+%7D+ORDER+BY+%3Fs+%3Fp+%3Fo&format=json",
+  "requested_master_ids": [
+    "RHEA:19029",
+    "RHEA:20896",
+    "RHEA:33871"
+  ],
+  "snapshot": "data/raw/phase1-gap-annotations/f1270c049ed71a4d02a24c0ba850062b8d40d77ca6c431505090c04870b11610.response.json",
+  "sha256": "07a1c4058dd63eb3f3c4d24c12bc9d99ad6e015fdf3dc03b66d164ba1fc1d646",
+  "retrieved_at": "2026-09-05T06:19:33.789021+00:00",
+  "status": "retrieved"
+}

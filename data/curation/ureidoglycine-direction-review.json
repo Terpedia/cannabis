@@ -1,0 +1,40 @@
+{
+  "id": "ureidoglycine-decay-direction-review-20260905",
+  "reaction_id": "balanced-equation:2365a3fda8ba5acf89d328e4e34a798ee5c268e3c00261cd77506ec26376419d",
+  "rhea_master": "RHEA:33871",
+  "rhea_decay_direction": "RHEA:33872",
+  "source_equation": "(S)-2-ureidoglycine + H2O = urea + glyoxylate + NH4(+)",
+  "decay_canonical_direction": "hypothetical-right-to-left",
+  "selected_canonical_direction": "hypothetical-left-to-right",
+  "selected_certificate_uses": 20,
+  "classification": "reverse-of-literature-reported-spontaneous-decay; synthesis-unresolved",
+  "evidence": [
+    {
+      "url": "https://www.nature.com/articles/nchembio.445",
+      "pmid": "20852637",
+      "access_scope": "publisher abstract",
+      "claim": "Bacillus subtilis PucG transaminates ureidoglycine with glyoxylate; the abstract reports spontaneous decay of the donor supplies the acceptor.",
+      "boundary": "Supports decay toward glyoxylate, not the complete product stoichiometry, Cannabis activity, or reverse synthesis. PucG is not assigned as an enzyme for this hydrolysis equation."
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3793049/",
+      "pmid": "23940254",
+      "access_scope": "indexed article passage; direct full-text retrieval blocked by CAPTCHA",
+      "claim": "The article describes enzyme-free ureidoglycine decay yielding glyoxylate, ammonia and urea.",
+      "boundary": "Corroborating passage, not a full-text experimental-condition audit. No rate constant or Cannabis physiological flux is assigned."
+    }
+  ],
+  "source_sha256": {
+    "data/reports/phase1-purine-precursor-audit.json": "67bcdfb391d7bbc416c353abdacf3dda41fb76e3f89322ed8392106162e976f5",
+    "data/raw/phase1-reference-discovery/rhea-directions.tsv": "deae1911da372c70ee8fc97992809c7923e63b288a8702fc4396edcb2633fb04",
+    "data/raw/phase1-gap-annotations/f1270c049ed71a4d02a24c0ba850062b8d40d77ca6c431505090c04870b11610.response.json": "07a1c4058dd63eb3f3c4d24c12bc9d99ad6e015fdf3dc03b66d164ba1fc1d646"
+  },
+  "model_action": "review-only; no candidate promotion, flux constraint, metric change or certificate invalidation",
+  "next_actions": [
+    "Run a separately labelled full-catalog sensitivity excluding this reverse synthesis step; retain decay and all other existing restrictions. Re-solve rather than declaring all twenty probes impossible.",
+    "Review full experimental conditions and competing plant ureide-catabolic reactions before admitting spontaneous decay to the candidate model.",
+    "For reverse synthesis, seek independent reaction evidence or alternative balanced precursor routes before repeating a generic protein search.",
+    "If testing reverse synthesis, measure stereochemically resolved ureidoglycine formation from all three inputs with no-protein and inactive-protein controls; distinguish it from donor decay and PucG transamination."
+  ],
+  "claim_boundary": "Twenty selected certificates use the reverse of reported decay; membership is not necessity. Missing EC or reviewed sequence does not prove spontaneity. Decay evidence does not establish reverse synthesis, thermodynamic irreversibility, or Cannabis in vivo activity. Atom tracing remains deferred."
+}
