@@ -1969,6 +1969,53 @@ artifacts in `terpedia_core`. Replay modules are
 `data/raw/phase1-purine-gap-references/` and `data/raw/phase1-purine-gap-search/`
 directories. Prior results are retained rather than overwritten.
 
+### Combined purine candidates: whole-metabolome recalculation (2026-09-05)
+
+`data/reports/phase1-purine-candidate-net.json` adds all 13 newly screened
+equations to the prior 1,588-equation candidate network. The 1,601 admitted
+equations are independently element/isotope/charge balanced. The supplement
+contains 33 distinct Cannabis proteins, with three unreviewed plant-reference
+equations kept distinct from ten reviewed-reference equations. Neither class
+establishes Cannabis enzyme activity.
+
+Both scenarios retain and assess **all 6,220 target records** under the same
+explicit CO₂-only carbon exchange boundary. Existing exact certificates are
+preserved verbatim only when they obey the scenario's direction restrictions;
+all other target structures are re-solved.
+
+| Scenario | Conditional net target records | Exact structures | Solver-infeasible records | No net-producing candidate equation | Explicit exchange records |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| All candidate directions hypothetical | 109 | 108 | 179 | 5,897 | 35 |
+| Five reviewed reverse steps forbidden | 101 | 100 | 187 | 5,897 | 35 |
+
+The single new permissive target is **5′-deoxyadenosine, CDB004932**. Its selected
+certificate uses four newly admitted equations, including two unreviewed
+plant-reference hypotheses. It also uses the previously flagged reverse steps
+for RHEA:25241 and RHEA:27329. The five-step restriction removes this new route
+and the previous seven permissive additions; no replacement target certificates
+are found in the restricted candidate model. Source equation ordering alone is
+not a physiological direction constraint. These results do not establish
+absence of alternative biology, enzyme function, feasible energy coupling or
+zero-pool startup. Internal pools may be pre-existing and regenerated.
+
+The static map now exposes the [purine supplement](net.html?scenario=purine)
+and [five-step restricted supplement](net.html?scenario=purine-restricted), using
+one shared data bundle. The permissive view opens on 5′-deoxyadenosine by default.
+Full equations, source links and candidate evidence remain attached to arrows;
+the new unreviewed-reference highlight and existing direction-risk highlight
+dim other arrows without deleting participants. Startup is explicitly marked
+as not recomputed in these views. Earlier baseline and expanded scenarios remain
+available unchanged.
+
+The report's 13,295-record export is stored as
+`terpedia_core.cannabis_phase1_purine_candidate_net_20260905_v1`.
+Replay modules are `cannabis_carbon.phase1_purine_candidate_net` and
+`cannabis_carbon.phase1_purine_candidate_view`. Tests independently check all
+selected equations and certificates, original-target preservation, source hashes,
+reference confidence, both graph projections and scenario switching. Net
+certificates are conditional hypotheses, not confirmed pathway completeness or
+atom provenance. Atom tracing remains deferred.
+
 ### Working-network balance audit
 
 The Phase 1 audit is stored in

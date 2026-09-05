@@ -56,6 +56,7 @@
         is_completion_sensitivity: !!reaction.is_completion_sensitivity,
         missing_candidate_evidence: !!reaction.missing_candidate_evidence,
         is_new_catalog_candidate: !!reaction.is_new_catalog_candidate,
+        has_unreviewed_reference: attached.some(e => e.evidence_class?.includes('unreviewed') || e.reference_matches?.some(r=>r.review_status==='unreviewed')),
         direction_review_id: reaction.direction_review?.id || null,
         direction_review_warning: reaction.direction_review?.warning || null,
         claim_boundary: 'Every input is required. Projected arrows are not separate reactions, atom flow or a startup sequence.'
@@ -76,15 +77,20 @@
     return targets.filter(t => (scope === 'all' || (t.certificate_compound_id && (scope !== 'enzyme-gaps' || t.missing_candidate_reaction_ids?.length))) && `${t.label} ${t.cannabisdb_id}`.toLowerCase().includes(q));
   }
   function createLoader(fetcher, folder = 'net-view') {
-    if (!['net-view', 'completion-net-view', 'catalog-net-view', 'expanded-net-view'].includes(folder)) throw new Error('Invalid scenario folder');
+    if (!['net-view', 'completion-net-view', 'catalog-net-view', 'expanded-net-view', 'purine-net-view', 'purine-restricted-net-view'].includes(folder)) throw new Error('Invalid scenario folder');
+    const sourceFolder = folder === 'purine-restricted-net-view' ? 'purine-net-view' : folder;
     return async function() {
-      const response = await fetcher(`data/${folder}/index.json`, {cache: 'no-cache'});
+      const response = await fetcher(`data/${sourceFolder}/index.json`, {cache: 'no-cache'});
       if (!response.ok) throw new Error(`Manifest unavailable (HTTP ${response.status})`);
       const manifest = await response.json();
       if (manifest.file !== 'bundle.json' || !/^[a-f0-9]{64}$/.test(manifest.sha256)) throw new Error('Invalid bundle manifest');
-      const data = await fetcher(`data/${folder}/bundle.json?v=${manifest.sha256.slice(0, 16)}`);
+      const data = await fetcher(`data/${sourceFolder}/bundle.json?v=${manifest.sha256.slice(0, 16)}`);
       if (!data.ok) throw new Error(`Net-conversion data unavailable (HTTP ${data.status})`);
       const base = await data.json();
+      if (folder === 'purine-restricted-net-view') {
+        if(base.view_scenario !== 'purine-candidates' || base.restricted_scenario?.id !== 'five-reverse-steps-forbidden') throw Error('Invalid restricted scenario');
+        return {...base, ...base.restricted_scenario, view_boundary:base.restricted_boundary};
+      }
       if (!manifest.evidence) return base;
       const extra = manifest.evidence;
       if(folder !== 'catalog-net-view' || extra.file !== 'evidence.json' || !/^[a-f0-9]{64}$/.test(extra.sha256)) throw Error('Invalid evidence manifest');
@@ -97,7 +103,7 @@
   }
   function mount() {
     const scenario = new URLSearchParams(location.search).get('scenario');
-    const folder = scenario === 'expanded' ? 'expanded-net-view' : scenario === 'catalog' ? 'catalog-net-view' : scenario === 'completions' ? 'completion-net-view' : 'net-view';
+    const folder = scenario === 'purine' ? 'purine-net-view' : scenario === 'purine-restricted' ? 'purine-restricted-net-view' : scenario === 'expanded' ? 'expanded-net-view' : scenario === 'catalog' ? 'catalog-net-view' : scenario === 'completions' ? 'completion-net-view' : 'net-view';
     const $ = id => document.getElementById(id), loader = createLoader((...args) => fetch(...args), folder);
     if (typeof cytoscape !== 'function') { $('netMessage').textContent = 'The graph library could not load. Reload the page or use the downloadable certificates below.'; return; }
     let bundle, current, generation = 0;
@@ -130,7 +136,7 @@
         const p = document.createElement('p'), a = document.createElement('a'); a.href = url; a.textContent = url; a.target = '_blank'; a.rel = 'noopener noreferrer'; p.appendChild(a); $('netSources').appendChild(p);
       }
     }
-    function highlight() {cy.elements().removeClass('muted'); if ($('poolHighlight').value === 'pools') cy.nodes().filter(n => !n.data('is_pool')).addClass('muted'); else if ($('poolHighlight').value === 'enzyme-gaps') cy.edges().filter(e => !e.data('missing_candidate_evidence')).addClass('muted'); else if ($('poolHighlight').value === 'direction-review') cy.edges().filter(e => !e.data('direction_review_id')).addClass('muted');}
+    function highlight() {cy.elements().removeClass('muted'); if ($('poolHighlight').value === 'pools') cy.nodes().filter(n => !n.data('is_pool')).addClass('muted'); else if ($('poolHighlight').value === 'enzyme-gaps') cy.edges().filter(e => !e.data('missing_candidate_evidence')).addClass('muted'); else if ($('poolHighlight').value === 'direction-review') cy.edges().filter(e => !e.data('direction_review_id')).addClass('muted'); else if ($('poolHighlight').value === 'unreviewed-references') cy.edges().filter(e => !e.data('has_unreviewed_reference')).addClass('muted');}
     function draw() {
       clear(); if (!bundle || !$('netTarget').value) return;
       current = project(bundle, $('netTarget').value, $('netReaction').value);
@@ -177,7 +183,7 @@
           $('netScope').value = 'all';
           if (!bundle.targets.some(t => t.cannabisdb_id === requested)) $('netSearch').value = requested;
         }
-        const newlyFeasible = bundle.view_scenario === 'expanded-candidates' ? bundle.targets.find(t=>t.new_net_certificate)?.cannabisdb_id : null;
+        const newlyFeasible = ['expanded-candidates','purine-candidates'].includes(bundle.view_scenario) ? bundle.targets.find(t=>t.new_net_certificate)?.cannabisdb_id : null;
         search(requested || newlyFeasible || bundle.targets.find(t=>t.label==='Limonene' && t.certificate_compound_id)?.cannabisdb_id);
       } catch(error) {if(token!==generation)return; clear(); $('netMessage').textContent = error.message; $('netRetry').hidden = false;}
     }

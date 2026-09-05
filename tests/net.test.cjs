@@ -12,6 +12,8 @@ const catalogBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/d
 const catalogEvidence = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/catalog-net-view/evidence.json')));
 const updatedCatalogBundle = context.NetView.applyEvidence(catalogBundle,catalogEvidence);
 const expandedBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/expanded-net-view/bundle.json')));
+const purineBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/purine-net-view/bundle.json')));
+const restrictedPurineBundle = {...purineBundle,...purineBundle.restricted_scenario,view_boundary:purineBundle.restricted_boundary};
 
 test('catalog supplement loader preserves chemistry, fails closed, and retains original gaps', async()=>{
   const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/catalog-net-view/index.json')));
@@ -39,7 +41,7 @@ test('catalog supplement loader preserves chemistry, fails closed, and retains o
   await assert.rejects(createLoader(async url=>url.includes('evidence.json')?{ok:true,json:async()=>wrong}:fetcher(url),'catalog-net-view')(),/snapshot mismatch/);
 });
 
-for (const bundle of [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), sensitivityBundle, catalogBundle, updatedCatalogBundle, expandedBundle]) {
+for (const bundle of [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), sensitivityBundle, catalogBundle, updatedCatalogBundle, expandedBundle, purineBundle, restrictedPurineBundle]) {
 test(`every ${bundle.view_scenario || 'baseline'} net certificate projects all participants, coefficients, extents and candidate evidence`, () => {
   let count = 0;
   for (const target of bundle.targets.filter(t => t.certificate_compound_id)) {
@@ -104,7 +106,7 @@ test('loader revalidates manifest, versions bundles, rejects external paths and 
   assert.deepEqual(sensitivityCalls,['data/completion-net-view/index.json','data/completion-net-view/bundle.json?v='+'b'.repeat(16)]);
 });
 
-for (const [bundle, scenario] of [[JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target=CDB006137'], [updatedCatalogBundle, '?scenario=catalog&target=CDB006137'], [expandedBundle, '?scenario=expanded']]) {
+for (const [bundle, scenario] of [[JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target=CDB006137'], [updatedCatalogBundle, '?scenario=catalog&target=CDB006137'], [expandedBundle, '?scenario=expanded'], [purineBundle, '?scenario=purine'], [restrictedPurineBundle, '?scenario=purine-restricted']]) {
 test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highlight without hiding, and recover from load errors`, async () => {
   class Field {
     constructor(){this.value='';this.textContent='';this.children=[];this.hidden=false;}
@@ -167,6 +169,20 @@ test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highl
     assert.match(fields.netEvidence.textContent,/No candidate enzyme evidence/);
     fields.netReaction.value='';fields.netReaction.change();
   }
+  if (scenario === '?scenario=purine') {
+    assert.equal(fields.netTarget.value,'CDB004932');
+    assert.match(fields.netMetrics.textContent,/109 \/ 6220/);
+    assert.match(fields.netBoundary.textContent,/two previously flagged reverse steps/);
+    const before=cy.items.length;
+    fields.poolHighlight.value='unreviewed-references';fields.poolHighlight.change();
+    assert.equal(cy.items.length,before);
+    assert.ok(cy.items.some(e=>e.data.has_unreviewed_reference));
+    assert.equal(cy.muted.length,cy.items.filter(e=>e.data.source&&!e.data.has_unreviewed_reference).length);
+  }
+  if (scenario === '?scenario=purine-restricted') {
+    assert.match(fields.netMetrics.textContent,/101 \/ 6220/);
+    assert.match(fields.netBoundary.textContent,/five reverse steps forbidden/);
+  }
   const fullCount=cy.items.length;
   fields.poolHighlight.value='pools';fields.poolHighlight.change();assert.equal(cy.items.length,fullCount);
   fields.netReaction.value=project(bundle,fields.netTarget.value).steps.find(s=>s.evidence.length).step_id;fields.netReaction.change();
@@ -177,3 +193,16 @@ test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highl
   fields.netSearch.value='no such compound xyz';fields.netSearch.input();assert.equal(cy.items.length,0);assert.equal(fields.netTarget.disabled,true);
 });
 }
+
+test('purine scenarios share one bundle and restriction cannot inherit a permissive certificate',async()=>{
+  const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/purine-net-view/index.json')));
+  const calls=[],before=JSON.stringify(purineBundle);
+  const loaded=await createLoader(async url=>{calls.push(url);return {ok:true,json:async()=>url.endsWith('index.json')?manifest:purineBundle};},'purine-restricted-net-view')();
+  assert.equal(JSON.stringify(purineBundle),before);
+  assert.ok(calls.every(url=>url.startsWith('data/purine-net-view/')));
+  assert.equal(project(loaded,'CDB004932').certificate,null);
+  assert.ok(project(purineBundle,'CDB004932').certificate);
+  const forbidden=new Set(loaded.forbidden_step_ids);
+  assert.ok(loaded.certificates.every(c=>c.steps.every(s=>!forbidden.has(s.step_id))));
+  await assert.rejects(createLoader(async url=>({ok:true,json:async()=>url.endsWith('index.json')?manifest:{...purineBundle,restricted_scenario:null}}),'purine-restricted-net-view')(),/Invalid restricted/);
+});
