@@ -1,0 +1,13 @@
+{
+  "schema": "cannabis-carbon.phase1-completion-connectivity-gcp.v1",
+  "status": "pending-reauthentication; no load attempted",
+  "intended_table": "terpedia-489015.terpedia_core.cannabis_phase1_completion_connectivity_20260904_v1",
+  "table_existence_verified": false,
+  "report": "data/reports/phase1-completion-connectivity.json",
+  "report_sha256": "79f6349b0318f0ac727fde268e34588592421ad4c470cb80e8dc4f659b554a08",
+  "export": "data/derived/phase1-completion-connectivity.ndjson",
+  "expected_row_count": 7396,
+  "record_kind_counts": {"target": 6220, "startup_scenario": 2, "admitted_reaction": 321, "excluded_completion": 380, "certificate": 11, "baseline_reaction": 24, "compound": 437, "metadata": 1},
+  "schema_fields": "record_kind:STRING,record_id:STRING,record_json:STRING,report_sha256:STRING",
+  "next_action": "Reauthenticate the intended Terpedia GCP account, then verify the destination is absent before a new load. If already present, inspect its provenance and contents instead of overwriting it. Verify grouped counts, distinct record IDs and report hashes after loading."
+}

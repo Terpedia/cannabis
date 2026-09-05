@@ -26,6 +26,7 @@
         kind: 'reaction-projection', step_id: step.step_id, reaction_id: step.reaction_id,
         direction_mode: step.direction_mode, extent: step.extent, required_inputs: inputs, outputs,
         enzyme_evidence_ids: reaction.enzyme_evidence_ids, candidate_protein_ids: proteins,
+        is_completion_sensitivity: !!reaction.is_completion_sensitivity,
         claim_boundary: 'Every input is required. Projected arrows are not separate reactions, atom flow or a startup sequence.'
       }})));
     }
@@ -43,19 +44,21 @@
     const q = query.trim().toLowerCase();
     return targets.filter(t => (scope === 'all' || t.certificate_compound_id) && `${t.label} ${t.cannabisdb_id}`.toLowerCase().includes(q));
   }
-  function createLoader(fetcher) {
+  function createLoader(fetcher, folder = 'net-view') {
+    if (!['net-view', 'completion-net-view'].includes(folder)) throw new Error('Invalid scenario folder');
     return async function() {
-      const response = await fetcher('data/net-view/index.json', {cache: 'no-cache'});
+      const response = await fetcher(`data/${folder}/index.json`, {cache: 'no-cache'});
       if (!response.ok) throw new Error(`Manifest unavailable (HTTP ${response.status})`);
       const manifest = await response.json();
       if (manifest.file !== 'bundle.json' || !/^[a-f0-9]{64}$/.test(manifest.sha256)) throw new Error('Invalid bundle manifest');
-      const data = await fetcher(`data/net-view/bundle.json?v=${manifest.sha256.slice(0, 16)}`);
+      const data = await fetcher(`data/${folder}/bundle.json?v=${manifest.sha256.slice(0, 16)}`);
       if (!data.ok) throw new Error(`Net-conversion data unavailable (HTTP ${data.status})`);
       return data.json();
     };
   }
   function mount() {
-    const $ = id => document.getElementById(id), loader = createLoader((...args) => fetch(...args));
+    const sensitivity = new URLSearchParams(location.search).get('scenario') === 'completions';
+    const $ = id => document.getElementById(id), loader = createLoader((...args) => fetch(...args), sensitivity ? 'completion-net-view' : 'net-view');
     if (typeof cytoscape !== 'function') { $('netMessage').textContent = 'The graph library could not load. Reload the page or use the downloadable certificates below.'; return; }
     let bundle, current, generation = 0;
     const cy = cytoscape({container: $('netCy'), elements: [], layout: {name: 'preset'}, style: [
@@ -65,6 +68,7 @@
       {selector: 'node[role="pool"]', style: {'background-color': '#f2bd65'}},
       {selector: 'node[?is_target]', style: {'border-width': 5, 'border-color': '#fff'}},
       {selector: 'edge', style: {'line-color': '#c78cff', 'target-arrow-color': '#c78cff', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier', 'line-style': 'dashed', 'width': 2}},
+      {selector: 'edge[?is_completion_sensitivity]', style: {'line-color': '#f2a65a', 'target-arrow-color': '#f2a65a', 'width': 4}},
       {selector: '.muted', style: {'opacity': .25}}
     ]});
     function options(select, rows) {select.replaceChildren(...rows.map(([value, label]) => {const e = document.createElement('option'); e.value = value; e.textContent = label; return e;}));}
@@ -89,7 +93,7 @@
       $('netStatus').textContent = `Net result: ${current.target.net_status}. Zero-pool startup: ${current.target.startup_status}.`;
       if (!current.certificate) {$('netMessage').textContent = 'No net-conversion certificate for this record. This is a model/evidence gap, not proof of biological absence.'; return;}
       const cert = current.certificate;
-      $('netMessage').textContent = 'Exact net balance; physiological pathway and startup remain unestablished.';
+      $('netMessage').textContent = bundle.view_boundary || 'Exact net balance; physiological pathway and startup remain unestablished.';
       const details = ['Net inputs: ' + Object.entries(cert.external_net_consumption).map(([c,n]) => `${n} × ${label(c)}`).join(' + '),
         'Net products: ' + Object.entries(cert.net_exports).map(([c,n]) => `${n} × ${label(c)}`).join(' + '),
         'Zero-net internal participants (pool origin unresolved): ' + cert.zero_net_internal_participants.map(label).join(', ')];
@@ -119,6 +123,7 @@
       $('netTitle').textContent = 'Loading net-conversion evidence…'; $('netStatus').textContent = ''; $('netMessage').textContent = '';
       try {
         const loaded = await loader(); if (token !== generation) return; bundle = loaded;
+        if ($('netBoundary') && bundle.view_boundary) $('netBoundary').textContent = bundle.view_boundary + ' ' + bundle.claim_boundary;
         $('netMetrics').textContent = `${bundle.summary.target_status_counts['exact-net-conversion-hypothesis']} / ${bundle.summary.target_records} target records have candidate-linked net certificates · not confirmed pathway completeness`;
         const requested = new URLSearchParams(location.search).get('target');
         if (requested) {

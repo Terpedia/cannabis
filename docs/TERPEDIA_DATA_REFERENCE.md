@@ -136,6 +136,75 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 Atom tracing is deferred for Phase 1. Acceptance requires full element and charge
 balance; candidate enzyme evidence and CO₂ connectivity are separate metrics.
 
+### Completion-network sensitivity: 11 additional net-balance hypotheses
+
+The [separate sensitivity graph](net.html?scenario=completions) augments the
+1,472 baseline candidate equations with 321 original-MARTS-homology completion
+hypotheses. Of these additions, 146 were already balanced equations in the full
+Terpedia catalog but lacked baseline candidate support, and 175 are additional
+inferred equations. The 64 completions already carrying baseline candidate
+evidence are not double-counted. The 380 completions without a candidate lead
+remain excluded. All 6,220 target records are retained.
+
+With the **same exact CO₂ and carbon-free external exchanges**, 11 additional
+target structures obtain rationally reconstructed net-balance certificates:
+112 target records / 111 unique structures versus the unchanged baseline of
+101 records / 100 structures. Each new certificate has 22–23 directed reaction
+steps and depends on one newly admitted completion. Every coefficient and
+coproduct is retained, every internal species has nonnegative net production,
+and CO₂ supplies all net carbon consumed. Both directions remain hypothetical;
+positive results are conditional on unverified chemistry, enzyme specificity,
+compartments, energy and thermodynamics, not confirmed Cannabis pathways.
+
+| Newly conditionally feasible target | CannabisDB ID |
+| --- | --- |
+| Farnesol | CDB006149 |
+| alpha-Cubebene | CDB000109 |
+| alpha-Bisabolol | CDB000119 |
+| alpha-Phellandrene | CDB000199 |
+| beta-Phellandrene | CDB000200 |
+| alpha-Thujene | CDB000206 |
+| trans-Sabinene hydrate | CDB000302 |
+| Ledol | CDB000316 |
+| Gamma-Muurolene | CDB000471 |
+| Beta-maaliene | CDB000572 |
+| Bulnesol | CDB006348 |
+
+**Zero-pool startup does not improve** in either the CO₂-only or permissive
+carbon-free scenario. The new net certificates allow regenerated, pre-existing
+internal pools; they do not establish pool synthesis or origin. In the net
+scenario, 187 target records remain solver-reported infeasible, 5,886 lack a
+net-producing candidate equation, and 35 are explicit exchange species rather
+than synthesis targets. Numerical infeasibility is not biological absence.
+
+The baseline report and its certificates are unchanged. Orange arrows identify
+completion-sensitivity edges; the graph retains complete required-input and
+coproduct lists, relative extents, exact structures, homology alignments and
+original-source product/stereo warnings. The graph is not a reaction execution
+sequence or atom-flow map. The selected certificates are neither unique nor a
+functional ranking of the proteins.
+
+Each new certificate includes test proposals: resolve exact source-product
+identity first; express candidate proteins and assay the exact original organic
+substrate while identifying products and quantifying inferred inorganic
+coproducts; then investigate full-route input supply, expression, compartments
+and physiological direction. A homology match is not a positive assay.
+
+Download [the full sensitivity report](data/phase1-completion-connectivity.json).
+SHA-256: `79f6349b0318f0ac727fde268e34588592421ad4c470cb80e8dc4f659b554a08`.
+Reproduce with `PYTHONPATH=src python -m cannabis_carbon.phase1_completion_connectivity`
+and `PYTHONPATH=src python -m cannabis_carbon.phase1_completion_net_view`.
+The 7,396-row Terpedia export is prepared (6,220 targets, 321 admitted reactions,
+380 excluded completions, 11 certificates, 24 baseline certificate reactions,
+437 compounds, two startup scenarios and one metadata row). **GCP upload is
+pending reauthentication**, not claimed complete. Intended versioned table:
+`terpedia-489015.terpedia_core.cannabis_phase1_completion_connectivity_20260904_v1`.
+No table existence or load was verified after credentials expired; re-check the
+destination before loading. The existing GCP tables below are previously verified
+snapshots, not evidence that this new export has been loaded.
+
+### Completion protein evidence
+
 The completion graph now includes a separate, evidence-only protein overlay.
 An exact full-equation join retains existing candidate evidence for 64 of 765
 completion hypotheses. The remaining 701 equations were screened using only
