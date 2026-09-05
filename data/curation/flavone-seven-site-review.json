@@ -1,0 +1,18 @@
+{
+  "schema": "cannabis-flavone-seven-site-review-v1",
+  "model_eligible": false,
+  "pmid": "17535823",
+  "doi": "10.1104/pp.107.098392",
+  "source_url": "https://academic.oup.com/plphys/article-abstract/144/3/1442/6106752",
+  "reviewed_sections": ["Homology Modeling and Choice of Mutations", "Site-Directed Mutagenesis", "Table I"],
+  "resolves_prior_review": "data/curation/flavone-fht-comparison-review.json",
+  "numbering_reference": "Q7XZQ7",
+  "fnsi_reference": "Q7XZQ8",
+  "tested_substitutions": ["M106T", "I115T", "V116I", "I131F", "D195E", "L215V", "K216R"],
+  "not_in_seven_site_construct": "V200I",
+  "table_row": 15,
+  "reported_product_ratio": {"dihydrokaempferol": 18, "apigenin": 82},
+  "assay_boundary": "Duplicate radiolabeled naringenin assays used crude recombinant yeast extracts. Products were distinguished by TLC with authentic standards. Product proportions are not conversion yields or kinetic constants.",
+  "numbering_boundary": "Both pinned parsley sequences agree with all seven stated residue pairs at the stated positions. This checks numbering compatibility, not full identity of archived experimental plasmids. No structural equivalence is inferred for Cannabis.",
+  "claim_boundary": "Reference mutagenesis supports experimental prioritization, not a universal seven-residue activity classifier. Retain weak alignments, query gaps, uncovered sites and fragment cautions. No reaction or completeness promotion."
+}

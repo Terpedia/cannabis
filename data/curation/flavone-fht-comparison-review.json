@@ -1,0 +1,27 @@
+{
+  "schema": "cannabis-flavone-fht-comparison-review-v1",
+  "model_eligible": false,
+  "comparison_report": "data/reports/phase1-flavone-fht-comparison.json",
+  "reference_roles": {
+    "Q7XZQ8": "Original parsley FNS-I reference; unchanged",
+    "Q7XZQ7": "Parsley flavanone 3-hydroxylase comparator; catalytic annotation cites PMID12782296",
+    "Q7XZQ6": "Multifunctional parsley flavonol synthase/flavanone 3-hydroxylase comparator; not a pure FHT control"
+  },
+  "leading_candidates": ["A0A7J6DQD1", "A0A7J6GJW3", "A0A7J6GGF7"],
+  "comparison_finding": "Each leading candidate has higher identity and bit score to Q7XZQ7 than to Q7XZQ8. Alignment lengths and coverage differ; this is descriptive similarity, not a calibrated specificity probability. A0A7J6GGF7 remains fragment-flagged in the prior annotation snapshot.",
+  "primary_study": {
+    "pmid": "17535823",
+    "doi": "10.1104/pp.107.098392",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1914147/",
+    "review_scope": "Indexed primary abstract and discussion; full methods, tables, constructs and supplements not yet reconciled",
+    "finding": "Combinations of substitutions changed product preference in recombinant parsley hydroxylase; similarity alone cannot establish desaturation specificity.",
+    "numbering_blocker": "The abstract says seven sites but lists eight substitutions. Preserve this discrepancy; do not infer a seven-site panel or transfer numbering to Cannabis without checking constructs and full results.",
+    "cannabis_activity_established": false
+  },
+  "next_steps": [
+    "Reconcile study constructs and residue numbering against the pinned parsley sequences before alignment-based site review.",
+    "Compare candidate products against authentic apigenin, dihydrokaempferol and kaempferol standards; retain substrate stereochemistry, no-enzyme controls and reference controls.",
+    "Retain both desaturation and hydroxylation hypotheses until direct activity evidence discriminates them."
+  ],
+  "claim_boundary": "No new exact enzyme assignment, reaction addition, net-route rescue or completeness increase. Comparators do not become FNS-I reaction candidates merely by being included in this screen."
+}

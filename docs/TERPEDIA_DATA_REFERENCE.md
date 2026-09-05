@@ -2765,3 +2765,44 @@ All ten records (nine documents plus metadata) matched the full local export on
 readback, with service-account principal and destination verified. Receipt:
 `data/reports/phase1-flavonoid-followup-gcp-verification.json`.
 Bundle SHA-256: `f46be5a0c76e6487a75f2dd77bdd21052921c1d33ae3149c80b177600ea28701`.
+
+## Flavone-synthase specificity comparison
+
+`docs/data/flavone-specificity-bundle.json` preserves four complete documents:
+the related-enzyme comparison, its initial literature review, a subsequent
+seven-site clarification, and coordinate-checked Cannabis residue hypotheses.
+The earlier review is retained, not overwritten by the later clarification.
+
+A parsley EC 1.14.11.9 query recovered Q7XZQ7 (F3H) and Q7XZQ6
+(multifunctional FLS/F3H). Both full annotation snapshots and their evidence codes
+are retained; Q7XZQ6 is not treated as a pure F3H control. Screening all 30,304
+Cannabis proteins produced 218 comparator alignments. All 32 original FNS-I leads
+remain represented, with 58 passing and six weak comparator alignments.
+The three highest-scoring original FNS-I leads have higher identity and bit score
+to Q7XZQ7 than to Q7XZQ8. Coverage differs and these are descriptive comparisons,
+not calibrated activity probabilities or exact enzyme assignments.
+
+The subsequent primary-paper review resolves the abstract's seven-versus-eight
+site discrepancy using the mutagenesis section and Table I: the seven-site
+construct excludes V200I. Both pinned parsley sequences agree with the seven
+stated residue pairs at the stated positions. This is numbering compatibility,
+not independent verification of archived experimental plasmids.
+
+Coordinate replay reproduces all 218 original comparator alignments. Seven
+alignments contain reported X masking; raw output is preserved and every restored
+pinned residue is explicitly recorded. Non-mask sequence discrepancies are rejected.
+The 32-lead review contains 215 aligned sites, six sites outside local alignments,
+and three query gaps. A0A7J6DQD1 and A0A7J6GJW3 retain all seven F3H-like residues;
+A0A7J6GGF7 retains six with a query gap at the seventh and remains fragment-flagged.
+No residue-count activity classifier is applied. Direct product-discriminating
+assays, structural review and expression evidence remain necessary.
+
+No reactions, enzyme assignments, net-route rescues, completeness increases or
+atom-tracing changes result from this batch.
+
+Immutable GCP table:
+`terpedia-489015.terpedia_core.cannabis_phase1_flavone_specificity_bundle_20260905_v1`.
+All five records (four documents plus metadata) matched the local export on
+full readback, with service-account principal and destination verified.
+Receipt: `data/reports/phase1-flavone-specificity-gcp-verification.json`.
+Bundle SHA-256: `e04cc3b0ae465dc9d5638c827fcc6fe414371a7dc9ec6a77e6e583bd9ffe5b82`.
