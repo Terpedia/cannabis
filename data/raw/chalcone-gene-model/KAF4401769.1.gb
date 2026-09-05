@@ -1,0 +1,80 @@
+LOCUS       KAF4401769               346 aa            linear   PLN 28-APR-2020
+DEFINITION  hypothetical protein G4B88_000817 [Cannabis sativa].
+ACCESSION   KAF4401769
+VERSION     KAF4401769.1
+DBLINK      BioProject: PRJNA575581
+            BioSample: SAMN13941723
+DBSOURCE    accession JAATIQ010000011.1
+KEYWORDS    .
+SOURCE      Cannabis sativa
+  ORGANISM  Cannabis sativa
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae;
+            Pentapetalae; rosids; fabids; Rosales; Cannabaceae; Cannabis.
+REFERENCE   1  (residues 1 to 346)
+  AUTHORS   Mckernan,K.J., Helbert,Y., Kane,L.T., Ebling,H., Zhang,L., Liu,B.,
+            Eaton,Z., Mclaughlin,S., Kingan,S., Baybayan,P., Concepcion,G.,
+            Jordan,M., Riva,A., Barbazuk,W. and Harkins,T.
+  TITLE     Sequence and annotation of 42 cannabis genomes reveals extensive
+            copy number variation in cannabinoid synthesis and pathogen
+            resistance genes
+  JOURNAL   bioRxivorg (2020) In press
+REFERENCE   2  (residues 1 to 346)
+  AUTHORS   Mckernan,K.J., Helbert,Y., Kane,L.T., Ebling,H., Zhang,L., Liu,B.,
+            Eaton,Z., Mclaughlin,S., Kingan,S., Baybayan,P., Concepcion,G.,
+            Jordan,M., Riva,A., Barbazuk,W. and Harkins,T.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (18-MAR-2020) R&D, Medicinal Genomics, 100 Cummings
+            Center, Beverly, MA 01915, USA
+COMMENT     As a trio, this is the genome of the father. The genome of the
+            mother is JAATIP000000000 while the genome of the offspring is
+            JAATIR000000000.
+            
+            ##Genome-Assembly-Data-START##
+            Assembly Date          :: 25-DEC-2019
+            Assembly Method        :: FALCON-Unzip v. 0.3.0
+            Polishing Method       :: Arrow
+            Assembly Name          :: JL_Father
+            Genome Representation  :: Full
+            Expected Final Version :: No
+            Genome Coverage        :: 125.0x
+            Sequencing Technology  :: PacBio Sequel
+            ##Genome-Assembly-Data-END##
+            Method: conceptual translation.
+FEATURES             Location/Qualifiers
+     source          1..346
+                     /organism="Cannabis sativa"
+                     /cultivar="Jamaican Lion ^4"
+                     /isolate="Father"
+                     /db_xref="taxon:3483"
+                     /sex="male"
+                     /tissue_type="leaf"
+                     /dev_stage="vegetative"
+                     /ecotype="Type II"
+                     /geo_loc_name="USA:Massachussets, Marblehead"
+                     /note="Sibling to Jamaican Lion Mother"
+     Protein         1..346
+                     /product="hypothetical protein"
+     Region          117..305
+                     /region_name="Chalcone_3"
+                     /note="Chalcone isomerase-like; cl03589"
+                     /db_xref="CDD:446143"
+     CDS             1..346
+                     /locus_tag="G4B88_000817"
+                     /coded_by="complement(join(JAATIQ010000011.1:7834077..7834
+                     385,JAATIQ010000011.1:7834492..7834715,
+                     JAATIQ010000011.1:7834799..7834957,
+                     JAATIQ010000011.1:7835397..7835470,
+                     JAATIQ010000011.1:7835726..7835844,
+                     JAATIQ010000011.1:7836053..7836208))"
+                     /db_xref="InterPro:IPR016087"
+                     /db_xref="PFAM:PF02431"
+ORIGIN      
+        1 mdepntnafs syhckdipsn ysiilntpls plsfhfgfnv etvshalllc sriglhifrr
+       61 niksfwlcws ppppeslkln vdvvisdsng tmeastsrgh slaqqalgld cefvwngvra
+      121 leiqgnlvkf tsigvyleds avtwlsgkwk gktseeltes veffreivtg pfhkftritm
+      181 ilpltgkqys ekvaencvai wkslgiysda eakaidkfle ifkdenflpg ssilftqspn
+      241 gflkisfskd esipetwvse ieskllseai lesiigkngv spaarqsias tlskllkenn
+      301 gstndhkaag eidgdinlka tkaykdkdvi sipiengngk hkvtne
+//
+

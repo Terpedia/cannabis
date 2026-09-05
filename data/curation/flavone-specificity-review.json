@@ -1,0 +1,17 @@
+{
+  "schema": "cannabis-flavone-specificity-review-v1",
+  "model_eligible": false,
+  "annotation_report": "data/reports/phase1-flavone-annotations.json",
+  "reference_accession": "Q7XZQ8",
+  "reference_organism": "Petroselinum crispum",
+  "reference_source_url": "https://rest.uniprot.org/uniprotkb/Q7XZQ8.json",
+  "reference_boundary": "The reference annotates flavone synthase I with a generic flavanone Rhea10448 reaction and cites PMID11524111 and PMID12782296. Exact Cannabis activity is not established by this annotation.",
+  "leading_alignment_accessions": ["A0A7J6DQD1", "A0A7J6GJW3", "A0A7J6GGF7"],
+  "finding": "All three highest-bit-score Cannabis hits have an automated naringenin,2-oxoglutarate 3-dioxygenase annotation. A0A7J6GGF7 additionally carries a Fragment flag. These annotations do not experimentally prove an alternative activity, but preclude equating the highest homology scores with exact flavone synthase specificity.",
+  "next_tests": [
+    "Compare against characterized flavanone 3-hydroxylase references, preserving original FNS-I hits and full sequence coverage.",
+    "Inspect discriminating substrate-positioning residues separately from broadly conserved Fe/2-oxoglutarate sites.",
+    "Assay naringenin conversion with authentic apigenin and dihydrokaempferol standards to distinguish desaturation from hydroxylation; retain no-enzyme and cofactor controls."
+  ],
+  "claim_boundary": "Annotation-guided experimental prioritization only; no protein activity, physiological direction, or net-route rescue assigned. Do not transfer FNS-II cofactor chemistry or drop fragment and WGS cautions."
+}

@@ -2716,3 +2716,52 @@ All six records (five source documents plus metadata) were read back and matched
 the full local export; service-account principal and destination were verified.
 Receipt: `data/reports/phase1-chalcone-gcp-verification.json`.
 Bundle SHA-256: `e7fcdbcdede256f4d490c826ad09b1a45411a2b2026df523c6eec78b9706361c`.
+
+## Flavonoid genomic checks and conditional pathway tests
+
+`docs/data/flavonoid-followup-bundle.json` preserves nine complete source documents,
+including genomic checks, assay review, conditional net-conversion certificates,
+and the flavone-synthase reference search and annotation review.
+
+The A0A7J6I409 lead matches conceptual translation KAF4401769.1 exactly. Its six
+reverse-strand exons reconstruct a 1,041-nucleotide CDS, encoding the same 346
+amino acids followed by a TGA stop. This checks the pinned genomic sequence and
+gene model, not independent expression, splicing, or enzymatic activity. Terminal
+extensions are not silently trimmed or classified as artifacts.
+
+The primary alfalfa chalcone-isomerase assay review retains substrate identity,
+conditions and spontaneous-conversion correction. Absorbance-based kinetics do
+not independently establish chiral product composition or Cannabis activity.
+
+An additive sensitivity scenario reconstructs all 1,609 baseline candidate
+equations, not just the 453 displayed/used equations. Adding only forward
+tetrahydroxychalcone → (2S)-naringenin gives exact, balanced net-conversion
+hypotheses for five previously infeasible target records: naringenin, eriodictyol,
+aromadendrin, leucopelargonidin and taxifolin. Reverse chalcone isomerization is
+forbidden in this scenario. CO2 remains the only carbon-containing external input;
+preexisting internal pools are allowed, so these are not startup or in-vivo proofs.
+
+Salvigenin and apigenin 7,4'-dimethyl ether remain infeasible in that scenario.
+Their saved full-chemical-network witnesses each use one further missing equation:
+`balanced-equation:f2f8945e28a8b49b0397c4717354685d12d0490a5a1c3aa72373ed940bc1937a`,
+in its canonical right-to-left direction. This is the 2-oxoglutarate-dependent
+naringenin-to-apigenin oxygenase chemistry; all eight charged/cofactor participants
+are retained. Weighted witnesses do not prove a minimum or necessary gap set.
+
+A reviewed EC 1.14.20.5 search recovered parsley reference Q7XZQ8. Screening all
+30,304 pinned Cannabis proteins yielded 105 alignments and 32 distinct passing
+leads. All 33 reference/candidate annotation sequences match the searched sequences.
+The top three leads carry automated flavanone-3-hydroxylase-like annotations;
+one is flagged as a fragment. Broad oxygenase homology cannot distinguish flavone
+synthase activity from competing activities. Comparative characterized references
+and assays distinguishing apigenin from dihydrokaempferol are still needed.
+
+All documents remain model-ineligible: no exact enzyme assignments or baseline
+completeness increases are claimed, and atom tracing is unchanged.
+
+Immutable GCP table:
+`terpedia-489015.terpedia_core.cannabis_phase1_flavonoid_followup_bundle_20260905_v1`.
+All ten records (nine documents plus metadata) matched the full local export on
+readback, with service-account principal and destination verified. Receipt:
+`data/reports/phase1-flavonoid-followup-gcp-verification.json`.
+Bundle SHA-256: `f46be5a0c76e6487a75f2dd77bdd21052921c1d33ae3149c80b177600ea28701`.
