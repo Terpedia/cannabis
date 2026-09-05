@@ -1,0 +1,18 @@
+{
+  "schema": "cannabis-carbon.phase1-no-producer-audit-gcp.v1",
+  "status": "loaded-and-full-record-readback-verified",
+  "verified_date": "2026-09-05",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "table": "cannabis_phase1_no_producer_audit_20260905_v1",
+  "load_job_id": "cannabis_sa_no_producer_audit_20260905_v1",
+  "authenticated_principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "destination_preflight": "Exact destination returned NOT_FOUND before loading; no existing table replaced.",
+  "report": "data/reports/phase1-no-producer-audit.json",
+  "report_sha256": "460b1ec528fcc2fb38d56d0ac2b4f0d43856d71fb3271bf8ec33f3e5a3821813",
+  "export": "data/derived/phase1-no-producer-audit.ndjson",
+  "row_count": 17356,
+  "record_kind_counts": {"metadata": 1, "target": 5897, "alternative_compound": 813, "reaction": 10574, "source_identity_conflict": 71},
+  "verification": "Job DONE without error, exact destination and service-account identity verified. All exported rows have the report checksum and unique kind/id pairs. Full SELECT * readback matched every complete local record, including JSON payloads, as sorted multisets.",
+  "claim_boundary": "Gap triage and source-identity review only. Diagnostic structure transformations do not establish identity equivalence or reaction edges. All 71 source disagreements retained; no structure, pathway or carbon accounting silently replaced."
+}

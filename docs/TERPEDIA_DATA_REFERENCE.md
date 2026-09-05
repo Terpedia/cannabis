@@ -4,6 +4,21 @@ This file is the source contract for the cannabis carbon-provenance project.
 It records what has actually been imported, how entities are identified, and
 which fields are required before a reaction can contribute carbon provenance.
 
+## Source identity warning
+
+An accession-by-accession audit found **71 encoded-structure disagreements**
+between the SDF-derived graph and CannabisDB XML; 64 occur among current
+no-producer targets. Historical graphs and carbon counts describe the retained
+SDF-derived structures, not independently validated name-to-structure identity.
+For example, CDB006156 is named Glycerol but its SDF-derived structure is
+C14H22O, while XML supplies `OCC(O)CO` and C3H8O3. XML also retains a conflicting
+IUPAC name and external identifier, so wholesale replacement from XML would
+not resolve every source assertion. Both assertions are preserved in
+`phase1-no-producer-audit.json`; no structure or historical carbon count has
+been silently replaced. Resolve these identities before interpreting their
+named pathways. Passing the artifact-accounting gate does not resolve this
+source-identity problem.
+
 ## Full balanced-catalog net diagnostic
 
 The [chemistry-only net graph](net.html?scenario=catalog) keeps all 6,220
@@ -2169,6 +2184,44 @@ Tests independently balance all 1,603 candidate equations and replay every
 saved certificate using exact rational stoichiometry. Startup, physiological
 direction, compartmentation and flux remain unestablished; atom tracing is
 still deferred.
+
+### Whole-inventory no-producer and identity audit
+
+`phase1-no-producer-audit.json` retains all 5,897 no-candidate-producer target
+records (5,883 exact encoded structures) from the 1,603-equation model.
+The categories below use those current structures and do not resolve source
+disagreements:
+
+| Gap category | Target records | Next action |
+| --- | ---: | --- |
+| Exact full-catalog producer, no admitted candidate enzyme | 120 | Review 208 distinct producing equations and enzyme evidence |
+| No exact participation, but diagnostic structure-variant leads | 588 | Resolve identity/protonation/stereochemistry without merging |
+| No exact or diagnostic catalog match | 5,188 | Find or infer a complete balanced producing reaction |
+| Exact catalog participation only with zero net change | 1 | Do not mistake participation for production |
+
+The zero-net-only record is CDB000139, Aldehydo-L-rhamnose. Full-catalog
+production is an upper bound considering both hypothetical directions, not
+proof of upstream supply, Cannabis activity or a CO2 route.
+
+Diagnostic keys separately remove stereochemistry, apply RDKit Uncharger, or
+combine the two, retaining isotope labels. They yield leads for 139, 395 and
+609 target records respectively; these overlapping counts must not be added.
+All matching structures are retained, without picking a preferred identity or
+creating reaction edges. Uncharger-key equality is not a validated proton
+transfer, pH model, tautomer equivalence or enzyme annotation.
+
+The audit separately compares all 6,220 SDF-derived and XML accessions and
+retains both assertions for all 71 structure disagreements. Identity resolution
+takes precedence over pathway inference for the 64 affected no-producer
+records. XML structure/name/formula/InChIKey fields are checked against the
+archived XML rather than reconstructed from names. Original xrefs remain
+source claims and may be internally inconsistent.
+
+The 17,356-record export is stored in
+`terpedia_core.cannabis_phase1_no_producer_audit_20260905_v1`.
+Replay: `python -m cannabis_carbon.phase1_no_producer_audit`.
+No reaction, structure, source assertion or completeness metric is promoted
+by this audit. Atom tracing remains deferred.
 
 ### Working-network balance audit
 
