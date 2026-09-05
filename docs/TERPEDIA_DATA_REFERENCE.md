@@ -133,6 +133,50 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [MARTS gap reference review](data/phase1-marts-gap-references.json) follows
+all **32 source rows for the ten newly identified stoichiometry-gap targets**.
+It resolves 23 active UniProtKB records, preserves one inactive entry and its
+deletion/UniParc metadata, and flags three source UniParc IDs for separate
+resolution. Two MARTS rows lack a UniProt reference; their other source fields,
+including any GenBank accession, are retained. The 27 requested identifiers
+are not 27 characterized Cannabis enzymes.
+
+Ten source rows have catalytic Rhea annotations. The review checks their
+explicit published direction families against 36 retained Terpedia Rhea source
+equations, but finds **zero balanced alternatives with exactly matching
+carbon-containing participants and coefficients**. This is a scoped annotation
+result, not evidence that the reactions or enzymes do not exist. All ten target
+gaps remain unresolved; no enzyme evidence is transferred and no equation is
+silently repaired. Full source responses, sequences, citations, evidence codes,
+retrieval timestamps and checksums are preserved for further review.
+
+Two source rows for CDB000302 (trans-sabinene hydrate), referencing
+[L0HB77](https://www.uniprot.org/uniprotkb/L0HB77/entry) and
+[L0HAM7](https://www.uniprot.org/uniprotkb/L0HAM7/entry), yield a **stereo-only
+diagnostic lead**. The retained Rhea 19566/19567 product has unspecified
+stereochemistry, whereas the CannabisDB/MARTS product encodes stereochemistry.
+The diagnostic removes stereo only for comparison; it preserves isotopes,
+charge, bonds and coefficients and never becomes an exact-identity or enzyme
+join. Review the cited study (PMID 23246843), including relative versus absolute
+product stereochemistry, before specializing a generic equation.
+
+Another priority is CDB000078: MARTS:2138 links to
+[A0A348B782 / PpSTS-06](https://www.uniprot.org/uniprotkb/A0A348B782/entry), whose
+function annotation names 9-epi-caryophyllene. The cited
+[primary study's Table 1](https://pmc.ncbi.nlm.nih.gov/articles/PMC6116744/)
+distinguishes that product from caryophyllene produced by PpSTS14. This flags a
+product-label/stereochemical review; it is not an automatic correction to
+CannabisDB or a claim that its encoded identity is wrong.
+
+Reproduce with `PYTHONPATH=src python -m cannabis_carbon.phase1_marts_gap_references`.
+The verified Terpedia export is
+`terpedia-489015.terpedia_core.cannabis_phase1_marts_gap_references_20260904_v1`:
+106 rows (10 targets, 32 source reviews, 27 reference outcomes, 36 Rhea sources,
+one metadata record). Report SHA-256:
+`04b948fdb153ea1d18a89afd21e0440b061361f9094debca9cf842d10e9c6328`.
+Atom tracing remains deferred; all-input supply and Cannabis pathway claims
+remain unestablished.
+
 The [whole-MARTS audit](data/phase1-marts-audit.json) scans all 4,639 MARTS
 records in Terpedia's normalized reaction catalog. **324 source rows balance**,
 deduplicating to 73 exact full equations, including **27 absent from the frozen

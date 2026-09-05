@@ -1,0 +1,12 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_marts_gap_references_20260904_v1",
+  "location": "us-central1",
+  "load_job_id": "bqjob_r21b30776ebba64d3_000001a06f45ac5e_1",
+  "source": "data/derived/phase1-marts-gap-references.ndjson",
+  "report_sha256": "04b948fdb153ea1d18a89afd21e0440b061361f9094debca9cf842d10e9c6328",
+  "verified_records_by_kind": {"metadata": 1, "target": 10, "source_review": 32, "reference": 27, "rhea_source": 36},
+  "verified_total_records": 106,
+  "verified_unique_ids_equal_record_count_in_each_group": true,
+  "verified_min_and_max_report_hash_match_local_report_in_each_group": true,
+  "claim_boundary": "Exact source-protein annotation review. No automatic enzyme transfer, identity relaxation, stoichiometry correction or completed CO2 pathway. Atom tracing deferred."
+}
