@@ -9,8 +9,36 @@ const {project, matchingTargets, createLoader} = context.NetView;
 const bundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json')));
 const sensitivityBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/completion-net-view/bundle.json')));
 const catalogBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/catalog-net-view/bundle.json')));
+const catalogEvidence = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/catalog-net-view/evidence.json')));
+const updatedCatalogBundle = context.NetView.applyEvidence(catalogBundle,catalogEvidence);
 
-for (const bundle of [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), sensitivityBundle, catalogBundle]) {
+test('catalog supplement loader preserves chemistry, fails closed, and retains original gaps', async()=>{
+  const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/catalog-net-view/index.json')));
+  const before=JSON.stringify(catalogBundle),calls=[];
+  const fetcher=async url=>{calls.push(url);return {ok:true,json:async()=>url.endsWith('index.json')?manifest:url.includes('evidence.json')?catalogEvidence:catalogBundle};};
+  const updated=await createLoader(fetcher,'catalog-net-view')();
+  assert.equal(calls.length,3);
+  assert.equal(JSON.stringify(catalogBundle),before);
+  assert.equal(updated.certificates.length,catalogBundle.certificates.length);
+  for(const [i,c] of updated.certificates.entries()) {
+    for(const k of ['steps','net_exports','external_net_consumption','zero_net_internal_participants']) assert.equal(c[k],catalogBundle.certificates[i][k]);
+  }
+  assert.equal(updated.reactions.filter(r=>r.is_new_catalog_candidate).length,97);
+  assert.equal(updated.reactions.filter(r=>r.missing_candidate_evidence).length,368);
+  assert.equal(matchingTargets(updated.targets,'','enzyme-gaps').length,202);
+  const uric=project(updated,'CDB004839');
+  assert.equal(uric.certificate.missing_candidate_reaction_ids.length,0);
+  assert.ok(uric.certificate.baseline_missing_candidate_reaction_ids.length);
+  assert.ok(uric.steps.every(s=>s.evidence.length));
+  assert.ok(uric.edges.some(e=>e.data.is_new_catalog_candidate));
+  const bad=JSON.parse(JSON.stringify(catalogEvidence));bad.certificate_updates[0].missing_candidate_reaction_ids=[];
+  assert.throws(()=>context.NetView.applyEvidence(catalogBundle,bad),/mismatch/);
+  await assert.rejects(createLoader(async url=>url.includes('evidence.json')?{ok:false,status:503}:fetcher(url),'catalog-net-view')(),/503/);
+  const wrong=JSON.parse(JSON.stringify(catalogEvidence));wrong.source_sha256['data/reports/phase1-catalog-net-gaps.json']='0'.repeat(64);
+  await assert.rejects(createLoader(async url=>url.includes('evidence.json')?{ok:true,json:async()=>wrong}:fetcher(url),'catalog-net-view')(),/snapshot mismatch/);
+});
+
+for (const bundle of [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), sensitivityBundle, catalogBundle, updatedCatalogBundle]) {
 test(`every ${bundle.view_scenario || 'baseline'} net certificate projects all participants, coefficients, extents and candidate evidence`, () => {
   let count = 0;
   for (const target of bundle.targets.filter(t => t.certificate_compound_id)) {
@@ -73,7 +101,7 @@ test('loader revalidates manifest, versions bundles, rejects external paths and 
   assert.deepEqual(sensitivityCalls,['data/completion-net-view/index.json','data/completion-net-view/bundle.json?v='+'b'.repeat(16)]);
 });
 
-for (const [bundle, scenario] of [[JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target='+catalogBundle.targets.find(t=>t.missing_candidate_reaction_ids?.length).cannabisdb_id]]) {
+for (const [bundle, scenario] of [[JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target=CDB006137'], [updatedCatalogBundle, '?scenario=catalog&target=CDB006137']]) {
 test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highlight without hiding, and recover from load errors`, async () => {
   class Field {
     constructor(){this.value='';this.textContent='';this.children=[];this.hidden=false;}
@@ -103,7 +131,7 @@ test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highl
     const gapStyle=cyOptions.style.find(s=>s.selector==='edge[?missing_candidate_evidence]').style;
     assert.equal(gapStyle['line-color'],'#ff7777');
     assert.equal(gapStyle['target-arrow-color'],'#ff7777');
-    assert.match(fields.netBoundary.textContent,/Chemistry-only/);
+    assert.match(fields.netBoundary.textContent,/Chemistry-only|Balanced-catalog/);
     assert.match(fields.netMetrics.textContent,/304 \/ 6220.*enzyme gaps included/);
     assert.ok(cy.items.some(e=>e.data.missing_candidate_evidence));
     const originalCount=cy.items.length;
@@ -112,7 +140,7 @@ test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highl
     assert.ok(cy.muted.every(e=>!e.data.missing_candidate_evidence));
     assert.equal(cy.muted.length,cy.items.filter(e=>e.data.source && !e.data.missing_candidate_evidence).length);
     fields.netScope.value='enzyme-gaps';fields.netScope.change();
-    assert.match(fields.netMatches.textContent,/203 matches/);
+    assert.match(fields.netMatches.textContent,bundle.evidence_summary ? /202 matches/ : /203 matches/);
     const selected=project(bundle,fields.netTarget.value);
     fields.netReaction.value=selected.steps.find(s=>!s.evidence.length).step_id;fields.netReaction.change();
     assert.match(fields.netEvidence.textContent,/No candidate enzyme evidence/);

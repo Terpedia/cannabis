@@ -93,8 +93,31 @@ only **uric acid (CDB004839)** has all its selected missing steps covered by
 the new candidates. Across the catalog diagnostic, 368 distinct selected gap
 equations still lack candidates. This comparison does not establish a new
 physiological pathway, zero-pool startup, or necessity of a selected step.
-**The published baseline and catalog graph snapshots have not yet been updated
-with this new evidence supplement.** Atom tracing remains deferred.
+The baseline and original catalog chemistry snapshots remain unchanged. The
+catalog graph now loads a separately versioned evidence supplement: 97 reactions
+with new candidates have blue arrows, 368 remaining gaps have red arrows, and
+the affected-target filter uses the remaining gaps. All full equations,
+extents, participants, external exchanges and startup results are unchanged.
+Atom tracing remains deferred.
+
+The [downloadable evidence supplement](data/catalog-net-view/evidence.json)
+has SHA-256 `ff242379d6c77127f112a8e170b4210284ef78b7e94f174d1faf30860dff0840`.
+It contains 97 candidate-evidence records, 181 exact-structure certificate
+updates and 181 target updates, plus metadata. It retains the original missing
+reaction lists alongside the remaining lists. The net graph now reports 102
+selected target certificates with candidates for all steps and 202 with gaps,
+out of the unchanged 304 net-conversion hypotheses. This is evidence coverage,
+not established pathway completeness. A failed or mismatched supplement load
+stops rendering and offers a retry rather than presenting mixed snapshots.
+
+Reproduce the supplement with
+`PYTHONPATH=src python -m cannabis_carbon.phase1_catalog_evidence`, followed by
+`PYTHONPATH=src python -m cannabis_carbon.phase1_catalog_net_view`. Pages retains
+the original catalog bundle once and fetches the 2.6 MB supplement separately;
+it does not duplicate the full net graph. The manifest pins both reports.
+GCP table `terpedia-489015.terpedia_core.cannabis_phase1_catalog_evidence_20260904_v1`
+contains all 460 supplement records, verified by complete-record readback.
+The receipt is `data/reports/phase1-catalog-evidence-gcp.json`.
 
 Reproduce reference discovery with
 `PYTHONPATH=src python -m cannabis_carbon.phase1_catalog_references` and screening

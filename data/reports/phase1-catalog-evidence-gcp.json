@@ -1,0 +1,19 @@
+{
+  "schema": "cannabis-carbon.phase1-catalog-evidence-gcp.v1",
+  "status": "loaded-and-full-record-readback-verified",
+  "verified_date": "2026-09-04",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "table": "cannabis_phase1_catalog_evidence_20260904_v1",
+  "load_job_id": "cannabis_sa_catalog_evidence_20260904_v1",
+  "authenticated_principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "destination_preflight": "Destination returned NOT_FOUND before loading; no existing table was replaced.",
+  "report": "data/reports/phase1-catalog-evidence.json",
+  "report_sha256": "ff242379d6c77127f112a8e170b4210284ef78b7e94f174d1faf30860dff0840",
+  "export": "data/derived/phase1-catalog-evidence.ndjson",
+  "schema_fields": "record_kind:STRING,record_id:STRING,record_json:STRING,report_sha256:STRING",
+  "row_count": 460,
+  "record_kind_counts": {"metadata": 1, "enzyme_evidence": 97, "certificate_update": 181, "target_update": 181},
+  "verification": "Local hashes, counts and unique (record_kind, record_id) keys checked. Job inspected: DONE without error, exact destination and service-account identity verified. SELECT * readback matched the export as a sorted multiset of all complete records, including JSON payloads and report hashes.",
+  "claim_boundary": "Candidate-evidence-only supplement; frozen chemistry, physiological uncertainty and startup results are unchanged."
+}

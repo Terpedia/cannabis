@@ -1,5 +1,32 @@
 (function(root) {
   'use strict';
+  function applyEvidence(base, supplement) {
+    if(base.view_scenario !== 'full-catalog-chemistry-only' || supplement.schema !== 'cannabis-carbon.phase1-catalog-evidence.v1') throw Error('Invalid evidence scenario');
+    const existing=new Set(base.enzyme_evidence.map(e=>e.id)), added=new Map();
+    for(const e of supplement.enzyme_evidence) {
+      const r=base.reactions.find(r=>r.id===e.reaction_id);
+      if(!r || r.enzyme_evidence_ids.length || existing.has(e.id) || added.has(e.reaction_id) || !e.screened_proteins.length) throw Error('Invalid or duplicate evidence reaction');
+      existing.add(e.id); added.set(e.reaction_id,e);
+    }
+    const certUpdates=new Map(supplement.certificate_updates.map(u=>[u.compound_id,u]));
+    const targetUpdates=new Map(supplement.target_updates.map(u=>[u.cannabisdb_id,u]));
+    if(certUpdates.size!==supplement.certificate_updates.length || targetUpdates.size!==supplement.target_updates.length) throw Error('Duplicate evidence update');
+    const update = (item, change) => {
+      const before=item.missing_candidate_reaction_ids, after=before.filter(rid=>!added.has(rid));
+      if(after.length===before.length) {if(change) throw Error('Unchanged record in supplement');return item;}
+      if(!change || change.compound_id!==item.compound_id || JSON.stringify(change.baseline_missing_candidate_reaction_ids)!==JSON.stringify(before) || JSON.stringify(change.missing_candidate_reaction_ids)!==JSON.stringify(after)) throw Error('Evidence gap update mismatch');
+      return {...item,baseline_missing_candidate_reaction_ids:before,missing_candidate_reaction_ids:after,
+        evidence_class:after.length?'chemistry-only-with-enzyme-gaps':'candidate-linked-net-hypothesis',has_new_catalog_evidence:true};
+    };
+    const certificates=base.certificates.map(c=>update(c,certUpdates.get(c.compound_id)));
+    const targets=base.targets.map(t=>update(t,targetUpdates.get(t.cannabisdb_id)));
+    if(certificates.filter(c=>c.has_new_catalog_evidence).length!==certUpdates.size || targets.filter(t=>t.has_new_catalog_evidence).length!==targetUpdates.size) throw Error('Unknown evidence update');
+    return {...base,certificates,targets,
+      reactions:base.reactions.map(r=>added.has(r.id)?{...r,enzyme_evidence_ids:[added.get(r.id).id],missing_candidate_evidence:false,is_new_catalog_candidate:true}:r),
+      enzyme_evidence:[...base.enzyme_evidence,...supplement.enzyme_evidence],
+      evidence_summary:supplement.summary,view_boundary:supplement.view_boundary,
+      claim_boundary:base.claim_boundary+' '+supplement.claim_boundary};
+  }
   function project(bundle, targetId, stepId = '') {
     const target = bundle.targets.find(t => t.cannabisdb_id === targetId);
     if (!target) throw new Error('Unknown target record');
@@ -28,6 +55,7 @@
         enzyme_evidence_ids: reaction.enzyme_evidence_ids, candidate_protein_ids: proteins,
         is_completion_sensitivity: !!reaction.is_completion_sensitivity,
         missing_candidate_evidence: !!reaction.missing_candidate_evidence,
+        is_new_catalog_candidate: !!reaction.is_new_catalog_candidate,
         claim_boundary: 'Every input is required. Projected arrows are not separate reactions, atom flow or a startup sequence.'
       }})));
     }
@@ -54,7 +82,15 @@
       if (manifest.file !== 'bundle.json' || !/^[a-f0-9]{64}$/.test(manifest.sha256)) throw new Error('Invalid bundle manifest');
       const data = await fetcher(`data/${folder}/bundle.json?v=${manifest.sha256.slice(0, 16)}`);
       if (!data.ok) throw new Error(`Net-conversion data unavailable (HTTP ${data.status})`);
-      return data.json();
+      const base = await data.json();
+      if (!manifest.evidence) return base;
+      const extra = manifest.evidence;
+      if(folder !== 'catalog-net-view' || extra.file !== 'evidence.json' || !/^[a-f0-9]{64}$/.test(extra.sha256)) throw Error('Invalid evidence manifest');
+      const responseExtra = await fetcher(`data/${folder}/evidence.json?v=${extra.sha256.slice(0,16)}`);
+      if(!responseExtra.ok) throw Error(`Evidence supplement unavailable (HTTP ${responseExtra.status})`);
+      const supplement = await responseExtra.json();
+      if(supplement.source_sha256?.['data/reports/phase1-catalog-net-gaps.json'] !== manifest.sha256) throw Error('Evidence snapshot mismatch');
+      return applyEvidence(base,supplement);
     };
   }
   function mount() {
@@ -72,6 +108,7 @@
       {selector: 'edge', style: {'line-color': '#c78cff', 'target-arrow-color': '#c78cff', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier', 'line-style': 'dashed', 'width': 2}},
       {selector: 'edge[?is_completion_sensitivity]', style: {'line-color': '#f2a65a', 'target-arrow-color': '#f2a65a', 'width': 4}},
       {selector: 'edge[?missing_candidate_evidence]', style: {'line-color': '#ff7777', 'target-arrow-color': '#ff7777', 'width': 4}},
+      {selector: 'edge[?is_new_catalog_candidate]', style: {'line-color': '#65c8ff', 'target-arrow-color': '#65c8ff', 'width': 4}},
       {selector: '.muted', style: {'opacity': .25}}
     ]});
     function options(select, rows) {select.replaceChildren(...rows.map(([value, label]) => {const e = document.createElement('option'); e.value = value; e.textContent = label; return e;}));}
@@ -132,6 +169,7 @@
         if ($('netBoundary') && bundle.view_boundary) $('netBoundary').textContent = bundle.view_boundary + ' ' + bundle.claim_boundary;
         const evidenceLabel = bundle.view_scenario === 'full-catalog-chemistry-only' ? 'chemistry-only net certificates (enzyme gaps included)' : 'candidate-linked net certificates';
         $('netMetrics').textContent = `${bundle.summary.target_status_counts['exact-net-conversion-hypothesis']} / ${bundle.summary.target_records} target records have ${evidenceLabel} · not confirmed pathway completeness`;
+        if(bundle.evidence_summary) $('netMetrics').textContent += ` · ${bundle.evidence_summary.selected_certificate_targets_with_candidates_for_all_steps} selected target certificates have candidates for all steps · ${bundle.evidence_summary.remaining_missing_candidate_equations} reaction gaps remain`;
         const requested = new URLSearchParams(location.search).get('target');
         if (requested) {
           $('netScope').value = 'all';
@@ -146,5 +184,5 @@
     $('netTarget').addEventListener('change',selectTarget); $('netReaction').addEventListener('change',draw); $('netRetry').addEventListener('click',load);
     load(); return {load};
   }
-  root.NetView = {project, matchingTargets, createLoader, mount};
+  root.NetView = {project, matchingTargets, createLoader, applyEvidence, mount};
 })(typeof window !== 'undefined' ? window : globalThis);
