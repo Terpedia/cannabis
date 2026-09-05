@@ -1,0 +1,12 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_candidate_net_flux_20260904_v1",
+  "location": "us-central1",
+  "load_job_id": "bqjob_r9e062b9284d7a1e_000001a06f14b294_1",
+  "source": "data/reports/phase1-candidate-net-flux.ndjson",
+  "report_sha256": "ad4acc0ef232f496be659fb3a9f197276f12338f985daf28f9514abb9e07aaf7",
+  "verified_records_by_kind": {"metadata": 1, "target": 6220, "certificate": 100, "reaction": 211, "compound": 321},
+  "verified_total_records": 6853,
+  "verified_unique_ids_equal_record_count_in_each_group": true,
+  "verified_min_and_max_report_hash_match_local_report_in_each_group": true,
+  "claim_boundary": "Exact net stoichiometric conversion with regenerated internal pools and CO2-only net carbon input. Not pool startup, thermodynamic feasibility, confirmed Cannabis activity or atom-wise provenance."
+}

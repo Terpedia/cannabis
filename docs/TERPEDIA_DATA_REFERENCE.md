@@ -133,6 +133,57 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [candidate-linked net-conversion audit](data/phase1-candidate-net-flux.json)
+tests a different question from zero-pool startup: can candidate-linked balanced
+equations make a target with CO₂ as the only net carbon input while fully
+regenerating internal compounds? The model uses the same 1,472 candidate-linked
+equations and permits CO₂ plus 101 carbon-free exchange species. Both directions
+remain hypothetical. Every nonexchange compound must have nonnegative net
+production; target production must be at least one unit. Every positive net
+product is explicitly recorded as an export, and every net-consumed species is
+listed. No ATP, NAD(P)H, CoA or other organic compound is allowed as a net input.
+
+The results retain all 6,220 CannabisDB records:
+
+- 101 target records (100 exact structures) have exact net-conversion certificates.
+- 187 have solver-reported infeasibility under these constraints.
+- 5,897 have no net-producing candidate-linked equation.
+- 35 are explicit exchange species and are not counted as synthesis targets.
+
+Of the 101 target records, 100 were blocked in the zero-organic-pool startup
+test. Examples with net certificates include ethanol, mannitol, limonene and
+linalool. These are not new claims of physiological Cannabis production.
+The certificates use 211 distinct balanced equations and preserve each equation's
+full participants, coefficients, source records and candidate evidence IDs.
+The longest selected solution uses 40 directed steps; this is not necessarily
+the shortest pathway.
+
+The numerical search uses SciPy/HiGHS linear programming
+([solver documentation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html)).
+It minimizes total nonnegative directed extent, reconstructs rational extents,
+and rejects any solution that fails exact nondepletion or target-production
+checks. Independent tests replay every published certificate with rational
+arithmetic and verify carbon/charge conservation and CO₂-only net carbon input.
+Solver-reported infeasibility remains numerical evidence, not an exact proof or
+biological absence. Failed or incomplete numerical solves cannot become certificates.
+
+**Pre-existing internal pools may be required.** Zero-net internal participants
+are listed, but their origin, minimum pool quantities and feasible startup
+sequence are not established. Closing a net balance does not trace atoms from
+CO₂. The permissive carbon-free exchanges, unknown directions, possible
+energy-generating cycles, absent thermodynamic constraints, and unresolved
+compartments, specificity and activity prevent interpreting these results as
+demonstrated pathways. Atom tracing remains deferred; the earlier startup and
+finite execution certificates remain unchanged and separately labeled.
+
+Install the optional numerical dependency with `pip install -e '.[flux]'` and
+reproduce with `PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_net_flux`.
+The report records the SciPy version and input checksums. The GCP snapshot is
+`terpedia-489015.terpedia_core.cannabis_phase1_candidate_net_flux_20260904_v1`
+(6,853 records: 6,220 targets, 100 certificates, 211 reactions, 321 compounds,
+and one metadata record). This release adds a downloadable net-conversion report;
+it does not replace the map's existing one-step view or its evidence labels.
+
 The [candidate-constrained scope and single-gap tests](data/phase1-candidate-scope.json)
 separate chemistry-only connectivity from connectivity through equations with
 attached candidate-enzyme evidence. Of 13,995 balanced equations, 1,472 have
