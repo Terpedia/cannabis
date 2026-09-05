@@ -2098,6 +2098,44 @@ Tests independently check exact stoichiometry, isotope/element/charge balance,
 CO2-only carbon input, all six restrictions, source hashes and gap membership.
 Existing map scenarios and atom-accounting artifacts remain unchanged.
 
+### Protein searches for newly exposed replacement-route gaps
+
+The replacement-route inventory contains five equations without prior search
+records and 61 equations with prior evidence. All 61 retain their original
+results, including the withheld partial-reference RHEA:10180 leads; no old
+negative or withheld candidate is silently promoted.
+
+Reviewed, nonfragment UniProt queries returned 524 references for all five new
+equations. All sequences were retrieved and screened against all 30,304
+Cannabis proteins. The screen produced 1,068 alignments, of which 434 pass the
+existing identity/coverage/e-value thresholds. Four Cannabis proteins provide
+four reaction hypotheses covering two equations:
+
+- RHEA:16845: A0A7J6ER78 and A0A7J6ETR9 match a reviewed plant citrate-synthase
+  reference (P49298), with 87.9–88.2% identity and 100% reference coverage.
+  **The selected replacement witness uses the equation opposite to its
+  source-written synthesis direction.** Homology does not validate this
+  reverse step or establish a citrate-cleavage mechanism.
+- RHEA:20780: A0A7J6EDY8 and A0A7J6HES8 match reviewed Arabidopsis guanylate
+  kinases (Q9M682 and Q94JM2). Their highest-bit-score alignments have
+  65.0–66.6% identity and 93.3–97.7% reference coverage. Localization and
+  Cannabis activity remain untested; the source-written direction matches
+  this selected witness but is not proof of physiological flux.
+
+RHEA:35799, RHEA:25860 and RHEA:24836 returned no hits under this screen.
+This is not evidence of biological absence. Neither new candidate equation
+has been admitted to the 1,601-equation candidate network, and no pathway or
+completeness count changes in this release. These are sequence-supported
+test leads, not characterized enzymes or distinct-gene assertions.
+
+Reports and replay modules are `phase1-replacement-references` and
+`phase1-replacement-search` (`cannabis_carbon` module namespace).
+The 597-record discovery/audit export and 977-record search export are stored
+in `terpedia_core.cannabis_phase1_replacement_references_20260905_v1` and
+`terpedia_core.cannabis_phase1_replacement_search_20260905_v1`.
+Raw requests, reference sequences, alignments, sequence checksums and exact
+source-reaction joins are retained for replay. Atom tracing remains deferred.
+
 ### Working-network balance audit
 
 The Phase 1 audit is stored in
