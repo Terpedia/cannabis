@@ -133,6 +133,49 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [all-reactant scope audit](data/phase1-all-reactants-scope.json) moves beyond
+single-edge participation: a reaction can expand the available-compound set only
+when **every** input is already available. It uses the
+[full balanced network](data/phase1-full-balanced-network.json), which adds 3,120
+upstream equations outside the earlier target-matching subset. The resulting
+network retains 13,995 balanced full equations, 16,938 exact compound structures,
+all 6,220 target records, source orientations, and candidate-evidence links.
+All 36,552 Rhea source records were considered: 28,102 pass balance, 8,408 are not
+auditable with concrete structures, and 42 are imbalanced. Reverse encodings are
+deduplicated without canceling or rescaling participants.
+
+Two **explicitly non-physiological structural scenarios** are retained:
+
+- **CO₂ alone:** one seed, no newly available compounds; 6,185 carbon-bearing
+  target records remain blocked and the CO₂ target itself is a seed.
+- **CO₂ plus every cataloged carbon-free species:** 102 seeds (CO₂ plus 101
+  carbon-free species), 6,486 newly available compounds, and 304 structurally
+  reachable carbon-bearing targets; 5,881 carbon-bearing targets remain blocked.
+  This permissive reservoir includes unusual inorganic/redox species and is **not
+  a proposed plant growth medium**. No other carbon-containing compound is seeded.
+
+Every reaction is tested in both directions only as an upper-bound diagnostic,
+not an assertion of physiological reversibility. All input coefficients remain
+in the full equations and witness records. Qualitative availability does not
+model finite quantities, flux bounds, thermodynamics, compartment compatibility,
+or enzyme activity. Each non-seed witness uses inputs from strictly earlier
+expansion levels; missing cofactors and unseeded cycles cannot bootstrap themselves
+through graph adjacency. The deepest witness reaches 97 expansion levels, not
+necessarily 97 distinct reactions. The denominator for reactant coverage is the
+11,162 unique reactants in the all-directions scenario, not all inventory nodes.
+This result is **not** a claim that 304 Cannabis pathways are established, and
+atom tracing remains deferred.
+
+GCP snapshots:
+`terpedia-489015.terpedia_core.cannabis_phase1_full_balanced_network_20260904_v1`
+(45,604 records) and
+`terpedia-489015.terpedia_core.cannabis_phase1_all_reactants_scope_20260904_v1`
+(19,032 records). Full source/checksum metadata, both seed lists, all targets,
+missing inputs, and step witnesses are retained. Reproduce using
+`PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_scope`.
+The focused map remains a one-step view; these multi-step witnesses are available
+in the linked report pending dedicated route-view integration.
+
 The focused Cytoscape map now includes the
 [screened-enzyme evidence layer](data/phase1-screened-enzyme-overlay.json).
 It joins 633 independently balanced equation IDs to the new Cannabis homology

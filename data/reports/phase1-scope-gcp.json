@@ -1,0 +1,25 @@
+{
+  "location": "us-central1",
+  "snapshots": [
+    {
+      "table": "terpedia-489015.terpedia_core.cannabis_phase1_full_balanced_network_20260904_v1",
+      "load_job_id": "bqjob_r33755a1140b70080_000001a06ee31685_1",
+      "source": "data/reports/phase1-full-balanced-network.ndjson",
+      "report_sha256": "6b2a814738f6ae45716b8dbb6c9df7ca8152554766fb384282b853aecd909640",
+      "verified_records_by_kind": {"compound": 16938, "reaction": 13995, "target": 6220, "excluded_source": 8450, "metadata": 1},
+      "verified_total_records": 45604
+    },
+    {
+      "table": "terpedia-489015.terpedia_core.cannabis_phase1_all_reactants_scope_20260904_v1",
+      "load_job_id": "bqjob_r5ff9b2063d853162_000001a06ee31686_1",
+      "source": "data/reports/phase1-all-reactants-scope.ndjson",
+      "report_sha256": "710df31edec0501d28bbb574abdb2fe93885b3d59f867985528edd5ef3dd42e3",
+      "verified_records_by_kind": {"scenario": 2, "target": 12440, "witness": 6589, "metadata": 1},
+      "verified_total_records": 19032
+    }
+  ],
+  "verified_unique_ids_equal_record_count_in_each_group": true,
+  "verified_min_and_max_report_hash_match_local_report_in_each_group": true,
+  "verified_load_bad_records": 0,
+  "claim_boundary": "Balanced equations and qualitative all-reactant availability under explicitly permissive scenarios. Not physiological reversibility, enzyme activity, finite-quantity flux feasibility, or atom tracing."
+}
