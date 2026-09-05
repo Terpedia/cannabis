@@ -5,7 +5,7 @@ from pathlib import Path
 from .phase1_net_view import build as attach_evidence
 
 
-def build(report, sources):
+def build(report, sources, *, new_candidate_field='new_thiolase_candidate'):
     scenarios = {s['id']: {**s, 'targets': [{**t, 'startup_status': 'not established; regenerated pools allowed'}
         for t in s['targets']]} for s in report['scenarios']}
     links = [{'id': 'synthase-reference-link:' + link['id'],
@@ -20,7 +20,7 @@ def build(report, sources):
     bundle['view_scenario'] = 'thiolase-candidates'
     bundle['view_boundary'] = '1,605 candidate-linked equations; 157 historical target records have conditional net certificates. Only CO2 supplies net carbon. Directions and regenerated pools are hypotheses, not physiological flux or startup.'
     bundle['restricted_boundary'] = 'Eight reverse steps forbidden: 149 of 6,220 historical records have conditional net certificates. 5,897 lack producing candidate equations; 139 are solver-infeasible; 35 are exchange species. Other directions remain hypothetical; not confirmed plant pathways.'
-    bundle['reactions'] = [{**r, 'is_new_catalog_candidate': r['new_thiolase_candidate']} for r in bundle['reactions']]
+    bundle['reactions'] = [{**r, 'is_new_catalog_candidate': r[new_candidate_field]} for r in bundle['reactions']]
     return bundle
 
 

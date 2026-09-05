@@ -9,7 +9,7 @@ from .phase1_purine_candidate_net import build as build_net
 from .phase1_scope import write_rows
 
 
-def build(network, parent, search, links):
+def build(network, parent, search, links, *, search_filename='phase1-weighted-gap-search.json'):
     scenarios = {s['id']: s for s in parent['scenarios']}
     baseline = {**parent, **scenarios['permissive-directions']}
     restricted_id = 'eight-reverse-steps-forbidden'
@@ -18,7 +18,7 @@ def build(network, parent, search, links):
             {'cannabisdb_id': t['cannabisdb_id'], 'restricted_net_status': t['net_status']}
             for t in scenarios[restricted_id]['targets']]}
     result = build_net(network, baseline, sensitivity, None, None,
-        search_supplements=[(search, 'phase1-weighted-gap-search.json')],
+        search_supplements=[(search, search_filename)],
         restricted_scenario_id=restricted_id)
     result['schema'] = 'cannabis-carbon.phase1-thiolase-candidate-net.v1'
     result['synthase_reference_links'] = copy.deepcopy(parent['synthase_reference_links'])

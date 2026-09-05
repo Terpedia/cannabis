@@ -19,6 +19,43 @@ been silently replaced. Resolve these identities before interpreting their
 named pathways. Passing the artifact-accounting gate does not resolve this
 source-identity problem.
 
+## Remaining-target search extension and graph
+
+`phase1-remaining-weighted-routes.json` retains all 6,220 historical records and
+diagnoses all 6,020 unresolved exact structures against the balanced catalog,
+without changing the 149-record restricted candidate baseline. It finds
+chemical-only witnesses for 155 additional records, with 153 selected reaction
+evidence gaps; 10 had no prior search row. Costs favor candidate-linked reaction
+extents but do not prove minimum gap cardinality or physiological likelihood.
+
+`phase1-remaining-gap-search.json` screens all 30,304 pinned Cannabis proteins
+against 1,040 retrieved reviewed reference sequences. Of 1,342 raw alignments,
+832 pass the established screen, yielding 16 distinct proteins across four
+equations. Three equations have weak hits only, one has no hits and two have
+no reference sequence. None of these negative search categories proves absence
+of a Cannabis enzyme.
+
+The local `phase1-remaining-candidate-net.json` adds the four candidate-linked
+equations, giving 1,609 equations. Restricted net-conversion records increase
+from 149 to 153; permissive records increase from 157 to 161. New restricted
+records are CDB004861 (Indole), CDB004890 (Indoleacetaldehyde), CDB004983
+(3-Indoleacetonitrile) and CDB005582 (1-azaindan-2-one), using their retained
+exact structures rather than names as identity evidence. All eight reverse
+exclusions and prior candidate evidence IDs remain. All target and probe
+certificates pass exact net CO2 balance tests. Regenerated pools are allowed;
+startup, physiological direction, substrate specificity and in-plant activity
+are unestablished. The extension, search and diagnostic are stored in
+`terpedia-489015.terpedia_core` under the immutable tables
+`cannabis_phase1_remaining_{candidate_net,gap_search,weighted_routes}_20260905_v1`.
+All 35,161 stored records were read back and matched to the local exports,
+including full record content, report hashes and unique record identities.
+The verification receipt is `data/reports/phase1-remaining-gcp-verification.json`.
+Explore the [153-record restricted graph](net.html?scenario=remaining-restricted)
+or [161-record permissive comparison](net.html?scenario=remaining). The prior
+1,605-equation scenarios remain available for comparison. All 6,220 historical
+records stay searchable; the separate exact cannabinoid probes do not inflate
+these counts.
+
 ## Acetyl-CoA condensation candidate search and graph
 
 `data/reports/phase1-weighted-gap-search.json` screens the complete pinned

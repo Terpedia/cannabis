@@ -23,9 +23,9 @@ def canonical(rows):
     return Counter(json.dumps(r, sort_keys=True, separators=(',', ':')) for r in rows)
 
 
-def verify():
+def verify(names=NAMES):
     tables = []
-    for name in NAMES:
+    for name in names:
         suffix = name.replace('-', '_') + '_20260905_v1'
         table = 'cannabis_phase1_' + suffix
         job_id = 'cannabis_sa_' + suffix
