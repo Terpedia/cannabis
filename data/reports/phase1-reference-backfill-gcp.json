@@ -1,0 +1,33 @@
+{
+  "schema": "cannabis-carbon.phase1-reference-backfill-gcp.v1",
+  "status": "loaded-and-full-record-readback-verified",
+  "verified_date": "2026-09-04",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "authenticated_principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "destination_preflight": "Both destinations returned NOT_FOUND before loading; no existing tables were replaced.",
+  "tables": [
+    {
+      "table": "cannabis_phase1_reference_backfill_20260904_v1",
+      "load_job_id": "cannabis_sa_reference_backfill_20260904_v1",
+      "report": "data/reports/phase1-reference-backfill.json",
+      "report_sha256": "c135d4f5563e7b9d0d36c80d4227e6aa0898ee7e7156207f9634c622d3c99508",
+      "export": "data/derived/phase1-reference-backfill.ndjson",
+      "row_count": 1004,
+      "record_kind_counts": {"metadata": 1, "equation_gap": 157, "gap_audit": 368, "reference_protein": 431, "lookup": 47},
+      "schema_fields": "record_kind:STRING,record_id:STRING,record_json:STRING,report_sha256:STRING"
+    },
+    {
+      "table": "cannabis_phase1_backfill_protein_search_20260904_v1",
+      "load_job_id": "cannabis_sa_backfill_protein_search_20260904_v1",
+      "report": "data/reports/phase1-backfill-protein-search.json",
+      "report_sha256": "c47ad4f250762b2f835827260adf403ea032c540bc1ca75f24e8f5dcdb4ff0ef",
+      "export": "data/derived/phase1-backfill-protein-search.ndjson",
+      "row_count": 1083,
+      "record_kind_counts": {"equation_gap": 157, "reference_sequence": 431, "cannabis_candidate": 111, "passing_alignment": 375, "retrieval": 8, "metadata": 1},
+      "schema_fields": "record_kind:STRING,record_id:STRING,status:STRING,record_json:STRING,report_sha256:STRING"
+    }
+  ],
+  "verification": "Local report hashes, row hashes, per-kind counts and unique (record_kind, record_id) keys checked before loading. Jobs inspected: DONE without errors, exact destinations and service-account identity verified. SELECT * readback matched each local export as a sorted multiset of every complete record, including JSON payloads, report hashes and optional status.",
+  "claim_boundary": "Completes previously skipped reference discovery; candidates remain homology leads, not enzyme activity or complete pathways. Graph snapshots and original chemistry are unchanged."
+}

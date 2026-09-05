@@ -138,6 +138,55 @@ record was read back and matched exactly to the local export. Load jobs and
 service-account verification are recorded in
 `data/reports/phase1-catalog-protein-gcp.json`.
 
+## Backfill of previously skipped reference-family lookups
+
+The 368 reaction gaps remaining after the catalog supplement were audited
+against all three protein screens and their actual lookup histories. Of these,
+211 had reference sequences already screened. The other 157 split into **51
+families never queried**, 98 with completed reviewed-family lookups, and eight
+without a published family mapping in the pinned Rhea snapshot.
+This distinguishes `no-reference-sequence` from a completed negative lookup;
+the earlier priority pass had not queried every reaction family.
+
+Three new reviewed, non-fragment lookup batches covered exactly those 51
+unqueried master families. Existing successful lookups were reused with
+checksum verification. The combined reference inventory yields 431 proteins
+for 43 equations; 106 still have no reviewed reference returned, and eight
+still have no published family mapping. No unreviewed annotations or numeric
+Rhea-ID arithmetic were introduced.
+
+All 431 reference sequences were retrieved and screened against all 30,304
+Cannabis reference-proteome proteins using the unchanged DIAMOND thresholds.
+Of 1,553 raw alignments, 375 passed, yielding 111 candidate proteins and 132
+protein–reaction hypotheses for **19 reactions**. Outcomes for the other
+backfill records are 12 weak-hit-only, 12 no-hit and 114 no-reference-sequence.
+These are candidate leads, not demonstrated catalytic activity, specificity,
+physiological direction or complete Cannabis pathways.
+
+An evidence-only comparison reduces the distinct remaining reaction gaps
+from 368 to 349, but **does not close any additional selected net certificate**.
+The catalog graph has not yet incorporated this backfill; its published
+368-gap evidence snapshot remains unchanged. Original chemistry, atom
+accounting and all prior search results are preserved; atom tracing remains
+deferred.
+
+Reproduce using `PYTHONPATH=src python -m cannabis_carbon.phase1_reference_backfill`
+and `PYTHONPATH=src python -m cannabis_carbon.phase1_backfill_protein_search`.
+The reports preserve all 368 gap classifications, exact source/family joins,
+lookup requests and cached responses, full sequences, and checked alignment
+results. Required snapshots are committed for clean-checkout replay.
+
+| Report | SHA-256 | Export rows |
+| --- | --- | ---: |
+| `phase1-reference-backfill.json` | `c135d4f5563e7b9d0d36c80d4227e6aa0898ee7e7156207f9634c622d3c99508` | 1,004 |
+| `phase1-backfill-protein-search.json` | `c47ad4f250762b2f835827260adf403ea032c540bc1ca75f24e8f5dcdb4ff0ef` | 1,083 |
+
+Both exports are verified in `terpedia-489015.terpedia_core`, in tables
+`cannabis_phase1_reference_backfill_20260904_v1` and
+`cannabis_phase1_backfill_protein_search_20260904_v1`. Every complete record
+was read back and matched to its local export. The receipt is
+`data/reports/phase1-reference-backfill-gcp.json`.
+
 ## Imported Terpedia snapshot
 
 Source repository: [Terpedia/terpedia-knowledge](https://github.com/Terpedia/terpedia-knowledge)
