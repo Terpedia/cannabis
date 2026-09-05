@@ -2261,6 +2261,44 @@ Raw Terpedia SQL and PubChem requests/responses are checksum-pinned, including
 negative exact-key results. Field consistency, registry matches, exact
 structure comparisons and unresolved alternatives remain separately inspectable.
 
+### Versioned identity branches: priority source conflicts
+
+`data/reports/phase1-identity-branches.json` retains both source assertions for
+four priority accessions and tests all eight exact structures independently in
+both the 1,603-equation permissive and six-reverse-step-restricted models.
+No historical target, structure, carbon inventory or completeness count is replaced.
+Three field-level named-structure choices remain provisional; neither source's
+names, formulas or external IDs are inherited wholesale.
+
+| Accession | Source structure branch | Result in both models |
+| --- | --- | --- |
+| CDB006156, Glycerol | XML, C3H8O3; provisional named structure, PubChem 753 | Exact net CO₂-conversion hypothesis; 56 catalog producing equations |
+| CDB006156, Glycerol | SDF-derived C14H22O structure | No candidate producing equation; no exact catalog producer |
+| CDB000142, D-arabitol | SDF-derived provisional named structure; XML kept separately | Both exact structures have net hypotheses; five catalog producing equations each |
+| CDB000546, Acetamide | SDF-derived provisional named structure | Exact net hypothesis; two catalog producing equations |
+| CDB000546, Acetamide | XML encoded tautomer | No exact structure in the balanced network; no implicit tautomer conversion added |
+| CDB006169, Ribitol | SDF-derived structure, identity unresolved | Exact net hypothesis; five catalog producing equations, **not proof of ribitol production** |
+| CDB006169, Ribitol | XML hydrocarbon structure, identity unresolved | No candidate producing equation; no exact catalog producer |
+
+The 16 branch/scenario tests produce ten exact net certificates, four
+no-candidate-producer results and two no-exact-network-structure results.
+These are alternative-structure tests, **not ten newly covered metabolites**.
+All certificates retain exact rational reaction extents, imports, exports,
+regenerated pools and reaction-level enzyme-evidence IDs. Only CO₂ supplies net
+carbon. Regenerated pre-existing pools, hypothetical directions, carbon-free
+exchanges, physiological flux and Cannabis occurrence remain explicit limitations.
+Catalog producer counts use either chemical orientation, not established biological
+direction or all-input availability. Atom tracing remains deferred.
+
+Replay with `PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_identity_branches`.
+The versioned Terpedia export is `data/derived/phase1-identity-branches.ndjson`;
+all 65 records were read back and matched exactly in
+`terpedia_core.cannabis_phase1_identity_branches_20260905_v1`
+(`data/reports/phase1-identity-branches-gcp.json`).
+the report records checksums of its registry review, balanced network and candidate
+model inputs. Before promoting a provisional structure, verify the primary Cannabis
+identification evidence; ribitol additionally requires stereochemical reconciliation.
+
 ### Working-network balance audit
 
 The Phase 1 audit is stored in

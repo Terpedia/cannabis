@@ -1,0 +1,10 @@
+{
+  "schema": "cannabis-carbon.gcp-verification.v1",
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_identity_branches_20260905_v1",
+  "job_id": "cannabis_sa_identity_branches_20260905_v1",
+  "principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "report_sha256": "83ad54428739edf1db3f9c7e2ad99bc447ec11b94d9d0ab959094431c08e0dbe",
+  "rows": 65,
+  "verification": "Load job DONE without error; exact destination and service-account principal checked. Full SELECT readback equals the complete local NDJSON record multiset, every report checksum matches, and all record-kind/record-id pairs are unique.",
+  "verified": true
+}
