@@ -61,6 +61,8 @@ test(`every ${bundle.view_scenario || 'baseline'} net certificate projects all p
         assert.equal(edge.data.outputs, step.outputs);
         assert.equal(edge.data.is_completion_sensitivity, !!source.is_completion_sensitivity);
         assert.equal(edge.data.missing_candidate_evidence, !!source.missing_candidate_evidence);
+        assert.equal(edge.data.direction_review_id, source.direction_review?.id || null);
+        assert.equal(edge.data.direction_review_warning, source.direction_review?.warning || null);
         if(source.missing_candidate_evidence) assert.equal(step.evidence.length, 0);
         assert.ok(proteins.every(p => edge.data.candidate_protein_ids.includes(p)));
       }
@@ -133,6 +135,16 @@ test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highl
     assert.match(fields.netMetrics.textContent,/108 \/ 6220/);
     assert.ok(cy.items.some(e=>e.data.is_new_catalog_candidate));
     assert.ok(!cy.items.some(e=>e.data.missing_candidate_evidence));
+    assert.match(fields.netBoundary.textContent,/opposite to their source-written equations/);
+    const beforeHighlight=cy.items.length;
+    fields.poolHighlight.value='direction-review';fields.poolHighlight.change();
+    assert.equal(cy.items.length,beforeHighlight);
+    assert.ok(cy.muted.length>0);
+    assert.equal(cy.muted.length,cy.items.filter(e=>e.data.source && !e.data.direction_review_id).length);
+    const reviewed = project(bundle,fields.netTarget.value).steps.find(s=>s.reaction.direction_review);
+    fields.netReaction.value=reviewed.step_id;fields.netReaction.change();
+    assert.match(JSON.stringify(fields.netEquation.children),/reverse catalytic capability remains unestablished/);
+    fields.netReaction.value='';fields.netReaction.change();
   }
   if (scenario.includes('catalog')) {
     assert.equal(fetched.at(-1),'data/catalog-net-view/bundle.json?v='+'a'.repeat(16));

@@ -1693,6 +1693,41 @@ the report does not use atom order or an unbounded MCS to fill gaps.
 
 ### Re-solved expanded candidate network (2026-09-04)
 
+**Direction review:** all seven newly feasible target certificates use one or
+more of the five newly selected candidate equations opposite to the source's
+written equation. This is a source-orientation comparison through the explicit
+published Rhea direction-family mapping, **not** a physiological direction
+assignment or proof that the reverse reaction is impossible. The 108 numerical
+certificates must not be read as 108 validated biosynthetic routes.
+
+`data/reports/phase1-candidate-direction-review.json` preserves five complete
+reaction reviews and seven target associations, with exact selected inputs,
+outputs, extents, source equations, literature links, and candidate evidence
+IDs. The new GCP table is
+`terpedia_core.cannabis_phase1_candidate_direction_review_20260904_v1` (13
+records including metadata). Each affected graph edge carries its review ID
+and warning; the reaction panel lists discriminating tests.
+
+The reviewed source masters are RHEA:25241 (ureidoglycine hydrolysis),
+RHEA:27329 (NADH-linked urate oxidation), RHEA:16425 (formaldehyde oxidation),
+RHEA:20001 (glycolaldehyde oxidation), and RHEA:64904 (GTP hydrolysis).
+The last is used by the permissive model to synthesize GTP from GMP and
+phosphate; energy feasibility is not established by element/charge balance.
+
+The [HpxO primary paper](https://pubmed.ncbi.nlm.nih.gov/19260710/) characterizes
+an FAD-dependent urate oxidase from *Klebsiella pneumoniae* in purine breakdown,
+not a reverse Cannabis reaction. Its illustrated assays use NADPH; the exact
+NADH/NADPH specificity of the proposed conversion needs separate checking.
+The review retains the abstract/figure-caption evidence scope rather than
+claiming a complete literature assessment.
+
+Proposed tests compare each complete selected conversion with the source-written
+direction, include inactive/no-protein controls, verify all products, and
+discriminate cofactors and related substrates. Unsupported reverse activity
+should prompt alternative plant-route curation, not an assertion that the
+metabolite is absent. Original certificates and candidate evidence are retained
+unchanged; only explicit risk annotations are added.
+
 The [expanded candidate map](net.html?scenario=expanded) re-solves all 6,220
 target records after adding the 116 catalog/backfill candidate equations to
 the original 1,472-equation candidate network. Every admitted equation is

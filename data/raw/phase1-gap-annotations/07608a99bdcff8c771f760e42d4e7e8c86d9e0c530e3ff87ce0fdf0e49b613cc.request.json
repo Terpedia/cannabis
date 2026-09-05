@@ -1,0 +1,15 @@
+{
+  "query": "SELECT ?s ?p ?o WHERE { VALUES ?s { <http://rdf.rhea-db.org/16425> <http://rdf.rhea-db.org/20001> <http://rdf.rhea-db.org/25241> <http://rdf.rhea-db.org/27329> <http://rdf.rhea-db.org/64904> } ?s ?p ?o } ORDER BY ?s ?p ?o",
+  "url": "https://sparql.rhea-db.org/sparql?query=SELECT+%3Fs+%3Fp+%3Fo+WHERE+%7B+VALUES+%3Fs+%7B+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F16425%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F20001%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F25241%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F27329%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F64904%3E+%7D+%3Fs+%3Fp+%3Fo+%7D+ORDER+BY+%3Fs+%3Fp+%3Fo&format=json",
+  "requested_master_ids": [
+    "RHEA:16425",
+    "RHEA:20001",
+    "RHEA:25241",
+    "RHEA:27329",
+    "RHEA:64904"
+  ],
+  "snapshot": "data/raw/phase1-gap-annotations/07608a99bdcff8c771f760e42d4e7e8c86d9e0c530e3ff87ce0fdf0e49b613cc.response.json",
+  "sha256": "49edb52e2bfe9035e78a454b485c5b8c8a91d501432852eb19be78528a1d6bc0",
+  "retrieved_at": "2026-09-05T05:01:41.465670+00:00",
+  "status": "retrieved"
+}

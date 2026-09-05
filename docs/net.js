@@ -56,6 +56,8 @@
         is_completion_sensitivity: !!reaction.is_completion_sensitivity,
         missing_candidate_evidence: !!reaction.missing_candidate_evidence,
         is_new_catalog_candidate: !!reaction.is_new_catalog_candidate,
+        direction_review_id: reaction.direction_review?.id || null,
+        direction_review_warning: reaction.direction_review?.warning || null,
         claim_boundary: 'Every input is required. Projected arrows are not separate reactions, atom flow or a startup sequence.'
       }})));
     }
@@ -117,7 +119,7 @@
     function label(cid) {const c = bundle.compounds.find(c => c.id === cid); return c?.labels?.[0] || `${c?.formula || ''} (${cid})`;}
     function describe(step) {
       const equation = side => side.map(m => `${m.coefficient} × ${label(m.compound_id)}`).join(' + ');
-      lines('netEquation', 'Full directed equation', [equation(step.required_inputs) + ' → ' + equation(step.outputs), `Relative extent: ${step.extent}`, 'Hypothetical direction; all listed inputs are required.']);
+      lines('netEquation', 'Full directed equation', [equation(step.required_inputs) + ' → ' + equation(step.outputs), `Relative extent: ${step.extent}`, 'Hypothetical direction; all listed inputs are required.', ...(step.reaction.direction_review ? [step.reaction.direction_review.warning, ...step.reaction.direction_review.discriminating_tests] : [])]);
       $('netEvidence').textContent = JSON.stringify(step.evidence.length ? step.evidence : {
         status: 'No candidate enzyme evidence in this snapshot', reaction_id: step.reaction_id,
         claim_boundary: 'Chemistry-only step. Determine whether it is enzymatic, spontaneous or a catalog transformation; do not infer activity from connectivity.'
@@ -128,7 +130,7 @@
         const p = document.createElement('p'), a = document.createElement('a'); a.href = url; a.textContent = url; a.target = '_blank'; a.rel = 'noopener noreferrer'; p.appendChild(a); $('netSources').appendChild(p);
       }
     }
-    function highlight() {cy.elements().removeClass('muted'); if ($('poolHighlight').value === 'pools') cy.nodes().filter(n => !n.data('is_pool')).addClass('muted'); else if ($('poolHighlight').value === 'enzyme-gaps') cy.edges().filter(e => !e.data('missing_candidate_evidence')).addClass('muted');}
+    function highlight() {cy.elements().removeClass('muted'); if ($('poolHighlight').value === 'pools') cy.nodes().filter(n => !n.data('is_pool')).addClass('muted'); else if ($('poolHighlight').value === 'enzyme-gaps') cy.edges().filter(e => !e.data('missing_candidate_evidence')).addClass('muted'); else if ($('poolHighlight').value === 'direction-review') cy.edges().filter(e => !e.data('direction_review_id')).addClass('muted');}
     function draw() {
       clear(); if (!bundle || !$('netTarget').value) return;
       current = project(bundle, $('netTarget').value, $('netReaction').value);
