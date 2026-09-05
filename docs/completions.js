@@ -80,6 +80,11 @@
         protein?.has_candidate_lead ? `${protein.screened_cannabis_proteins.length} Cannabis homology candidates · source product identity and inferred stoichiometry remain unverified.` :
         'No screened candidate lead. Missing annotation or a negative screen is not biological absence.';
       el('Protein').append(note);
+      if (protein?.archived_source_screen) {
+        const archived=doc.createElement('p');
+        archived.textContent=`Original-source archive screen: ${protein.archived_source_screen.search_status}. Archived sequence identity is not functional annotation; earlier source-product warnings remain in force.`;
+        el('Protein').append(archived);
+      }
       for(const a of protein?.representative_alignments || []) {
         link(el('Protein'),'https://www.uniprot.org/uniprotkb/'+encodeURIComponent(a.cannabis_accession),
           `${a.cannabis_accession} · ${a.identity_percent}% identity · query/reference coverage ${a.query_coverage_percent}%/${a.reference_coverage_percent}% · E=${a.evalue} · reference ${a.reference_accession}`);

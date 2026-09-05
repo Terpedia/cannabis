@@ -136,6 +136,64 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 Atom tracing is deferred for Phase 1. Acceptance requires full element and charge
 balance; candidate enzyme evidence and CO₂ connectivity are separate metrics.
 
+### Original-source archive recovery
+
+The [archive resolution report](data/phase1-archived-references.json) recovers all
+47 requested original-source sequences: 46 UniParc identifiers in Terpedia's
+MARTS records plus the explicit archive link for inactive UniProt A0A4P2VJ76.
+The latter is accepted only after the archived record independently retains
+the old accession as a cross-reference. Its inactive status is not rewritten.
+All 104 source associations across 66 completion equations are retained,
+including four CannabisDB target records. Raw responses, retrieval dates,
+SHA-256 hashes, sequence lengths, MD5 checks and complete archive cross-references
+are preserved. No active accession or functional annotation is substituted.
+[UniParc is a sequence archive](https://www.uniprot.org/uniparc), not evidence of
+exact enzymatic activity.
+
+The [archived-reference screen](data/phase1-archived-protein-search.json) searches
+all 30,304 Cannabis proteins and retains 107 raw alignments, 65 passing alignments,
+44 distinct Cannabis candidates and 65 protein–reaction hypotheses across three
+equations. The same identity (≥30%), two-sided coverage (≥50% each) and E-value
+(≤1e-5) thresholds apply. Of the 66 equations searched, 57 have no hits and six
+have only weak hits; these outcomes are not evidence of biological absence.
+
+The [evidence supplement](data/phase1-archived-evidence.json) adds first candidate
+leads for two completion equations and additional sequence support for one that
+already had leads. One newly linked equation involves CannabisDB CDB004889,
+(S)-2,3-epoxysqualene. Participation in that equation is not a demonstrated
+producing pathway: exact identities, full inputs, direction and original source
+product warnings remain explicit. No previously unsupported priority target
+receives a passing archived-reference candidate in this screen.
+
+The [completion graph](completions.html) shows the archive screen separately
+inside protein evidence and includes its passing leads in hypothesis filters.
+Across all 765 completion equations, candidate-lead coverage becomes 387
+(previously 385); 378 remain without a lead. The 62 target records with at least
+one lead and five targets with no lead remain unchanged. Original chemistry and
+protein reports are immutable. **CO₂ baseline and completion-sensitivity
+certificates are not changed or re-scored by this evidence-only supplement.**
+Atom tracing remains deferred.
+
+Reproduce in order with `PYTHONPATH=src python -m cannabis_carbon.` plus
+`phase1_archived_references`, `phase1_archived_protein_search`,
+`phase1_archived_evidence`, and `phase1_completion_view` (join the prefix and
+module name into one argument). The reference resolver reuses checksummed cached
+responses; it does not silently replace a failed or archived record.
+
+| Report | SHA-256 | Prepared Terpedia rows |
+| --- | --- | ---: |
+| `phase1-archived-references.json` | `eb2d4a7e538dbd063fec07252bcff7be972e21a3e07ff8f4b50f7ba149049ae5` | 161 |
+| `phase1-archived-protein-search.json` | `c77f50fd2b85009c6ca103a3dc8960aece7971cfcd4cea87cbac6dc35ece5399` | 270 |
+| `phase1-archived-evidence.json` | `6da25f45823409f07c7ca2822e33a7cef58be08d3c05a1475e681f22ac4cd6e0` | 67 |
+
+These three exports, like the connectivity export below, await GCP
+reauthentication. No archive table load or destination existence is claimed.
+Intended tables in `terpedia-489015.terpedia_core` are
+`cannabis_phase1_archived_references_20260904_v1`,
+`cannabis_phase1_archived_protein_search_20260904_v1`, and
+`cannabis_phase1_archived_evidence_20260904_v1`. Verify each destination before
+loading; never overwrite an existing table to resume a pending upload.
+
 ### Completion-network sensitivity: 11 additional net-balance hypotheses
 
 The [separate sensitivity graph](net.html?scenario=completions) augments the
@@ -278,7 +336,7 @@ hypotheses or all targets, and shows one complete equation at a time. Amber node
 are inferred inorganic species; green nodes are unchanged organic compounds.
 Directed dashed arrows project input/output pairs and are not additional
 reactions or atom-flow claims. Full coefficients, source references and review
-requirements remain available. A versioned 5.48 MB bundle contains only the
+requirements remain available. A versioned 5.51 MB bundle contains only the
 target-linked subset; the complete 16.38 MB report preserves all 765 hypotheses,
 355 reference equations and 779 participating/reference compound structures.
 

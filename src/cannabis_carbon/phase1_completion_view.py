@@ -2,9 +2,17 @@
 import hashlib
 import json
 from pathlib import Path
+from .phase1_archived_evidence import apply as apply_archive
 
 
-def build(report, audit, evidence=None):
+def build(report, audit, evidence=None, archive=None):
+    if archive is not None:
+        if evidence is None:
+            raise ValueError('Archive supplement requires its parent evidence')
+        evidence = apply_archive(evidence, archive)
+        by_completion = {r['id']: r for r in evidence['rows']}
+        evidence['summary']['targets_with_any_candidate_lead'] = sum(any(by_completion[h]['has_candidate_lead'] for h in t['completion_ids']) for t in report['targets'])
+        evidence['summary']['targets_with_completions_but_no_candidate_lead'] = sum(bool(t['completion_ids']) and not any(by_completion[h]['has_candidate_lead'] for h in t['completion_ids']) for t in report['targets'])
     ids = {hid for t in report['targets'] for hid in t['completion_ids']}
     completions = [h for h in report['completions'] if h['id'] in ids]
     if evidence is not None:
@@ -35,13 +43,15 @@ def build(report, audit, evidence=None):
 
 def run():
     paths = [Path('data/reports/phase1-marts-completions.json'), Path('data/reports/phase1-marts-audit.json'),
-             Path('data/reports/phase1-completion-protein-evidence.json')]
-    report, audit, evidence = [json.loads(p.read_text()) for p in paths]
+             Path('data/reports/phase1-completion-protein-evidence.json'), Path('data/reports/phase1-archived-evidence.json')]
+    report, audit, evidence, archive = [json.loads(p.read_text()) for p in paths]
     if report['source_sha256'][str(paths[1])] != hashlib.sha256(paths[1].read_bytes()).hexdigest():
         raise ValueError('Completion audit input mismatch')
     if evidence['source_sha256'][str(paths[0])] != hashlib.sha256(paths[0].read_bytes()).hexdigest():
         raise ValueError('Evidence overlay chemistry source mismatch')
-    payload = json.dumps(build(report, audit, evidence), separators=(',', ':')) + '\n'
+    if archive['source_sha256'][str(paths[2])] != hashlib.sha256(paths[2].read_bytes()).hexdigest():
+        raise ValueError('Archive evidence parent checksum mismatch')
+    payload = json.dumps(build(report, audit, evidence, archive), separators=(',', ':')) + '\n'
     folder = Path('docs/data/completion-view'); folder.mkdir(parents=True, exist_ok=True)
     (folder / 'bundle.json').write_text(payload)
     manifest = {'file': 'bundle.json', 'bytes': len(payload.encode()),

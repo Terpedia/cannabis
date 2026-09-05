@@ -75,6 +75,21 @@ def run(source=Path('data/reports/phase1-new-references.json'),
         for n, (retrieval, parsed) in enumerate(pool.map(retrieve, batches), 1):
             retrievals.append(retrieval); references.update(parsed)
             print(f'Reference batch {n}/{len(batches)}: {retrieval["status"]}', flush=True)
+    return screen(discovery, source, raw, output, references, retrievals,
+                  evidence_class, additional_blockers, claim_boundary)
+
+
+def screen(discovery, source, raw, output, references, retrievals,
+           evidence_class=None, additional_blockers=(), claim_boundary=None):
+    """Screen already-resolved references; callers retain exact retrieval provenance."""
+    ids = sorted({m['accession'] for r in discovery['rows'] for m in r['reference_matches']})
+    if not set(references) <= set(ids):
+        raise ValueError('Resolved reference outside discovery scope')
+    for accession, ref in references.items():
+        if ref['accession'] != accession or hashlib.sha256(ref['sequence'].encode()).hexdigest() != ref['sequence_sha256']:
+            raise ValueError('Resolved reference identity or checksum mismatch')
+        parse_references(f'>{accession}\n{ref["sequence"]}\n'.encode(), {accession})
+    raw.mkdir(parents=True, exist_ok=True)
     if not references:
         raise ValueError('No reference sequences retrieved')
     reference_path = raw / 'references.fasta'

@@ -21,6 +21,11 @@ test('all target completion graphs retain full coefficients and explicit inferre
   assert.equal(without.filter(t=>t.completion_ids.every(id=>!bundle.completions.find(h=>h.id===id).protein_evidence.has_candidate_lead)).length,5);
   const gap=bundle.targets.find(t=>!t.completion_ids.length);assert.equal(project(bundle,gap.cannabisdb_id).nodes.length,0);
   assert.throws(()=>project(bundle,gap.cannabisdb_id,bundle.completions[0].id),/belong/);
+  const archived=bundle.completions.find(h=>h.protein_evidence.archived_source_screen?.has_archived_candidate_lead);
+  assert.ok(archived); assert.equal(archived.protein_evidence.has_candidate_lead,true);
+  assert.ok(archived.protein_evidence.representative_alignments.some(a=>a.reference_accession.startsWith('UPI')));
+  const archivedTarget=bundle.targets.find(t=>t.completion_ids.includes(archived.id));
+  assert.ok(matching(bundle,archivedTarget.cannabisdb_id,'hypotheses','with').length);
 });
 test('loader revalidates and versions local data and rejects external paths',async()=>{
   const calls=[];let fail=true;
@@ -44,6 +49,11 @@ test('controls select a target, clear gaps, and retry without unsafe HTML',async
   fields.completionProteinFilter.value='with';fields.completionProteinFilter.change();
   assert.equal(JSON.parse(fields.completionEvidence.textContent).protein_evidence.has_candidate_lead,true);
   fields.completionProteinFilter.value='all';fields.completionProteinFilter.change();
+  const archived=bundle.completions.find(h=>h.protein_evidence.archived_source_screen?.has_archived_candidate_lead);
+  fields.completionSearch.value=bundle.targets.find(t=>t.completion_ids.includes(archived.id)).cannabisdb_id;fields.completionSearch.input();
+  fields.completionChoice.value=archived.id;fields.completionChoice.change();
+  assert.ok(fields.completionProtein.children.some(c=>c.textContent.includes('Archived sequence identity is not functional annotation')));
+  assert.ok(JSON.parse(fields.completionEvidence.textContent).protein_evidence.archived_source_screen.has_archived_candidate_lead);
   const gap=bundle.targets.find(t=>!t.completion_ids.length);fields.completionScope.value='all';fields.completionSearch.value=gap.cannabisdb_id;fields.completionSearch.input();
   assert.equal(fields.completionEquation.textContent,'');assert.ok(fields.completionStatus.textContent.startsWith('No completion'));assert.ok(destroyed>0);
 });
