@@ -1,0 +1,32 @@
+{
+  "schema": "cannabis-carbon.reaction-fulltext-review.v1",
+  "reaction_id": "balanced-equation:89f51b3b080df52e16249ebab4170dba9bf7f952a9fb8cd79e6633c13ccf9a92",
+  "doi": "10.1248/yakushi1947.80.8_1139",
+  "source_url": "https://www.jstage.jst.go.jp/article/yakushi1947/80/8/80_8_1139/_pdf",
+  "snapshot": "data/raw/glucuronolactone-literature/imai-hirasaka-1960.pdf",
+  "snapshot_sha256": "31fc6f9294fcaa3da802dc105a37f8c004f626c1d80da10d7bc7a44ed846f8e0",
+  "read_scope": "All four original PDF pages visually inspected; numerical observations below transcribed from Table I on printed page 1141.",
+  "observations": [
+    {"starting_material": "lactone", "temperature_c": 20, "elapsed_value": 30, "elapsed_unit": "days", "transformed_percent": 30, "reported_mean_rate": "1% per day"},
+    {"starting_material": "lactone", "temperature_c": 50, "elapsed_value": 3, "elapsed_unit": "days", "transformed_percent": 60, "reported_mean_rate": "20% per day"},
+    {"starting_material": "acid", "temperature_c": 100, "elapsed_value": 3.5, "elapsed_unit": "hours", "transformed_percent": 63, "reported_mean_rate": "18% per hour"}
+  ],
+  "kinetic_boundary": "Reported mean transformation rates are not elementary or first-order rate constants. Lactone-starting hydrolysis observations cannot be relabeled as acid-starting lactonization rates. No plant compartment or physiological kinetic parameter is inferred.",
+  "additional_findings": [
+    {"location": "printed page 1142, section III", "finding": "The authors report that lactone-starting aqueous solutions took nearly ten weeks to reach equilibrium at room temperature; the numerical room temperature is not specified in that passage."},
+    {"location": "printed page 1142, section IV and Table II", "finding": "Mineral-acid experiments add an equivalent amount of sulfuric acid and accelerate equilibration. These conditions are not assigned to Cannabis tissue."}
+  ],
+  "identity_review": {
+    "location": "printed page 1139, Chart 1",
+    "paper_product_depiction": "Cyclic hemiacetal lactone depiction",
+    "catalog_product_id": "structure:6cba5bca494bc3beafd63b08de8009a5d1e0f97968aa1fad13668b9ac5914bc4",
+    "catalog_product_smiles": "O=C[C@H](O)[C@H]1OC(=O)[C@@H](O)[C@H]1O",
+    "catalog_product_depiction": "Open aldehyde side chain attached to the lactone ring",
+    "exact_structure_identity_established": false,
+    "required_check": "Resolve cyclic/open-chain and anomeric equilibrium explicitly; do not merge by glucuronolactone name or formula."
+  },
+  "decision": "Retain primary evidence for aqueous nonenzymatic interconversion, but do not promote this exact catalog reaction into the candidate-enzyme baseline. Exact identity bridging and plant-relevant conditions remain unresolved.",
+  "candidate_model_changed": false,
+  "proposed_test": "Compare authentic exact-identity standards in enzyme-free and tissue-matrix controls at measured tissue pH and temperature, following time-dependent acid/lactone and cyclic/open-chain species. Include preparation and storage controls to distinguish ex vivo interconversion from endogenous formation.",
+  "other_source_status": "The 1968 phosphate-buffer paper remains abstract-only; its full PDF was not retrieved in this review."
+}

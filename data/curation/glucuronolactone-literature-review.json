@@ -1,0 +1,29 @@
+{
+  "schema": "cannabis-carbon.reaction-literature-review.v1",
+  "reaction_id": "balanced-equation:89f51b3b080df52e16249ebab4170dba9bf7f952a9fb8cd79e6633c13ccf9a92",
+  "source_reaction_ids": ["RHEA:30767", "RHEA:30768", "RHEA:30769"],
+  "review_status": "primary-abstract-evidence; exact conditions and identity review incomplete",
+  "sources": [
+    {
+      "doi": "10.1248/yakushi1947.80.8_1139",
+      "title": "The Equilibrium between Glucuronic Acid and its Lactone",
+      "year": 1960,
+      "url": "https://www.jstage.jst.go.jp/article/yakushi1947/80/8/80_8_1139/_article/-char/en",
+      "read_scope": "publisher abstract",
+      "finding": "Aqueous glucuronic acid/lactone interconversion was measured. Temperature affects equilibrium composition and transition rate; mineral acid accelerates transition without changing equilibrium composition.",
+      "boundary": "No Cannabis assay, cellular compartment, physiological rate, or atom-mapped identity established by this abstract."
+    },
+    {
+      "doi": "10.1248/yakushi1947.88.12_1504",
+      "title": "Studies on the Hydrolysis of Glucuronolactone in Phosphate Buffer Solutions",
+      "year": 1968,
+      "url": "https://www.jstage.jst.go.jp/article/yakushi1947/88/12/88_12_1504/_article",
+      "read_scope": "publisher abstract",
+      "finding": "Experiments re-examined glucuronic acid/lactone reaction and equilibrium and measured pH and buffer-concentration effects on rate constants.",
+      "boundary": "Reaction formula images and numerical rate equations were not evaluated; do not assign plant kinetic constants from this abstract."
+    }
+  ],
+  "inference": "This gap warrants an enzyme-independent chemistry review, rather than assuming a missing protein is necessarily required.",
+  "next_checks": ["Review full experimental conditions and exact D-glucuronic acid/lactone identity", "Evaluate rate and equilibrium under relevant plant pH, temperature and compartment conditions", "Separate sample-preparation interconversion from endogenous formation", "If admitted, create a separate nonenzymatic sensitivity with explicit evidence rather than a characterized-enzyme edge"],
+  "candidate_model_changed": false
+}

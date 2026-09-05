@@ -1,0 +1,47 @@
+{
+  "schema": "cannabis-biopterin-reference-review-v1",
+  "reaction_id": "balanced-equation:5da25aa23127c68c464d0b2b4ee4eb8dd6ebd899941a10659e977e085f7eeec9",
+  "target_ids": ["CDB004936"],
+  "exact_rhea_family": ["RHEA:32247", "RHEA:32248", "RHEA:32249", "RHEA:32250"],
+  "source": {
+    "accession": "P09417",
+    "url": "https://rest.uniprot.org/uniprotkb/P09417.json",
+    "raw_path": "data/raw/biopterin-reference-review/P09417.json",
+    "sha256": "7ef73e73b15eb967db526cc5ba2970965992ff348e758b57057e1bc61def3936",
+    "read_scope": "UniProt catalytic activity annotations and their evidence pointers; cited primary papers not independently reviewed"
+  },
+  "annotation_observations": [
+    {
+      "rhea_id": "RHEA:17869",
+      "cofactor_pair": "NAD+/NADH",
+      "ec": "1.5.1.34",
+      "physiological_rhea_id": "RHEA:17871",
+      "direction_in_source_equation": "right-to-left",
+      "activity_evidence": ["PubMed:3033643", "PubMed:8262916"],
+      "activity_evidence_code": "ECO:0000269",
+      "direction_evidence_code": "ECO:0000305"
+    },
+    {
+      "rhea_id": "RHEA:17865",
+      "cofactor_pair": "NADP+/NADPH",
+      "ec": "1.5.1.34",
+      "physiological_rhea_id": "RHEA:17867",
+      "direction_in_source_equation": "right-to-left",
+      "activity_evidence": ["PubMed:3033643", "PubMed:8262916"],
+      "activity_evidence_code": "ECO:0000269",
+      "direction_evidence_code": "ECO:0000305"
+    }
+  ],
+  "interpretation": {
+    "evidence_class": "generic-substrate-reference-lead",
+    "exact_reaction_annotation_match": false,
+    "candidate_model_changed": false,
+    "genome_screen_performed": false,
+    "boundary": "Generic tetrahydropteridine/dihydropteridine annotations are not an exact biopterin substrate assignment. NADH evidence is not interchangeable with NADPH evidence. Source right-to-left means reduction in these source equations, not right-to-left in the oppositely oriented catalog equation. No Cannabis activity or physiological oxidation is established.",
+    "next_actions": [
+      "Retrieve primary assay methods to establish exact substrate stereochemistry and NADPH-specific activity independently of the generic annotation.",
+      "Screen the complete pinned Cannabis proteome against generic pteridine reductase references in a separate specificity-unverified hypothesis class; do not promote hits into the exact-reaction model solely from homology.",
+      "Test authentic quinonoid dihydrobiopterin and tetrahydrobiopterin with NADH and NADPH separately, including both reaction directions and enzyme-free controls."
+    ]
+  }
+}

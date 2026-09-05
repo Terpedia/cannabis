@@ -1,0 +1,8 @@
+Entry	Rhea ID	Organism	Protein names
+P09417	RHEA:17869 RHEA:17865	Homo sapiens (Human)	Dihydropteridine reductase (EC 1.5.1.34) (HDHPR) (Quinoid dihydropteridine reductase) (Short chain dehydrogenase/reductase family 33C member 1)
+P11348	RHEA:17869 RHEA:17865	Rattus norvegicus (Rat)	Dihydropteridine reductase (EC 1.5.1.34) (HDHPR) (Quinoid dihydropteridine reductase)
+P38489	RHEA:46160 RHEA:46164 RHEA:17869 RHEA:17865	Escherichia coli (strain K12)	NAD(P)H-dependent nitroreductase NfsB (EC 1.7.1.-) (Dihydropteridine reductase) (EC 1.5.1.34) (FMN-dependent nitroreductase) (NAD(P)H-dependent quinone reductase) (EC 1.6.5.2) (Nitrofuran sensitivity B) (Oxygen-insensitive NAD(P)H nitroreductase)
+Q86A17	RHEA:17869 RHEA:17865	Dictyostelium discoideum (Social amoeba)	Dihydropteridine reductase (EC 1.5.1.34) (Quinoid dihydropteridine reductase)
+Q3T0Z7	RHEA:17869 RHEA:17865	Bos taurus (Bovine)	Dihydropteridine reductase (EC 1.5.1.34) (HDHPR) (Quinoid dihydropteridine reductase)
+Q8BVI4	RHEA:17869 RHEA:17865	Mus musculus (Mouse)	Dihydropteridine reductase (EC 1.5.1.34) (HDHPR) (Quinoid dihydropteridine reductase)
+Q8MJ30	RHEA:17869 RHEA:17865	Sus scrofa (Pig)	Dihydropteridine reductase (EC 1.5.1.34) (HDHPR) (Quinoid dihydropteridine reductase)
