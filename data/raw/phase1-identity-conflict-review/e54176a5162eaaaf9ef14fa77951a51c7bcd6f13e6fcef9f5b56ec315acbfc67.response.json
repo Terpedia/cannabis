@@ -1,0 +1,16 @@
+{
+  "PropertyTable": {
+    "Properties": [
+      {
+        "CID": 178,
+        "MolecularFormula": "C2H5NO",
+        "SMILES": "CC(=O)N",
+        "ConnectivitySMILES": "CC(=O)N",
+        "InChI": "InChI=1S/C2H5NO/c1-2(3)4/h1H3,(H2,3,4)",
+        "InChIKey": "DLFVBJFMPXGRIB-UHFFFAOYSA-N",
+        "IUPACName": "acetamide",
+        "Title": "Acetamide"
+      }
+    ]
+  }
+}

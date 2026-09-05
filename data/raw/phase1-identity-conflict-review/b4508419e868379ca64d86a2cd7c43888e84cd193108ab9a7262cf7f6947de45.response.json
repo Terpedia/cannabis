@@ -1,0 +1,16 @@
+{
+  "PropertyTable": {
+    "Properties": [
+      {
+        "CID": 753,
+        "MolecularFormula": "C3H8O3",
+        "SMILES": "C(C(CO)O)O",
+        "ConnectivitySMILES": "C(C(CO)O)O",
+        "InChI": "InChI=1S/C3H8O3/c4-1-3(6)2-5/h3-6H,1-2H2",
+        "InChIKey": "PEDCQBHIVMGVHV-UHFFFAOYSA-N",
+        "IUPACName": "propane-1,2,3-triol",
+        "Title": "Glycerol"
+      }
+    ]
+  }
+}

@@ -1,0 +1,1039 @@
+[
+  {
+    "inchikey": "BGKCUGPVLVNPSG-ANYFNZRUSA-N", 
+    "molecular_formula": "C14H22O", 
+    "smiles": "CC(=O)/C=C/C1=C(C)CC[C@@H](C)C1(C)C", 
+    "source_crossrefs": [
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T044715446993Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/78310576f31f13727610846a295d1c9cc17fce69e356f88fff019a291409b192/unii/UNII_Data_20241220/UNII_Records_20Dec2024.txt", 
+        "source_name": "unii_records", 
+        "source_record_id": "Z17752202P", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260903T211905246078Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/4d9e840a8a95f1f6c82a94b7d018b3492227c85257c42efd75330e7a408df0fb/supernatural2/full_data_download.csv", 
+        "source_name": "supernatural2_records", 
+        "source_record_id": "SN0024826-02", 
+        "source_release": "2022-09-14"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260903T211905246078Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/4d9e840a8a95f1f6c82a94b7d018b3492227c85257c42efd75330e7a408df0fb/supernatural2/full_data_download.csv", 
+        "source_name": "supernatural2_records", 
+        "source_record_id": "SN0024826", 
+        "source_release": "2022-09-14"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260903T211905246078Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/4d9e840a8a95f1f6c82a94b7d018b3492227c85257c42efd75330e7a408df0fb/supernatural2/full_data_download.csv", 
+        "source_name": "supernatural2_records", 
+        "source_record_id": "SN0024826-01", 
+        "source_release": "2022-09-14"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/83ef2812544f46ffb66554fc33dadb738fb1da1923d7a0cc5e6af761035ba6c8/coconut/coconut_terpenoids_pubchem.csv", 
+        "source_name": "coconut_terpenoids_pubchem", 
+        "source_record_id": "CNP0306269.1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/30c19bd62137ffeb6cd29ed05c572a4c3fd2c084050f63df73f5df8875856933/coconut/coconut_terpenoids.csv", 
+        "source_name": "coconut_terpenoids", 
+        "source_record_id": "CNP0306269.1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T055236Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terokit/objects/e16b46b3011fb0c9f1a91928bf6c1fd206ad0eee0b9eb8f31ed5e86fa0cf3ec6/TeroKit_V2.5_molecules.txt", 
+        "source_name": "terokit_classified", 
+        "source_record_id": "TKC056618", 
+        "source_release": "TeroKit_V2.5"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/0d072cff885587c193678a97af64851eeb250d808d8df7ea41f557b8f09a24ab/coconut/coconut_complete-10-2024.csv", 
+        "source_name": "coconut_complete", 
+        "source_record_id": "CNP0306269.1", 
+        "source_release": "local-snapshot"
+      }
+    ], 
+    "source_memberships": [
+      "coconut_terpenoids", 
+      "terokit_classified"
+    ], 
+    "source_record_ids": [
+      "CNP0306269.1", 
+      "TKC056618"
+    ], 
+    "terpene_id": "TXX006152"
+  }, 
+  {
+    "inchikey": "CBIDRCWHNCKSTO-UHFFFAOYSA-N", 
+    "molecular_formula": "C5H12O7P2", 
+    "smiles": "CC(C)=CCOP(=O)(O)OP(=O)(O)O", 
+    "source_crossrefs": [
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/0d072cff885587c193678a97af64851eeb250d808d8df7ea41f557b8f09a24ab/coconut/coconut_complete-10-2024.csv", 
+        "source_name": "coconut_complete", 
+        "source_record_id": "CNP0343198.1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/30c19bd62137ffeb6cd29ed05c572a4c3fd2c084050f63df73f5df8875856933/coconut/coconut_terpenoids.csv", 
+        "source_name": "coconut_terpenoids", 
+        "source_record_id": "CNP0343198.1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T055236Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terokit/objects/e16b46b3011fb0c9f1a91928bf6c1fd206ad0eee0b9eb8f31ed5e86fa0cf3ec6/TeroKit_V2.5_molecules.txt", 
+        "source_name": "terokit_classified", 
+        "source_record_id": "TKC091674", 
+        "source_release": "TeroKit_V2.5"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/83ef2812544f46ffb66554fc33dadb738fb1da1923d7a0cc5e6af761035ba6c8/coconut/coconut_terpenoids_pubchem.csv", 
+        "source_name": "coconut_terpenoids_pubchem", 
+        "source_record_id": "CNP0343198.1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "JP-6673879-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "EP-3062606-B1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-9526267-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-2023284578-A1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-10106822-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "JP-7241802-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260903T211905246078Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/4d9e840a8a95f1f6c82a94b7d018b3492227c85257c42efd75330e7a408df0fb/supernatural2/full_data_download.csv", 
+        "source_name": "supernatural2_records", 
+        "source_record_id": "SN0041088", 
+        "source_release": "2022-09-14"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-11529320-B2", 
+        "source_release": "local-snapshot"
+      }
+    ], 
+    "source_memberships": [
+      "coconut_terpenoids", 
+      "terokit_classified"
+    ], 
+    "source_record_ids": [
+      "CNP0343198.1", 
+      "TKC091674"
+    ], 
+    "terpene_id": "TXX000047"
+  }, 
+  {
+    "inchikey": "DNVPQKQSNYMLRS-APGDWVJJSA-N", 
+    "molecular_formula": "C28H44O", 
+    "smiles": "CC(C)[C@@H](C)/C=C/[C@@H](C)[C@H]1CC[C@H]2C3=CC=C4C[C@@H](O)CC[C@]4(C)[C@H]3CC[C@@]21C", 
+    "source_crossrefs": [
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/83ef2812544f46ffb66554fc33dadb738fb1da1923d7a0cc5e6af761035ba6c8/coconut/coconut_terpenoids_pubchem.csv", 
+        "source_name": "coconut_terpenoids_pubchem", 
+        "source_record_id": "CNP0274636.1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/0d072cff885587c193678a97af64851eeb250d808d8df7ea41f557b8f09a24ab/coconut/coconut_complete-10-2024.csv", 
+        "source_name": "coconut_complete", 
+        "source_record_id": "CNP0274636.1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T055236Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terokit/objects/e16b46b3011fb0c9f1a91928bf6c1fd206ad0eee0b9eb8f31ed5e86fa0cf3ec6/TeroKit_V2.5_molecules.txt", 
+        "source_name": "terokit_classified", 
+        "source_record_id": "TKC122931", 
+        "source_release": "TeroKit_V2.5"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/30c19bd62137ffeb6cd29ed05c572a4c3fd2c084050f63df73f5df8875856933/coconut/coconut_terpenoids.csv", 
+        "source_name": "coconut_terpenoids", 
+        "source_record_id": "CNP0274636.1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260903T211905246078Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/4d9e840a8a95f1f6c82a94b7d018b3492227c85257c42efd75330e7a408df0fb/supernatural2/full_data_download.csv", 
+        "source_name": "supernatural2_records", 
+        "source_record_id": "SN0070690-02", 
+        "source_release": "2022-09-14"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T044715446993Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/78310576f31f13727610846a295d1c9cc17fce69e356f88fff019a291409b192/unii/UNII_Data_20241220/UNII_Records_20Dec2024.txt", 
+        "source_name": "unii_records", 
+        "source_record_id": "Z30RAY509F", 
+        "source_release": "local-snapshot"
+      }
+    ], 
+    "source_memberships": [
+      "coconut_terpenoids", 
+      "terokit_classified"
+    ], 
+    "source_record_ids": [
+      "CNP0274636.1", 
+      "TKC122931"
+    ], 
+    "terpene_id": "TXX092571"
+  }, 
+  {
+    "inchikey": "GVVPGTZRZFNKDS-JXMROGBWSA-N", 
+    "molecular_formula": "C10H20O7P2", 
+    "smiles": "CC(C)=CCC/C(C)=C/COP(=O)(O)OP(=O)(O)O", 
+    "source_crossrefs": [
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T044715446993Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/78310576f31f13727610846a295d1c9cc17fce69e356f88fff019a291409b192/unii/UNII_Data_20241220/UNII_Records_20Dec2024.txt", 
+        "source_name": "unii_records", 
+        "source_record_id": "7X7DBM66JG", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T055236Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terokit/objects/e16b46b3011fb0c9f1a91928bf6c1fd206ad0eee0b9eb8f31ed5e86fa0cf3ec6/TeroKit_V2.5_molecules.txt", 
+        "source_name": "terokit_classified", 
+        "source_record_id": "TKC019382", 
+        "source_release": "TeroKit_V2.5"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/83ef2812544f46ffb66554fc33dadb738fb1da1923d7a0cc5e6af761035ba6c8/coconut/coconut_terpenoids_pubchem.csv", 
+        "source_name": "coconut_terpenoids_pubchem", 
+        "source_record_id": "CNP0343392.2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/30c19bd62137ffeb6cd29ed05c572a4c3fd2c084050f63df73f5df8875856933/coconut/coconut_terpenoids.csv", 
+        "source_name": "coconut_terpenoids", 
+        "source_record_id": "CNP0343392.2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/30c19bd62137ffeb6cd29ed05c572a4c3fd2c084050f63df73f5df8875856933/coconut/coconut_terpenoids.csv", 
+        "source_name": "coconut_terpenoids", 
+        "source_record_id": "CNP0343392.1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/0d072cff885587c193678a97af64851eeb250d808d8df7ea41f557b8f09a24ab/coconut/coconut_complete-10-2024.csv", 
+        "source_name": "coconut_complete", 
+        "source_record_id": "CNP0343392.1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/83ef2812544f46ffb66554fc33dadb738fb1da1923d7a0cc5e6af761035ba6c8/coconut/coconut_terpenoids_pubchem.csv", 
+        "source_name": "coconut_terpenoids_pubchem", 
+        "source_record_id": "CNP0343392.1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/0d072cff885587c193678a97af64851eeb250d808d8df7ea41f557b8f09a24ab/coconut/coconut_complete-10-2024.csv", 
+        "source_name": "coconut_complete", 
+        "source_record_id": "CNP0343392.2", 
+        "source_release": "local-snapshot"
+      }
+    ], 
+    "source_memberships": [
+      "coconut_terpenoids", 
+      "terokit_classified"
+    ], 
+    "source_record_ids": [
+      "CNP0343392.1", 
+      "CNP0343392.2", 
+      "TKC019382"
+    ], 
+    "terpene_id": "T10003866"
+  }, 
+  {
+    "inchikey": "HJMCQDCJBFTRPX-RSGMMRJUSA-N", 
+    "molecular_formula": "C22H30O5", 
+    "smiles": "C=C(C)[C@@H]1CC[C@](C)(O)[C@H]2OC3=C(C(=O)O)C(CCCCC)=CC(O)=C3[C@@H]12", 
+    "source_crossrefs": [
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-2024082174-A1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-10851077-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-11819491-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260903T211905246078Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/4d9e840a8a95f1f6c82a94b7d018b3492227c85257c42efd75330e7a408df0fb/supernatural2/full_data_download.csv", 
+        "source_name": "supernatural2_records", 
+        "source_record_id": "SN0127343-01", 
+        "source_release": "2022-09-14"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-2022202710-A1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-11013715-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-10821147-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "CA-2970651-C", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-2021362074-A1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "AU-2017335724-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-12023306-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T044715446993Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/78310576f31f13727610846a295d1c9cc17fce69e356f88fff019a291409b192/unii/UNII_Data_20241220/UNII_Records_20Dec2024.txt", 
+        "source_name": "unii_records", 
+        "source_record_id": "J66DS78DF7", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260903T211905246078Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/4d9e840a8a95f1f6c82a94b7d018b3492227c85257c42efd75330e7a408df0fb/supernatural2/full_data_download.csv", 
+        "source_name": "supernatural2_records", 
+        "source_record_id": "SN0127343", 
+        "source_release": "2022-09-14"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T055236Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terokit/objects/e16b46b3011fb0c9f1a91928bf6c1fd206ad0eee0b9eb8f31ed5e86fa0cf3ec6/TeroKit_V2.5_molecules.txt", 
+        "source_name": "terokit_classified", 
+        "source_record_id": "TKC027359", 
+        "source_release": "TeroKit_V2.5"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/0d072cff885587c193678a97af64851eeb250d808d8df7ea41f557b8f09a24ab/coconut/coconut_complete-10-2024.csv", 
+        "source_name": "coconut_complete", 
+        "source_record_id": "CNP0417013.1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/83ef2812544f46ffb66554fc33dadb738fb1da1923d7a0cc5e6af761035ba6c8/coconut/coconut_terpenoids_pubchem.csv", 
+        "source_name": "coconut_terpenoids_pubchem", 
+        "source_record_id": "CNP0417013.1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/30c19bd62137ffeb6cd29ed05c572a4c3fd2c084050f63df73f5df8875856933/coconut/coconut_terpenoids.csv", 
+        "source_name": "coconut_terpenoids", 
+        "source_record_id": "CNP0417013.1", 
+        "source_release": "local-snapshot"
+      }
+    ], 
+    "source_memberships": [
+      "coconut_terpenoids", 
+      "terokit_classified"
+    ], 
+    "source_record_ids": [
+      "CNP0417013.1", 
+      "TKC027359"
+    ], 
+    "terpene_id": "TXX044746"
+  }, 
+  {
+    "inchikey": "KSBJAONOPKRVRR-LTTRRGSQSA-N", 
+    "molecular_formula": "C20H26O5", 
+    "smiles": "C=C1C[C@]23C[C@@]1(O)CC[C@H]2[C@@]12CCC[C@](C)(C(=O)OC1)[C@H]2[C@@H]3C(=O)O", 
+    "source_crossrefs": [
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/0d072cff885587c193678a97af64851eeb250d808d8df7ea41f557b8f09a24ab/coconut/coconut_complete-10-2024.csv", 
+        "source_name": "coconut_complete", 
+        "source_record_id": "CNP0305686.3", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/30c19bd62137ffeb6cd29ed05c572a4c3fd2c084050f63df73f5df8875856933/coconut/coconut_terpenoids.csv", 
+        "source_name": "coconut_terpenoids", 
+        "source_record_id": "CNP0305686.3", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/83ef2812544f46ffb66554fc33dadb738fb1da1923d7a0cc5e6af761035ba6c8/coconut/coconut_terpenoids_pubchem.csv", 
+        "source_name": "coconut_terpenoids_pubchem", 
+        "source_record_id": "CNP0305686.3", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T055236Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terokit/objects/e16b46b3011fb0c9f1a91928bf6c1fd206ad0eee0b9eb8f31ed5e86fa0cf3ec6/TeroKit_V2.5_molecules.txt", 
+        "source_name": "terokit_classified", 
+        "source_record_id": "TKC075223", 
+        "source_release": "TeroKit_V2.5"
+      }
+    ], 
+    "source_memberships": [
+      "coconut_terpenoids", 
+      "terokit_classified"
+    ], 
+    "source_record_ids": [
+      "CNP0305686.3", 
+      "TKC075223"
+    ], 
+    "terpene_id": "T20005435"
+  }, 
+  {
+    "inchikey": "KSBJAONOPKRVRR-YTJHIPEWSA-N", 
+    "molecular_formula": "C20H26O5", 
+    "smiles": "C=C1C[C@]23C[C@@]1(O)CC[C@H]2[C@@]12CCC[C@@](C)(C(=O)OC1)[C@H]2[C@@H]3C(=O)O", 
+    "source_crossrefs": [
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260903T211905246078Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/4d9e840a8a95f1f6c82a94b7d018b3492227c85257c42efd75330e7a408df0fb/supernatural2/full_data_download.csv", 
+        "source_name": "supernatural2_records", 
+        "source_record_id": "SN0193889-03", 
+        "source_release": "2022-09-14"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260903T211905246078Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/4d9e840a8a95f1f6c82a94b7d018b3492227c85257c42efd75330e7a408df0fb/supernatural2/full_data_download.csv", 
+        "source_name": "supernatural2_records", 
+        "source_record_id": "SN0193889-02", 
+        "source_release": "2022-09-14"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260903T211905246078Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/4d9e840a8a95f1f6c82a94b7d018b3492227c85257c42efd75330e7a408df0fb/supernatural2/full_data_download.csv", 
+        "source_name": "supernatural2_records", 
+        "source_record_id": "SN0193889-01", 
+        "source_release": "2022-09-14"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260903T211905246078Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/4d9e840a8a95f1f6c82a94b7d018b3492227c85257c42efd75330e7a408df0fb/supernatural2/full_data_download.csv", 
+        "source_name": "supernatural2_records", 
+        "source_record_id": "SN0193889", 
+        "source_release": "2022-09-14"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/0d072cff885587c193678a97af64851eeb250d808d8df7ea41f557b8f09a24ab/coconut/coconut_complete-10-2024.csv", 
+        "source_name": "coconut_complete", 
+        "source_record_id": "CNP0305686.2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/30c19bd62137ffeb6cd29ed05c572a4c3fd2c084050f63df73f5df8875856933/coconut/coconut_terpenoids.csv", 
+        "source_name": "coconut_terpenoids", 
+        "source_record_id": "CNP0305686.2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T055236Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terokit/objects/e16b46b3011fb0c9f1a91928bf6c1fd206ad0eee0b9eb8f31ed5e86fa0cf3ec6/TeroKit_V2.5_molecules.txt", 
+        "source_name": "terokit_classified", 
+        "source_record_id": "TKC007041", 
+        "source_release": "TeroKit_V2.5"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/83ef2812544f46ffb66554fc33dadb738fb1da1923d7a0cc5e6af761035ba6c8/coconut/coconut_terpenoids_pubchem.csv", 
+        "source_name": "coconut_terpenoids_pubchem", 
+        "source_record_id": "CNP0305686.2", 
+        "source_release": "local-snapshot"
+      }
+    ], 
+    "source_memberships": [
+      "coconut_terpenoids", 
+      "terokit_classified"
+    ], 
+    "source_record_ids": [
+      "CNP0305686.2", 
+      "TKC007041"
+    ], 
+    "terpene_id": "T20005434"
+  }, 
+  {
+    "inchikey": "NPNUFJAVOOONJE-FGHOCRGKSA-N", 
+    "molecular_formula": "C15H24", 
+    "smiles": "C=C1CC/C=C(/C)CC[C@H]2[C@@H]1CC2(C)C", 
+    "source_crossrefs": [
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/0d072cff885587c193678a97af64851eeb250d808d8df7ea41f557b8f09a24ab/coconut/coconut_complete-10-2024.csv", 
+        "source_name": "coconut_complete", 
+        "source_record_id": "CNP0212910.4", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T055236Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terokit/objects/e16b46b3011fb0c9f1a91928bf6c1fd206ad0eee0b9eb8f31ed5e86fa0cf3ec6/TeroKit_V2.5_molecules.txt", 
+        "source_name": "terokit_classified", 
+        "source_record_id": "TKC146113", 
+        "source_release": "TeroKit_V2.5"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/83ef2812544f46ffb66554fc33dadb738fb1da1923d7a0cc5e6af761035ba6c8/coconut/coconut_terpenoids_pubchem.csv", 
+        "source_name": "coconut_terpenoids_pubchem", 
+        "source_record_id": "CNP0212910.4", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/30c19bd62137ffeb6cd29ed05c572a4c3fd2c084050f63df73f5df8875856933/coconut/coconut_terpenoids.csv", 
+        "source_name": "coconut_terpenoids", 
+        "source_record_id": "CNP0212910.4", 
+        "source_release": "local-snapshot"
+      }
+    ], 
+    "source_memberships": [
+      "coconut_terpenoids", 
+      "terokit_classified"
+    ], 
+    "source_record_ids": [
+      "CNP0212910.4", 
+      "TKC146113"
+    ], 
+    "terpene_id": "T15014155"
+  }, 
+  {
+    "inchikey": "VAFRUJRAAHLCFZ-UHFFFAOYSA-N", 
+    "molecular_formula": "C23H34O4", 
+    "smiles": "CCCCCC1=CC(OC)=C(CC=C(C)CCC=C(C)C)C(O)=C1C(=O)O", 
+    "source_crossrefs": [
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "AU-2017335724-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-11013715-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-2021362074-A1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-12023306-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-11819491-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "CA-2970651-C", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-2022202710-A1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-10821147-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-2024082174-A1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/83ef2812544f46ffb66554fc33dadb738fb1da1923d7a0cc5e6af761035ba6c8/coconut/coconut_terpenoids_pubchem.csv", 
+        "source_name": "coconut_terpenoids_pubchem", 
+        "source_record_id": "CNP0276805.0", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/0d072cff885587c193678a97af64851eeb250d808d8df7ea41f557b8f09a24ab/coconut/coconut_complete-10-2024.csv", 
+        "source_name": "coconut_complete", 
+        "source_record_id": "CNP0276805.0", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/30c19bd62137ffeb6cd29ed05c572a4c3fd2c084050f63df73f5df8875856933/coconut/coconut_terpenoids.csv", 
+        "source_name": "coconut_terpenoids", 
+        "source_record_id": "CNP0276805.0", 
+        "source_release": "local-snapshot"
+      }
+    ], 
+    "source_memberships": [
+      "coconut_terpenoids"
+    ], 
+    "source_record_ids": [
+      "CNP0276805.0"
+    ], 
+    "terpene_id": "TXX057158"
+  }, 
+  {
+    "inchikey": "XWIWWMIPMYDFOV-UHFFFAOYSA-N", 
+    "molecular_formula": "C17H18O2", 
+    "smiles": "CC1=CC(O)=C2C(=C1)OC(C)(C)C1=CC=C(C)C=C12", 
+    "source_crossrefs": [
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/30c19bd62137ffeb6cd29ed05c572a4c3fd2c084050f63df73f5df8875856933/coconut/coconut_terpenoids.csv", 
+        "source_name": "coconut_terpenoids", 
+        "source_record_id": "CNP0575419.0", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/83ef2812544f46ffb66554fc33dadb738fb1da1923d7a0cc5e6af761035ba6c8/coconut/coconut_terpenoids_pubchem.csv", 
+        "source_name": "coconut_terpenoids_pubchem", 
+        "source_record_id": "CNP0575419.0", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/0d072cff885587c193678a97af64851eeb250d808d8df7ea41f557b8f09a24ab/coconut/coconut_complete-10-2024.csv", 
+        "source_name": "coconut_complete", 
+        "source_record_id": "CNP0575419.0", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "AU-2017335724-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-10821147-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "AU-2021240296-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-2024285549-A1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-10851077-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-2023364052-A1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-11779562-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-2024082174-A1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-11819491-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-11013715-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-2022202710-A1", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "CA-2970651-C", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T132729Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/3fc7907e2f4694c17fc91a7a5938a39f83827c22ce7b6b84b5269e8d2c8034fd/patents/gp-search-20250213-105325.csv", 
+        "source_name": "patent_compound_search", 
+        "source_record_id": "US-12023306-B2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T044715446993Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/78310576f31f13727610846a295d1c9cc17fce69e356f88fff019a291409b192/unii/UNII_Data_20241220/UNII_Records_20Dec2024.txt", 
+        "source_name": "unii_records", 
+        "source_record_id": "3X9ANZ6GZQ", 
+        "source_release": "local-snapshot"
+      }
+    ], 
+    "source_memberships": [
+      "coconut_terpenoids"
+    ], 
+    "source_record_ids": [
+      "CNP0575419.0"
+    ], 
+    "terpene_id": "TXX012215"
+  }, 
+  {
+    "inchikey": "YHAJBLWYOIUHHM-IPYPFGDCSA-N", 
+    "molecular_formula": "C15H24", 
+    "smiles": "C=C(C)[C@H]1CCC(C)=C2CC[C@@H](C)[C@@H]2C1", 
+    "source_crossrefs": [
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T055236Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terokit/objects/e16b46b3011fb0c9f1a91928bf6c1fd206ad0eee0b9eb8f31ed5e86fa0cf3ec6/TeroKit_V2.5_molecules.txt", 
+        "source_name": "terokit_classified", 
+        "source_record_id": "TKC133773", 
+        "source_release": "TeroKit_V2.5"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/83ef2812544f46ffb66554fc33dadb738fb1da1923d7a0cc5e6af761035ba6c8/coconut/coconut_terpenoids_pubchem.csv", 
+        "source_name": "coconut_terpenoids_pubchem", 
+        "source_record_id": "CNP0190202.5", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/30c19bd62137ffeb6cd29ed05c572a4c3fd2c084050f63df73f5df8875856933/coconut/coconut_terpenoids.csv", 
+        "source_name": "coconut_terpenoids", 
+        "source_record_id": "CNP0190202.5", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/0d072cff885587c193678a97af64851eeb250d808d8df7ea41f557b8f09a24ab/coconut/coconut_complete-10-2024.csv", 
+        "source_name": "coconut_complete", 
+        "source_record_id": "CNP0190202.5", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260903T211905246078Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/4d9e840a8a95f1f6c82a94b7d018b3492227c85257c42efd75330e7a408df0fb/supernatural2/full_data_download.csv", 
+        "source_name": "supernatural2_records", 
+        "source_record_id": "SN0450176-03", 
+        "source_release": "2022-09-14"
+      }
+    ], 
+    "source_memberships": [
+      "coconut_terpenoids", 
+      "terokit_classified"
+    ], 
+    "source_record_ids": [
+      "CNP0190202.5", 
+      "TKC133773"
+    ], 
+    "terpene_id": "T15013580"
+  }, 
+  {
+    "inchikey": "YYWZKGZIIKPPJZ-XKSSXDPKSA-N", 
+    "molecular_formula": "C10H18O", 
+    "smiles": "CC1(C)[C@H]2CC[C@](C)(O)[C@@H]1C2", 
+    "source_crossrefs": [
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/83ef2812544f46ffb66554fc33dadb738fb1da1923d7a0cc5e6af761035ba6c8/coconut/coconut_terpenoids_pubchem.csv", 
+        "source_name": "coconut_terpenoids_pubchem", 
+        "source_record_id": "CNP0114831.2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/30c19bd62137ffeb6cd29ed05c572a4c3fd2c084050f63df73f5df8875856933/coconut/coconut_terpenoids.csv", 
+        "source_name": "coconut_terpenoids", 
+        "source_record_id": "CNP0114831.2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T043838294091Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/0d072cff885587c193678a97af64851eeb250d808d8df7ea41f557b8f09a24ab/coconut/coconut_complete-10-2024.csv", 
+        "source_name": "coconut_complete", 
+        "source_record_id": "CNP0114831.2", 
+        "source_release": "local-snapshot"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260902T055236Z.json", 
+        "matched_key_type": "standard_inchi", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terokit/objects/e16b46b3011fb0c9f1a91928bf6c1fd206ad0eee0b9eb8f31ed5e86fa0cf3ec6/TeroKit_V2.5_molecules.txt", 
+        "source_name": "terokit_classified", 
+        "source_record_id": "TKC091210", 
+        "source_release": "TeroKit_V2.5"
+      }, 
+      {
+        "manifest_uri": "gs://terpedia-knowledge-raw/manifests/tonsync/20260904T044715446993Z.json", 
+        "matched_key_type": "inchikey", 
+        "source_file_uri": "gs://terpedia-knowledge-raw/raw/terport-data/objects/78310576f31f13727610846a295d1c9cc17fce69e356f88fff019a291409b192/unii/UNII_Data_20241220/UNII_Records_20Dec2024.txt", 
+        "source_name": "unii_records", 
+        "source_record_id": "2J3SJ3OQEU", 
+        "source_release": "local-snapshot"
+      }
+    ], 
+    "source_memberships": [
+      "coconut_terpenoids", 
+      "terokit_classified"
+    ], 
+    "source_record_ids": [
+      "CNP0114831.2", 
+      "TKC091210"
+    ], 
+    "terpene_id": "T10003053"
+  }
+]

@@ -2223,6 +2223,44 @@ Replay: `python -m cannabis_carbon.phase1_no_producer_audit`.
 No reaction, structure, source assertion or completeness metric is promoted
 by this audit. Atom tracing remains deferred.
 
+### Registry review of the 71 source identity conflicts
+
+`phase1-identity-conflict-review.json` preserves 142 separate source assertions
+and queries both structures by freshly computed InChIKey. Live Terpedia
+`terpene_identity_set` corroborates 14 assertions and PubChem corroborates 132;
+these are assertion counts, not independent compounds or validated Cannabis
+occurrence. All nine lookups completed. Nine source-reported InChIKeys disagree
+with their own SMILES and must not silently drive identity joins.
+
+Of the 71 pairs, 48 share a standardized InChIKey despite distinct encoded
+structures, 10 share only the connectivity key, and 13 differ in connectivity.
+Standardized-key equality is explicitly separated from exact encoded-structure
+agreement. It does not authorize merging tautomer, stereochemical or other
+representation distinctions.
+
+Four priority name queries yield these provisional findings:
+
+| Record | Registry-supported finding | Migration status |
+| --- | --- | --- |
+| CDB006156 Glycerol | XML structure exactly matches [PubChem 753](https://pubchem.ncbi.nlm.nih.gov/compound/753); SDF structure exactly matches [(+)-beta-irone, 10219919](https://pubchem.ncbi.nlm.nih.gov/compound/10219919) | XML structure provisionally supported for this name; no historical overwrite |
+| CDB000142 D-arabitol | SDF structure exactly matches the [D-arabitol name result, 94154](https://pubchem.ncbi.nlm.nih.gov/compound/94154) | SDF structure provisionally supported; XML alternative retained |
+| CDB000546 Acetamide | SDF structure exactly matches [PubChem 178](https://pubchem.ncbi.nlm.nih.gov/compound/178); XML form shares its standard key but not exact encoded structure | Keep distinct forms; no implicit tautomer reaction |
+| CDB006169 Ribitol | Neither source structure exactly matches the [name-query structure, 6912](https://pubchem.ncbi.nlm.nih.gov/compound/6912); XML is a different-connectivity hydrocarbon | Unresolved; stereochemical review required |
+
+These are registry-supported proposals for versioned reconciliation, not
+primary Cannabis-source corrections, biological observations or new pathways.
+The three existing conditional certificates remain attached to their original
+stored structures. Both copies of the source external IDs originate from XML
+enrichment and are not independent SDF/XML corroboration. No graph structure,
+carbon accounting or completeness metric is changed in this release.
+
+The 227-record export is stored in
+`terpedia_core.cannabis_phase1_identity_conflict_review_20260905_v1`.
+Replay module: `cannabis_carbon.phase1_identity_conflict_review`.
+Raw Terpedia SQL and PubChem requests/responses are checksum-pinned, including
+negative exact-key results. Field consistency, registry matches, exact
+structure comparisons and unresolved alternatives remain separately inspectable.
+
 ### Working-network balance audit
 
 The Phase 1 audit is stored in
