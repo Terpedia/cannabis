@@ -1,0 +1,12 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_marts_audit_20260904_v1",
+  "location": "us-central1",
+  "load_job_id": "bqjob_r1246dcc8cceb719a_000001a06f392cb7_1",
+  "source": "data/derived/phase1-marts-audit.ndjson",
+  "report_sha256": "1d021f0813989abcb7d7065ed8791b6013c49c2263fa6315c418d591613b94ea",
+  "verified_records_by_kind": {"metadata": 1, "target": 6220, "source": 4639, "reaction": 73, "compound": 80},
+  "verified_total_records": 11013,
+  "verified_unique_ids_equal_record_count_in_each_group": true,
+  "verified_min_and_max_report_hash_match_local_report_in_each_group": true,
+  "claim_boundary": "Full-source MARTS balance audit and candidate additions, not confirmed Cannabis reactions or new completed CO2 pathways. Unbalanced source leads remain excluded; atom tracing deferred."
+}

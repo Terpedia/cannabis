@@ -133,6 +133,45 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [whole-MARTS audit](data/phase1-marts-audit.json) scans all 4,639 MARTS
+records in Terpedia's normalized reaction catalog. **324 source rows balance**,
+deduplicating to 73 exact full equations, including **27 absent from the frozen
+full balanced-network baseline**. The report retains these as candidate additions;
+it does not rewrite the existing network or its pathway certificates. Six target
+records participate in balanced MARTS equations; all six already had balanced
+network participation. Therefore this audit adds **zero newly covered targets**.
+
+The other **4,315 source rows are imbalanced**, representing 834 distinct recorded
+reaction strings. All source fields, protein/EC references, source orientation,
+and element/charge deficits are preserved. There are 68 targets with exact
+participation in these excluded equations, including **10 without baseline
+balanced participation**: farnesol, beta-caryophyllene, alpha-cubebene,
+alpha-bisabolol, alpha-phellandrene, beta-phellandrene, alpha-thujene,
+trans-sabinene hydrate, ledol and bulnesol. These are exact encoded-structure
+leads, not name-only matches or completed pathways.
+
+For example, MARTS:1 records a diphosphate-bearing substrate turning into a
+hydrocarbon but omits coproducts. The recorded right-minus-left deficit is
+H −1, O −7, P −2, with charge +3. The audit **does not automatically insert
+pyrophosphate, water or protons**; full stoichiometry and the source publication
+must be reviewed before an equation enters a balanced pathway scenario.
+The source's `directly_characterized_MARTS_record` label is retained as a source
+claim, not converted into Cannabis enzyme evidence. Every new equation has
+explicit full sides and coefficients, unresolved physiological direction and
+all-input supply, and no automatically assigned Cannabis enzyme.
+
+Reproduce with `PYTHONPATH=src python -m cannabis_carbon.phase1_marts_audit`.
+Use `--fetch` only for the first immutable snapshot download and configure
+`CANNABIS_BQ` when `bq` is not on PATH. The report pins its full-network and raw
+MARTS inputs by SHA-256; the source ledger preserves every fetched row even when
+the local raw cache is absent. The Terpedia export is
+`terpedia-489015.terpedia_core.cannabis_phase1_marts_audit_20260904_v1`:
+11,013 rows (6,220 targets, 4,639 sources, 73 reactions, 80 compounds, one
+metadata record). Report SHA-256:
+`1d021f0813989abcb7d7065ed8791b6013c49c2263fa6315c418d591613b94ea`.
+Atom tracing remains deferred. Next: review complete equations for the ten
+new target leads, then validate references and screen the Cannabis proteome.
+
 The [protonation identity audit](data/phase1-protonation-audit.json) retains all
 6,220 CannabisDB target records and proposes **342 separate, balanced
 proton-transfer hypotheses for 343 target records**. Of those targets, 341
