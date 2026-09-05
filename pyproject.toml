@@ -13,8 +13,9 @@ dependencies = ["rdkit>=2023.9"]
 cannabis-carbon = "cannabis_carbon.cli:main"
 
 [project.optional-dependencies]
-test = ["pytest>=8", "scipy>=1.16,<2"]
+test = ["pytest>=8", "scipy>=1.16,<2", "rdkit>=2026.3"]
 flux = ["scipy>=1.16,<2"]
+protonation = ["rdkit>=2026.3"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

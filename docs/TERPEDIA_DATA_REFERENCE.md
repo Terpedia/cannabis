@@ -133,6 +133,46 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [protonation identity audit](data/phase1-protonation-audit.json) retains all
+6,220 CannabisDB target records and proposes **342 separate, balanced
+proton-transfer hypotheses for 343 target records**. Of those targets, 341
+currently have no exact balanced-reaction participation. These are review leads,
+not added candidate-enzyme evidence or established CO₂ pathways; all existing
+coverage and net-conversion metrics remain unchanged.
+
+For example, CDB006145 (methylamine) yields the balanced hypothesis
+`CN + [H+] → C[NH3+]`. H⁺ is an explicit required input in that display
+orientation; its compartment availability and the physiological direction are
+unresolved. No protein, EC assignment or metabolite-observation evidence is
+created by this structure comparison.
+
+Each hypothesis retains both exact compound IDs, full reaction SMILES including
+every H⁺, independent element/charge checks, source reaction participation,
+normalization checks, and explicit review requirements. The audit uses RDKit's
+[protonation-only Uncharger](https://www.rdkit.org/docs/cppapi/classRDKit_1_1MolStandardize_1_1Uncharger.html)
+solely for candidate lookup. It independently rejects changed heavy-atom
+connectivity, bond order, isotopes or stereochemistry; changed protonation sites
+are restricted to N/O/P/S. It does not merge compounds, normalize tautomers,
+strip salts, or infer enzyme activity. Net-zero proton relocations, retained
+explicit hydrogen atoms, radicals, generic and multicomponent structures are
+outside this conservative audit. There are 21 excluded target records; a
+negative result means no match within these restrictions, not chemical absence.
+
+Before a bridge enters any separately labeled pathway sensitivity scenario,
+review source identity, pKa, compartment pH, direction, and whether spontaneous
+equilibration or catalysis applies. CannabisDB labels are source labels: a
+concrete encoded structure does not establish that a polymer or mixture label
+has been resolved correctly. Atom tracing remains deferred.
+
+Reproduce with `pip install -e '.[protonation]'` and
+`PYTHONPATH=src python -m cannabis_carbon.phase1_protonation_audit`.
+The report pins its full balanced-network input by SHA-256 and records RDKit
+2026.3.6. Its Terpedia export is
+`terpedia-489015.terpedia_core.cannabis_phase1_protonation_audit_20260904_v1`:
+7,247 rows (6,220 targets, 342 bridges, 684 compounds, one metadata record).
+Report SHA-256:
+`7698099beebe91f63147b4f44e761b42bba5157189b7064a86a0ae6c983cedef`.
+
 The [multi-reaction net-conversion explorer](net.html) now renders the complete
 selected net-conversion certificate in static Cytoscape, or one selected reaction.
 It retains all 6,220 target records, including gaps, and offers a certificate-only

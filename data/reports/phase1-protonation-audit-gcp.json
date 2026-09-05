@@ -1,0 +1,12 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_protonation_audit_20260904_v1",
+  "location": "us-central1",
+  "load_job_id": "bqjob_r6980e61484fb6802_000001a06f2fcf1b_1",
+  "source": "data/derived/phase1-protonation-audit.ndjson",
+  "report_sha256": "7698099beebe91f63147b4f44e761b42bba5157189b7064a86a0ae6c983cedef",
+  "verified_records_by_kind": {"metadata": 1, "target": 6220, "bridge": 342, "compound": 684},
+  "verified_total_records": 7247,
+  "verified_unique_ids_equal_record_count_in_each_group": true,
+  "verified_min_and_max_report_hash_match_local_report_in_each_group": true,
+  "claim_boundary": "Structurally inferred proton-transfer review leads only. Distinct exact identities, no enzyme assignments, no changes to CO2-pathway completeness. Atom tracing deferred."
+}
