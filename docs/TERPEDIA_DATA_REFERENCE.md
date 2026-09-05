@@ -1880,6 +1880,48 @@ Raw public inputs are under `data/raw/phase1-plant-purine-references/` and
 `cannabis_carbon.phase1_plant_purine_references` and
 `cannabis_carbon.phase1_plant_purine_search` names.
 
+### Exact purine-participant supply diagnostic (2026-09-04)
+
+`data/reports/phase1-purine-precursor-audit.json` tests the **32 exact chemical
+participants** of the 13 plant-annotated purine equations, plus the seven
+previously added target structures. The 39 probes retain exact structures,
+charges, coefficients and source reaction joins. All scenarios use the same
+CO₂-only carbon exchange boundary and forbid the same five analyst-selected
+reverse steps from the direction-sensitivity report.
+
+| Scenario | Equations admitted | Participant net hypotheses | Explicit exchange participants | Solver-infeasible participants | Seven target net hypotheses |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Restricted expanded candidates | 1,588 | 6 | 5 | 21 | 0 |
+| Same plus three unreviewed plant-reference hypotheses | 1,591 | 6 | 5 | 21 | 0 |
+| Restricted full balanced catalog, regardless of enzyme evidence | 13,995 | 27 | 5 | 0 | 7 |
+
+This local comparison points to missing candidate-linked chemistry in the
+current model: the three newly screened purine reactions alone do not restore
+precursor supply, whereas additional catalog chemistry permits net conversion.
+It does **not** establish that all catalog routes operate in Cannabis, that
+missing genes exist, or that these reactions are the only possible alternatives.
+Other reaction directions remain hypothetical and internal pools may be
+pre-existing and regenerated. Each probe is solved separately; this is not a
+joint-supply, pathway-ordering, energetic-feasibility or startup certificate.
+
+The report retains every successful exact net certificate, all 152 selected
+or plant-annotated equations, and 230 participating or exchange structures.
+Its **70-reaction candidate-evidence queue** records full equations and exact
+selected uses in catalog certificates for probes unresolved in the augmented
+candidate model. Queue membership means no candidate link in this model, not
+absence of a protein or unique reaction necessity. Before another genome
+search, audit existing search reports and source annotations for these exact
+equations, including direction, reference coverage and complex requirements.
+
+The 459-record export is stored in Terpedia as
+`terpedia_core.cannabis_phase1_purine_precursor_audit_20260904_v1`.
+`cannabis_carbon.phase1_purine_precursor_audit` reproduces the diagnostic;
+`add_gap_queue` derives the queue from saved certificates without re-solving.
+Tests independently replay every selected equation and successful certificate,
+including element/isotope/charge balance, exact net coefficients, permitted
+exchanges and forbidden directions. Published whole-metabolome completeness
+counts and map scenarios remain unchanged. Atom tracing remains deferred.
+
 ### Working-network balance audit
 
 The Phase 1 audit is stored in
