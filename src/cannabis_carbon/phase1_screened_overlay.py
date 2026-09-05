@@ -16,10 +16,17 @@ def build_overlay(parent, search, full_search_report='phase1-new-protein-search.
         if any(hypotheses[hid]['reaction_id'] != row['reaction_id'] for hid in row['hypothesis_ids']):
             raise ValueError('Search hypothesis/reaction mismatch')
         hits = [alignments[aid] for aid in row['passing_alignment_ids']]
+        if hits and (search.get('model_eligible') is False or row.get('model_eligible') is False):
+            raise ValueError('Evidence is explicitly ineligible for reaction model')
         if {a['cannabis_accession'] for a in hits} != set(row['screened_cannabis_proteins']):
             raise ValueError('Candidate proteins do not match alignments')
         allowed = {r['accession'] for r in row['reference_matches']}
+        ineligible = {r['accession'] for r in row['reference_matches'] if r.get('model_eligible') is False}
         for hit in hits:
+            if hit.get('model_eligible') is False:
+                raise ValueError('Alignment evidence is explicitly ineligible for reaction model')
+            if hit['reference_accession'] in ineligible:
+                raise ValueError('Reference evidence is explicitly ineligible for reaction model')
             if hit['reference_accession'] not in allowed or not hit['passes_screen'] or hit['identity_percent'] < 30 or min(hit['query_coverage_percent'], hit['reference_coverage_percent']) < 50 or not 0 <= hit['evalue'] <= 1e-5:
                 raise ValueError('Invalid screened alignment or reference join')
         if not hits:
@@ -43,6 +50,8 @@ def build_overlay(parent, search, full_search_report='phase1-new-protein-search.
 
 
 def apply_overlay(parent, overlay):
+    if overlay.get('model_eligible') is False or any(e.get('model_eligible') is False for e in overlay['enzyme_evidence']):
+        raise ValueError('Overlay evidence is explicitly ineligible for reaction model')
     report = copy.deepcopy(parent)
     index = {e['reaction_id']: e for e in overlay['enzyme_evidence']}
     if len(index) != len(overlay['enzyme_evidence']):

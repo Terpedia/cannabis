@@ -1,0 +1,14 @@
+{
+  "schema": "cannabis-carbon.gcp-batch-verification.v1",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "verified": true,
+  "verification": "All load jobs DONE without errors; exact service-account principal and destination checked. Full bounded SELECT readbacks match complete local NDJSON record multisets, report checksums and unique kind/id pairs.",
+  "tables": [{
+    "table": "cannabis_phase1_desaturase_evidence_bundle_20260905_v1",
+    "job_id": "cannabis_sa_desaturase_evidence_bundle_20260905_v1",
+    "rows": 13,
+    "report_sha256": "c8262618966da8135a82aeb1e692c4cf093592076c00a3ab15d49430a3d1d5a4"
+  }]
+}

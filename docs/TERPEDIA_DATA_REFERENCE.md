@@ -2530,3 +2530,34 @@ status changed in this publication batch.
 `data/reports/phase1-reference-gap-gcp-verification.json` records the completed
 service-account load and full ten-record readback comparison. The corresponding
 lossless-export test replays every source-document join and checksum.
+
+### Desaturase review and competing sphingolipid hypothesis
+
+`terpedia-489015.terpedia_core.cannabis_phase1_desaturase_evidence_bundle_20260905_v1`
+contains twelve complete source reports plus metadata (13 records), using the same
+four-column lossless document schema. The local report and NDJSON export are
+`data/reports/phase1-desaturase-evidence-bundle.json` and
+`data/derived/phase1-desaturase-evidence-bundle.ndjson`. Full readback verification
+is recorded in `data/reports/phase1-desaturase-gcp-verification.json`.
+
+The four weak/no-hit reaction gaps were followed through unreviewed plant and
+nonplant reference queries. All 6,629 nonplant references were retrieved and
+screened against the 30,304-protein Cannabis snapshot: 2,444 raw alignments yielded
+one passing short hit. Its cytochrome b5 domain evidence does not establish
+desaturase catalysis. The additive reviewed-search report explicitly rejects
+that alignment for model integration while retaining its original screen result.
+
+The two longer proteins A0A7J6DP00 and A0A7J6F905 have b5 and desaturase domain
+annotations. Their human Δ6 catalytic-region alignments fail the existing identity
+threshold. In contrast, both pass full-length comparison to Arabidopsis SLD1/SLD2
+with 64.6–71.7% identity and at least 99.3% reference coverage. These support a
+competing sphingolipid Δ8 hypothesis, not an exact Δ6 acyl-CoA reaction assignment.
+The Δ8 catalog families have four not-auditable directional records and no
+accepted balanced equations in the pinned full network.
+
+The RDKit amide-linked amino-triol topology screen retains all 6,220 target records
+and screens 6,203 exact structures; none match that deliberately limited motif.
+This does not establish absence of sphingolipids in Cannabis. Specific lipid
+identities, complete electron-transfer reactants, and experimental substrate/E–Z
+specificity remain unresolved. No pathway count or historical target identity is
+changed by this evidence batch.

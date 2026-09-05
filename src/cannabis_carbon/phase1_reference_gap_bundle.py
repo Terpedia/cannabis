@@ -16,9 +16,9 @@ SOURCES = (
 )
 
 
-def build():
+def build(sources=SOURCES):
     documents = []
-    for name in SOURCES:
+    for name in sources:
         payload = Path(name).read_bytes()
         document = json.loads(payload)
         for path, digest in document.get('source_sha256', {}).items():
@@ -34,11 +34,11 @@ def build():
             'interconversion do not close exact Cannabis reaction gaps. Historical balanced network and atom tracing unchanged.'}
 
 
-def run():
-    report = build()
-    path = Path('data/reports/phase1-reference-gap-bundle.json')
+def run(sources=SOURCES, name='reference-gap-bundle'):
+    report = build(sources)
+    path = Path('data/reports/phase1-' + name + '.json')
     path.write_text(json.dumps(report, separators=(',', ':')) + '\n')
-    Path('docs/data/reference-gap-bundle.json').write_bytes(path.read_bytes())
+    Path('docs/data/' + name + '.json').write_bytes(path.read_bytes())
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
     rows = [{'record_kind': 'source_document', 'record_id': d['source_path'],
              'record_json': json.dumps(d, separators=(',', ':')), 'report_sha256': digest}
@@ -46,7 +46,7 @@ def run():
     rows.append({'record_kind': 'metadata', 'record_id': 'report',
                  'record_json': json.dumps({k: v for k, v in report.items() if k != 'documents'}, separators=(',', ':')),
                  'report_sha256': digest})
-    Path('data/derived/phase1-reference-gap-bundle.ndjson').write_text(
+    Path('data/derived/phase1-' + name + '.ndjson').write_text(
         ''.join(json.dumps(row, separators=(',', ':')) + '\n' for row in rows))
     print(json.dumps({'records': len(rows), 'sha256': digest}))
 

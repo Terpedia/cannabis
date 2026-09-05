@@ -9,15 +9,15 @@ from pathlib import Path
 from .phase1_new_references import attach
 
 
-def run():
-    source = Path('data/reports/phase1-missing-reference-review.json')
+def run(source=Path('data/reports/phase1-missing-reference-review.json'),
+        prefix='phase1-nonplant-reference'):
     parent = json.loads(source.read_text())
     rows = copy.deepcopy(parent['rows'])
     masters = sorted({f['RHEA_ID_MASTER'] for r in rows for f in r['rhea_families'].values()})
     query = '(' + ' OR '.join('cc_catalytic_activity:"' + m.lower() + '"' for m in masters) + ') AND NOT taxonomy_id:33090 AND reviewed:false AND fragment:false'
     url = 'https://rest.uniprot.org/uniprotkb/stream?' + urllib.parse.urlencode({'query': query,
         'format': 'tsv', 'fields': 'accession,rhea,organism_name,protein_name'})
-    raw = Path('data/raw/phase1-nonplant-reference-review'); raw.mkdir(parents=True, exist_ok=True)
+    raw = Path('data/raw/' + prefix + '-review'); raw.mkdir(parents=True, exist_ok=True)
     snapshot, cache = raw / 'nonplant-unreviewed.tsv', raw / 'lookup.json'
     if not cache.exists():
         with urllib.request.urlopen(url, timeout=45) as response:
@@ -43,7 +43,7 @@ def run():
         'summary': {'equation_gaps': len(rows), 'unreviewed_nonplant_reference_records': len(proteins),
             'equations_with_reference_leads': sum(bool(r['reference_matches']) for r in rows)},
         'claim_boundary': 'Exact Rhea-family query of unreviewed nonfragment sequences outside Viridiplantae. No name-only joins, no Cannabis activity claim, no negative inference of enzyme absence. Primary literature may identify enzyme-independent chemistry; no model change is authorized by missing annotation alone.'}
-    Path('data/reports/phase1-nonplant-reference-review.json').write_text(json.dumps(report, separators=(',', ':')) + '\n')
+    Path('data/reports/' + prefix + '-review.json').write_text(json.dumps(report, separators=(',', ':')) + '\n')
     print(json.dumps(report['summary']), flush=True)
 
 

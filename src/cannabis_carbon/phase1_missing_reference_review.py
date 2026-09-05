@@ -10,27 +10,29 @@ from .phase1_new_references import attach
 from .phase1_new_protein_search import run as screen, export_table
 
 
-def prepare(discovery, search):
-    absent = {r['reaction_id']: r for r in search['rows'] if r['search_status'] == 'no-reference-sequence' and not r['reference_matches']}
+def prepare(discovery, search, followup_statuses=None):
+    absent = {r['reaction_id']: r for r in search['rows'] if
+              (r['search_status'] in followup_statuses if followup_statuses is not None else
+               r['search_status'] == 'no-reference-sequence' and not r['reference_matches'])}
     rows = [copy.deepcopy(r) for r in discovery['rows'] if r['reaction_id'] in absent]
     for row in rows:
         row['prior_reviewed_search'] = copy.deepcopy(absent[row['reaction_id']])
     return rows
 
 
-def run():
+def run(prefix='phase1-missing-reference', followup_statuses=None):
     paths = [Path('data/reports', n + '.json') for n in ('phase1-remaining-gap-references', 'phase1-remaining-gap-search')]
     discovery, search = [json.loads(p.read_text()) for p in paths]
     if hashlib.sha256(paths[0].read_bytes()).hexdigest() != search['source_discovery_sha256']:
         raise ValueError('Prior discovery lineage changed')
-    rows = prepare(discovery, search)
+    rows = prepare(discovery, search, followup_statuses)
     masters = sorted({f['RHEA_ID_MASTER'] for row in rows for f in row['rhea_families'].values()})
     if not masters:
         raise ValueError('No missing reviewed reaction families')
     query = '(' + ' OR '.join('cc_catalytic_activity:"' + m.lower() + '"' for m in masters) + ') AND taxonomy_id:33090 AND reviewed:false AND fragment:false'
     url = 'https://rest.uniprot.org/uniprotkb/stream?' + urllib.parse.urlencode({'query': query,
         'format': 'tsv', 'fields': 'accession,rhea,organism_name,protein_name'})
-    raw = Path('data/raw/phase1-missing-reference-review'); raw.mkdir(parents=True, exist_ok=True)
+    raw = Path('data/raw/' + prefix + '-review'); raw.mkdir(parents=True, exist_ok=True)
     snapshot, cache = raw / 'plant-unreviewed.tsv', raw / 'lookup.json'
     if not cache.exists():
         with urllib.request.urlopen(url, timeout=45) as response:
@@ -55,14 +57,14 @@ def run():
         'summary': {'equation_gaps': len(rows), 'unreviewed_plant_reference_records': len(proteins),
             'equations_with_reference_leads': sum(bool(r['reference_matches']) for r in rows)},
         'claim_boundary': 'Unreviewed nonfragment Viridiplantae annotations only, joined through exact published Rhea families. Prior negative reviewed searches retained. Not characterized reference activity, Cannabis activity, physiological direction, or proof of absence. Atom tracing deferred.'}
-    output = Path('data/reports/phase1-missing-reference-review.json')
+    output = Path('data/reports/' + prefix + '-review.json')
     output.write_text(json.dumps(report, separators=(',', ':')) + '\n')
     print(json.dumps(report['summary']), flush=True)
     if any(row['reference_matches'] for row in rows):
-        result = Path('data/reports/phase1-missing-reference-search.json')
+        result = Path('data/reports/' + prefix + '-search.json')
         screen(output, raw, result, evidence_class='unreviewed-plant-reference-homology-candidate',
             additional_blockers=('unreviewed-reference-activity-unverified',), claim_boundary=report['claim_boundary'])
-        export_table(result, Path('data/derived/phase1-missing-reference-search.ndjson'))
+        export_table(result, Path('data/derived/' + prefix + '-search.ndjson'))
 
 
 if __name__ == '__main__':
