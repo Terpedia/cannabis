@@ -1,0 +1,26 @@
+{
+  "query": "SELECT ?s ?p ?o WHERE { VALUES ?s { <http://rdf.rhea-db.org/80639> <http://rdf.rhea-db.org/81371> <http://rdf.rhea-db.org/81423> <http://rdf.rhea-db.org/81539> <http://rdf.rhea-db.org/82251> <http://rdf.rhea-db.org/82259> <http://rdf.rhea-db.org/82355> <http://rdf.rhea-db.org/83923> <http://rdf.rhea-db.org/84307> <http://rdf.rhea-db.org/85351> <http://rdf.rhea-db.org/86123> <http://rdf.rhea-db.org/86571> <http://rdf.rhea-db.org/86771> <http://rdf.rhea-db.org/86775> <http://rdf.rhea-db.org/87087> <http://rdf.rhea-db.org/87351> } ?s ?p ?o } ORDER BY ?s ?p ?o",
+  "url": "https://sparql.rhea-db.org/sparql?query=SELECT+%3Fs+%3Fp+%3Fo+WHERE+%7B+VALUES+%3Fs+%7B+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F80639%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F81371%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F81423%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F81539%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F82251%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F82259%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F82355%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F83923%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F84307%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F85351%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F86123%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F86571%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F86771%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F86775%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F87087%3E+%3Chttp%3A%2F%2Frdf.rhea-db.org%2F87351%3E+%7D+%3Fs+%3Fp+%3Fo+%7D+ORDER+BY+%3Fs+%3Fp+%3Fo&format=json",
+  "requested_master_ids": [
+    "RHEA:80639",
+    "RHEA:81371",
+    "RHEA:81423",
+    "RHEA:81539",
+    "RHEA:82251",
+    "RHEA:82259",
+    "RHEA:82355",
+    "RHEA:83923",
+    "RHEA:84307",
+    "RHEA:85351",
+    "RHEA:86123",
+    "RHEA:86571",
+    "RHEA:86771",
+    "RHEA:86775",
+    "RHEA:87087",
+    "RHEA:87351"
+  ],
+  "snapshot": "data/raw/phase1-gap-annotations/c41628b2ac7942e16f66f4426be00b0481a8fd3764ff6a6e698cf2a999861cb2.response.json",
+  "sha256": "3792d87db0bf5bc5b2e59e2688a2fd92808468c2a5702bedb88e6068d7bf92e6",
+  "retrieved_at": "2026-09-05T04:38:29.961672+00:00",
+  "status": "retrieved"
+}

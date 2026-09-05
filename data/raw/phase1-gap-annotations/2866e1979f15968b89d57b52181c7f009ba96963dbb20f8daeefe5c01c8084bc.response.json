@@ -1,0 +1,6388 @@
+{
+  "head" : {
+    "vars" : [
+      "s",
+      "p",
+      "o"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:50716"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50719"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/15661012"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/27392454"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50717"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50718"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/ec"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://purl.uniprot.org/enzyme/1.14.14.35"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "dimethyl sulfone + FMNH2 + O2 = methanesulfinate + FMN + formaldehyde + H2O + 2 H(+)"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "dimethyl sulfone + FMNH<small><sub>2</sub></small> + O<small><sub>2</sub></small> = methanesulfinate + FMN + formaldehyde + H<small><sub>2</sub></small>O + 2 H<small><sup>+</sup></small>"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "50716"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "dimethyl sulfone + FMNH2 + O2 = methanesulfinate + FMN + formaldehyde + H2O + 2 H(+)"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50716"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:50720"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50723"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/27392454"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50721"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50722"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/ec"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://purl.uniprot.org/enzyme/1.14.14.35"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "methanesulfinate + FMNH2 + O2 = methanesulfonate + FMN + H2O + H(+)"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "methanesulfinate + FMNH<small><sub>2</sub></small> + O<small><sub>2</sub></small> = methanesulfonate + FMN + H<small><sub>2</sub></small>O + H<small><sup>+</sup></small>"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "50720"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#comment"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "Methanesulfinate is oxidized spontaneously to methanesulfonate in the presence of dioxygen and FMNH2."
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "methanesulfinate + FMNH2 + O2 = methanesulfonate + FMN + H2O + H(+)"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/50720"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:51192"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51195"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/19935646"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51193"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51194"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "(R)-2-hydroxyglutarate + NADP(+) = 2-oxoglutarate + NADPH + H(+)"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "(<i>R</i>)-2-hydroxyglutarate + NADP<small><sup>+</sup></small> = 2-oxoglutarate + NADPH + H<small><sup>+</sup></small>"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "51192"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "(R)-2-hydroxyglutarate + NADP(+) = 2-oxoglutarate + NADPH + H(+)"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#seeAlso"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://purl.obolibrary.org/obo/GO_0051990"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/38295"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52308"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51192"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:51532"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51535"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/23760935"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51533"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51534"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "urate + NADPH + O2 + H(+) = 5-hydroxyisourate + NADP(+) + H2O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "urate + NADPH + O<small><sub>2</sub></small> + H<small><sup>+</sup></small> = 5-hydroxyisourate + NADP<small><sup>+</sup></small> + H<small><sub>2</sub></small>O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "51532"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "urate + NADPH + O2 + H(+) = 5-hydroxyisourate + NADP(+) + H2O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51532"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:51624"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51627"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/1460049"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/24827372"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/7568012"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/8381402"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/9305874"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51625"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51626"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "formate + GTP + H(+) = dGTP + CO2 + H2O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "formate + GTP + H<small><sup>+</sup></small> = dGTP + CO<small><sub>2</sub></small> + H<small><sub>2</sub></small>O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "51624"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "formate + GTP + H(+) = dGTP + CO2 + H2O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51476"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51624"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:52408"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52411"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/27402745"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52409"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52410"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/ec"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://purl.uniprot.org/enzyme/1.1.1.409"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "4-phospho-D-erythronate + NAD(+) = dihydroxyacetone phosphate + CO2 + NADH"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "4-phospho-<small>D</small>-erythronate + NAD<small><sup>+</sup></small> = dihydroxyacetone phosphate + CO<small><sub>2</sub></small> + NADH"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "52408"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#comment"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "Multi-step reaction: RHEA:52412 and RHEA:52416"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "4-phospho-D-erythronate + NAD(+) = dihydroxyacetone phosphate + CO2 + NADH"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52408"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:52708"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52711"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/27941785"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52709"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52710"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "GMP + H2O = guanine + D-ribose 5-phosphate"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "GMP + H<small><sub>2</sub></small>O = guanine + <small>D</small>-ribose 5-phosphate"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "52708"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "GMP + H2O = guanine + D-ribose 5-phosphate"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52708"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:52712"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52715"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/27941785"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52713"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52714"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "dTMP + H2O = 2-deoxy-D-ribose 5-phosphate + thymine"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "dTMP + H<small><sub>2</sub></small>O = 2-deoxy-<small>D</small>-ribose 5-phosphate + thymine"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "52712"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "dTMP + H2O = 2-deoxy-D-ribose 5-phosphate + thymine"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57852"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/52712"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54528"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:54528"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54528"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54531"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54528"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54529"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54528"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54530"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54528"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "aldehydo-D-ribose 5-phosphate = D-ribose 5-phosphate"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54528"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "<i>aldehydo</i>-<small>D</small>-ribose 5-phosphate = <small>D</small>-ribose 5-phosphate"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54528"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "54528"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54528"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54528"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54528"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54528_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54528"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54528_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54528"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54528"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54528"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "aldehydo-D-ribose 5-phosphate = D-ribose 5-phosphate"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54528"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:54692"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54695"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/26814669"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54693"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54694"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/ec"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://purl.uniprot.org/enzyme/5.5.1.30"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "(2E,6E,10E)-geranylgeranyl diphosphate = (13E)-labda-7,13-dien-15-yl diphosphate"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "(2<i>E</i>,6<i>E</i>,10<i>E</i>)-geranylgeranyl diphosphate = (13<i>E</i>)-labda-7,13-dien-15-yl diphosphate"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "54692"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "(2E,6E,10E)-geranylgeranyl diphosphate = (13E)-labda-7,13-dien-15-yl diphosphate"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54692"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:54828"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54831"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/28304370"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/3624236"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/4389011"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/4401380"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54829"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54830"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/ec"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://purl.uniprot.org/enzyme/1.14.13.238"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "dimethylamine + NADPH + O2 + H(+) = methylamine + formaldehyde + NADP(+) + H2O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "dimethylamine + NADPH + O<small><sub>2</sub></small> + H<small><sup>+</sup></small> = methylamine + formaldehyde + NADP<small><sup>+</sup></small> + H<small><sub>2</sub></small>O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "54828"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "dimethylamine + NADPH + O2 + H(+) = methylamine + formaldehyde + NADP(+) + H2O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:54844"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54847"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/26771671"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54845"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54846"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "hexan-3-one + NADPH + O2 + H(+) = ethyl butanoate + NADP(+) + H2O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "hexan-3-one + NADPH + O<small><sub>2</sub></small> + H<small><sup>+</sup></small> = ethyl butanoate + NADP<small><sup>+</sup></small> + H<small><sub>2</sub></small>O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "54844"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "hexan-3-one + NADPH + O2 + H(+) = ethyl butanoate + NADP(+) + H2O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54844"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:54856"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54859"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/26771671"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54857"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54858"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "octan-3-one + NADPH + O2 + H(+) = ethyl hexanoate + NADP(+) + H2O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "octan-3-one + NADPH + O<small><sub>2</sub></small> + H<small><sup>+</sup></small> = ethyl hexanoate + NADP<small><sup>+</sup></small> + H<small><sub>2</sub></small>O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "54856"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#comment"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "See also RHEA:54841"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "octan-3-one + NADPH + O2 + H(+) = ethyl hexanoate + NADP(+) + H2O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/54856"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:55368"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55371"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/24591617"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/25440057"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/32694223"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/8000862"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55369"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55370"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/ec"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://purl.uniprot.org/enzyme/1.14.13.239"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "(R)-carnitine + NADPH + O2 + H(+) = (3R)-3-hydroxy-4-oxobutanoate + trimethylamine + NADP(+) + H2O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "(<i>R</i>)-carnitine + NADPH + O<small><sub>2</sub></small> + H<small><sup>+</sup></small> = (3<i>R</i>)-3-hydroxy-4-oxobutanoate + trimethylamine + NADP<small><sup>+</sup></small> + H<small><sub>2</sub></small>O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "55368"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "(R)-carnitine + NADPH + O2 + H(+) = (3R)-3-hydroxy-4-oxobutanoate + trimethylamine + NADP(+) + H2O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55368"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:55540"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55543"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/1336937"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/21538750"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/2784670"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/2851977"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/3223922"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/8424785"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55541"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55542"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/ec"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://purl.uniprot.org/enzyme/1.18.6.2"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "N2 + 12 reduced [2Fe-2S]-[ferredoxin] + 40 ATP + 40 H2O = 3 H2 + 12 oxidized [2Fe-2S]-[ferredoxin] + 2 NH4(+) + 40 ADP + 40 phosphate + 26 H(+)"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "N<small><sub>2</sub></small> + 12 reduced [2Fe-2S]-[ferredoxin] + 40 ATP + 40 H<small><sub>2</sub></small>O = 3 H<small><sub>2</sub></small> + 12 oxidized [2Fe-2S]-[ferredoxin] + 2 NH<small><sub>4</sub></small><small><sup>+</sup></small> + 40 ADP + 40 phosphate + 26 H<small><sup>+</sup></small>"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "55540"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "N2 + 12 reduced [2Fe-2S]-[ferredoxin] + 40 ATP + 40 H2O = 3 H2 + 12 oxidized [2Fe-2S]-[ferredoxin] + 2 NH4(+) + 40 ADP + 40 phosphate + 26 H(+)"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/55540"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:56060"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56063"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/28860382"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/37000872"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56061"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56062"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/ec"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://purl.uniprot.org/enzyme/4.1.1.106"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "hnu + hexadecanoate + H(+) = pentadecane + CO2"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "h&#957; + hexadecanoate + H<small><sup>+</sup></small> = pentadecane + CO<small><sub>2</sub></small>"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "56060"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "hnu + hexadecanoate + H(+) = pentadecane + CO2"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/18969"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56060"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:56272"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56275"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/24034209"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/24816778"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56273"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56274"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "4 Fe(III)-[cytochrome cL] + methanol + H2O = 4 Fe(II)-[cytochrome cL] + formate + 5 H(+)"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "4 Fe(<small>III</small>)-[cytochrome <i>c</i><small><sub>L</sub></small>] + methanol + H<small><sub>2</sub></small>O = 4 Fe(<small>II</small>)-[cytochrome <i>c</i><small><sub>L</sub></small>] + formate + 5 H<small><sup>+</sup></small>"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "56272"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "4 Fe(III)-[cytochrome cL] + methanol + H2O = 4 Fe(II)-[cytochrome cL] + formate + 5 H(+)"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56272"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:56428"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56431"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/18614531"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56429"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56430"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "1,2-di-(9Z,12Z-octadecadienoyl)-sn-glycero-3-phosphocholine + H2O = 1-(9Z,12Z)-octadecadienoyl-sn-glycero-3-phosphocholine + (9Z,12Z)-octadecadienoate + H(+)"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "1,2-di-(9<i>Z</i>,12<i>Z</i>-octadecadienoyl)-<i>sn</i>-glycero-3-phosphocholine + H<small><sub>2</sub></small>O = 1-(9<i>Z</i>,12<i>Z</i>)-octadecadienoyl-<i>sn</i>-glycero-3-phosphocholine + (9<i>Z</i>,12<i>Z</i>)-octadecadienoate + H<small><sup>+</sup></small>"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "56428"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "1,2-di-(9Z,12Z-octadecadienoyl)-sn-glycero-3-phosphocholine + H2O = 1-(9Z,12Z)-octadecadienoyl-sn-glycero-3-phosphocholine + (9Z,12Z)-octadecadienoate + H(+)"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#seeAlso"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://purl.obolibrary.org/obo/GO_0004623"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/40643"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56428"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:56760"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56763"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/10430874"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56761"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56762"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "24,25-dihydrolanosterol + 6 reduced [2Fe-2S]-[ferredoxin] + 3 O2 + 5 H(+) = 4,4-dimethyl-8,14-cholestadien-3beta-ol + formate + 6 oxidized [2Fe-2S]-[ferredoxin] + 4 H2O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "24,25-dihydrolanosterol + 6 reduced [2Fe-2S]-[ferredoxin] + 3 O<small><sub>2</sub></small> + 5 H<small><sup>+</sup></small> = 4,4-dimethyl-8,14-cholestadien-3&#946;-ol + formate + 6 oxidized [2Fe-2S]-[ferredoxin] + 4 H<small><sub>2</sub></small>O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "56760"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "24,25-dihydrolanosterol + 6 reduced [2Fe-2S]-[ferredoxin] + 3 O2 + 5 H(+) = 4,4-dimethyl-8,14-cholestadien-3beta-ol + formate + 6 oxidized [2Fe-2S]-[ferredoxin] + 4 H2O"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56752"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/56760"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:57128"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57131"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/7827040"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/8188594"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57129"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57130"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "2 oxidized [azurin] + tyramine + H2O = 2 reduced [azurin] + (4-hydroxyphenyl)acetaldehyde + NH4(+) + 2 H(+)"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "2 oxidized [azurin] + tyramine + H<small><sub>2</sub></small>O = 2 reduced [azurin] + (4-hydroxyphenyl)acetaldehyde + NH<small><sub>4</sub></small><small><sup>+</sup></small> + 2 H<small><sup>+</sup></small>"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "57128"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "2 oxidized [azurin] + tyramine + H2O = 2 reduced [azurin] + (4-hydroxyphenyl)acetaldehyde + NH4(+) + 2 H(+)"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#seeAlso"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://purl.obolibrary.org/obo/GO_0030059"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/47796"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57128"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:57168"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57171"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/15070399"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/23334546"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57169"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57170"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "(R)-2-hydroxyglutarate + FAD + H(+) = FADH2 + 2-oxoglutarate"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "(<i>R</i>)-2-hydroxyglutarate + FAD + H<small><sup>+</sup></small> = FADH<small><sub>2</sub></small> + 2-oxoglutarate"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "57168"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "(R)-2-hydroxyglutarate + FAD + H(+) = FADH2 + 2-oxoglutarate"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#seeAlso"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://purl.obolibrary.org/obo/GO_0051990"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/25261"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/38295"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57168"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:57424"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57427"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/29950589"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57425"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57426"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "guaiacol + reduced [NADH--hemoprotein reductase] + O2 = oxidized [NADH--hemoprotein reductase] + catechol + formaldehyde + H2O + H(+)"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "guaiacol + reduced [NADH&#8212;hemoprotein reductase] + O<small><sub>2</sub></small> = oxidized [NADH&#8212;hemoprotein reductase] + catechol + formaldehyde + H<small><sub>2</sub></small>O + H<small><sup>+</sup></small>"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "57424"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "guaiacol + reduced [NADH--hemoprotein reductase] + O2 = oxidized [NADH--hemoprotein reductase] + catechol + formaldehyde + H2O + H(+)"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57424"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:57816"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57819"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/17234634"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57817"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57818"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "dGMP + H2O = 2-deoxy-D-ribose 5-phosphate + guanine"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "dGMP + H<small><sub>2</sub></small>O = 2-deoxy-<small>D</small>-ribose 5-phosphate + guanine"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "57816"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "dGMP + H2O = 2-deoxy-D-ribose 5-phosphate + guanine"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51132"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57816"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:57828"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57831"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/17234634"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57829"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57830"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "dIMP + H2O = 2-deoxy-D-ribose 5-phosphate + hypoxanthine"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "dIMP + H<small><sub>2</sub></small>O = 2-deoxy-<small>D</small>-ribose 5-phosphate + hypoxanthine"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "57828"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "dIMP + H2O = 2-deoxy-D-ribose 5-phosphate + hypoxanthine"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/51132"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/57828"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/accession"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "RHEA:58068"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/bidirectionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58071"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/10702906"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/16944125"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/17516050"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/citation"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.ncbi.nlm.nih.gov/pubmed/23391906"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58069"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/directionalReaction"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58070"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/ec"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://purl.uniprot.org/enzyme/1.13.11.88"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/equation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "(E)-isoeugenol + O2 = vanillin + acetaldehyde"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/htmlEquation"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "(<i>E</i>)-isoeugenol + O<small><sub>2</sub></small> = vanillin + acetaldehyde"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#long",
+          "type" : "literal",
+          "value" : "58068"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isChemicallyBalanced"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/isTransport"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068_L"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/side"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068_R"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/status"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Approved"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#Class"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#label"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "(E)-isoeugenol + O2 = vanillin + acetaldehyde"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/58068"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://rdf.rhea-db.org/Reaction"
+        }
+      }
+    ]
+  }
+}

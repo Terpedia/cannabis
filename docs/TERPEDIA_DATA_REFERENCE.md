@@ -1691,6 +1691,42 @@ the report does not use atom order or an unbounded MCS to fill gaps.
 
 ## Phase 1 balance gate
 
+### Remaining catalog-gap source annotation audit (2026-09-04)
+
+`data/reports/phase1-gap-annotations.json` audits all **349** equations still
+missing candidate evidence after the combined catalog/backfill supplement.
+It joins exact source reaction IDs through the pinned, published Rhea
+direction-family table, then preserves complete source triples from 14
+checksummed Rhea SPARQL responses for 341 master reactions.
+
+- 200 equations have a source EC link; Cannabis function remains unresolved.
+- 141 mapped equations have no source EC link; catalysis remains unresolved.
+- 8 equations lack a published source-family mapping.
+- 316 equations have source-linked literature citations available for review.
+
+Missing EC annotations or reference proteins **do not establish spontaneous
+chemistry**. This audit adds no enzyme, spontaneous-reaction, physiological
+direction, or pathway-completion claims. Existing equations, full participant
+lists, evidence and selected certificates remain unchanged. The ranking counts
+membership in selected certificates, not reaction necessity.
+
+The first-ranked gap, RHEA:46952 (EC 1.17.1.11), appears in 181 selected target
+certificates. Its linked primary paper reports an electron-bifurcating formate
+dehydrogenase complex purified from *Clostridium acidurici*, comprising four
+subunits encoded by `hylCBA-fdhF2`; it does not demonstrate Cannabis activity.
+See [Wang et al., 2013](https://pubmed.ncbi.nlm.nih.gov/23872566/).
+Follow-up must review organism, complex assembly, cofactors and measured
+direction, and compare plant-supported alternative routes before treating this
+as a high-priority missing Cannabis gene. A single homolog would not establish
+the complete complex's catalytic capability.
+
+The audit is exported as 705 provenance-preserving records for the versioned
+Terpedia table `cannabis_phase1_gap_annotations_20260904_v1`.
+Raw request metadata and responses are under `data/raw/phase1-gap-annotations/`;
+the module `cannabis_carbon.phase1_gap_annotations` replays cached evidence.
+
+### Working-network balance audit
+
 The Phase 1 audit is stored in
 `data/reports/phase1-balance-audit.json`:
 
