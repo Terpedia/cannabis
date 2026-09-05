@@ -133,6 +133,48 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [candidate-constrained scope and single-gap tests](data/phase1-candidate-scope.json)
+separate chemistry-only connectivity from connectivity through equations with
+attached candidate-enzyme evidence. Of 13,995 balanced equations, 1,472 have
+candidate evidence and 12,523 are excluded in this diagnostic. An annotation or
+homology candidate is not direct activity evidence. Both hypothetical reaction
+directions remain allowed; no physiological reversibility claim is made.
+
+- CO₂ alone: no additional compounds or targets become available.
+- CO₂ plus all 101 carbon-free catalog species: nine additional compounds and
+  one non-seed CannabisDB target (urea, CDB004840) become available. This leaves
+  6,184 carbon-bearing target records blocked, one reachable and CO₂ itself seeded.
+
+This is a **zero-organic-inventory startup diagnostic**, not a model of an
+established plant's steady-state CO₂ assimilation. ATP, NAD(P)H, CoA and other
+organic pools are not silently supplied. Failure to start from these seeds does
+not demonstrate that a living plant cannot synthesize the metabolite. Conversely,
+the permissive carbon-free reservoir and unknown directions mean even the urea
+result does not establish an in-vivo Cannabis pathway. Atom tracing stays deferred.
+
+There are 27 unsupported directed steps whose complete inputs are available and
+whose outputs could expand this candidate-only scope. Each was tested separately
+by temporarily admitting just its one full balanced equation (both hypothetical
+directions), then repeating all-reactant expansion through candidate-linked
+equations. Seven such tests add a target, never more than one per test. Across
+these separate scenarios the additional target identities are uric acid,
+carbon monoxide and hydrogen cyanide; they are not newly established pathways.
+All 27 tests retain the full original source equation, prior screen outcome,
+newly available compounds, target identities and complete prerequisite witnesses.
+No hypothetical rescue is promoted into candidate-enzyme evidence. Curation must
+first determine whether an equation is enzymatic, spontaneous, or a transformation
+rule and assess its direction before deciding on protein-discovery work.
+
+The reactant denominators are 1,626 unique reactants in the candidate-linked
+subnetwork and 11,162 in the full network; neither uses inventory-only nodes.
+All 12,440 target/scenario records, including blocked targets and seeds, remain
+in the report. Reproduce with
+`PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_candidate_scope`.
+The GCP snapshot is
+`terpedia-489015.terpedia_core.cannabis_phase1_candidate_scope_20260904_v1`
+(12,719 records). Existing map evidence filters are unchanged by these
+counterfactual tests; the report is a separate downloadable diagnostic.
+
 The focused Cytoscape map now uses the
 [combined enzyme overlay](data/phase1-combined-enzyme-overlay.json), joining
 the earlier screen and the selected-route screen by exact balanced-equation ID.

@@ -1,0 +1,12 @@
+{
+  "table": "terpedia-489015.terpedia_core.cannabis_phase1_candidate_scope_20260904_v1",
+  "location": "us-central1",
+  "load_job_id": "bqjob_r3afdc6deb43379ee_000001a06f0a9814_1",
+  "source": "data/reports/phase1-candidate-scope.ndjson",
+  "report_sha256": "aa0ea330691aa3fd231ba1f83fff974de56a95ae4fc054eeaa901af487521645",
+  "verified_records_by_kind": {"metadata": 1, "compound": 137, "scenario": 2, "target": 12440, "witness": 112, "frontier": 27},
+  "verified_total_records": 12719,
+  "verified_unique_ids_equal_record_count_in_each_group": true,
+  "verified_min_and_max_report_hash_match_local_report_in_each_group": true,
+  "claim_boundary": "Candidate-constrained qualitative startup and explicitly unsupported single-gap counterfactuals. Not steady-state plant assimilation, confirmed enzyme activity or atom tracing."
+}
