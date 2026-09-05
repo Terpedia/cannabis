@@ -1,0 +1,8 @@
+{
+  "url": "https://rest.uniprot.org/uniprotkb/stream?query=%28organism_id%3A3702%29+AND+%28cc_pathway%3Apurine%29+AND+%28cc_pathway%3A%22de+novo%22%29&format=tsv&fields=accession%2Creviewed%2Cprotein_name%2Cgene_names%2Cec%2Ccc_pathway%2Crhea",
+  "query": "(organism_id:3702) AND (cc_pathway:purine) AND (cc_pathway:\"de novo\")",
+  "fields": "accession,reviewed,protein_name,gene_names,ec,cc_pathway,rhea",
+  "snapshot": "data/raw/phase1-plant-purine-references/arabidopsis.tsv",
+  "sha256": "0959e2d5cb73b45eea81daa86a9fb624207012345040dd1820bf2e20dcb2ab40",
+  "retrieved_at": "2026-09-05T05:25:00.244925+00:00"
+}

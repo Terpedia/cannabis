@@ -1830,6 +1830,56 @@ Terpedia table `cannabis_phase1_gap_annotations_20260904_v1`.
 Raw request metadata and responses are under `data/raw/phase1-gap-annotations/`;
 the module `cannabis_carbon.phase1_gap_annotations` replays cached evidence.
 
+### Plant purine annotation audit and protein hypotheses (2026-09-04)
+
+`data/reports/phase1-plant-purine-references.json` preserves the complete
+24-record response to the explicit Arabidopsis de novo purine UniProt query:
+11 reviewed and 13 unreviewed annotations. This query is a pathway-discovery
+aid, not proof of a complete pathway inventory. Its 13 annotated Rhea families
+join exact balanced Terpedia equations: 10 already have candidate evidence,
+and 3 lacked it. Q9SJ42 has no Rhea annotation and remains explicitly unjoined.
+The source response, query, timestamps and hashes are retained for replay.
+
+The three gaps were absent from earlier selected-certificate search queues.
+This demonstrates a limitation of prioritizing only selected minimum-extent
+routes: alternative plant-pathway reactions can remain unscreened even when
+their equations are present in the catalog.
+
+`data/reports/phase1-plant-purine-search.json` screens all **30,304 Cannabis
+proteins** against all eight gap-reference sequences (all retrieved, all
+unreviewed). Of 31 raw alignments, 16 pass the existing thresholds: at least
+30% identity and 50% coverage of both query and reference. Four distinct
+Cannabis proteins yield six protein–reaction hypotheses:
+
+| Exact Rhea family | Reference-annotated activity | Cannabis candidates |
+| --- | --- | --- |
+| RHEA:16853 | Adenylosuccinate lyase | A0A7J6GQT2; A0A7J6I882 |
+| RHEA:23920 | Adenylosuccinate lyase, second reaction | A0A7J6GQT2; A0A7J6I882 |
+| RHEA:22192 | AICAR formyltransferase | A0A7J6E4V0; A0A7J6HKH3 |
+
+Each hypothesis retains the exact balanced equation, source-family join,
+reference review status, sequence provenance and passing alignment evidence.
+Full participant lists are preserved. Multiple protein records are not counted
+as distinct genes without locus evidence. Homology to an unreviewed reference
+does not establish activity, substrate specificity, direction or compartment
+in Cannabis. The next tests are exact-substrate product assays, controls for
+the reference-annotated activities, and independent localization/cofactor
+assessment; upstream precursor supply still needs pathway analysis.
+
+These are separate discovery reports, not an automatic addition to an existing
+candidate network. **No pathway-completeness count increases in this release.**
+The expanded scenario remains at 108 conditional net target records, and its
+five-direction sensitivity remains at 101; neither establishes physiological
+flux or zero-pool startup. Atom tracing remains deferred.
+
+The reports export 41 annotation-audit records and 33 screen records to
+`terpedia_core.cannabis_phase1_plant_purine_references_20260904_v1` and
+`terpedia_core.cannabis_phase1_plant_purine_search_20260904_v1`, respectively.
+Raw public inputs are under `data/raw/phase1-plant-purine-references/` and
+`data/raw/phase1-plant-purine-search/`. Replay modules have the corresponding
+`cannabis_carbon.phase1_plant_purine_references` and
+`cannabis_carbon.phase1_plant_purine_search` names.
+
 ### Working-network balance audit
 
 The Phase 1 audit is stored in
