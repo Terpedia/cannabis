@@ -1,0 +1,30 @@
+{
+  "schema": "cannabis-dopa-lyase-reference-review-v1",
+  "reaction_id": "balanced-equation:3c44490522137f5f42775897e9261c6ebc4ce2167c8fc33767365ffacf213068",
+  "reference_accession": "Q3IWB0",
+  "model_eligible": false,
+  "claims": [
+    {
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2859959/",
+      "pmid": "17185228",
+      "doi": "10.1016/j.chembiol.2006.11.011",
+      "access_scope": "Indexed primary-article passages about L-DOPA and crystallographic preparation; direct PMC fetch blocked and Europe PMC full-text API returned 404. No full-text or assay-data audit.",
+      "claim": "RsTAL is reported to act on L-DOPA, but the authors explicitly state that these activity data are not shown. Caffeate complexes were prepared by soaking crystals in product-containing solution.",
+      "evidence_class": "reference-activity-reported-without-displayed-assay",
+      "boundary": "Product binding is not turnover evidence. No L-DOPA kinetic constants, reverse activity, or Cannabis activity established here."
+    },
+    {
+      "source_url": "https://www.rcsb.org/structure/2O7D",
+      "access_scope": "Structure entry and primary-citation summary",
+      "claim": "The caffeate-bound RsTAL structure is associated with the same publication. Protein numbering and construct sequence must be aligned before transferring residue positions to UniProt or Cannabis proteins.",
+      "evidence_class": "product-binding-structure"
+    },
+    {
+      "source_url": "https://www.uniprot.org/uniprotkb/Q3IWB0/entry",
+      "access_scope": "UniProt JSON annotation, pinned by the search report",
+      "claim": "The retrieved reference annotation describes tyrosine deamination and lists Rhea 24906; it is not an exact-Rhea annotation for the L-DOPA equation.",
+      "evidence_class": "different-substrate-reference-annotation"
+    }
+  ],
+  "next_test": "Express promising Cannabis aromatic-ammonia-lyase homologs and compare L-DOPA, L-tyrosine and L-phenylalanine turnover with authentic product standards, no-enzyme and inactive-enzyme controls. Confirm caffeate identity and exclude substrate autoxidation. Validate reference L-DOPA activity independently before attributing the exact reaction."
+}

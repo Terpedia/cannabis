@@ -2633,3 +2633,45 @@ neither is it a biochemical assignment of an alternative Cannabis activity.
 The broad discovery, search and domain review remain explicitly ineligible for
 exact-reaction integration. No balanced equation, enzyme assignment, completeness
 count or atom-tracing status changes in this batch.
+
+## L-DOPA lyase experimental leads and substrate-site review
+
+Immutable GCP table:
+`terpedia-489015.terpedia_core.cannabis_phase1_dopa_evidence_bundle_20260905_v1`.
+All six stored records (five documents and metadata) were read back in full and
+matched the local export, with service-account principal and load destination
+verified. Receipt: `data/reports/phase1-dopa-gcp-verification.json`.
+Bundle SHA-256: `8c66f8802402d3b8a04c113e4ed9db01b14de8aa3425a928ab4dff01f0e7ff46`.
+
+`docs/data/dopa-evidence-bundle.json` preserves five complete source documents:
+the literature review, reference discovery, full-proteome screen, sequence-linked
+candidate annotations, and residue-coordinate review. These are experimental
+leads only, not additions to the candidate reaction model.
+
+The exact balanced L-DOPA → trans-caffeate + ammonium gap is
+`balanced-equation:3c44490522137f5f42775897e9261c6ebc4ce2167c8fc33767365ffacf213068`.
+Twelve currently unresolved target records use it in saved chemical-network
+witnesses; this is not a claim of biological necessity or pathway rescue.
+The RsTAL reference Q3IWB0 has reported L-DOPA activity with data not shown;
+product-soaked crystal structures do not independently demonstrate turnover.
+Its retrieved UniProt reaction annotation is for tyrosine, not this exact gap.
+Source URLs, access limitations, and assay recommendations remain in the bundle.
+
+The pinned 30,304-protein Cannabis proteome screen yields nine alignments,
+seven meeting the unchanged homology thresholds. All seven candidates have
+phenylalanine ammonia-lyase annotations, preserved with original evidence.
+Coordinate replay reproduces all nine original alignments and verifies gapped
+sequence slices against the pinned full-length sequences. All seven leads have
+Phe at the position aligned to reference His89: A0A7J6ETV0 F136, A0A7J6EW32 F130,
+A0A7J6F4R2 F130, A0A7J6GDB2 F136, A0A7J6I8V6 F146, A0A7J6I8X2 F128,
+and A0A7J6I9V2 F126. Other annotated reference binding/active sites are mapped
+without discarding gaps or uncovered positions. UniProt numbering is used,
+not assumed PDB construct numbering.
+
+The reference H89F mutagenesis annotation concerns Tyr/Phe specificity.
+Transferring that result to Cannabis L-DOPA activity would be unsupported.
+These local-alignment positions are hypotheses, not validated structural
+equivalences. Assay each lead against L-DOPA, Tyr and Phe with authentic product
+standards and no-enzyme, inactive-enzyme and autoxidation controls; independently
+validate the reference L-DOPA activity. Zero new exact enzyme assignments,
+balanced equations, net-route rescues or atom-tracing claims result from this batch.
