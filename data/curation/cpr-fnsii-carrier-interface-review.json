@@ -1,0 +1,18 @@
+{
+  "schema": "cannabis-cpr-fnsii-carrier-interface-review-v1",
+  "model_eligible": false,
+  "cpr_report": "data/reports/phase1-cpr-annotation-audit.json",
+  "fnsii_review": "data/curation/fnsii-carrier-review.json",
+  "cpr_annotation_master": "RHEA:24040",
+  "cpr_annotation_carriers": ["RHEA-COMP:14627", "RHEA-COMP:14628"],
+  "fnsii_annotation_carriers": ["RHEA-COMP:11964", "RHEA-COMP:11965"],
+  "finding": "CPR annotations represent reduction of P450 heme states, whereas the FNS-II reaction represents reductase-bound flavin donor states. These participant identities are distinct and cannot be canceled as an exact stoichiometric join.",
+  "candidate_accessions": ["A0A7J6E3R3", "A0A7J6ENW9", "A0A7J6GM49"],
+  "evidence_boundary": "All three catalytic annotations are automated. Predicted membrane and flavin-binding features are retained with evidence codes; they do not prove compatibility with an FNS-II lead.",
+  "next_requirements": [
+    "Recover characterized plant CPR reference sequences for an independent full-proteome comparison.",
+    "Reconcile explicit carrier states and electron/proton accounting before constructing a coupled net equation.",
+    "Measure paired P450/CPR turnover with NADPH and authentic products, retaining P450-only, CPR-only and no-NADPH controls."
+  ],
+  "claim_boundary": "No native partnership or net conversion is established. Do not replace carrier identities with free flavin or heme, or infer missing reductase absence from a name-only inventory."
+}

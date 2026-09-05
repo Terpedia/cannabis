@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 def run(name='chalcone'):
-    if name not in ('chalcone', 'flavone', 'fnsii'):
+    if name not in ('chalcone', 'flavone', 'fnsii', 'cpr'):
         raise ValueError('Unknown annotation batch')
     source = Path('data/reports/phase1-' + name + '-search.json')
     search = json.loads(source.read_text())

@@ -2854,3 +2854,45 @@ All seven records (six documents plus metadata) matched the full local export on
 readback, with service-account principal and destination verified.
 Receipt: `data/reports/phase1-fnsii-gcp-verification.json`.
 Bundle SHA-256: `53d18073cf3be95534c31c9d38ef84d238807aa10e8be2666927e431ffbd2a3d`.
+
+## CPR candidates and the unresolved FNS-II carrier interface
+
+`docs/data/cpr-evidence-bundle.json` preserves five complete documents: the
+name-annotation inventory, carrier-interface review, reviewed plant reference
+discovery, independent full-proteome search, and sequence-verified annotations.
+
+The initial literal-name inventory found three Cannabis NADPH–cytochrome P450
+reductase annotations: A0A7J6E3R3 (710 residues), A0A7J6ENW9 (670), and
+A0A7J6GM49 (706). Their EC 1.6.2.4 catalytic annotations are automated;
+membrane/flavin-domain predictions do not demonstrate catalytic partnerships.
+
+An independent DIAMOND screen compared all 30,304 pinned Cannabis proteins
+against all 11 references returned by the archived UniProt query
+`ec:1.6.2.4 AND taxonomy_id:33090 AND reviewed:true AND fragment:false`.
+It retained 113 raw alignments across 11 Cannabis queries. Thirty-three
+alignments passed the existing 30% identity, 50% query/reference coverage and
+1e-5 E-value thresholds; the same three Cannabis accessions passed, each
+against all 11 references. Eight other queries had only below-threshold hits.
+No hit or missing annotation establishes protein presence/absence beyond the
+scope of this pinned proteome and search. Full sequences and all 14 UniProt
+annotation snapshots are preserved with checksums and original evidence codes.
+
+The carrier mismatch is explicit: CPR RHEA:24040 uses P450 heme carrier states
+RHEA-COMP:14627/14628, whereas FNS-II uses reductase-bound flavin states
+RHEA-COMP:11964/11965. These are not identical participants and cannot simply
+be canceled to construct an exact coupled net equation. No free flavin or
+organic seed is introduced. All candidate partnership lists remain empty and
+marked unverified, not incompatible.
+
+Next requirements are explicit carrier/electron/proton reconciliation and
+paired P450/CPR assays with NADPH, authentic products, P450-only, CPR-only and
+no-NADPH controls. This evidence does not assign Cannabis FNS-II function or
+close either remaining exact flavonoid pathway gap. The balanced model,
+completeness metrics and deferred atom tracing are unchanged.
+
+Immutable GCP table:
+`terpedia-489015.terpedia_core.cannabis_phase1_cpr_evidence_bundle_20260905_v1`.
+All six records (five documents plus metadata) matched the complete local
+export, with service-account principal and destination verified.
+Receipt: `data/reports/phase1-cpr-gcp-verification.json`.
+Bundle SHA-256: `57f2bc9af8cf9ffe527e7058a1fa67c89e9f5c505e23010d90ce52779a69fa56`.
