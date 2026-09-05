@@ -133,6 +133,36 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The [multi-reaction net-conversion explorer](net.html) now renders the complete
+selected net-conversion certificate in static Cytoscape, or one selected reaction.
+It retains all 6,220 target records, including gaps, and offers a certificate-only
+filter for the 101 target records with net solutions. Default selection is a
+certified limonene record; `?target=CDB…` can select another exact record.
+Search and target selection preserve CannabisDB IDs instead of merging labels.
+
+Compounds are nodes. Directed arrows project each full reaction's input/output
+pairs; they are **not additional reactions, atom-flow claims, or an execution
+order**. The view reports compound, directed-reaction and projection counts
+separately. Each edge retains the full required inputs, outputs, coefficients,
+relative extent, reaction ID, evidence IDs and candidate protein identifiers.
+Selecting an edge or reaction exposes its full equation, source links and
+unaltered evidence records. Zero-net internal participants are distinguished
+from net inputs and products and can be highlighted without hiding any species.
+The full certificate balance remains visible even while focusing on one step.
+
+The [graph manifest](data/net-view/index.json) pins the net report and all three
+source evidence catalogs by checksum. Its ~6.7 MB uncompressed bundle contains
+229 referenced evidence records, exact equations, certificates and target
+statuses. It is generated with
+`PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_net_view`.
+Client requests revalidate the manifest and version the bundle URL by checksum.
+Automated checks cover every projected certificate, source fidelity, no omitted
+participants, reaction focus, pool highlighting, gaps, retry behavior and manifest
+path restrictions. No browser visual QA was requested for this release.
+The underlying scientific report remains the verified GCP net-flux snapshot;
+this display layer adds no new reaction, enzyme, startup or physiological claim.
+Atom tracing remains deferred.
+
 The [candidate-linked net-conversion audit](data/phase1-candidate-net-flux.json)
 tests a different question from zero-pool startup: can candidate-linked balanced
 equations make a target with CO₂ as the only net carbon input while fully
@@ -181,8 +211,8 @@ reproduce with `PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_net_
 The report records the SciPy version and input checksums. The GCP snapshot is
 `terpedia-489015.terpedia_core.cannabis_phase1_candidate_net_flux_20260904_v1`
 (6,853 records: 6,220 targets, 100 certificates, 211 reactions, 321 compounds,
-and one metadata record). This release adds a downloadable net-conversion report;
-it does not replace the map's existing one-step view or its evidence labels.
+and one metadata record). The net-conversion explorer above displays this report
+alongside, rather than replacing, the existing one-step map and evidence labels.
 
 The [candidate-constrained scope and single-gap tests](data/phase1-candidate-scope.json)
 separate chemistry-only connectivity from connectivity through equations with
