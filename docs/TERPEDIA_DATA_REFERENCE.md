@@ -1693,6 +1693,32 @@ the report does not use atom order or an unbounded MCS to fill gaps.
 
 ### Re-solved expanded candidate network (2026-09-04)
 
+**Joint direction sensitivity:** disabling only the five reverse orientations
+identified below, while keeping their source-written orientations and all
+other candidate reactions available, yields **101** target certificates rather
+than 108. None of the seven added targets retains a certificate; each is
+solver-reported infeasible and no alternative was found. All 100 original
+structure witnesses (101 target records) are preserved unchanged because none
+uses a forbidden step. This is a model sensitivity result, not proof that the
+reverse chemistry is impossible or that the seven metabolites are absent.
+
+The audit reconsiders all 6,220 targets in the 1,588-equation candidate network.
+There are 3,171 allowed directed steps after five are disabled, involving 1,667
+distinct allowed reactant compounds. The target results are 101 certificates,
+187 solver-reported infeasible, 5,897 without a producing candidate equation,
+and 35 explicit exchange species. Target coverage and the reactant-compound
+denominator are separate metrics. CO2 and the explicit carbon-free reservoir
+are unchanged; no new organic seeds, thermodynamic constraints or atom traces
+are introduced. Other reaction directions remain permissive hypotheses.
+
+`data/reports/phase1-direction-sensitivity.json` records every target result,
+the five precise forbidden step IDs and their review links, and references to
+unchanged certificates in the expanded report. Terpedia stores 6,226 records in
+`terpedia_core.cannabis_phase1_direction_sensitivity_20260904_v1`. This report
+does not replace the unrestricted expanded map. Follow-up priorities are
+direction-specific assays and alternative plant-supported reactions, not
+further promotion of the unrestricted numerical count.
+
 **Direction review:** all seven newly feasible target certificates use one or
 more of the five newly selected candidate equations opposite to the source's
 written equation. This is a source-orientation comparison through the explicit

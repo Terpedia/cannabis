@@ -28,8 +28,12 @@ def exact_net(steps, extents):
 
 
 class NetModel:
-    def __init__(self, reactions, exchange_ids):
+    def __init__(self, reactions, exchange_ids, forbidden_step_ids=()):
         self.steps = orientations(reactions)
+        forbidden = set(forbidden_step_ids)
+        if not forbidden <= {s['id'] for s in self.steps}:
+            raise ValueError('Unknown forbidden directed step')
+        self.steps = [s for s in self.steps if s['id'] not in forbidden]
         self.exchange_ids = set(exchange_ids)
         self.internal_ids = sorted({m['compound_id'] for s in self.steps for side in ('required_inputs', 'outputs') for m in s[side]} - self.exchange_ids)
         self.index = {c: i for i, c in enumerate(self.internal_ids)}
