@@ -6,6 +6,7 @@ from fractions import Fraction
 from pathlib import Path
 
 import pytest
+import scipy
 from rdkit import Chem
 
 from cannabis_carbon.phase1_replacement_candidate_net import build
@@ -88,7 +89,13 @@ def test_assembly_replay_and_fail_closed_direction_and_annotation_checks(monkeyp
         outcomes[scenario['summary']['allowed_directed_steps']] = rows
     monkeypatch.setattr('cannabis_carbon.phase1_purine_candidate_net.NetModel.solve', lambda self, cid: outcomes[len(self.steps)][cid])
     before = copy.deepcopy(inputs)
-    assert build(*inputs) == {k: v for k, v in report.items() if k != 'source_sha256'}
+    actual = build(*inputs)
+    # Replay uses captured numerical outcomes, but the builder truthfully records
+    # the current runtime. Do not require CI to impersonate the producing host.
+    assert actual['scipy_version'] == scipy.__version__
+    assert report['scipy_version']
+    assert {k: v for k, v in actual.items() if k != 'scipy_version'} == {
+        k: v for k, v in report.items() if k not in ('source_sha256', 'scipy_version')}
     assert inputs == before
     row = next(r for r in inputs[3]['rows'] if 'RHEA:16846' in r['source_reaction_ids'])
     next(s for s in row['sources'] if s['source_reaction_id'] == 'RHEA:16846')['source_left_corresponds_to'] = 'left'
