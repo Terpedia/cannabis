@@ -2806,3 +2806,51 @@ All five records (four documents plus metadata) matched the local export on
 full readback, with service-account principal and destination verified.
 Receipt: `data/reports/phase1-flavone-specificity-gcp-verification.json`.
 Bundle SHA-256: `e04cc3b0ae465dc9d5638c827fcc6fe414371a7dc9ec6a77e6e583bd9ffe5b82`.
+
+## Alternative FNS-II chemistry and full-proteome search
+
+`docs/data/fnsii-evidence-bundle.json` preserves six complete source documents:
+carrier review, Terpedia exclusion audit, reference discovery, full-proteome
+search, sequence-verified annotations, and primary rice-assay review.
+
+Terpedia's pinned Rhea catalog contains RHEA:57681/57682, the directional forms
+of generic FNS-II reaction RHEA:57680 (EC 1.14.19.76). Both remain excluded from
+the exact balanced network. Their flavonoid structures each contain ten generic
+substituent atoms. The source SMILES also represent reactive flavin portions of
+protein-bound reduced/oxidized NADPH-hemoprotein reductase participants
+RHEA-COMP:11964/11965. Those portions must not be treated as free-flavin catalysts
+or silently substituted for the complete carrier context.
+
+The alternative is associated with the unresolved salvigenin and apigenin
+7,4'-dimethyl ether investigations, but is not an exact replacement for the
+2-oxoglutarate-dependent FNS-I equation. Source-direction labels do not establish
+physiological reversibility in Cannabis. Exact substrate/product instantiation,
+compatible reductase partnership, regeneration and compartment evidence remain
+required before a separate balanced scenario could be evaluated.
+
+Three reviewed nonfragment references were recovered: Q0JFI2 (rice), E9KBR8
+(soybean), and Q9XGT9 (Gerbera). Screening all 30,304 pinned Cannabis proteins
+produced 647 alignments, 258 passing the existing thresholds, involving 95
+distinct Cannabis leads. All 98 reference/candidate annotation sequences match
+the searched sequences. Raw weak alignments and complete annotations remain
+available. Leading candidates A0A7J6H3L3 and A0A7J6HB21 have generic P450 names,
+not characterized FNS-II activity. No homology result is assigned to the exact
+FNS-I reaction.
+
+The primary rice study (PMID24843076) is linked through Q0JFI2 and cDNA AK100972.
+Its reviewed methods describe recombinant yeast microsomes with NADPH and report
+naringenin-to-apigenin product identification. They do not resolve assay-substrate
+enantiopurity or identify a separately supplied reductase partner. This evidence
+does not identify a native Cannabis partner; assay additives are not silently
+introduced as network carbon sources. Original assay conditions and the limits
+of the review are retained in the bundle.
+
+All documents remain model-ineligible. No exact reactions, enzyme assignments,
+net-route rescues, completeness increases or atom-tracing changes are claimed.
+
+Immutable GCP table:
+`terpedia-489015.terpedia_core.cannabis_phase1_fnsii_evidence_bundle_20260905_v1`.
+All seven records (six documents plus metadata) matched the full local export on
+readback, with service-account principal and destination verified.
+Receipt: `data/reports/phase1-fnsii-gcp-verification.json`.
+Bundle SHA-256: `53d18073cf3be95534c31c9d38ef84d238807aa10e8be2666927e431ffbd2a3d`.

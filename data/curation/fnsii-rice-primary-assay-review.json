@@ -1,0 +1,34 @@
+{
+  "schema": "cannabis-fnsii-rice-primary-assay-review-v1",
+  "model_eligible": false,
+  "reference_accession": "Q0JFI2",
+  "annotation_snapshot": "data/raw/fnsii-annotations/Q0JFI2.json",
+  "pmid": "24843076",
+  "doi": "10.1104/pp.114.239723",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4081339/",
+  "review_scope": "Indexed primary results and yeast-expression/enzyme-assay methods; supplements and underlying chromatograms not independently reanalyzed",
+  "gene": "CYP93G1",
+  "reported_cdna": "AK100972",
+  "uniprot_linked_protein": "BAG94859.1",
+  "expression": {"host": "Saccharomyces cerevisiae INVSc1", "vector": "pYES2.1/V5-His-TOPO", "preparation": "microsomes"},
+  "assay": {
+    "temperature_C": 30,
+    "duration_min": 30,
+    "potassium_phosphate_mM": 100,
+    "pH": 8.0,
+    "L_glutathione_mM": 2,
+    "NADPH_mM": 5,
+    "substrate_uM": 100,
+    "microsomal_protein_ug": 200
+  },
+  "reported_conversions": [{"substrate": "naringenin", "product": "apigenin"}, {"substrate": "eriodictyol", "product": "luteolin"}],
+  "product_evidence": "Retention time and tandem-mass-spectral comparison with authentic standard support apigenin identification.",
+  "substrate_stereochemistry": "Not resolved by the reviewed methods wording; do not silently assert an enantiopure assay substrate.",
+  "electron_transfer": {
+    "NADPH_supplied": true,
+    "separately_supplied_reductase_named_in_reviewed_methods": false,
+    "native_Cannabis_partner_assigned": false,
+    "boundary": "Microsomal turnover does not identify an endogenous Cannabis electron-transfer partner or establish free-flavin catalysis."
+  },
+  "claim_boundary": "Reference biochemical evidence only. The cDNA cross-reference joins the study to UniProt, not to a fully reconstructed experimental construct. Assay additives are not automatically network reactants or organic carbon seeds. Cannabis specificity, carrier regeneration and physiological flux remain unestablished."
+}

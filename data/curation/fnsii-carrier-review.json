@@ -1,0 +1,17 @@
+{
+  "schema": "cannabis-fnsii-carrier-review-v1",
+  "model_eligible": false,
+  "source_urls": ["https://www.rhea-db.org/rhea/57680", "https://enzyme.expasy.org/EC/1.14.19.76"],
+  "ec": "1.14.19.76",
+  "generic_master_reaction": "RHEA:57680",
+  "source_forward_record": "RHEA:57681",
+  "source_reverse_record": "RHEA:57682",
+  "generic_substrate": "CHEBI:28863",
+  "generic_product": "CHEBI:24043",
+  "reduced_carrier": {"participant": "RHEA-COMP:11964", "reactive_part": "CHEBI:57618"},
+  "oxidized_carrier": {"participant": "RHEA-COMP:11965", "reactive_part": "CHEBI:58210"},
+  "other_stoichiometry": {"oxygen_consumed": 1, "water_produced": 2, "proton_produced": 1},
+  "interpretation": "FNS-II is a cytochrome P450 alternative with reduced/oxidized NADPH-hemoprotein reductase participants. Flavin reactive-part structures do not establish turnover with free flavin. Generic flavonoid substituents do not identify exact naringenin/apigenin chemistry.",
+  "blocking_requirements": ["Exact substrate and product instantiation", "Protein-carrier context", "Compatible electron-transfer partner and regeneration", "Cannabis activity and compartment evidence"],
+  "claim_boundary": "Do not transfer the FNS-I 2-oxoglutarate equation to FNS-II, or infer a physiological reverse reaction from the directional catalog record. No balanced-network inclusion or net-route rescue."
+}
