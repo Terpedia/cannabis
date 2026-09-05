@@ -1,0 +1,26 @@
+{
+  "location": "us-central1",
+  "snapshots": [
+    {
+      "table": "terpedia-489015.terpedia_core.cannabis_phase1_route_enzyme_overlay_20260904_v1",
+      "load_job_id": "bqjob_r6a3b8445f5c6e254_000001a06f0099b2_1",
+      "report_sha256": "347cc3ca1105bf9e5a06837f587cfa79283eba276dfd907f2cfb1f748b359004",
+      "verified_records_by_kind": {"enzyme_evidence": 167, "metadata": 1}
+    },
+    {
+      "table": "terpedia-489015.terpedia_core.cannabis_phase1_combined_enzyme_overlay_20260904_v1",
+      "load_job_id": "bqjob_r417a6955ef58127c_000001a06f00994f_1",
+      "report_sha256": "73004b8d6a19d4263b748995338810dc129ee933872a81c07a9939033e20e45f",
+      "verified_records_by_kind": {"enzyme_evidence": 744, "metadata": 1}
+    },
+    {
+      "table": "terpedia-489015.terpedia_core.cannabis_phase1_route_evidence_status_20260904_v1",
+      "load_job_id": "bqjob_r1c257bc9458c4199_000001a06f0099af_1",
+      "report_sha256": "a46579a2cc7eb2341db13f301e1cc514d1fae8858d65c5836c985d277acb8920",
+      "verified_records_by_kind": {"route": 304, "metadata": 1}
+    }
+  ],
+  "verified_unique_ids_equal_record_count_in_each_group": true,
+  "verified_min_and_max_report_hash_match_local_report_in_each_group": true,
+  "claim_boundary": "Evidence-only joins preserve original chemistry, direction assumptions, seed inventories and biological status. No confirmed pathway or atom tracing claim."
+}

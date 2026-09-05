@@ -66,4 +66,4 @@ def generate(report_path, output, overlay_path=None):
 
 if __name__ == '__main__':
     generate(Path('data/reports/phase1-target-hypotheses.json'), Path('docs/data/hypothesis-view'),
-             Path('data/reports/phase1-screened-enzyme-overlay.json'))
+             Path('data/reports/phase1-combined-enzyme-overlay.json'))

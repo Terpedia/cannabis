@@ -133,6 +133,40 @@ unmodeled co-substrate must not be assigned to an arbitrary reactant carbon.
 
 ## Current completeness baseline
 
+The focused Cytoscape map now uses the
+[combined enzyme overlay](data/phase1-combined-enzyme-overlay.json), joining
+the earlier screen and the selected-route screen by exact balanced-equation ID.
+The combined layer contains 744 screened-equation evidence records: 633 from
+the earlier screen and 111 newly candidate-linked equations present in the
+one-step map. The other 56 newly candidate-linked upstream equations are retained
+in the [full route-screen overlay](data/phase1-route-enzyme-overlay.json), which
+contains all 167 new evidence records. Every record links the correct full
+screen report, all passing alignment IDs, representative alignments, reference
+joins, candidate proteins and validation blockers. Representative alignments
+are not functional rankings.
+
+Candidate filters and edge details now cover 2,740 one-step hypotheses, 217 more
+than the previous map; 17,032 hypotheses still lack candidate evidence. Target
+coverage remains 289 carbon-bearing records with any candidate evidence: these
+additions strengthen alternatives/upstream steps, not new target coverage.
+All 19,772 one-step hypotheses retain their original blocked pathway status,
+full coefficients, required inputs, target identities and direction assumptions.
+
+The [route evidence status overlay](data/phase1-route-evidence-status.json) joins
+the same evidence to all 304 complete prerequisite certificates without
+rewriting their chemistry, finite quantities, seeds or execution assumptions.
+All 304 routes still have missing candidate evidence; 343 distinct selected
+equations remain without it. The first missing enzyme step is recomputed per
+route. Neither this evidence update nor the preserved stoichiometric certificate
+establishes a physiological Cannabis pathway. Atom tracing remains deferred.
+
+Reproduce with `PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_route_overlay`,
+then `PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.phase1_hypothesis_view`.
+The GCP tables in `terpedia-489015.terpedia_core` are
+`cannabis_phase1_route_enzyme_overlay_20260904_v1` (168 records),
+`cannabis_phase1_combined_enzyme_overlay_20260904_v1` (745 records), and
+`cannabis_phase1_route_evidence_status_20260904_v1` (305 records).
+
 The [selected-route whole-proteome screen](data/phase1-route-protein-search.json)
 compares all 30,304 pinned Cannabis proteins against all 11,487 retrieved
 reference sequences (192 successful batches). DIAMOND sensitive search returned
@@ -151,8 +185,8 @@ catalytic residues/domains, compartments and expression remain unverified.
 Each result retains reaction-specific reference annotations, passing alignment
 IDs, full reference and candidate sequences, exact search settings, source hashes,
 weak-hit counts and proposed biochemical tests. The original route certificates
-and Cytoscape evidence layer remain unchanged snapshots; this new report is a
-separate evidence layer pending map integration.
+remain unchanged snapshots. The current map and route-status overlays above
+integrate this screen without rewriting its source evidence or the certificates.
 
 The verified GCP snapshot is
 `terpedia-489015.terpedia_core.cannabis_phase1_route_protein_search_20260904_v1`

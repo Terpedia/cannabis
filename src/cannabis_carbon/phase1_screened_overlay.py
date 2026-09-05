@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 
-def build_overlay(parent, search):
+def build_overlay(parent, search, full_search_report='phase1-new-protein-search.json'):
     reaction_ids = {r['id'] for r in parent['reactions']}
     hypotheses = {h['id']: h for h in parent['hypotheses']}
     alignments = {a['id']: a for a in search['passing_alignments']}
@@ -33,7 +33,7 @@ def build_overlay(parent, search):
             'passing_alignment_ids': row['passing_alignment_ids'], 'reference_matches': row['reference_matches'],
             'screen': search['screen'], 'validation_blockers': row['validation_blockers'],
             'proposed_test': row['proposed_test'],
-            'full_search_report': 'phase1-new-protein-search.json',
+            'full_search_report': full_search_report,
             'alignment_selection': 'Highest bitscore alignment per protein is displayed as a representative, not a functional rank; every passing alignment ID is retained.',
             'claim_boundary': 'Exact balanced-equation identity joins homology evidence to all its target projections. Protein activity, substrate specificity, direction, and CO2 pathways remain unconfirmed.'})
     return {'schema': 'cannabis-carbon.phase1-screened-enzyme-overlay.v1', 'enzyme_evidence': rows,

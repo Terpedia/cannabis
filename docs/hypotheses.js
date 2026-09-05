@@ -166,6 +166,7 @@
         const s = index.summary;
         $('metrics').textContent = `${s.carbon_bearing_target_status_counts['net-production-hypotheses-found']} / ${s.carbon_bearing_target_records} carbon-bearing records have one-step hypotheses · ${s.cannabisdb_records} total records retained · not CO₂ pathway completeness`;
         if (s.carbon_bearing_targets_with_candidate_enzyme_evidence !== undefined) $('metrics').textContent += ` · ${s.carbon_bearing_targets_with_candidate_enzyme_evidence} carbon-bearing targets have candidate enzyme evidence (not confirmed activity)`;
+        if (s.hypotheses_with_candidate_enzyme_evidence !== undefined) $('metrics').textContent += ` · ${s.hypotheses_with_candidate_enzyme_evidence} reaction hypotheses have candidate evidence`;
         const requested = new URLSearchParams(location.search).get('target');
         const initial = index.targets.find(t => t.cannabisdb_id === requested) || index.targets.find(t => t.label.toLowerCase() === 'eugenol' && t.hypothesis_count) || index.targets.find(t => t.hypothesis_count);
         $('targetSearch').value = initial?.cannabisdb_id || ''; search(initial?.cannabisdb_id);
