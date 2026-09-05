@@ -1,0 +1,14 @@
+{
+  "schema": "cannabis-carbon.gcp-batch-verification.v1",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "verified": true,
+  "verification": "Every load completed without error. Exact destination and service-account principal checked for each job. Full SELECT readbacks equal complete local NDJSON record multisets; every report checksum matches and all record-kind/id pairs are unique within each table.",
+  "tables": [
+    {"table": "cannabis_phase1_producer_screen_audit_20260905_v1", "job_id": "cannabis_sa_producer_screen_audit_20260905_v1", "rows": 329, "report_sha256": "3581a2b412f59859f76288afa4d63e73ed99d04664652cda5e27a07c4d279e35"},
+    {"table": "cannabis_phase1_cannabinoid_revalidation_search_20260905_v1", "job_id": "cannabis_sa_cannabinoid_revalidation_search_20260905_v1", "rows": 107, "report_sha256": "ba0ce78f33b7f65ba01469bb291982f3f4b0bce815cc2606d55dee80ee4a3b64"},
+    {"table": "cannabis_phase1_synthase_reaction_links_20260905_v1", "job_id": "cannabis_sa_synthase_reaction_links_20260905_v1", "rows": 15, "report_sha256": "226bf2f31f8714f31ed5a84534fd10184cacaa2bdabb80cf49d4e66ac2bcae49"},
+    {"table": "cannabis_phase1_synthase_candidate_net_20260905_v1", "job_id": "cannabis_sa_synthase_candidate_net_20260905_v1", "rows": 13268, "report_sha256": "6cf11c3e230c2a799acc2717c7099838cfd4a4a2e9261e114c7845a3f19218f8"}
+  ]
+}

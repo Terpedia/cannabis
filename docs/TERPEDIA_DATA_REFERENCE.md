@@ -2328,6 +2328,58 @@ certificate. Historical targets and completeness counts remain unchanged.
 Replay validation/export with
 `PYTHONPATH=src ./.venv/bin/python -m cannabis_carbon.priority_occurrence_export`.
 
+### Exact synthase references and the 1,604-equation model
+
+The exact-producer audit covers 208 equations for 120 no-producer targets and
+retains all 318 prior search rows. Its dispositions are 94 reference-sequence
+gaps, 56 weak-hit cases, 56 negative-search cases and two unadmitted candidate
+leads. These categories do not mean biological absence; legacy core enzyme
+records remain attached separately. The two prior candidate leads retain their
+inferred-stoichiometry evidence context and are not automatically admitted.
+
+Revalidation against all 30,304 pinned Cannabis proteins recovered 79 raw and
+67 passing alignments to two synthase references, spanning 34 candidate proteins.
+Pinned **A0A7J6G9C8 is sequence-identical to all 544 residues of CBDAS A6P6V9**.
+The legacy CBDAS hit's 485-residue query length disagrees with this pinned
+sequence and remains preserved as a historical assertion. THCAS candidate
+A0A7J6DJS8 remains a 368-residue partial match to the 545-residue Q8GTB6 reference
+(92.7% identity, 67.5% reference coverage).
+
+Reference catalytic annotations link to [RHEA:34412](https://www.rhea-db.org/rhea/34412)
+and [RHEA:34136](https://www.rhea-db.org/rhea/34136), preserving their experimental
+evidence codes, source citations and direction annotations. The 67 protein links
+distinguish the one exact reference sequence from homologous candidates. This is
+not a claim of new direct assays or in-vivo flux. Both equations use charged
+cannabinoids and geometrically specified CBGA; the neutral core CBGA record lacks
+that geometry. The four core/Rhea equations remain distinct and independently
+balanced. No neutralization or stereochemical merge supplies a missing reaction.
+
+The new version adds the exact CBDAS equation to the 1,603-equation candidate model
+and supplements the already present THCAS equation. All 6,220 historical targets
+were evaluated with **1,604 equations**. The permissive scenario retains 109
+net-feasible target records (108 exact structures); the eight-reverse-step-restricted
+scenario retains 101 (100 structures). Neither produces any newly feasible target.
+The restricted scenario preserves six earlier exclusions and additionally forbids
+both synthase reversals as a sensitivity, not proof of irreversibility. CO₂ is the
+only net carbon input; regenerated pre-existing pools, startup, compartmentation
+and physiological flux remain unresolved. Historical map bundles and atom counts
+are unchanged, and atom tracing remains deferred.
+
+Artifacts and corresponding versioned GCP tables in `terpedia_core`:
+
+| Report under `data/reports/` | Table | Records |
+| --- | --- | ---: |
+| `phase1-producer-screen-audit.json` | `cannabis_phase1_producer_screen_audit_20260905_v1` | 329 |
+| `phase1-cannabinoid-revalidation-search.json` | `cannabis_phase1_cannabinoid_revalidation_search_20260905_v1` | 107 |
+| `phase1-synthase-reaction-links.json` | `cannabis_phase1_synthase_reaction_links_20260905_v1` | 15 |
+| `phase1-synthase-candidate-net.json` | `cannabis_phase1_synthase_candidate_net_20260905_v1` | 13,268 |
+
+Raw reference records, sequences and all alignments are preserved under
+`data/raw/phase1-cannabinoid-revalidation/`; reference-discovery and legacy-length
+checks are in `phase1-cannabinoid-revalidation-references.json`. Tests replay
+source joins, sequence hashes, target inventory and every certificate's exact net
+balance without modifying prior reports.
+
 ### Working-network balance audit
 
 The Phase 1 audit is stored in
