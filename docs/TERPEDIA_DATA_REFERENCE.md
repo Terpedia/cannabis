@@ -2675,3 +2675,44 @@ equivalences. Assay each lead against L-DOPA, Tyr and Phe with authentic product
 standards and no-enzyme, inactive-enzyme and autoxidation controls; independently
 validate the reference L-DOPA activity. Zero new exact enzyme assignments,
 balanced equations, net-route rescues or atom-tracing claims result from this batch.
+
+## Chalcone isomerase reference recovery and residue review
+
+`docs/data/chalcone-evidence-bundle.json` preserves the complete reference review,
+discovery, full-proteome search, sequence-verified annotations and residue review.
+The exact gap is
+`balanced-equation:4f54b627e4bdef8e0ed5d73c4d6fafaef5222100c538665b7ffabbc9bb3c9568`:
+tetrahydroxychalcone → (2S)-naringenin. Seven unresolved target records use this
+step in saved chemical-network witnesses; this does not establish necessity.
+
+The reviewed nonfragment EC 5.5.1.6 search recovered 50 reference sequences,
+all with empty Rhea cross-reference fields in the pinned query response.
+These are not 50 characterized exact-substrate enzymes: the hop CHIL1 reference,
+for example, has an EC label by similarity but describes ring-opened chalconoid
+stabilization by binding. All original annotations and their evidence codes are
+retained, along with the previous exact-Rhea negative searches.
+
+Screening all 30,304 pinned Cannabis proteins yielded 115 alignments, 60 passing
+the unchanged thresholds, involving five distinct Cannabis leads. All 50 reference
+and five candidate annotation sequences match the searched sequences exactly.
+Coordinate replay reproduces every original alignment, including weak hits.
+For the alfalfa P28012 reference, A0A7J6I409 is the sole passing match: 53.8%
+identity, 52.6% query coverage and 82.0% reference coverage. Reference sites
+T48/Y106/N113/T190 align to candidate T131/Y189/N196/S273. A0A7J6DUS9 has a
+weaker reference match with two reviewed sites outside its local alignment;
+three other leads have no reported alignment to P28012. Neither unaligned sites
+nor absence of a reported alignment establish enzyme absence.
+
+Residue correspondence is a sequence-alignment hypothesis, not proof of structural
+equivalence or activity. The WGS sequence cautions remain. Prioritize primary-assay
+and domain review, then measure stereoselective cyclization with chiral product
+analysis and time-matched no-enzyme controls for spontaneous conversion.
+No reaction-model additions, exact enzyme assignments, completeness gains or atom
+tracing changes are claimed.
+
+Immutable GCP table:
+`terpedia-489015.terpedia_core.cannabis_phase1_chalcone_evidence_bundle_20260905_v1`.
+All six records (five source documents plus metadata) were read back and matched
+the full local export; service-account principal and destination were verified.
+Receipt: `data/reports/phase1-chalcone-gcp-verification.json`.
+Bundle SHA-256: `e7fcdbcdede256f4d490c826ad09b1a45411a2b2026df523c6eec78b9706361c`.

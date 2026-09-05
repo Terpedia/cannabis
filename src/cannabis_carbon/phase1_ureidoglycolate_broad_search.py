@@ -21,11 +21,11 @@ BOUNDARY = ('EC/name-only discovery with no automatic exact-reaction assignment.
     'Any passing homology is an experimental lead only, ineligible for model integration. Atom tracing deferred.')
 
 
-def lookup(name, query):
+def lookup(name, query, raw=RAW):
     url = 'https://rest.uniprot.org/uniprotkb/stream?' + urllib.parse.urlencode({
         'query': query, 'format': 'tsv',
         'fields': 'accession,reviewed,organism_name,protein_name,ec,rhea'})
-    snapshot, cache = RAW / (name + '.tsv'), RAW / (name + '-lookup.json')
+    snapshot, cache = raw / (name + '.tsv'), raw / (name + '-lookup.json')
     if not cache.exists():
         with urllib.request.urlopen(url, timeout=45) as response:
             payload = response.read()

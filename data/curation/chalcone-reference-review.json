@@ -1,0 +1,31 @@
+{
+  "schema": "cannabis-chalcone-reference-review-v1",
+  "reaction_id": "balanced-equation:4f54b627e4bdef8e0ed5d73c4d6fafaef5222100c538665b7ffabbc9bb3c9568",
+  "model_eligible": false,
+  "claims": [
+    {
+      "source_url": "https://www.rhea-db.org/rhea/79892",
+      "access_scope": "Reaction entry, exact structures and cited publication abstracts; not full primary assay-data audit",
+      "claim": "The exact reaction converts CHEBI:15413 to CHEBI:17846, (2S)-naringenin, with EC 5.5.1.6. Rhea also notes spontaneous cyclization. This does not establish the physiological rate or stereoselectivity of uncatalyzed conversion in Cannabis."
+    },
+    {
+      "source_url": "https://rest.uniprot.org/uniprotkb/P28012.json",
+      "snapshot": "data/raw/chalcone-annotations/P28012.json",
+      "claim": "The alfalfa reference has experimental-evidence-coded function text for tetrahydroxychalcone cyclization and a substrate-specific Km annotation. The generic catalytic-activity record lacks a Rhea cross-reference. This is reference-organism annotation evidence, not a Cannabis assay.",
+      "primary_citations": ["10966651", "11698411", "11955065"],
+      "next_step": "Audit the primary assays and map the reference catalytic-site features before making an exact-substrate candidate-model addition."
+    },
+    {
+      "source_url": "https://rest.uniprot.org/uniprotkb/A0A2U7XUH7.json",
+      "snapshot": "data/raw/chalcone-annotations/A0A2U7XUH7.json",
+      "claim": "The reviewed hop CHIL1 entry carries EC 5.5.1.6 by similarity but describes stabilization of the ring-opened chalconoid by binding. The EC label cannot be treated as experimental cyclization evidence.",
+      "primary_citations": ["29760092"]
+    },
+    {
+      "source_url": "https://rest.uniprot.org/uniprotkb/A0A7J6I409.json",
+      "snapshot": "data/raw/chalcone-annotations/A0A7J6I409.json",
+      "claim": "This Cannabis lead has an automated ARBA function annotation naming the substrate and naringenin product. The full-proteome screen matches it to P28012 at 53.8 percent identity, 52.6 percent query coverage and 82.0 percent reference coverage. Automated annotation and homology do not establish experimental activity; the WGS sequence caution is retained."
+    }
+  ],
+  "next_test": "Review all reference assay and noncatalytic evidence separately, inspect sequence/domain architecture and aligned catalytic residues, then assay prioritized Cannabis proteins against authentic tetrahydroxychalcone. Quantify both naringenin enantiomers with chiral separation and time-matched no-enzyme controls to distinguish stereoselective catalysis from spontaneous cyclization. Do not assume reverse catalysis or complete precursor supply."
+}
