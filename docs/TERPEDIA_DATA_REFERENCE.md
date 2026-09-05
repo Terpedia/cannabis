@@ -2598,3 +2598,38 @@ claims. Both sensitivity reports allow pre-existing internal pools and unresolve
 directions elsewhere; they are not physiological pathways or zero-pool startup
 proofs. The candidate model, published completeness counts, historical direction
 review, and deferred atom-tracing status remain unchanged.
+
+### Ureidoglycolate cofactor separation and broad-reference search
+
+`terpedia-489015.terpedia_core.cannabis_phase1_ureidoglycolate_evidence_bundle_20260905_v1`
+contains six complete documents plus metadata (seven records), with full readback
+verification in `data/reports/phase1-ureidoglycolate-gcp-verification.json`.
+The same lossless evidence is available in `docs/data/ureidoglycolate-evidence-bundle.json`;
+the source report and export use `data/reports/phase1-ureidoglycolate-evidence-bundle.json`
+and `data/derived/phase1-ureidoglycolate-evidence-bundle.ndjson`.
+
+The exact-family unreviewed plant and nonplant lookups found no additional
+references for the three replacement-route gaps. This does not mean the enzyme
+names or EC annotations are absent. A broader nonfragment query for EC 1.1.1.154
+returned 292 records, and the enzyme-name query returned 2,120; their union
+contains 2,124 distinct references. All were retrieved in 36 batches and screened
+against all 30,304 pinned Cannabis proteins. The 13 raw alignments involve six
+query proteins; none pass the unchanged identity, coverage and E-value thresholds.
+Full source records, query membership, sequences and negative results are retained.
+
+The cofactor review preserves separate NAD and NADP equations. E. coli AllD
+reference evidence is NAD-specific and is not transferred to the NADP gap.
+Arthrobacter dual-cofactor biochemical evidence remains unresolved at the
+assayed-sequence level. Literature access limits and discriminating assays are
+listed in `data/curation/ureidoglycolate-cofactor-review.json`.
+
+A representative weak match, A0A7J6HP57 against A0A1I0CMJ9, has 33.5% identity,
+87.8% query coverage and 47.7% full-reference coverage. Coordinate replay of all
+13 alignments exactly matches the original screen. Its query positions 50–409
+and reference positions 4–352 overlap annotated isopropylmalate-dehydrogenase-like
+domains by 349 and 338 residues, respectively. Both annotation sequences match
+the searched sequences. This is not evidence for ureidoglycolate activity;
+neither is it a biochemical assignment of an alternative Cannabis activity.
+The broad discovery, search and domain review remain explicitly ineligible for
+exact-reaction integration. No balanced equation, enzyme assignment, completeness
+count or atom-tracing status changes in this batch.

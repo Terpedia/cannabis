@@ -1,0 +1,14 @@
+{
+  "schema": "cannabis-carbon.gcp-batch-verification.v1",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "verified": true,
+  "verification": "All load jobs DONE without errors; exact service-account principal and destination checked. Full bounded SELECT readbacks match complete local NDJSON record multisets, report checksums and unique kind/id pairs.",
+  "tables": [{
+    "table": "cannabis_phase1_ureidoglycolate_evidence_bundle_20260905_v1",
+    "job_id": "cannabis_sa_ureidoglycolate_evidence_bundle_20260905_v1",
+    "rows": 7,
+    "report_sha256": "790d08114b8115789f156ac669df0a18a231b1c8597162d8e479f20c34fc2f6a"
+  }]
+}

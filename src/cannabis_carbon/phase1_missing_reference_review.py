@@ -20,8 +20,9 @@ def prepare(discovery, search, followup_statuses=None):
     return rows
 
 
-def run(prefix='phase1-missing-reference', followup_statuses=None):
-    paths = [Path('data/reports', n + '.json') for n in ('phase1-remaining-gap-references', 'phase1-remaining-gap-search')]
+def run(prefix='phase1-missing-reference', followup_statuses=None,
+        source_prefix='phase1-remaining-gap'):
+    paths = [Path('data/reports', source_prefix + suffix + '.json') for suffix in ('-references', '-search')]
     discovery, search = [json.loads(p.read_text()) for p in paths]
     if hashlib.sha256(paths[0].read_bytes()).hexdigest() != search['source_discovery_sha256']:
         raise ValueError('Prior discovery lineage changed')

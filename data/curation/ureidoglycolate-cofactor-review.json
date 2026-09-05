@@ -1,0 +1,39 @@
+{
+  "schema": "cannabis-cofactor-specificity-review-v1",
+  "nad_reaction_id": "balanced-equation:85835fada171dac6e1874c5c207c933cb7d3243ea66fbb9dc333b7dbea62a8f8",
+  "nadp_reaction_id": "balanced-equation:8947132ce9931fc93c3393cb882527eb4095a44968e8ba7010292bec382f5ffc",
+  "nad_rhea_master": "RHEA:15329",
+  "nadp_rhea_master": "RHEA:15333",
+  "candidate_model_changed": false,
+  "claims": [
+    {
+      "source_url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0052066",
+      "pmid": "23284870",
+      "access_scope": "Publisher article text: abstract, structural comparison, functional analysis, discussion, and cloning sections; supplementary plots not inspected.",
+      "claim": "The E. coli AllD study reports NAD preference and a structural explanation involving Asp308/Gln309. The R48A and H116A mutants lacked measured activity. These are reference-enzyme observations, not Cannabis annotations.",
+      "boundary": "Does not establish reverse flux, a Cannabis homolog, or NADP activity. Residue conservation alone would not establish substrate specificity."
+    },
+    {
+      "source_url": "https://enzyme.expasy.org/EC/1.1.1.350",
+      "access_scope": "Curated enzyme nomenclature entry",
+      "claim": "EC 1.1.1.350 separates the NAD-specific activity and lists reviewed reference proteins P58408 and P77555."
+    },
+    {
+      "source_url": "https://enzyme.expasy.org/EC/1.1.1.154",
+      "access_scope": "Curated enzyme nomenclature entry",
+      "claim": "EC 1.1.1.154 includes both cofactor equations and describes dual activity in Arthrobacter allantoicus; it does not supply a reviewed sequence in this entry."
+    },
+    {
+      "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S0003986171800061",
+      "access_scope": "Indexed publisher abstract excerpt; direct page fetch failed; full paper not reviewed.",
+      "claim": "The Arthrobacter purification study reports conversion of S-ureidoglycolate to oxalurate using either NAD or NADP.",
+      "boundary": "No exact assayed-protein sequence has been resolved here. Do not equate a name or EC match with sequence-linked biochemical evidence."
+    }
+  ],
+  "decision": "Preserve separate cofactor-specific gaps. Do not transfer the E. coli NAD reference assignment to the NADP equation.",
+  "next_tests": [
+    "Resolve the assayed Arthrobacter strain and protein sequence from the original purification study before assigning a dual-cofactor reference.",
+    "For any future Cannabis lead, assay chemically verified S-ureidoglycolate and oxalurate with NAD/NADH and NADP/NADPH separately, using substrate-decay and no-protein controls and product identification.",
+    "Test both directions independently; an oxidation assay does not establish synthesis in the selected reverse route."
+  ]
+}
