@@ -1691,6 +1691,50 @@ the report does not use atom order or an unbounded MCS to fill gaps.
 
 ## Phase 1 balance gate
 
+### Re-solved expanded candidate network (2026-09-04)
+
+The [expanded candidate map](net.html?scenario=expanded) re-solves all 6,220
+target records after adding the 116 catalog/backfill candidate equations to
+the original 1,472-equation candidate network. Every admitted equation is
+independently element-, isotope- and charge-balanced. No inferred completion
+equations are added in this scenario. Candidate evidence is not proof of
+Cannabis activity, specificity, physiological direction or complex assembly.
+
+The 1,588-equation network has **108 target net-conversion certificates**
+(107 exact structures), seven target records beyond the unchanged baseline
+101. Newly feasible records are adenosine (CDB004791), guanosine (CDB004808),
+inosine (CDB004818), uric acid (CDB004839), 5'-methylthioadenosine (CDB004887),
+glycolaldehyde (CDB004953), and 5-amino-6-ribitylamino uracil (CDB004992).
+Five newly candidate-linked equations occur in the selected certificates.
+
+This differs from the **102** fully candidate-linked target certificates in
+the frozen chemistry-only diagnostic: re-solving can select alternative
+equations. These counts have different selection procedures and must not be
+substituted for each other. Original baseline certificates remain verbatim.
+The completion-sensitivity scenario is separate and unchanged.
+
+CO2 remains the only carbon exchange; the same explicitly listed carbon-free
+reservoir is allowed. Every certificate is checked with exact rational
+arithmetic: no internal species is depleted overall, all positive net products
+are retained, and net carbon input equals net carbon output. These are
+stoichiometric hypotheses allowing regenerated pre-existing internal pools,
+not proof of pool origin, energy feasibility, compartment compatibility, or
+atom provenance. Both directions remain hypothetical.
+
+Separately, all-reactants startup scope adds uric acid, for two nonseed target
+records under the permissive carbon-free reservoir; 6,183 targets remain
+startup-blocked and 35 are explicit exchange species. This qualitative scope
+does not establish a quantitatively feasible startup sequence. The net audit
+retains 5,897 targets with no producing candidate equation and 180 with
+solver-reported infeasibility, not proof of biological absence.
+
+The report is `data/reports/phase1-expanded-candidate-net.json`, with 7,021
+export records for `terpedia_core.cannabis_phase1_expanded_candidate_net_20260904_v1`.
+The static view is `docs/data/expanded-net-view/`; its manifest pins the report
+and full evidence sources. Blue arrows identify newly screened candidate
+equations; each projected arrow retains the complete reaction input/output
+lists. The report and view preserve all target records, including gaps.
+
 ### Remaining catalog-gap source annotation audit (2026-09-04)
 
 `data/reports/phase1-gap-annotations.json` audits all **349** equations still

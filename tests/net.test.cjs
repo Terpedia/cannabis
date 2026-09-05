@@ -11,6 +11,7 @@ const sensitivityBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../do
 const catalogBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/catalog-net-view/bundle.json')));
 const catalogEvidence = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/catalog-net-view/evidence.json')));
 const updatedCatalogBundle = context.NetView.applyEvidence(catalogBundle,catalogEvidence);
+const expandedBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/expanded-net-view/bundle.json')));
 
 test('catalog supplement loader preserves chemistry, fails closed, and retains original gaps', async()=>{
   const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/catalog-net-view/index.json')));
@@ -38,7 +39,7 @@ test('catalog supplement loader preserves chemistry, fails closed, and retains o
   await assert.rejects(createLoader(async url=>url.includes('evidence.json')?{ok:true,json:async()=>wrong}:fetcher(url),'catalog-net-view')(),/snapshot mismatch/);
 });
 
-for (const bundle of [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), sensitivityBundle, catalogBundle, updatedCatalogBundle]) {
+for (const bundle of [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), sensitivityBundle, catalogBundle, updatedCatalogBundle, expandedBundle]) {
 test(`every ${bundle.view_scenario || 'baseline'} net certificate projects all participants, coefficients, extents and candidate evidence`, () => {
   let count = 0;
   for (const target of bundle.targets.filter(t => t.certificate_compound_id)) {
@@ -101,7 +102,7 @@ test('loader revalidates manifest, versions bundles, rejects external paths and 
   assert.deepEqual(sensitivityCalls,['data/completion-net-view/index.json','data/completion-net-view/bundle.json?v='+'b'.repeat(16)]);
 });
 
-for (const [bundle, scenario] of [[JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target=CDB006137'], [updatedCatalogBundle, '?scenario=catalog&target=CDB006137']]) {
+for (const [bundle, scenario] of [[JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target=CDB006137'], [updatedCatalogBundle, '?scenario=catalog&target=CDB006137'], [expandedBundle, '?scenario=expanded']]) {
 test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highlight without hiding, and recover from load errors`, async () => {
   class Field {
     constructor(){this.value='';this.textContent='';this.children=[];this.hidden=false;}
@@ -124,6 +125,14 @@ test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highl
     assert.match(fields.netBoundary.textContent,/Completion sensitivity/);
     assert.match(fields.netMessage.textContent,/unverified completion chemistry/);
     assert.ok(cy.items.some(e=>e.data.is_completion_sensitivity));
+  }
+  if (scenario.includes('expanded')) {
+    assert.equal(fetched.at(-1),'data/expanded-net-view/bundle.json?v='+'a'.repeat(16));
+    assert.equal(fields.netTarget.value,'CDB004791');
+    assert.match(fields.netBoundary.textContent,/Re-solved candidate-only/);
+    assert.match(fields.netMetrics.textContent,/108 \/ 6220/);
+    assert.ok(cy.items.some(e=>e.data.is_new_catalog_candidate));
+    assert.ok(!cy.items.some(e=>e.data.missing_candidate_evidence));
   }
   if (scenario.includes('catalog')) {
     assert.equal(fetched.at(-1),'data/catalog-net-view/bundle.json?v='+'a'.repeat(16));

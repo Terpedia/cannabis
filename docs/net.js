@@ -74,7 +74,7 @@
     return targets.filter(t => (scope === 'all' || (t.certificate_compound_id && (scope !== 'enzyme-gaps' || t.missing_candidate_reaction_ids?.length))) && `${t.label} ${t.cannabisdb_id}`.toLowerCase().includes(q));
   }
   function createLoader(fetcher, folder = 'net-view') {
-    if (!['net-view', 'completion-net-view', 'catalog-net-view'].includes(folder)) throw new Error('Invalid scenario folder');
+    if (!['net-view', 'completion-net-view', 'catalog-net-view', 'expanded-net-view'].includes(folder)) throw new Error('Invalid scenario folder');
     return async function() {
       const response = await fetcher(`data/${folder}/index.json`, {cache: 'no-cache'});
       if (!response.ok) throw new Error(`Manifest unavailable (HTTP ${response.status})`);
@@ -95,7 +95,7 @@
   }
   function mount() {
     const scenario = new URLSearchParams(location.search).get('scenario');
-    const folder = scenario === 'catalog' ? 'catalog-net-view' : scenario === 'completions' ? 'completion-net-view' : 'net-view';
+    const folder = scenario === 'expanded' ? 'expanded-net-view' : scenario === 'catalog' ? 'catalog-net-view' : scenario === 'completions' ? 'completion-net-view' : 'net-view';
     const $ = id => document.getElementById(id), loader = createLoader((...args) => fetch(...args), folder);
     if (typeof cytoscape !== 'function') { $('netMessage').textContent = 'The graph library could not load. Reload the page or use the downloadable certificates below.'; return; }
     let bundle, current, generation = 0;
@@ -175,7 +175,8 @@
           $('netScope').value = 'all';
           if (!bundle.targets.some(t => t.cannabisdb_id === requested)) $('netSearch').value = requested;
         }
-        search(requested || bundle.targets.find(t=>t.label==='Limonene' && t.certificate_compound_id)?.cannabisdb_id);
+        const newlyFeasible = bundle.view_scenario === 'expanded-candidates' ? bundle.targets.find(t=>t.new_net_certificate)?.cannabisdb_id : null;
+        search(requested || newlyFeasible || bundle.targets.find(t=>t.label==='Limonene' && t.certificate_compound_id)?.cannabisdb_id);
       } catch(error) {if(token!==generation)return; clear(); $('netMessage').textContent = error.message; $('netRetry').hidden = false;}
     }
     cy.on('tap','node,edge',event=>{const data=event.target.data(); $('netDetails').textContent=JSON.stringify(data,null,2); if(data.step_id){const step=current?.steps.find(s=>s.step_id===data.step_id);if(step)describe(step);}});

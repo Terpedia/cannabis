@@ -1,0 +1,19 @@
+{
+  "schema": "cannabis-carbon.phase1-expanded-candidate-net-gcp.v1",
+  "status": "loaded-and-full-record-readback-verified",
+  "verified_date": "2026-09-04",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "table": "cannabis_phase1_expanded_candidate_net_20260904_v1",
+  "load_job_id": "cannabis_sa_expanded_candidate_net_20260904_v1",
+  "authenticated_principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "destination_preflight": "Destination returned NOT_FOUND before loading; no existing table was replaced.",
+  "report": "data/reports/phase1-expanded-candidate-net.json",
+  "report_sha256": "dbc95f1d00b64399ca6bfe2da099dcd2db622eab8079d625d95e1c23c90a17b3",
+  "export": "data/derived/phase1-expanded-candidate-net.ndjson",
+  "schema_fields": "record_kind:STRING,record_id:STRING,record_json:STRING,report_sha256:STRING",
+  "row_count": 7021,
+  "record_kind_counts": {"metadata": 1, "target": 6220, "certificate": 107, "reaction": 236, "compound": 341, "enzyme_evidence": 116},
+  "verification": "Inspected job DONE without error, exact destination and service-account identity. Verified report hashes and unique local record keys. SELECT * readback matched the local export as a sorted multiset of all complete records, including JSON payloads and report hashes.",
+  "claim_boundary": "Candidate-only re-solve of balanced chemistry with permissive directions and exchanges. No confirmed Cannabis activity, physiological flux or atom tracing. Baseline certificates remain unchanged."
+}
