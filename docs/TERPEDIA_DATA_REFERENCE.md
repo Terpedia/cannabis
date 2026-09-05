@@ -2136,6 +2136,40 @@ in `terpedia_core.cannabis_phase1_replacement_references_20260905_v1` and
 Raw requests, reference sequences, alignments, sequence checksums and exact
 source-reaction joins are retained for replay. Atom tracing remains deferred.
 
+### Whole-metabolome test of the replacement candidates
+
+`phase1-replacement-candidate-net.json` evaluates the two new sequence-supported
+equations as additions to the 1,601-equation candidate model. The resulting
+1,603-equation test model retains all prior evidence IDs and adds four protein
+hypotheses without upgrading their evidence class to characterized activity.
+All 6,220 target records are accounted for in both scenarios:
+
+- Permissive directions: 109 target records (108 exact structures) retain
+  net-conversion certificates; 179 are solver-infeasible, 5,897 have no
+  net-producing candidate equation, and 35 are explicit exchange species.
+- Six reverse steps forbidden: 101 target records (100 exact structures)
+  retain certificates; 187 are solver-infeasible, with the same 5,897
+  no-producer records and 35 exchange species. This preserves the five prior
+  restrictions and additionally excludes reverse citrate-synthase use.
+
+Neither scenario gains a target certificate. Existing valid certificates are
+preserved exactly; every other exact target structure is reconsidered with the
+augmented model. No internal depletion or organic carbon import is accepted.
+This is an enzyme-candidate inventory gain, not improved pathway completeness.
+Reverse ureidoglycine synthesis is not an extra constraint here because its
+equation remains absent from this candidate model altogether.
+
+The report contains both new reaction evidence records even though neither
+occurs in a preserved certificate. It does not replace the historical static
+map scenarios or relabel their 1,601-equation inventory as 1,603. The 13,267-row
+export is stored in
+`terpedia_core.cannabis_phase1_replacement_candidate_net_20260905_v1`.
+Replay: `python -m cannabis_carbon.phase1_replacement_candidate_net`.
+Tests independently balance all 1,603 candidate equations and replay every
+saved certificate using exact rational stoichiometry. Startup, physiological
+direction, compartmentation and flux remain unestablished; atom tracing is
+still deferred.
+
 ### Working-network balance audit
 
 The Phase 1 audit is stored in

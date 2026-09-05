@@ -13,12 +13,15 @@ from .phase1_scope import write_rows
 from .phase1_screened_overlay import build_overlay
 
 
-def build(network, baseline, sensitivity, plant, alternatives):
+def build(network, baseline, sensitivity, plant, alternatives, *, search_supplements=None,
+          restricted_scenario_id='five-reverse-steps-forbidden'):
     original = {r['id']: r for r in network['reactions']}
     compounds = {c['id']: c for c in network['compounds']}
     evidence = copy.deepcopy(baseline['candidate_reaction_evidence_ids'])
     supplements = []
-    for search, filename in [(plant, 'phase1-plant-purine-search.json'), (alternatives, 'phase1-purine-gap-search.json')]:
+    if search_supplements is None:
+        search_supplements = [(plant, 'phase1-plant-purine-search.json'), (alternatives, 'phase1-purine-gap-search.json')]
+    for search, filename in search_supplements:
         rows = {r['reaction_id']: r for r in search['rows']}
         if len(rows) != len(search['rows']):
             raise ValueError('Duplicate search equation')
@@ -47,7 +50,7 @@ def build(network, baseline, sensitivity, plant, alternatives):
     restricted_status = {t['cannabisdb_id']: t['restricted_net_status'] for t in sensitivity['targets']}
     scenarios = []
     for name, forbidden in [('permissive-directions', set()),
-                            ('five-reverse-steps-forbidden', {c['id'] for c in sensitivity['constraints']})]:
+                            (restricted_scenario_id, {c['id'] for c in sensitivity['constraints']})]:
         model = NetModel(reactions, exchange, forbidden_step_ids=forbidden)
         preserved = {cid: cert for cid, cert in old.items() if not forbidden.intersection(s['step_id'] for s in cert['steps'])}
         certificates, targets, cache = {}, [], {}

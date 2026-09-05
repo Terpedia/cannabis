@@ -1,0 +1,18 @@
+{
+  "schema": "cannabis-carbon.phase1-replacement-candidate-net-gcp.v1",
+  "status": "loaded-and-full-record-readback-verified",
+  "verified_date": "2026-09-05",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "table": "cannabis_phase1_replacement_candidate_net_20260905_v1",
+  "load_job_id": "cannabis_sa_replacement_candidate_net_20260905_v1",
+  "authenticated_principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "destination_preflight": "Exact destination returned NOT_FOUND before loading; no existing table replaced.",
+  "report": "data/reports/phase1-replacement-candidate-net.json",
+  "report_sha256": "b297718cb9a5d690a4dd546b369b90f5b1f88f26cd70364daff5c1dfc4d9d5e8",
+  "export": "data/derived/phase1-replacement-candidate-net.ndjson",
+  "row_count": 13267,
+  "record_kind_counts": {"certificate": 208, "compound": 359, "enzyme_evidence": 2, "metadata": 1, "reaction": 255, "scenario": 2, "target": 12440},
+  "verification": "Job DONE without error, exact destination and service-account identity verified. All exported rows have the report checksum and unique kind/id pairs. Full SELECT * readback matched all complete local records, including JSON payloads, as sorted multisets.",
+  "claim_boundary": "Two candidate equations added in a separate test model; zero new target certificates. Preserved routes remain conditional net-conversion hypotheses, not demonstrated biology or startup. Historical static scenarios are unchanged."
+}
