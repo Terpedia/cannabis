@@ -1,0 +1,30 @@
+{
+  "schema": "cannabis-reaction-direction-review-v1",
+  "reaction_id": "balanced-equation:2365a3fda8ba5acf89d328e4e34a798ee5c268e3c00261cd77506ec26376419d",
+  "source_reactions": ["RHEA:33872", "RHEA:33873"],
+  "selected_direction": "hypothetical-left-to-right",
+  "selected_equation": "glyoxylate + ammonium + urea -> ureidoglycine + water",
+  "classification": "reverse-of-literature-reported-spontaneous-decomposition",
+  "model_eligible": false,
+  "claims": [
+    {
+      "claim": "The 2013 study describes enzyme-independent ureidoglycine decay to glyoxylate, ammonia and urea. This is opposite the selected synthesis direction; protonation is represented separately by the balanced catalog equation.",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3793049/",
+      "pmid": "23940254",
+      "access_scope": "Search-index text excerpt; direct page fetch blocked by CAPTCHA. Full paper and underlying decay experiments not reviewed."
+    },
+    {
+      "claim": "The 2010 primary-study abstract reports NMR identification of S-ureidoglycine as the allantoate-amidohydrolase product, spontaneous ammonia release in vitro, and an enzyme yielding S-ureidoglycolate. That enzymatic conversion is not the three-product spontaneous breakdown reaction.",
+      "source_url": "https://pubs.acs.org/doi/10.1021/cb900248n",
+      "doi": "10.1021/cb900248n",
+      "access_scope": "Publisher abstract; full text and supporting information not reviewed."
+    }
+  ],
+  "decision": "Exclude this condensation only in a separately named sensitivity run, alongside the earlier allantoate-condensation exclusion. Do not promote a ureidoglycine aminohydrolase protein to this different equation.",
+  "blocking_reasons": [
+    "No retrieved reference sequence in the pinned prior exact-reaction searches.",
+    "Reverse synthesis, stereoselectivity, physiological rate and Cannabis activity remain unestablished.",
+    "Spontaneous forward decomposition does not prove thermodynamic irreversibility or eliminate possible enzyme-catalyzed reverse chemistry."
+  ],
+  "next_test": "Measure formation of stereochemically resolved ureidoglycine from glyoxylate, ammonium and urea under defined plant-relevant conditions, with no-enzyme controls and time courses; compare candidate-protein conditions only after identity and baseline chemistry are established."
+}

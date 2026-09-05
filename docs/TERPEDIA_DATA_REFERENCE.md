@@ -2561,3 +2561,40 @@ This does not establish absence of sphingolipids in Cannabis. Specific lipid
 identities, complete electron-transfer reactants, and experimental substrate/E–Z
 specificity remain unresolved. No pathway count or historical target identity is
 changed by this evidence batch.
+
+### Ureide condensation sensitivities and replacement-route gaps
+
+`terpedia-489015.terpedia_core.cannabis_phase1_ureide_evidence_bundle_20260905_v1`
+stores eight complete source documents plus metadata (nine records) in the
+four-column lossless document schema. The public download is
+`data/ureide-evidence-bundle.json`; local report and export are
+`data/reports/phase1-ureide-evidence-bundle.json` and
+`data/derived/phase1-ureide-evidence-bundle.ndjson`. Full service-account readback
+is recorded in `data/reports/phase1-ureide-gcp-verification.json`.
+
+The current-gap priority report excludes already net-feasible targets from its
+remaining-target counts while retaining the historical 153 missing-equation
+inventory. Shared use in a selected chemical witness is not proof of necessity.
+All 14 targets sharing the allantoate-condensation gap retain exact balanced net
+conversions after that direction is excluded from the full 13,995-equation
+catalog. The replacement witnesses share hypothetical synthesis of ureidoglycine
+from glyoxylate, ammonium and urea. The direction review distinguishes this from
+reported spontaneous decay and from enzymatic hydrolysis to ureidoglycolate;
+literature access limits and unresolved reverse chemistry are explicit.
+
+A second, separate sensitivity excludes both condensations, retaining all eight
+earlier restrictions and the same 102 explicit exchanges (CO2 is the only carbon
+input). All 14 targets still have rationally checked net-conversion hypotheses.
+These witnesses contain 12 missing-enzyme equations, including three absent from
+the pinned earlier search inventory. Full sequences, balanced participants,
+selected directions, extents, source joins, and search outcomes are retained.
+
+The new search retrieved three reviewed reference proteins and screened all
+30,304 Cannabis proteins. Rhea family 33867 yielded one weak alignment to O32148,
+family 15329 yielded no hits to P58408/P77555, and the third equation had no
+reviewed reference sequence. None passed the existing combined identity,
+coverage and E-value thresholds. These negative results are not enzyme-absence
+claims. Both sensitivity reports allow pre-existing internal pools and unresolved
+directions elsewhere; they are not physiological pathways or zero-pool startup
+proofs. The candidate model, published completeness counts, historical direction
+review, and deferred atom-tracing status remain unchanged.
