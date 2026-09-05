@@ -1,0 +1,33 @@
+{
+  "schema": "cannabis-carbon.phase1-deferred-gcp.v1",
+  "status": "loaded-and-full-record-readback-verified",
+  "verified_date": "2026-09-05",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "authenticated_principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "destination_preflight": "Both exact destination tables returned NOT_FOUND before loading; no existing table was replaced.",
+  "tables": [
+    {
+      "table": "cannabis_phase1_deferred_references_20260905_v1",
+      "load_job_id": "cannabis_sa_deferred_references_20260905_v1",
+      "report": "data/reports/phase1-deferred-references.json",
+      "report_sha256": "413c4ee392c8e6e3169880b9c97d4a3d5645eb650951f36d00d6f33ecf73164e",
+      "export": "data/derived/phase1-deferred-references.ndjson",
+      "schema_fields": "record_kind:STRING,record_id:STRING,record_json:STRING,report_sha256:STRING",
+      "row_count": 98,
+      "record_kind_counts": {"metadata": 1, "equation_gap": 7, "prior_attempt_audit": 60, "reference_protein": 29, "lookup": 1}
+    },
+    {
+      "table": "cannabis_phase1_deferred_search_20260905_v1",
+      "load_job_id": "cannabis_sa_deferred_search_20260905_v1",
+      "report": "data/reports/phase1-deferred-search.json",
+      "report_sha256": "8da220a4c9e72481ab552858c6adfe0ffbe0185c4a4b34fe9af3b686c3f0ed79",
+      "export": "data/derived/phase1-deferred-search.ndjson",
+      "schema_fields": "record_kind:STRING,record_id:STRING,status:STRING,record_json:STRING,report_sha256:STRING",
+      "row_count": 114,
+      "record_kind_counts": {"equation_gap": 7, "reference_sequence": 29, "cannabis_candidate": 9, "passing_alignment": 67, "retrieval": 1, "metadata": 1}
+    }
+  ],
+  "verification": "Inspected both jobs as DONE without error, exact destinations and service-account identity. Verified report hashes and unique local record keys. SELECT * readback matched each local export as a sorted multiset of all complete records, including JSON payloads and report hashes.",
+  "claim_boundary": "Recovered explicitly skipped reference searches, not reinterpretation of genuine negative results. Nine partial-reference homology leads do not establish full catalytic architecture or enzyme activity. Published pathway scenarios and completeness counts remain unchanged."
+}

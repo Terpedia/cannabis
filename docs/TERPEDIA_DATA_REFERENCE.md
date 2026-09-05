@@ -2016,6 +2016,54 @@ reference confidence, both graph projections and scenario switching. Net
 certificates are conditional hypotheses, not confirmed pathway completeness or
 atom provenance. Atom tracing remains deferred.
 
+### Recovering skipped reference discovery (2026-09-05)
+
+`data/reports/phase1-deferred-references.json` audits all **60** selected
+purine-alternative gaps still absent from the current 1,601-equation candidate
+network. It joins each prior search row to its checksummed discovery record,
+rather than equating presence in a search report with a completed search.
+For **seven equations**, every prior attempt had `no-reference-sequence` because
+discovery was explicitly `not-searched-in-priority-pass`. Those are workflow
+omissions, not negative reference searches. The other 53 gaps retain their
+existing evidence; failed lookups, genuine empty responses and weak/no-hit
+results are not reclassified as skipped.
+
+The missing reviewed-reference query found 29 proteins for five equations;
+two equations returned no reviewed references. The complete-proteome screen in
+`data/reports/phase1-deferred-search.json` retrieved all 29 references and
+searched all 30,304 Cannabis proteins. It records 266 raw alignments and 67
+passing alignments, with the following equation outcomes:
+
+- 1 equation with nine candidate proteins;
+- 2 equations with weak hits only;
+- 2 equations with no hits despite available references;
+- 2 equations with no reference sequence.
+
+The candidate equation has source variants RHEA:10181 and RHEA:10182, joined
+through the published family for 10-formyltetrahydrofolate dehydrogenase.
+**Full catalytic architecture remains unestablished.** The nine Cannabis
+sequences are 466–543 residues long; each highest-bitscore representative match
+is to a 902-residue reference and covers only 52.4–54.0% of that reference.
+These are partial-reference alignment leads, not evidence for an intact
+multidomain catalytic system. Alignment coordinates/domain localization were
+not established by this screen. Review complete domain composition, required
+partners and exact reaction direction before admitting the reaction to a
+candidate pathway or designing an activity assay.
+
+The three highest-ranked formerly skipped gaps remain unresolved: RHEA:33871
+returned no reviewed reference, while RHEA:19029 and RHEA:20896 produced only
+weak hits. Each occurs in 20 selected precursor certificates, which is a
+prioritization measure, not evidence of reaction necessity.
+
+The 98-record reference/audit export and 114-record screen export are stored as
+`terpedia_core.cannabis_phase1_deferred_references_20260905_v1` and
+`terpedia_core.cannabis_phase1_deferred_search_20260905_v1`. Replay modules are
+`cannabis_carbon.phase1_deferred_references` and
+`cannabis_carbon.phase1_deferred_search`. Historical reports remain unchanged;
+tests require explicit skipped-discovery evidence before recovering a row.
+This release changes neither map scenarios nor pathway counts. Atom tracing
+remains deferred.
+
 ### Working-network balance audit
 
 The Phase 1 audit is stored in
