@@ -14,6 +14,22 @@ const updatedCatalogBundle = context.NetView.applyEvidence(catalogBundle,catalog
 const expandedBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/expanded-net-view/bundle.json')));
 const purineBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/purine-net-view/bundle.json')));
 const restrictedPurineBundle = {...purineBundle,...purineBundle.restricted_scenario,view_boundary:purineBundle.restricted_boundary};
+const thiolaseBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/thiolase-net-view/bundle.json')));
+const restrictedThiolaseBundle = {...thiolaseBundle,...thiolaseBundle.restricted_scenario,view_boundary:thiolaseBundle.restricted_boundary};
+
+test('thiolase restriction loads the shared bundle without inheriting permissive certificates', async()=>{
+  const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/thiolase-net-view/index.json')));
+  const before=JSON.stringify(thiolaseBundle), calls=[];
+  const loaded=await createLoader(async url=>{calls.push(url);return {ok:true,json:async()=>url.endsWith('index.json')?manifest:thiolaseBundle};},'thiolase-restricted-net-view')();
+  assert.equal(JSON.stringify(thiolaseBundle),before);
+  assert.ok(calls.every(url=>url.startsWith('data/thiolase-net-view/')));
+  assert.equal(loaded.targets.length,6220);
+  assert.equal(loaded.certificates.length,148);
+  assert.equal(loaded.forbidden_step_ids.length,8);
+  assert.equal(loaded.summary.target_status_counts['exact-net-conversion-hypothesis'],149);
+  for(const cert of loaded.certificates) assert.ok(cert.steps.every(s=>!loaded.forbidden_step_ids.includes(s.step_id)));
+  await assert.rejects(createLoader(async url=>({ok:true,json:async()=>url.endsWith('index.json')?manifest:{...thiolaseBundle,restricted_scenario:null}}),'thiolase-restricted-net-view')(),/Invalid restricted/);
+});
 
 test('catalog supplement loader preserves chemistry, fails closed, and retains original gaps', async()=>{
   const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/catalog-net-view/index.json')));
@@ -41,7 +57,7 @@ test('catalog supplement loader preserves chemistry, fails closed, and retains o
   await assert.rejects(createLoader(async url=>url.includes('evidence.json')?{ok:true,json:async()=>wrong}:fetcher(url),'catalog-net-view')(),/snapshot mismatch/);
 });
 
-for (const bundle of [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), sensitivityBundle, catalogBundle, updatedCatalogBundle, expandedBundle, purineBundle, restrictedPurineBundle]) {
+for (const bundle of [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), sensitivityBundle, catalogBundle, updatedCatalogBundle, expandedBundle, purineBundle, restrictedPurineBundle, thiolaseBundle, restrictedThiolaseBundle]) {
 test(`every ${bundle.view_scenario || 'baseline'} net certificate projects all participants, coefficients, extents and candidate evidence`, () => {
   let count = 0;
   for (const target of bundle.targets.filter(t => t.certificate_compound_id)) {

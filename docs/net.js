@@ -77,8 +77,8 @@
     return targets.filter(t => (scope === 'all' || (t.certificate_compound_id && (scope !== 'enzyme-gaps' || t.missing_candidate_reaction_ids?.length))) && `${t.label} ${t.cannabisdb_id}`.toLowerCase().includes(q));
   }
   function createLoader(fetcher, folder = 'net-view') {
-    if (!['net-view', 'completion-net-view', 'catalog-net-view', 'expanded-net-view', 'purine-net-view', 'purine-restricted-net-view'].includes(folder)) throw new Error('Invalid scenario folder');
-    const sourceFolder = folder === 'purine-restricted-net-view' ? 'purine-net-view' : folder;
+    if (!['net-view', 'completion-net-view', 'catalog-net-view', 'expanded-net-view', 'purine-net-view', 'purine-restricted-net-view', 'thiolase-net-view', 'thiolase-restricted-net-view'].includes(folder)) throw new Error('Invalid scenario folder');
+    const sourceFolder = folder === 'thiolase-restricted-net-view' ? 'thiolase-net-view' : folder === 'purine-restricted-net-view' ? 'purine-net-view' : folder;
     return async function() {
       const response = await fetcher(`data/${sourceFolder}/index.json`, {cache: 'no-cache'});
       if (!response.ok) throw new Error(`Manifest unavailable (HTTP ${response.status})`);
@@ -87,6 +87,10 @@
       const data = await fetcher(`data/${sourceFolder}/bundle.json?v=${manifest.sha256.slice(0, 16)}`);
       if (!data.ok) throw new Error(`Net-conversion data unavailable (HTTP ${data.status})`);
       const base = await data.json();
+      if (folder === 'thiolase-restricted-net-view') {
+        if(base.view_scenario !== 'thiolase-candidates' || base.restricted_scenario?.id !== 'eight-reverse-steps-forbidden') throw Error('Invalid restricted scenario');
+        return {...base, ...base.restricted_scenario, view_boundary:base.restricted_boundary};
+      }
       if (folder === 'purine-restricted-net-view') {
         if(base.view_scenario !== 'purine-candidates' || base.restricted_scenario?.id !== 'five-reverse-steps-forbidden') throw Error('Invalid restricted scenario');
         return {...base, ...base.restricted_scenario, view_boundary:base.restricted_boundary};
@@ -103,7 +107,7 @@
   }
   function mount() {
     const scenario = new URLSearchParams(location.search).get('scenario');
-    const folder = scenario === 'purine' ? 'purine-net-view' : scenario === 'purine-restricted' ? 'purine-restricted-net-view' : scenario === 'expanded' ? 'expanded-net-view' : scenario === 'catalog' ? 'catalog-net-view' : scenario === 'completions' ? 'completion-net-view' : 'net-view';
+    const folder = scenario === 'thiolase' ? 'thiolase-net-view' : scenario === 'thiolase-restricted' ? 'thiolase-restricted-net-view' : scenario === 'purine' ? 'purine-net-view' : scenario === 'purine-restricted' ? 'purine-restricted-net-view' : scenario === 'expanded' ? 'expanded-net-view' : scenario === 'catalog' ? 'catalog-net-view' : scenario === 'completions' ? 'completion-net-view' : 'net-view';
     const $ = id => document.getElementById(id), loader = createLoader((...args) => fetch(...args), folder);
     if (typeof cytoscape !== 'function') { $('netMessage').textContent = 'The graph library could not load. Reload the page or use the downloadable certificates below.'; return; }
     let bundle, current, generation = 0;
@@ -183,7 +187,7 @@
           $('netScope').value = 'all';
           if (!bundle.targets.some(t => t.cannabisdb_id === requested)) $('netSearch').value = requested;
         }
-        const newlyFeasible = ['expanded-candidates','purine-candidates'].includes(bundle.view_scenario) ? bundle.targets.find(t=>t.new_net_certificate)?.cannabisdb_id : null;
+        const newlyFeasible = ['expanded-candidates','purine-candidates','thiolase-candidates'].includes(bundle.view_scenario) ? bundle.targets.find(t=>t.new_net_certificate)?.cannabisdb_id : null;
         search(requested || newlyFeasible || bundle.targets.find(t=>t.label==='Limonene' && t.certificate_compound_id)?.cannabisdb_id);
       } catch(error) {if(token!==generation)return; clear(); $('netMessage').textContent = error.message; $('netRetry').hidden = false;}
     }

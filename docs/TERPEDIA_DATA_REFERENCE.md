@@ -19,6 +19,59 @@ been silently replaced. Resolve these identities before interpreting their
 named pathways. Passing the artifact-accounting gate does not resolve this
 source-identity problem.
 
+## Acetyl-CoA condensation candidate search and graph
+
+`data/reports/phase1-weighted-gap-search.json` screens the complete pinned
+30,304-sequence Cannabis proteome against 75 retrieved reviewed reference
+sequences joined through the published Rhea family RHEA:21036. The exact
+catalog source equations are RHEA:21037 and RHEA:21038; the selected route uses
+the condensation direction, 2 acetyl-CoA(4−) → acetoacetyl-CoA(4−) + CoA(4−).
+This is a direction hypothesis, not an experimentally established Cannabis flux.
+
+The screen produced 691 raw alignments and 355 passing alignments representing
+five distinct Cannabis candidates: A0A7J6DSS6, A0A7J6F9D3, A0A7J6FJG9,
+A0A7J6G881 and A0A7J6HW56. Passing requires ≥30% identity, ≥50% coverage
+of both sequences and E-value ≤1e-5. Reference annotations, sequences, raw
+alignments and hashes are retained; sequence similarity does not establish
+exact substrate specificity, direction, compartment, expression or activity.
+
+The preceding `phase1-evidence-weighted-routes.json` diagnostic selected this
+equation as the sole candidate-evidence gap in charged CBGA, CBDA and THCA
+witnesses at both tested missing-evidence penalties. These weighted witnesses
+are not minimum-cardinality proofs, zero-pool startup pathways or evidence of
+in vivo biosynthesis. Neutral and stereochemically unspecified structures
+remain separate.
+
+`phase1-thiolase-candidate-net.json` now incorporates the one new
+equation and its five protein candidates, giving 1,605 candidate-linked equations.
+All 6,220 historical target records were evaluated: permissive directions yield
+157 net-conversion records (156 distinct structures), while preserving all eight
+reverse exclusions yields 149 records (148 structures). Both scenarios gain
+48 records over the preceding 1,604-equation model. The restricted scenario
+still has 5,897 records without a net-producing candidate equation, 139 solver-
+reported infeasible records and 35 explicit exchange species. These categories
+cover all 6,220 records; they do not establish biological completeness.
+
+Separately, charged CBGA, CBDA and THCA have exact net-conversion certificates
+in both scenarios; all three retained neutral/core probes still lack producing
+candidate equations. These probes do not inflate the historical target count.
+All certificates use CO2 as the sole net carbon input while permitting regenerated
+pre-existing pools. The report does not prove startup, physiological direction,
+compartment compatibility or characterized activity. The model, protein search,
+precursor audit, CBGA input audit and weighted-route diagnostic are now stored
+in `terpedia-489015.terpedia_core` under immutable tables
+`cannabis_phase1_{thiolase_candidate_net,weighted_gap_search,synthase_precursor_audit,cbga_input_audit,evidence_weighted_routes}_20260905_v1`.
+All 14,902 stored records were read back and matched against the complete local
+exports, including report hashes and unique record identities. Load-job principal,
+destination and successful completion were verified; the receipt is
+`data/reports/phase1-thiolase-gcp-verification.json`. Explore the
+[eight-reverse-exclusion graph](net.html?scenario=thiolase-restricted) or the
+[permissive comparison](net.html?scenario=thiolase). Both retain all historical
+targets, complete equations and candidate evidence; the shared bundle also
+retains the separate exact cannabinoid probe results without adding them to
+the historical target count.
+Atom tracing remains deferred.
+
 ## Full balanced-catalog net diagnostic
 
 The [chemistry-only net graph](net.html?scenario=catalog) keeps all 6,220

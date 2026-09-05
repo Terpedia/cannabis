@@ -47,13 +47,16 @@ class NetModel:
                     row.append(self.index[c]); col.append(j); values.append(-float(amount))
         self.matrix = coo_matrix((values, (row, col)), shape=(len(self.index), len(self.steps))).tocsr()
 
-    def solve(self, target):
+    def solve(self, target, *, step_costs=None):
+        costs = np.ones(len(self.steps)) if step_costs is None else np.asarray(step_costs, dtype=float)
+        if costs.shape != (len(self.steps),) or not np.all(np.isfinite(costs)) or np.any(costs <= 0):
+            raise ValueError('Every directed step needs one finite positive cost')
         if target in self.exchange_ids:
             return {'status': 'explicit-exchange-species; not a synthesis target'}
         if target not in self.producible or target not in self.index:
             return {'status': 'no-net-producing-candidate-equation'}
         bound = np.zeros(len(self.index)); bound[self.index[target]] = -1
-        result = linprog(np.ones(len(self.steps)), A_ub=self.matrix, b_ub=bound,
+        result = linprog(costs, A_ub=self.matrix, b_ub=bound,
             bounds=(0, None), method='highs', options={'time_limit': 30,
                 'primal_feasibility_tolerance': 1e-9, 'dual_feasibility_tolerance': 1e-9})
         record = {'solver_status': int(result.status), 'solver_message': result.message}
@@ -71,7 +74,8 @@ class NetModel:
             'external_net_consumption': {c: str(-n) for c, n in sorted(net.items()) if n < 0},
             'net_exports': {c: str(n) for c, n in sorted(net.items()) if n > 0},
             'zero_net_internal_participants': sorted(c for c in participants if c not in self.exchange_ids and not net[c]),
-            'selection_boundary': 'One minimum-total-directed-extent numerical solution, rationally reconstructed and checked exactly. Not a shortest route, unique solution, functional ranking or thermodynamic model.',
+            'selection_boundary': ('One minimum-total-directed-extent numerical solution, rationally reconstructed and checked exactly. Not a shortest route, unique solution, functional ranking or thermodynamic model.' if step_costs is None else
+                'One positive-cost-weighted directed-extent numerical solution, rationally reconstructed and checked exactly. Not a minimum number of missing enzymes, unique route, biological probability or thermodynamic model.'),
             'startup_status': 'Pre-existing internal pools may be required; synthesis and minimum pool sizes are not established by this certificate.'}
 
 

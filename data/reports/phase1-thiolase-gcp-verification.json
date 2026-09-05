@@ -1,0 +1,15 @@
+{
+  "schema": "cannabis-carbon.gcp-batch-verification.v1",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "verified": true,
+  "verification": "All load jobs DONE without errors; exact service-account principal and destination checked. Full bounded SELECT readbacks match complete local NDJSON record multisets, report checksums and unique kind/id pairs.",
+  "tables": [
+    {"table": "cannabis_phase1_synthase_precursor_audit_20260905_v1", "job_id": "cannabis_sa_synthase_precursor_audit_20260905_v1", "rows": 320, "report_sha256": "8743f7f7575ad7389211ad0845aa9eca8b0a81b503eae0933a0a0ed3ab61dbfc"},
+    {"table": "cannabis_phase1_cbga_input_audit_20260905_v1", "job_id": "cannabis_sa_cbga_input_audit_20260905_v1", "rows": 178, "report_sha256": "d4bcd194d827ac7641c5f31d08d7670deeed35fb28d1ce46ade50a31f9664dd5"},
+    {"table": "cannabis_phase1_evidence_weighted_routes_20260905_v1", "job_id": "cannabis_sa_evidence_weighted_routes_20260905_v1", "rows": 231, "report_sha256": "6b3032e7d2a76a3f41dc04ed253066de104c2f7c846519ac55bbf225ad50cb7b"},
+    {"table": "cannabis_phase1_weighted_gap_search_20260905_v1", "job_id": "cannabis_sa_weighted_gap_search_20260905_v1", "rows": 439, "report_sha256": "4dbdb053fa9219bf18548cca174ce6ef6e9b063c43c2f8f073e1b0c992c8a40c"},
+    {"table": "cannabis_phase1_thiolase_candidate_net_20260905_v1", "job_id": "cannabis_sa_thiolase_candidate_net_20260905_v1", "rows": 13734, "report_sha256": "6f445b441bc19b9ac133ab062b0a845d1a731066a7a8a2199a28977d36c4e2bb"}
+  ]
+}
