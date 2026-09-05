@@ -186,13 +186,15 @@ responses; it does not silently replace a failed or archived record.
 | `phase1-archived-protein-search.json` | `c77f50fd2b85009c6ca103a3dc8960aece7971cfcd4cea87cbac6dc35ece5399` | 270 |
 | `phase1-archived-evidence.json` | `6da25f45823409f07c7ca2822e33a7cef58be08d3c05a1475e681f22ac4cd6e0` | 67 |
 
-These three exports, like the connectivity export below, await GCP
-reauthentication. No archive table load or destination existence is claimed.
-Intended tables in `terpedia-489015.terpedia_core` are
+These three exports were loaded and fully read-back verified on 2026-09-04
+using `cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com`.
+Tables in `terpedia-489015.terpedia_core` are
 `cannabis_phase1_archived_references_20260904_v1`,
 `cannabis_phase1_archived_protein_search_20260904_v1`, and
-`cannabis_phase1_archived_evidence_20260904_v1`. Verify each destination before
-loading; never overwrite an existing table to resume a pending upload.
+`cannabis_phase1_archived_evidence_20260904_v1`. Each destination was absent
+before loading. All 498 stored records match the local exports exactly,
+including complete JSON payloads and report hashes. Job IDs and verification
+details are retained in `data/reports/phase1-archived-gcp.json`.
 
 ### Completion-network sensitivity: 11 additional net-balance hypotheses
 
@@ -252,14 +254,14 @@ Download [the full sensitivity report](data/phase1-completion-connectivity.json)
 SHA-256: `79f6349b0318f0ac727fde268e34588592421ad4c470cb80e8dc4f659b554a08`.
 Reproduce with `PYTHONPATH=src python -m cannabis_carbon.phase1_completion_connectivity`
 and `PYTHONPATH=src python -m cannabis_carbon.phase1_completion_net_view`.
-The 7,396-row Terpedia export is prepared (6,220 targets, 321 admitted reactions,
+The 7,396-row Terpedia export is verified in GCP (6,220 targets, 321 admitted reactions,
 380 excluded completions, 11 certificates, 24 baseline certificate reactions,
-437 compounds, two startup scenarios and one metadata row). **GCP upload is
-pending reauthentication**, not claimed complete. Intended versioned table:
+437 compounds, two startup scenarios and one metadata row). Versioned table:
 `terpedia-489015.terpedia_core.cannabis_phase1_completion_connectivity_20260904_v1`.
-No table existence or load was verified after credentials expired; re-check the
-destination before loading. The existing GCP tables below are previously verified
-snapshots, not evidence that this new export has been loaded.
+The destination was verified absent before loading on 2026-09-04. The dedicated
+Cannabis service account completed the load, and all 7,396 complete records
+were read back and matched exactly to the local export. The load job and
+verification are recorded in `data/reports/phase1-completion-connectivity-gcp.json`.
 
 ### Completion protein evidence
 

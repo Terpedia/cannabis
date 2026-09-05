@@ -1,13 +1,19 @@
 {
   "schema": "cannabis-carbon.phase1-completion-connectivity-gcp.v1",
-  "status": "pending-reauthentication; no load attempted",
+  "status": "loaded-and-full-record-readback-verified",
+  "verified_date": "2026-09-04",
+  "authenticated_principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "load_job_id": "cannabis_sa_completion_connectivity_20260904_v1",
+  "verified_row_count": 7396,
   "intended_table": "terpedia-489015.terpedia_core.cannabis_phase1_completion_connectivity_20260904_v1",
-  "table_existence_verified": false,
+  "table_existence_verified": true,
+  "destination_preflight": "Destination returned NOT_FOUND before loading; no existing table was replaced.",
   "report": "data/reports/phase1-completion-connectivity.json",
   "report_sha256": "79f6349b0318f0ac727fde268e34588592421ad4c470cb80e8dc4f659b554a08",
   "export": "data/derived/phase1-completion-connectivity.ndjson",
   "expected_row_count": 7396,
   "record_kind_counts": {"target": 6220, "startup_scenario": 2, "admitted_reaction": 321, "excluded_completion": 380, "certificate": 11, "baseline_reaction": 24, "compound": 437, "metadata": 1},
   "schema_fields": "record_kind:STRING,record_id:STRING,record_json:STRING,report_sha256:STRING",
-  "next_action": "Reauthenticate the intended Terpedia GCP account, then verify the destination is absent before a new load. If already present, inspect its provenance and contents instead of overwriting it. Verify grouped counts, distinct record IDs and report hashes after loading."
+  "verification": "Job inspected: DONE without error, exact destination and service-account principal verified, outputRows 7396. SELECT * readback matched the local NDJSON export as a sorted multiset of all complete records, including record_json and report_sha256. Local report hash, row hashes, per-kind counts and unique (record_kind, record_id) pairs were checked before loading.",
+  "claim_boundary": "Sensitivity net-conversion hypotheses with inferred completion reactions, not confirmed Cannabis pathways or zero-pool startup. Atom tracing remains deferred."
 }

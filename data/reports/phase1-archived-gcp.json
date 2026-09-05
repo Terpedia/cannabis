@@ -1,12 +1,17 @@
 {
   "schema": "cannabis-carbon.phase1-archived-gcp.v1",
-  "status": "pending-reauthentication; no load attempted",
+  "status": "loaded-and-full-record-readback-verified",
+  "verified_date": "2026-09-04",
+  "authenticated_principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
   "project": "terpedia-489015",
   "dataset": "terpedia_core",
-  "table_existence_verified": false,
+  "table_existence_verified": true,
+  "destination_preflight": "All three tables returned NOT_FOUND before loading; no existing table was replaced.",
   "tables": [
     {
       "intended_table": "cannabis_phase1_archived_references_20260904_v1",
+      "load_job_id": "cannabis_sa_archived_references_20260904_v1",
+      "verified_row_count": 161,
       "report": "data/reports/phase1-archived-references.json",
       "report_sha256": "eb2d4a7e538dbd063fec07252bcff7be972e21a3e07ff8f4b50f7ba149049ae5",
       "export": "data/derived/phase1-archived-references.ndjson",
@@ -16,6 +21,8 @@
     },
     {
       "intended_table": "cannabis_phase1_archived_protein_search_20260904_v1",
+      "load_job_id": "cannabis_sa_archived_protein_search_20260904_v1",
+      "verified_row_count": 270,
       "report": "data/reports/phase1-archived-protein-search.json",
       "report_sha256": "c77f50fd2b85009c6ca103a3dc8960aece7971cfcd4cea87cbac6dc35ece5399",
       "export": "data/derived/phase1-archived-protein-search.ndjson",
@@ -25,6 +32,8 @@
     },
     {
       "intended_table": "cannabis_phase1_archived_evidence_20260904_v1",
+      "load_job_id": "cannabis_sa_archived_evidence_20260904_v1",
+      "verified_row_count": 67,
       "report": "data/reports/phase1-archived-evidence.json",
       "report_sha256": "6da25f45823409f07c7ca2822e33a7cef58be08d3c05a1475e681f22ac4cd6e0",
       "export": "data/derived/phase1-archived-evidence.ndjson",
@@ -33,5 +42,6 @@
       "record_kind_counts": {"metadata": 1, "completion": 66}
     }
   ],
-  "next_action": "Reauthenticate the intended Terpedia GCP account. Check each destination before loading, and inspect rather than overwrite if present. Verify grouped counts, distinct record IDs and min/max report hashes after loading."
+  "verification": "Each job was inspected: DONE without error, exact destination and service-account principal verified, outputRows equal expected_rows. SELECT * readback was compared to each local NDJSON export as a sorted multiset of complete records, including record_json, report_sha256 and status when present. Every record matched exactly. Local report hashes, row hashes, per-kind counts and unique (record_kind, record_id) pairs were independently checked before loading.",
+  "claim_boundary": "Archived source sequences and homology evidence remain candidate evidence for inferred reactions, not demonstrated enzyme activity or completed CO2 pathways."
 }
