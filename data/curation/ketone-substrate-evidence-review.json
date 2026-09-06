@@ -1,0 +1,60 @@
+{
+  "schema": "cannabis-carbon.ketone-substrate-evidence-review.v1",
+  "reviewed_at": "2026-09-06",
+  "status": "source-specific-assignment-constraints-not-new-reactions",
+  "reviews": [
+    {
+      "cannabisdb_id": "CDB000467",
+      "compound_id": "structure:a55e925f61f8b2aad2936b15f9e40d343fc73f77fff4d4eecc8ddfc7d404e1a5",
+      "exact_target_smiles": "C=CC(=C)C[C@H](O)C=C(C)C",
+      "target_CIP": ["S"],
+      "hypothesis_id": "ketone-stereo-hypothesis:5f9bcd6d9046d90da16ebab70826f89d0e5a5f4803610f588d88df66ed921d0e",
+      "required_direction": "ipsdienone reduction to exact S-ipsdienol",
+      "candidate_enzyme": "Ips pini ipsdienol dehydrogenase (IDOLDH)",
+      "candidate_ec": "1.1.1.386",
+      "sources": [
+        {
+          "url": "https://pubmed.ncbi.nlm.nih.gov/26953347/",
+          "doi": "10.1093/jb/mvw019",
+          "evidence_level": "primary-study-abstract",
+          "claim": "Recombinant IDOLDH reduced ipsdienone to the minus alcohol; plus products were not observed in the reported assays."
+        },
+        {
+          "url": "https://iubmb.qmul.ac.uk/enzyme/EC1/1/1/386.html",
+          "evidence_level": "official-enzyme-nomenclature",
+          "claim": "The named alcohol substrate is R-ipsdienol; both NAD and NADP are represented in the reaction nomenclature."
+        }
+      ],
+      "assignment_decision": "do-not-assign-characterized-IDOLDH-to-S-product-reduction",
+      "reason": "The measured product stereoselectivity and official R-substrate assignment do not support production of the exact S target.",
+      "scope_limit": "Does not prove that no other enzyme or engineered variant can make the S product. No Cannabis protein activity is established.",
+      "next_test": "Find and assay an S-product-selective reductase; distinguish product enantiomers and test exact cofactor preference."
+    },
+    {
+      "cannabisdb_id": "CDB000184",
+      "compound_id": "structure:917a09339e6eaa2389afacd67572c10248ea00f7e479a0d6b8f3ddad75334b53",
+      "exact_target_smiles": "CC1(C)[C@@H]2CC[C@@]1(C)[C@H](O)C2",
+      "target_CIP": ["R", "R", "R"],
+      "hypothesis_id": "ketone-stereo-hypothesis:771e5564f0e23ccb42624a826bc0305c196634f94a12f474010516c0c011f7e2",
+      "required_direction": "exact camphor reduction to the encoded isoborneol stereoisomer",
+      "candidate_enzyme": "Salvia officinalis SoBDH1/SoBDH2",
+      "sources": [
+        {
+          "url": "https://pubmed.ncbi.nlm.nih.gov/31927319/",
+          "evidence_level": "primary-study-abstract",
+          "claim": "Recombinant sage enzymes preferentially oxidized racemic borneol to plus camphor and racemic isoborneol to minus camphor."
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S2468823122004588",
+          "evidence_level": "primary-study-abstract",
+          "claim": "An engineered Arabidopsis lyrata AlBDH L205F variant reduced plus camphor to plus borneol and minus camphor to plus isoborneol."
+        }
+      ],
+      "assignment_decision": "do-not-promote-oxidation-or-other-stereoisomer-evidence-to-exact-reduction",
+      "reason": "The retrieved sage abstract concerns oxidation, while the AlBDH abstract names different stereoisomeric reduction products. Neither is an exact substrate-product-direction assignment for this proposed step.",
+      "scope_limit": "Abstract-level review is not an exhaustive enzyme search. Full-text stereochemical assignments, cofactor specificity and exact chemical joins remain to be verified. No Cannabis activity is established.",
+      "next_test": "Seek an exact camphor/isoborneol stereochemical product assignment in a reduction assay before choosing a genome-search reference."
+    }
+  ],
+  "claim_boundary": "Negative assignment decisions are specific to the reviewed evidence, not proof of biological impossibility. Existing structural hypotheses and their conditional certificates are unchanged; zero supported-reaction or pathway-coverage gain is claimed. Optical rotation is never calculated from an R/S label; literature rotation assignments and encoded absolute stereochemistry remain distinct evidence."
+}
