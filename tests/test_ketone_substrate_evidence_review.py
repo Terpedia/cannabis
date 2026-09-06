@@ -1,4 +1,5 @@
 import json
+import hashlib
 from pathlib import Path
 from rdkit import Chem
 
@@ -20,3 +21,13 @@ def test_reviews_join_exact_hypotheses_without_promoting_candidate_support():
         assert row['assignment_decision'].startswith('do-not-')
         assert row['scope_limit'] and row['next_test']
         assert all(s['url'].startswith('https://') and s['evidence_level'] for s in row['sources'])
+
+
+def test_export_retains_complete_review_and_pins_sources():
+    review=json.loads(Path('data/curation/ketone-substrate-evidence-review.json').read_bytes())
+    report=json.loads(Path('data/reports/phase1-ketone-substrate-review.json').read_bytes())
+    assert {k:v for k,v in report.items() if k!='source_sha256'}==review
+    assert len(report['source_sha256'])==2
+    for path,sha in report['source_sha256'].items():
+        assert hashlib.sha256(Path(path).read_bytes()).hexdigest()==sha
+    assert Path('docs/data/ketone-substrate-review.json').read_bytes()==Path('data/reports/phase1-ketone-substrate-review.json').read_bytes()
