@@ -22,3 +22,9 @@ Important boundary problems include imported iron–sulfur clusters, hydrogen pe
 8. Treat light/energy, initial pools, compartments, transport, catalytic minerals, biomass demand, counterions, pH and concentrations as explicit outstanding requirements before calling it an experimentally usable plant growth medium. This workstream is not a dosing or fertilizer recipe.
 
 The all-metabolite pathway objective remains active; minimum-medium analysis must not redefine success as supporting only today's covered subset. The covered subset can be an explicitly labeled intermediate benchmark.
+
+## Element-level audit of the saved baseline
+
+`phase1-medium-elements.json` independently indexes all 102 exact external species by element and de-duplicates consuming certificate identities across alternative species. The boundary contains 39 elements. All 17 elements in the selected general plant-essential reference have at least one external form, but **B, Ca, K, Mg, Mn, Mo, Ni and Zn** have no selected net-input demand. This is a growth/catalytic-demand modeling gap, not evidence that these elements are dispensable. Presence of an arbitrary compound containing an essential element does not validate that compound as its nutrient source.
+
+Selenium is the only consumed element outside that reference's essential-element list. This reflects the explicit selenium-containing target scope, not a claim of ordinary plant nutrient essentiality. The audit retains all other boundary elements for exposure/inventory review; none are automatically discarded or called nutrients. Exact uptake forms and required amounts remain unestablished for every element. Results refer to the selenium-forward certificate set, not the later redox hypothesis or ongoing restricted-medium scenarios.
