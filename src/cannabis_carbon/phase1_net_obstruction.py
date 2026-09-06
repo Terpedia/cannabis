@@ -44,9 +44,9 @@ def solve(model,target):
             'checked_allowed_steps':len(model.steps),'weighted_steps':touched}
 
 
-def run():
+def run(current_name='alkane-net', output_name='alkane-obstructions'):
     root=Path('data/reports'); read=lambda p:json.loads(p.read_bytes())
-    current_path=root/'phase1-alkane-net.json'; current=read(current_path)
+    current_path=root/('phase1-'+current_name+'.json'); current=read(current_path)
     paths=[current_path,root/'phase1-full-balanced-network.json',root/'phase1-marts-completions.json']+[root/n for n in current['baseline_certificate_reports']]
     docs=[read(p) for p in paths]
     for doc in docs:
@@ -67,7 +67,7 @@ def run():
         'proof':'Every weight is nonnegative and restricted to internal compounds; target weight is at least one. Every allowed directed reaction has weighted net change <= 0, checked with exact fractions. Nonnegative reaction extents therefore cannot produce a positive net target while leaving every other internal net amount nonnegative. External species carry zero weight.',
         'claim_boundary':'Proof applies only to the pinned reaction set, exact identities, directions and exchange boundary. It permits recycled pre-existing pools, but not their net depletion. It is not biological absence, an enzyme assignment, a minimal cut, a complete search for missing chemistry, or a minimum-medium result. Failure to produce a certificate proves nothing about feasibility.',
         'source_sha256':{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}}
-    (root/'phase1-alkane-obstructions.json').write_text(json.dumps(report,separators=(',',':'))+'\n')
+    (root/('phase1-'+output_name+'.json')).write_text(json.dumps(report,separators=(',',':'))+'\n')
 
 
 if __name__=='__main__':
