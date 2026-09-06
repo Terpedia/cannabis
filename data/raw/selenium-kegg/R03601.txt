@@ -1,0 +1,16 @@
+ENTRY       R03601                      Reaction
+NAME        O3-acetyl-L-serine acetate-lyase (adding hydrogen sulfide)
+DEFINITION  O-Acetyl-L-serine + Hydrogen selenide <=> L-Selenocysteine + Acetate
+EQUATION    C00979 + C01528 <=> C05688 + C00033
+RCLASS      RC00020  C00033_C00979
+ENZYME      2.5.1.47
+BRITE       Enzymatic reactions [BR:br08201]
+             2. Transferase reactions
+              2.5  Transferring alkyl or aryl groups, other than methyl groups
+               2.5.1  Transferring alkyl or aryl groups, other than methyl groups (only sub-subclass identified to date)
+                2.5.1.47
+                 R03601  O-Acetyl-L-serine + Hydrogen selenide <=> L-Selenocysteine + Acetate
+ORTHOLOGY   K01738  cysteine synthase [EC:2.5.1.47]
+            K10150  cysteine synthase / O-phosphoserine sulfhydrylase / cystathionine beta-synthase [EC:2.5.1.47 2.5.1.65 4.2.1.22]
+            K13034  L-3-cyanoalanine synthase/ cysteine synthase [EC:2.5.1.47 4.4.1.9]
+///

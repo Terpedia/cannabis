@@ -1,0 +1,32 @@
+{
+  "R03601": {
+    "url": "https://rest.kegg.jp/get/R03601",
+    "path": "data/raw/selenium-kegg/R03601.txt",
+    "retrieved_at": "2026-09-06T18:29:26.132259+00:00",
+    "sha256": "c9bb1e7586b5085261622a589a14b061901800785b2d61585f180e4d8396b0d5"
+  },
+  "C00979": {
+    "url": "https://rest.kegg.jp/get/C00979/mol",
+    "path": "data/raw/selenium-kegg/C00979.mol",
+    "retrieved_at": "2026-09-06T18:29:27.077924+00:00",
+    "sha256": "f05e2dcec9188c16ea38653a056c8cd6fc9dfddc8d830eb3998097de4c3a1831"
+  },
+  "C01528": {
+    "url": "https://rest.kegg.jp/get/C01528/mol",
+    "path": "data/raw/selenium-kegg/C01528.mol",
+    "retrieved_at": "2026-09-06T18:29:28.500921+00:00",
+    "sha256": "10237a2061810deadb3817809d0866a8b610d731562a8c80d3f74b5ec5c08c56"
+  },
+  "C05688": {
+    "url": "https://rest.kegg.jp/get/C05688/mol",
+    "path": "data/raw/selenium-kegg/C05688.mol",
+    "retrieved_at": "2026-09-06T18:29:29.826226+00:00",
+    "sha256": "08aec554d9686284d1ca7f4d9fdd2a9522c39e880ba941aac50e9efe3ed1a4f5"
+  },
+  "C00033": {
+    "url": "https://rest.kegg.jp/get/C00033/mol",
+    "path": "data/raw/selenium-kegg/C00033.mol",
+    "retrieved_at": "2026-09-06T18:29:32.584534+00:00",
+    "sha256": "8493e68bf14e6113f3725889918a30e2d128e297c1c0e376f87f0d58fcfa70ac"
+  }
+}
