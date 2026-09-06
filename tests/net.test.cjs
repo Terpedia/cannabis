@@ -20,6 +20,25 @@ const remainingBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs
 const restrictedRemainingBundle = {...remainingBundle,...remainingBundle.restricted_scenario,view_boundary:remainingBundle.restricted_boundary};
 const fnsiiBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/fnsii-net-view/bundle.json')));
 const triglycerideBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/triglyceride-net-view/bundle.json')));
+const symmetryBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/triglyceride-symmetry-net-view/bundle.json')));
+
+test('symmetric target routes preserve exact source products and forward-only assumptions',async()=>{
+  const source=JSON.parse(fs.readFileSync(path.join(__dirname,'../data/reports/phase1-triglyceride-symmetry-net.json')));
+  const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/triglyceride-symmetry-net-view/index.json')));
+  const loaded=await createLoader(async url=>({ok:true,json:async()=>url.endsWith('index.json')?manifest:symmetryBundle}),'triglyceride-symmetry-net-view')();
+  assert.equal(loaded.summary.target_status_counts['exact-net-conversion-hypothesis'],477);
+  assert.equal(loaded.targets.length,6220);
+  for(const target of source.targets.filter(t=>t.new_certificate)){
+    const graph=project(loaded,target.cannabisdb_id);
+    const added=graph.steps.filter(s=>s.reaction.id.startsWith('triglyceride-symmetry-hypothesis:'));
+    assert.ok(added.length);
+    for(const s of added){
+      assert.equal(s.direction_mode,'hypothetical-left-to-right');
+      assert.ok(s.reaction.stereo_assumption);
+      assert.ok(s.reaction.is_route_sensitivity);
+    }
+  }
+});
 
 test('triglyceride certificates preserve inherited and new direction exclusions', async()=>{
   const source=JSON.parse(fs.readFileSync(path.join(__dirname,'../data/reports/phase1-triglyceride-net.json')));
@@ -210,7 +229,7 @@ test('loader revalidates manifest, versions bundles, rejects external paths and 
   assert.deepEqual(sensitivityCalls,['data/completion-net-view/index.json','data/completion-net-view/bundle.json?v='+'b'.repeat(16)]);
 });
 
-for (const [bundle, scenario] of [[triglycerideBundle, "?scenario=triglycerides&target=CDB001321"], [JSON.parse(fs.readFileSync(path.join(__dirname, "../docs/data/chemistry-net-view/bundle.json"))), "?scenario=chemistry&target=CDB000806"], [fnsiiBundle, '?scenario=fnsii&target=CDB005072'], [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target=CDB006137'], [updatedCatalogBundle, '?scenario=catalog&target=CDB006137'], [expandedBundle, '?scenario=expanded'], [purineBundle, '?scenario=purine'], [restrictedPurineBundle, '?scenario=purine-restricted']]) {
+for (const [bundle, scenario] of [[symmetryBundle, "?scenario=symmetry&target=CDB001366"], [triglycerideBundle, "?scenario=triglycerides&target=CDB001321"], [JSON.parse(fs.readFileSync(path.join(__dirname, "../docs/data/chemistry-net-view/bundle.json"))), "?scenario=chemistry&target=CDB000806"], [fnsiiBundle, '?scenario=fnsii&target=CDB005072'], [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target=CDB006137'], [updatedCatalogBundle, '?scenario=catalog&target=CDB006137'], [expandedBundle, '?scenario=expanded'], [purineBundle, '?scenario=purine'], [restrictedPurineBundle, '?scenario=purine-restricted']]) {
 test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highlight without hiding, and recover from load errors`, async () => {
   class Field {
     constructor(){this.value='';this.textContent='';this.children=[];this.hidden=false;}

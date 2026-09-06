@@ -10,21 +10,27 @@ SOURCES = ('phase1-lipid-acylation-net', 'phase1-reaction-completion-net',
     'phase1-target-hypotheses', 'phase1-screened-enzyme-overlay', 'phase1-route-enzyme-overlay')
 
 
-def run(triglycerides=False):
+def run(triglycerides=False, symmetry=False):
     paths = [Path('data/reports', n + '.json') for n in SOURCES]
     current, parent, baseline, network, lipid, *evidence = [json.loads(p.read_text()) for p in paths]
     previous = current
-    extra = None
-    if triglycerides:
+    layers = [parent, previous]
+    extras = []
+    if triglycerides or symmetry:
         extra_paths = [Path('data/reports', n + '.json') for n in ('phase1-triglyceride-net', 'phase1-triglyceride-acylation')]
         current, extra = [json.loads(p.read_text()) for p in extra_paths]
         paths.extend(extra_paths)
+        layers.append(current); extras.append(extra)
+    if symmetry:
+        extra_paths = [Path('data/reports', n + '.json') for n in ('phase1-triglyceride-symmetry-net', 'phase1-triglyceride-symmetry')]
+        current, extra = [json.loads(p.read_text()) for p in extra_paths]
+        paths.extend(extra_paths)
+        layers.append(current); extras.append(extra)
     hashes = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
-    for doc in (current, previous, parent, baseline, lipid, *([extra] if extra else [])):
+    for doc in (*layers, baseline, lipid, *extras):
         for p, sha in doc['source_sha256'].items():
             if hashlib.sha256(Path(p).read_bytes()).hexdigest() != sha:
                 raise ValueError('Stale chemistry view input')
-    layers = [parent, previous] + ([current] if triglycerides else [])
     certificates = baseline['certificates'] + [c for layer in layers for c in layer['new_certificates']]
     if len({c['compound_id'] for c in certificates}) != len(certificates):
         raise ValueError('Duplicate exact certificate identity')
@@ -33,7 +39,7 @@ def run(triglycerides=False):
     reactions = {r['id']: r for r in network['reactions'] + added_reactions}
     additions = {r['id'] for r in added_reactions}
     source_by_id = {r['rule_id']: r for r in lipid['source_records']}
-    if extra:
+    for extra in extras:
         source_by_id[extra['source_record']['rule_id']] = extra['source_record']
     selected = []
     for rid in sorted(used):
@@ -59,7 +65,7 @@ def run(triglycerides=False):
         'view_boundary': 'Reaction-first scenario across all 6,220 CannabisDB records. No enzyme gate. Added completion and lipid hypotheses are highlighted as assumptions; every input and coproduct remains in each full equation.',
         'claim_boundary': current['claim_boundary'], 'source_sha256': hashes}
     bundle = attach_evidence(report, evidence)
-    folder = Path('docs/data/triglyceride-net-view' if triglycerides else 'docs/data/chemistry-net-view'); folder.mkdir(parents=True, exist_ok=True)
+    folder = Path('docs/data/triglyceride-symmetry-net-view' if symmetry else 'docs/data/triglyceride-net-view' if triglycerides else 'docs/data/chemistry-net-view'); folder.mkdir(parents=True, exist_ok=True)
     payload = json.dumps(bundle, separators=(',', ':')) + '\n'
     (folder / 'bundle.json').write_text(payload)
     manifest = {'schema': report['schema'], 'file': 'bundle.json', 'bytes': len(payload.encode()),
@@ -72,4 +78,6 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('--triglycerides', action='store_true')
-    run(triglycerides=parser.parse_args().triglycerides)
+    parser.add_argument('--symmetry', action='store_true')
+    args = parser.parse_args()
+    run(triglycerides=args.triglycerides, symmetry=args.symmetry)

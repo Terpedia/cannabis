@@ -1,0 +1,12 @@
+{
+  "schema": "cannabis-carbon.gcp-batch-verification.v1",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "verified": true,
+  "verification": "All load jobs DONE without errors; exact service-account principal and destination checked. Full bounded SELECT readbacks match complete local NDJSON record multisets, report checksums and unique kind/id pairs.",
+  "tables": [
+    {"table": "cannabis_phase1_triglyceride_symmetry_20260906_v1", "job_id": "cannabis_sa_triglyceride_symmetry_20260906_v1", "rows": 544, "report_sha256": "30ab948ae90a47ec5ae50cd7f587362302577feb0d8a389ee67df05629f4ebda"},
+    {"table": "cannabis_phase1_triglyceride_symmetry_net_20260906_v1", "job_id": "cannabis_sa_triglyceride_symmetry_net_20260906_v1", "rows": 24027, "report_sha256": "50d19cfc0745df396780861158a1f45bad7f105c097452f142279663a987c8c4"}
+  ]
+}
