@@ -1,0 +1,38 @@
+{
+  "schema":"cannabis-carbon.light-reaction-requirements.v1",
+  "status":"source-annotation-not-enforced-energy-model",
+  "accessed":"2026-09-06",
+  "reactions":[
+    {
+      "source_master_id":"RHEA:30407",
+      "source_forward_id":"RHEA:30408",
+      "source_url":"https://www.rhea-db.org/rhea/30407",
+      "ec":"1.97.1.12",
+      "label":"photosystem I",
+      "model_reaction_id":"balanced-equation:9702890047bb1d918ae531bf6612a4c21813d5a94590cd0f5fd0d86210fad8fe",
+      "source_forward_model_direction":"hypothetical-right-to-left",
+      "energy_inputs":[{"entity_type":"photon","source_id":"CHEBI:30212","coefficient":1}],
+      "reactive_part_context":[
+        {"source_entity":"RHEA-COMP:10039","label":"reduced plastocyanin","reactive_part_smiles":"[Cu+]"},
+        {"source_entity":"RHEA-COMP:10040","label":"oxidized plastocyanin","reactive_part_smiles":"[Cu+2]"},
+        {"source_entity":"RHEA-COMP:10000","label":"oxidized 2Fe-2S ferredoxin","reactive_part_smiles":"[S]1[Fe+][S][Fe+]1"},
+        {"source_entity":"RHEA-COMP:10001","label":"reduced 2Fe-2S ferredoxin","reactive_part_smiles":"[S]1[Fe][S][Fe+]1"}
+      ],
+      "boundary":"The source reaction uses protein-bound carriers and light. The SMILES projection preserves reactive metal parts only; it is not evidence that free copper ions replace plastocyanin or that light can be omitted."
+    },
+    {
+      "source_master_id":"RHEA:30247",
+      "source_forward_id":"RHEA:30248",
+      "source_url":"https://www.rhea-db.org/rhea/30247",
+      "supporting_source_url":"https://www.rhea-db.org/rhea/36359",
+      "ec":"1.10.3.9",
+      "label":"photosystem II, exact plastoquinone-9 form",
+      "model_reaction_id":"balanced-equation:78325ad4ab16b16fb1c99b725fbcd7ec6210ad837fe0410e8b4d5fc66b6ec063",
+      "source_forward_model_direction":"hypothetical-right-to-left",
+      "energy_inputs":[{"entity_type":"photon","source_id":"CHEBI:30212","coefficient":4}],
+      "reactive_part_context":[],
+      "boundary":"The exact source form consumes two plastoquinone-9 and two water molecules, with four photons, and yields two plastoquinol-9 and oxygen. Element/charge balance in the molecular projection does not establish energetics, light availability or physiological reversibility."
+    }
+  ],
+  "claim_boundary":"Source-linked annotations only; no reaction, direction, exchange boundary or coverage changes. Photons are energy inputs, not wildcard chemical atoms or carbon-free mineral nutrients. Enforcing light availability and energy direction remains outstanding. Other photochemical and energy-coupled reactions have not yet been exhaustively annotated."
+}

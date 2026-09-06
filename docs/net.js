@@ -59,6 +59,7 @@
         speciation_type: reaction.speciation_type || null,
         direction_status: reaction.direction_status || null,
         balance_status: reaction.balance_status || null,
+        light_requirement_annotation: reaction.light_requirement_annotation || null,
         enzyme_evidence_ids: reaction.enzyme_evidence_ids, candidate_protein_ids: proteins,
         is_completion_sensitivity: !!reaction.is_completion_sensitivity,
         is_route_sensitivity: !!reaction.is_route_sensitivity,
@@ -139,7 +140,7 @@
     return state;
   }
   function createLoader(fetcher, folder = 'net-view', comparison = 'CHI-and-FNSII') {
-    if(folder==='local-speciation-net-view') return async()=>{
+    if(['local-speciation-net-view','selenium-net-view'].includes(folder)) return async()=>{
       const response=await fetcher(`data/${folder}/index.json`,{cache:'no-cache'});
       if(!response.ok) throw Error(`Manifest unavailable (HTTP ${response.status})`);
       const manifest=await response.json();
@@ -195,7 +196,7 @@ if (!['pg-named-net-view', 'glycerophospholipid-net-view', 'amino-phospholipid-n
   function mount() {
     const scenario = new URLSearchParams(location.search).get('scenario');
     const folder = scenario === 'hydrolysis' ? 'phosphatidate-hydrolysis-net-view' : scenario === 'symmetry' ? 'triglyceride-symmetry-net-view' : scenario === 'triglycerides' ? 'triglyceride-net-view' : scenario === 'chemistry' ? 'chemistry-net-view' : scenario === 'fnsii' ? 'fnsii-net-view' : scenario === 'remaining' ? 'remaining-net-view' : scenario === 'remaining-restricted' ? 'remaining-restricted-net-view' : scenario === 'thiolase' ? 'thiolase-net-view' : scenario === 'thiolase-restricted' ? 'thiolase-restricted-net-view' : scenario === 'purine' ? 'purine-net-view' : scenario === 'purine-restricted' ? 'purine-restricted-net-view' : scenario === 'expanded' ? 'expanded-net-view' : scenario === 'catalog' ? 'catalog-net-view' : scenario === 'completions' ? 'completion-net-view' : 'net-view';
-const selectedFolder = scenario === 'speciation' ? 'local-speciation-net-view' : scenario === 'pg-named' ? 'pg-named-net-view' : scenario === 'glycerophospholipids' ? 'glycerophospholipid-net-view' : scenario === 'aminos' ? 'amino-phospholipid-net-view' : scenario === 'protonation' ? 'source-mapped-protonation-net-view' : scenario === 'cardiolipins' ? 'cardiolipin-net-view' : scenario === 'precursors' ? 'glycerolipid-precursors-net-view' : folder;
+const selectedFolder = scenario === 'selenium' ? 'selenium-net-view' : scenario === 'speciation' ? 'local-speciation-net-view' : scenario === 'pg-named' ? 'pg-named-net-view' : scenario === 'glycerophospholipids' ? 'glycerophospholipid-net-view' : scenario === 'aminos' ? 'amino-phospholipid-net-view' : scenario === 'protonation' ? 'source-mapped-protonation-net-view' : scenario === 'cardiolipins' ? 'cardiolipin-net-view' : scenario === 'precursors' ? 'glycerolipid-precursors-net-view' : folder;
     const $ = id => document.getElementById(id), loader = createLoader((...args) => fetch(...args), selectedFolder, new URLSearchParams(location.search).get('comparison') || (scenario === 'pg-named' ? 'alternative_extended_result' : 'CHI-and-FNSII'));
     if (typeof cytoscape !== 'function') { $('netMessage').textContent = 'The graph library could not load. Reload the page or use the downloadable certificates below.'; return; }
     let bundle, current, generation = 0, selectionGeneration = 0;
