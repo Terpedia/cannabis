@@ -7,10 +7,10 @@ from .phase1_sharded_net_view import write_view
 from .phase1_net_view import build as attach_evidence
 
 
-def run(*, ketone=False, c17=False):
-    if ketone and c17:
+def run(*, ketone=False, c17=False, geranial=False):
+    if sum((ketone, c17, geranial)) > 1:
         raise ValueError('Select one scenario')
-    folder=Path('docs/data/ketone-stereo-net-view' if c17 else 'docs/data/selenium-net-view' if ketone else 'docs/data/local-speciation-net-view')
+    folder=Path('docs/data/c17-net-view' if geranial else 'docs/data/ketone-stereo-net-view' if c17 else 'docs/data/selenium-net-view' if ketone else 'docs/data/local-speciation-net-view')
     read=lambda p:json.loads(p.read_bytes())
     manifest=read(folder/'index.json')
     def verified(ref):
@@ -20,7 +20,7 @@ def run(*, ketone=False, c17=False):
         return json.loads(payload)
     base=verified(manifest); shared=verified(base['shared_chemistry'])
     certs=[verified(ref) for ref in base['certificate_files'].values()]
-    paths=[Path('data/reports/phase1-c17-elongation-net.json' if c17 else 'data/reports/phase1-ketone-stereo-net.json' if ketone else 'data/reports/phase1-selenium-forward-net.json'),
+    paths=[Path('data/reports/phase1-geranial-reduction-net.json' if geranial else 'data/reports/phase1-c17-elongation-net.json' if c17 else 'data/reports/phase1-ketone-stereo-net.json' if ketone else 'data/reports/phase1-selenium-forward-net.json'),
            Path('data/reports/phase1-medium-inventory.json'),Path('data/curation/light-reaction-requirements.json'),
            folder/'index.json',folder/'bundle.json']+[Path('data/reports/'+n+'.json') for n in
            ('phase1-target-hypotheses','phase1-screened-enzyme-overlay','phase1-route-enzyme-overlay')]
@@ -32,6 +32,12 @@ def run(*, ketone=False, c17=False):
                      Path('data/reports/phase1-c17-evidence-audit.json')]
         extra_layers=[read(p) for p in extra_paths[:2]]
         audit=read(extra_paths[2])
+        paths+=extra_paths
+    if geranial:
+        extra_paths=[Path('data/reports/phase1-alcohol-acetates-net.json'),
+                     Path('data/reports/phase1-geranial-evidence-audit.json')]
+        extra_layers=[read(extra_paths[0])]
+        audit=read(extra_paths[1])
         paths+=extra_paths
     completion_path=Path('data/reports/phase1-marts-completions.json')
     completion_report=read(completion_path)
@@ -84,7 +90,7 @@ def run(*, ketone=False, c17=False):
             reactions[rid]={**reactions[rid],'light_requirement_annotation':annotation}
     if audit:
         for cert in audit['certificates']:
-            if cert['role']!='new-inventory-target-certificate':
+            if cert.get('role','new-inventory-target-certificate')!='new-inventory-target-certificate':
                 continue
             for s in cert['steps']:
                 rid=s['reaction_id']
@@ -92,6 +98,8 @@ def run(*, ketone=False, c17=False):
                     raise ValueError('Audited reaction missing from map')
                 note={k:s[k] for k in ('evidence_class','review_flags',
                     'cannabis_physiological_direction_established_by_this_audit','enzyme_assignment_established_by_this_audit')}
+                if s.get('biochemical_evidence'):
+                    note['biochemical_evidence']=s['biochemical_evidence']
                 notes=reactions[rid].setdefault('certificate_direction_annotations',{})
                 if s['direction_mode'] in notes and notes[s['direction_mode']]!=note:
                     raise ValueError('Conflicting direction audit')
@@ -144,8 +152,18 @@ def run(*, ketone=False, c17=False):
             'The unchanged permissive 102-species boundary is not a minimum defined medium.')
         report['medium_annotation_scope']='selenium-forward baseline; not recomputed for C17 hypotheses'
         report['certificate_evidence_audit_summary']=audit['summary']
+    if geranial:
+        report['schema']='cannabis-carbon.geranial-view.v1'
+        report['view_boundary']=('Alcohol-acetylation and geranial-reduction scenario. '
+            'The geranial channel has substrate-specific cascade evidence outside Cannabis; acetylation additions '
+            'are reaction-class analogies. No Cannabis enzyme assignment follows. Direction annotations cover '
+            'the four recent gains and retain prior C17 annotations, not a full-network physiology audit. '
+            'Medium consumer counts describe the earlier selenium-forward certificate set. '
+            'The permissive 102-species boundary is not a minimum defined medium.')
+        report['medium_annotation_scope']='selenium-forward baseline; not recomputed for geranial hypotheses'
+        report['certificate_evidence_audit_summary']=audit['summary']
     Path('docs/data/light-reaction-requirements.json').write_bytes(paths[2].read_bytes())
-    print(json.dumps(write_view(report,'docs/data/c17-net-view' if c17 else 'docs/data/ketone-stereo-net-view' if ketone else 'docs/data/selenium-net-view')),flush=True)
+    print(json.dumps(write_view(report,'docs/data/geranial-net-view' if geranial else 'docs/data/c17-net-view' if c17 else 'docs/data/ketone-stereo-net-view' if ketone else 'docs/data/selenium-net-view')),flush=True)
 
 
 if __name__=='__main__':
