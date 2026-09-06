@@ -12,7 +12,7 @@ SOURCES = ('phase1-lipid-acylation-net', 'phase1-reaction-completion-net',
 
 def reaction_sources(reaction, source_by_id):
     """Keep the source of an assumption distinct from biochemical reaction evidence."""
-    if reaction.get('hypothesis_type') == 'amino-phospholipid-speciation':
+    if reaction.get('hypothesis_type') in ('amino-phospholipid-speciation', 'glycerophospholipid-speciation'):
         if reaction.get('speciation_type') not in ('net-zero-intramolecular-proton-relocation', 'explicit-proton-exchange'):
             raise ValueError('Missing explicit speciation classification')
         return reaction.get('sources', []) + [{
@@ -35,7 +35,8 @@ def reaction_sources(reaction, source_by_id):
 
 
 def run(triglycerides=False, symmetry=False, hydrolysis=False, precursors=False, cardiolipins=False,
-        protonation=False, aminos=False):
+        protonation=False, aminos=False, glycerophospholipids=False):
+    aminos = aminos or glycerophospholipids
     protonation = protonation or aminos
     paths = [Path('data/reports', n + '.json') for n in SOURCES]
     current, parent, baseline, network, lipid, *evidence = [json.loads(p.read_text()) for p in paths]
@@ -82,6 +83,12 @@ def run(triglycerides=False, symmetry=False, hydrolysis=False, precursors=False,
         current, *hypotheses = [json.loads(p.read_text()) for p in extra_paths]
         paths.extend(extra_paths)
         layers.append(current); extras.extend(hypotheses)
+    if glycerophospholipids:
+        extra_paths = [Path('data/reports', n + '.json') for n in
+                       ('phase1-glycerophospholipid-net', 'phase1-glycerophospholipid-synthesis')]
+        current, extra = [json.loads(p.read_text()) for p in extra_paths]
+        paths.extend(extra_paths)
+        layers.append(current); extras.append(extra)
     hashes = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     for doc in (*layers, baseline, lipid, *extras):
         for p, sha in doc['source_sha256'].items():
@@ -130,6 +137,9 @@ def run(triglycerides=False, symmetry=False, hydrolysis=False, precursors=False,
         'claim_boundary': current['claim_boundary'], 'source_sha256': hashes}
     bundle = attach_evidence(report, evidence)
     folder = Path('docs/data/amino-phospholipid-net-view' if aminos else 'docs/data/source-mapped-protonation-net-view' if protonation else 'docs/data/cardiolipin-net-view' if cardiolipins else 'docs/data/glycerolipid-precursors-net-view' if precursors else 'docs/data/phosphatidate-hydrolysis-net-view' if hydrolysis else 'docs/data/triglyceride-symmetry-net-view' if symmetry else 'docs/data/triglyceride-net-view' if triglycerides else 'docs/data/chemistry-net-view'); folder.mkdir(parents=True, exist_ok=True)
+    if glycerophospholipids:
+        folder = Path('docs/data/glycerophospholipid-net-view')
+        folder.mkdir(parents=True, exist_ok=True)
     payload = json.dumps(bundle, separators=(',', ':')) + '\n'
     (folder / 'bundle.json').write_text(payload)
     manifest = {'schema': report['schema'], 'file': 'bundle.json', 'bytes': len(payload.encode()),
@@ -148,6 +158,8 @@ if __name__ == '__main__':
     parser.add_argument('--cardiolipins', action='store_true')
     parser.add_argument('--protonation', action='store_true')
     parser.add_argument('--aminos', action='store_true')
+    parser.add_argument('--glycerophospholipids', action='store_true')
     args = parser.parse_args()
     run(triglycerides=args.triglycerides, symmetry=args.symmetry, hydrolysis=args.hydrolysis,
-        precursors=args.precursors, cardiolipins=args.cardiolipins, protonation=args.protonation, aminos=args.aminos)
+        precursors=args.precursors, cardiolipins=args.cardiolipins, protonation=args.protonation,
+        aminos=args.aminos, glycerophospholipids=args.glycerophospholipids)

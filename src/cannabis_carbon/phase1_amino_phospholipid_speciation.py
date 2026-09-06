@@ -64,9 +64,11 @@ def source_forms(mol, template):
     return list(result.values())
 
 
-def build(parent, catalog):
+def build(parent, catalog, *, rules=None, boundary=BOUNDARY,
+          schema='cannabis-carbon.phase1-amino-phospholipid-speciation.v1'):
     compounds = {c['id']: c for c in parent['compounds']}
-    sources = {kind: next(r for r in catalog if r['rule_id'] == rid) for kind, rid in RULES.items()}
+    sources = {kind: next(r for r in catalog if r['rule_id'] == rid)
+               for kind, rid in (RULES if rules is None else rules).items()}
     templates = {kind: next(m for m in (Chem.MolFromSmiles(s) for s in r['reaction_smarts'].split('>>')[1].split('.'))
                            if any(a.GetAtomicNum() == 0 for a in m.GetAtoms())) for kind, r in sources.items()}
     known = set(compounds)
@@ -96,10 +98,10 @@ def build(parent, catalog):
                     'speciation_type': 'net-zero-intramolecular-proton-relocation' if delta == 0 else 'explicit-proton-exchange',
                     'protons_consumed': delta, 'left': left, 'right': right,
                     'source_reaction_id': sources[kind]['rule_id'], 'source_url': sources[kind]['source_url'],
-                    'claim_boundary': BOUNDARY})
-    return {'schema': 'cannabis-carbon.phase1-amino-phospholipid-speciation.v1',
+                    'claim_boundary': boundary})
+    return {'schema': schema,
         'source_records': list(sources.values()), 'targets': rows,
-        'compounds': [compounds[c] for c in sorted(used)], 'claim_boundary': BOUNDARY,
+        'compounds': [compounds[c] for c in sorted(used)], 'claim_boundary': boundary,
         'summary': {'inventory_records_screened': len(parent['targets']), 'matched_records': len({t['cannabisdb_id'] for t in rows}),
             'proposal_count': len(rows), 'lipid_class_counts': dict(Counter(t['lipid_class'] for t in rows)),
             'speciation_type_counts': dict(Counter(t['speciation_type'] for t in rows)),

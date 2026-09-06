@@ -6,6 +6,20 @@ from cannabis_carbon.phase1_chemistry_route_view import reaction_sources
 
 
 class ChemistryRouteSourceTests(unittest.TestCase):
+    def test_glycerophospholipid_speciation_keeps_assumption_provenance(self):
+        report = json.loads(Path('data/reports/phase1-glycerophospholipid-synthesis.json').read_text())
+        reactions = [r for r in report['reactions'] if r['hypothesis_type'] == 'glycerophospholipid-speciation']
+        self.assertEqual(len(reactions), 157)
+        for reaction in reactions:
+            source, = reaction_sources(reaction, {})
+            self.assertEqual(source['source_urls'], [reaction['source_url']])
+            self.assertEqual(source['speciation_type'], 'explicit-proton-exchange')
+            self.assertEqual(source['claim_boundary'], reaction['claim_boundary'])
+            self.assertIn('not-curated-reaction-or-exact-ChEBI-mapping', source['evidence_type'])
+            self.assertNotIn('mapping_evidence', source)
+            with self.assertRaisesRegex(ValueError, 'speciation classification'):
+                reaction_sources({**reaction, 'speciation_type': None}, {})
+
     def test_amino_speciation_is_not_presented_as_exact_source_mapping(self):
         report = json.loads(Path('data/reports/phase1-amino-phospholipid-synthesis.json').read_text())
         reactions = [r for r in report['reactions'] if r['hypothesis_type'] == 'amino-phospholipid-speciation']
