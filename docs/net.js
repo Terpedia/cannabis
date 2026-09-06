@@ -83,9 +83,71 @@
   }
   function matchingTargets(targets, query, scope) {
     const q = query.trim().toLowerCase();
-    return targets.filter(t => (scope === 'all' || (t.certificate_compound_id && (scope !== 'enzyme-gaps' || t.missing_candidate_reaction_ids?.length))) && `${t.label} ${t.cannabisdb_id}`.toLowerCase().includes(q));
+    return targets.filter(t => (scope === 'all' || (t.certificate_compound_id && (scope !== 'enzyme-gaps' || (t.missing_candidate_reaction_count ?? t.missing_candidate_reaction_ids?.length)))) && `${t.label} ${t.cannabisdb_id}`.toLowerCase().includes(q));
+  }
+  function shardedView(base, fetcher, folder) {
+    if (base.schema !== 'cannabis-carbon.sharded-net-view.v1' || !Array.isArray(base.targets) || base.targets.length !== base.summary?.target_records || !base.certificate_files) throw Error('Invalid sharded index');
+    const validRef = (r, pattern) => r && pattern.test(r.file) && /^[a-f0-9]{64}$/.test(r.sha256) && Number.isSafeInteger(r.bytes) && r.bytes > 0;
+    if (!validRef(base.shared_chemistry, /^chemistry\.json$/)) throw Error('Invalid shared chemistry reference');
+    const targets = new Map(base.targets.map(t=>[t.cannabisdb_id,t]));
+    if(targets.size !== base.targets.length) throw Error('Duplicate target accession');
+    for (const [cid,ref] of Object.entries(base.certificate_files)) if (!/^structure:[a-f0-9]{64}$/.test(cid) || !validRef(ref,/^certificates\/[a-f0-9]{64}\.json$/)) throw Error('Invalid certificate reference');
+    for (const t of base.targets) {
+      if (!Number.isSafeInteger(t.missing_candidate_reaction_count) || t.missing_candidate_reaction_count < 0) throw Error('Invalid enzyme-gap count');
+      if (t.certificate_compound_id && (t.certificate_compound_id !== t.compound_id || !base.certificate_files[t.compound_id])) throw Error('Invalid target certificate identity');
+    }
+    async function read(ref) {
+      const response = await fetcher(`data/${folder}/${ref.file}?v=${ref.sha256.slice(0,16)}`);
+      if (!response.ok) throw Error(`Pathway data unavailable (HTTP ${response.status})`);
+      const bytes = await response.arrayBuffer();
+      if (bytes.byteLength !== ref.bytes) throw Error('Pathway data size mismatch');
+      const digest = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),n=>n.toString(16).padStart(2,'0')).join('');
+      if (digest !== ref.sha256) throw Error('Pathway data checksum mismatch');
+      return JSON.parse(new TextDecoder().decode(bytes));
+    }
+    let shared;
+    const certificates = new Map();
+    const state = {...base, certificates:[], reactions:[], compounds:[], enzyme_evidence:[], loadTarget};
+    async function loadTarget(id) {
+      const target = targets.get(id);
+      if (!target) throw Error('Unknown target record');
+      const cid = target.certificate_compound_id;
+      if (!cid) return {...state};
+      if (!shared) shared = read(base.shared_chemistry).then(data=>{
+        for (const key of ['reactions','compounds','enzyme_evidence']) if (!Array.isArray(data[key])) throw Error('Invalid shared chemistry');
+        return data;
+      }).catch(error=>{shared=null;throw error;});
+      if (!certificates.has(cid)) {
+        const promise=read(base.certificate_files[cid]).then(cert=>{
+          if(cert.compound_id!==cid || !Array.isArray(cert.steps)) throw Error('Certificate identity mismatch');
+          return cert;
+        }).catch(error=>{certificates.delete(cid);throw error;});
+        certificates.set(cid,promise);
+        if(certificates.size>16) certificates.delete(certificates.keys().next().value);
+      }
+      const [chemistry,cert] = await Promise.all([shared,certificates.get(cid)]);
+      const byReaction = new Map(chemistry.reactions.map(r=>[r.id,r]));
+      const missing = new Set();
+      for (const step of cert.steps) {
+        const reaction = byReaction.get(step.reaction_id);
+        if (!reaction || base.forbidden_step_ids?.includes(step.step_id)) throw Error('Missing or forbidden certificate reaction');
+        if (!reaction.enzyme_evidence_ids.length) missing.add(step.reaction_id);
+      }
+      if (missing.size!==target.missing_candidate_reaction_count) throw Error('Certificate enzyme-gap count mismatch');
+      return {...state,...chemistry,certificates:[cert],targets:base.targets.map(t=>t.compound_id===cid ? {...t,missing_candidate_reaction_ids:[...missing].sort()} : t)};
+    }
+    return state;
   }
   function createLoader(fetcher, folder = 'net-view', comparison = 'CHI-and-FNSII') {
+    if(folder==='local-speciation-net-view') return async()=>{
+      const response=await fetcher(`data/${folder}/index.json`,{cache:'no-cache'});
+      if(!response.ok) throw Error(`Manifest unavailable (HTTP ${response.status})`);
+      const manifest=await response.json();
+      if(manifest.file!=='bundle.json'|| !/^[a-f0-9]{64}$/.test(manifest.sha256)) throw Error('Invalid bundle manifest');
+      const data=await fetcher(`data/${folder}/bundle.json?v=${manifest.sha256.slice(0,16)}`);
+      if(!data.ok) throw Error(`Net-conversion data unavailable (HTTP ${data.status})`);
+      return shardedView(await data.json(),fetcher,folder);
+    };
 if (!['pg-named-net-view', 'glycerophospholipid-net-view', 'amino-phospholipid-net-view', 'source-mapped-protonation-net-view', 'cardiolipin-net-view', 'glycerolipid-precursors-net-view', 'phosphatidate-hydrolysis-net-view', 'triglyceride-symmetry-net-view', 'triglyceride-net-view', 'chemistry-net-view', 'fnsii-net-view', 'net-view', 'completion-net-view', 'catalog-net-view', 'expanded-net-view', 'purine-net-view', 'purine-restricted-net-view', 'thiolase-net-view', 'thiolase-restricted-net-view', 'remaining-net-view', 'remaining-restricted-net-view'].includes(folder)) throw new Error('Invalid scenario folder');
     if (folder === 'fnsii-net-view' && !['baseline', 'CHI-only', 'FNSII-only', 'CHI-and-FNSII'].includes(comparison)) throw new Error('Invalid sensitivity comparison');
     const sourceFolder = folder === 'remaining-restricted-net-view' ? 'remaining-net-view' : folder === 'thiolase-restricted-net-view' ? 'thiolase-net-view' : folder === 'purine-restricted-net-view' ? 'purine-net-view' : folder;
@@ -133,10 +195,10 @@ if (!['pg-named-net-view', 'glycerophospholipid-net-view', 'amino-phospholipid-n
   function mount() {
     const scenario = new URLSearchParams(location.search).get('scenario');
     const folder = scenario === 'hydrolysis' ? 'phosphatidate-hydrolysis-net-view' : scenario === 'symmetry' ? 'triglyceride-symmetry-net-view' : scenario === 'triglycerides' ? 'triglyceride-net-view' : scenario === 'chemistry' ? 'chemistry-net-view' : scenario === 'fnsii' ? 'fnsii-net-view' : scenario === 'remaining' ? 'remaining-net-view' : scenario === 'remaining-restricted' ? 'remaining-restricted-net-view' : scenario === 'thiolase' ? 'thiolase-net-view' : scenario === 'thiolase-restricted' ? 'thiolase-restricted-net-view' : scenario === 'purine' ? 'purine-net-view' : scenario === 'purine-restricted' ? 'purine-restricted-net-view' : scenario === 'expanded' ? 'expanded-net-view' : scenario === 'catalog' ? 'catalog-net-view' : scenario === 'completions' ? 'completion-net-view' : 'net-view';
-const selectedFolder = scenario === 'pg-named' ? 'pg-named-net-view' : scenario === 'glycerophospholipids' ? 'glycerophospholipid-net-view' : scenario === 'aminos' ? 'amino-phospholipid-net-view' : scenario === 'protonation' ? 'source-mapped-protonation-net-view' : scenario === 'cardiolipins' ? 'cardiolipin-net-view' : scenario === 'precursors' ? 'glycerolipid-precursors-net-view' : folder;
+const selectedFolder = scenario === 'speciation' ? 'local-speciation-net-view' : scenario === 'pg-named' ? 'pg-named-net-view' : scenario === 'glycerophospholipids' ? 'glycerophospholipid-net-view' : scenario === 'aminos' ? 'amino-phospholipid-net-view' : scenario === 'protonation' ? 'source-mapped-protonation-net-view' : scenario === 'cardiolipins' ? 'cardiolipin-net-view' : scenario === 'precursors' ? 'glycerolipid-precursors-net-view' : folder;
     const $ = id => document.getElementById(id), loader = createLoader((...args) => fetch(...args), selectedFolder, new URLSearchParams(location.search).get('comparison') || (scenario === 'pg-named' ? 'alternative_extended_result' : 'CHI-and-FNSII'));
     if (typeof cytoscape !== 'function') { $('netMessage').textContent = 'The graph library could not load. Reload the page or use the downloadable certificates below.'; return; }
-    let bundle, current, generation = 0;
+    let bundle, current, generation = 0, selectionGeneration = 0;
     const cy = cytoscape({container: $('netCy'), elements: [], layout: {name: 'preset'}, style: [
       {selector: 'node', style: {'label': 'data(label)', 'background-color': '#aebdd2', 'color': '#e8eef8', 'font-size': 16, 'text-wrap': 'wrap', 'text-max-width': 120, 'text-valign': 'bottom', 'text-margin-y': 7, 'width': 40, 'height': 40}},
       {selector: 'node[role="input"]', style: {'background-color': '#77b9ef'}},
@@ -184,6 +246,23 @@ const selectedFolder = scenario === 'pg-named' ? 'pg-named-net-view' : scenario 
       if (current.steps.length === 1) describe(current.steps[0]); else $('netEquation').textContent = 'Select an edge or a reaction above to inspect its complete equation and enzyme evidence.';
     }
     function selectTarget() {
+      const selection = ++selectionGeneration, loadGeneration = generation;
+      if(bundle?.loadTarget) {
+        const id = $('netTarget').value;
+        clear(); $('netReaction').disabled = true; $('netRetry').hidden = true;
+        $('netTitle').textContent = 'Loading selected pathway…'; $('netStatus').textContent = '';
+        $('netMessage').textContent = 'Loading full equations and the selected certificate…';
+        return bundle.loadTarget(id).then(loaded=>{
+          if(selection!==selectionGeneration || loadGeneration!==generation) return;
+          bundle=loaded; renderTarget();
+        }).catch(error=>{
+          if(selection!==selectionGeneration || loadGeneration!==generation) return;
+          clear(); $('netMessage').textContent=error.message; $('netRetry').hidden=false;
+        });
+      }
+      renderTarget();
+    }
+    function renderTarget() {
       const target = bundle?.targets.find(t => t.cannabisdb_id === $('netTarget').value);
       const cert = bundle?.certificates.find(c => c.compound_id === target?.certificate_compound_id);
       options($('netReaction'), [['', 'Whole net conversion'], ...(cert?.steps || []).map((s,i) => [s.step_id, `${i+1}. ${bundle.reactions.find(r=>r.id===s.reaction_id).sources[0]?.source_reaction_id || s.reaction_id} · extent ${s.extent}`])]);
@@ -197,7 +276,7 @@ const selectedFolder = scenario === 'pg-named' ? 'pg-named-net-view' : scenario 
       options($('netTarget'), shown.map(t=>[t.cannabisdb_id,`${t.label} · ${t.cannabisdb_id}`]));
       $('netTarget').disabled = !shown.length; $('netTarget').value = shown.some(t=>t.cannabisdb_id===selected) ? selected : shown[0]?.cannabisdb_id || '';
       $('netMatches').textContent = `${rows.length} matches; ${shown.length} shown. Refine the search to find any record.`;
-      if (!shown.length) {clear(); $('netTitle').textContent = 'No matching target'; $('netStatus').textContent = ''; $('netMessage').textContent = 'No records match this search and scope.'; options($('netReaction'), []); $('netReaction').disabled = true;} else selectTarget();
+      if (!shown.length) {++selectionGeneration; clear(); $('netTitle').textContent = 'No matching target'; $('netStatus').textContent = ''; $('netMessage').textContent = 'No records match this search and scope.'; options($('netReaction'), []); $('netReaction').disabled = true;} else return selectTarget();
     }
     async function load() {
       const token = ++generation; clear(); bundle = null; $('netRetry').hidden = true; $('netTarget').disabled = true; $('netReaction').disabled = true;
@@ -215,7 +294,7 @@ const selectedFolder = scenario === 'pg-named' ? 'pg-named-net-view' : scenario 
           if (!bundle.targets.some(t => t.cannabisdb_id === requested)) $('netSearch').value = requested;
         }
         const newlyFeasible = ['expanded-candidates','purine-candidates','thiolase-candidates','remaining-candidates'].includes(bundle.view_scenario) ? bundle.targets.find(t=>t.new_net_certificate)?.cannabisdb_id : null;
-        search(requested || newlyFeasible || bundle.targets.find(t=>t.label==='Limonene' && t.certificate_compound_id)?.cannabisdb_id);
+        await search(requested || newlyFeasible || bundle.targets.find(t=>t.label==='Limonene' && t.certificate_compound_id)?.cannabisdb_id);
       } catch(error) {if(token!==generation)return; clear(); $('netMessage').textContent = error.message; $('netRetry').hidden = false;}
     }
     cy.on('tap','node,edge',event=>{const data=event.target.data(); $('netDetails').textContent=JSON.stringify(data,null,2); if(data.step_id){const step=current?.steps.find(s=>s.step_id===data.step_id);if(step)describe(step);}});
