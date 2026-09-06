@@ -1,0 +1,17 @@
+{
+  "endpoint": "https://sparql.rhea-db.org/sparql",
+  "queried_date": "2026-09-06",
+  "counts": [
+    {
+      "name": "distinct-carriers-with-reactive-parts",
+      "query": "PREFIX rh: <http://rdf.rhea-db.org/> SELECT (COUNT(DISTINCT ?c) AS ?count) WHERE { ?c rh:reactivePart ?p }",
+      "result": 1980
+    },
+    {
+      "name": "directed-carrier-occurrence-rows",
+      "query": "PREFIX rh: <http://rdf.rhea-db.org/> SELECT (COUNT(*) AS ?count) WHERE { { SELECT DISTINCT ?reaction ?sideRole ?side ?participant ?carrier ?coefficientPredicate WHERE { VALUES ?sideRole { rh:substrates rh:products } ?reaction ?sideRole ?side . ?side rh:contains ?participant ; ?coefficientPredicate ?participant . ?participant rh:compound ?carrier . ?carrier rh:reactivePart ?part . FILTER(?coefficientPredicate != rh:contains) } } }",
+      "result": 13974
+    }
+  ],
+  "claim_boundary": "Independent aggregate responses for checking retrieval completeness. They do not establish polymer completeness, source-version equivalence to the historical SMILES catalog, or corrected pathway coverage."
+}

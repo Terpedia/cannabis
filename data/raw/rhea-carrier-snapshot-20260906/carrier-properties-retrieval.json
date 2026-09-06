@@ -1,0 +1,31 @@
+{
+  "name": "carrier-properties",
+  "endpoint": "https://sparql.rhea-db.org/sparql",
+  "query": "PREFIX rh: <http://rdf.rhea-db.org/> SELECT DISTINCT ?subject ?predicate ?object WHERE {\n      { ?subject rh:reactivePart ?part . ?subject ?predicate ?object }\n      UNION\n      { ?carrier rh:reactivePart ?subject . ?subject ?predicate ?object }\n    } ORDER BY ?subject ?predicate ?object",
+  "retrieved_at": "2026-09-06T21:37:51.264907+00:00",
+  "headers": {
+    "Date": "Sun, 06 Sep 2026 21:37:45 GMT",
+    "Server": "Apache",
+    "Strict-Transport-Security": "max-age=31536001; includeSubDomains",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "origin, x-requested-with, content-type, X-Release, queryid",
+    "Access-Control-Expose-Headers": "X-Total-Results, X-Release, queryid, content-type, user-agent, cache-control, etag, range",
+    "X-Release": "2026_03",
+    "X-Frame-Options": "SAMEORIGIN",
+    "X-Content-Type-Options": "nosniff",
+    "Vary": "Negotiate,Accept,Accept-Encoding,Content-Type",
+    "Cache-Control": "public",
+    "ETag": "W/\"2026_03\"",
+    "Expires": "Mon, 07 Sep 2026 23:37:45 GMT",
+    "queryid": "-404",
+    "Content-Disposition": "attachment; filename=\"sparql-A6DB66EBD97C09BF3531EEABEBABC5D2.srj\"",
+    "Content-Type": "application/sparql-results+json",
+    "X-Powered-By": "sib.swiss",
+    "Connection": "close",
+    "Transfer-Encoding": "chunked"
+  },
+  "path": "data/raw/rhea-carrier-snapshot-20260906/carrier-properties.json",
+  "bytes": 11864857,
+  "rows": 31003,
+  "sha256": "d6aa5437cbf3c2d477f950c84bb65d2771389ab5f4a0469441337e2a69a9fc88"
+}
