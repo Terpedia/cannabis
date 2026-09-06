@@ -30,3 +30,11 @@ These pathways still consume protons, iron redox species, iron–sulfur clusters
 The reaction-inference skill's exact-identity and all-input requirements determined both the C15 precursor selection and the certificate checks. Next biological tests should establish substrate acceptance for the four elongation steps and distinguish their carrier, compartment and intermediate stereochemistry. The upstream C15 certificate also needs organism/direction/energy review; its mathematical existence does not establish the plant's actual initiation route. Enzyme assignments remain separate from Phase 1 reaction coverage.
 
 Publication status is recorded by separate GCP verification receipts and Pages release verification. Local static JSON generation alone is not a live-map deployment.
+
+## Saved-certificate evidence audit
+
+`phase1-c17-evidence-audit.json` preserves all steps, extents, full reaction source records and normalized external inputs for the independent C15 precursor certificate and each of the four new inventory-target certificates. The independent precursor route is not substituted for the selected upstream chemistry of the target certificates.
+
+The 94-step independent C15 certificate uses catalog-linked equations throughout. Its selected carbon-chain route includes C16 hydroxylation, carbon loss to a C15 acid, and ATP/CoA-dependent activation. Catalog linkage alone establishes neither Cannabis substrate activity nor physiological direction. Fourteen of its steps consume peroxide and produce oxygen; these are exact participant-pattern review flags, not a thermodynamic impossibility verdict.
+
+The hexadecane, octadecane, eicosane and margaric-acid certificates contain respectively 4, 10, 14 and 5 proposed gap-filling steps. Each includes 10 peroxide-consuming/oxygen-producing steps and eight CO₂-consuming steps. CO₂ consumption alone is not proof of photosynthetic fixation. Source-linked and proposed steps remain separately filterable, and every step explicitly leaves Cannabis physiological direction and enzyme assignment unestablished by this audit. Counts describe the selected certificates, not all feasible alternatives or required minimum inputs. No model reactions, bounds, coverage or confirmed-biology counts change.
