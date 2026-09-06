@@ -43,8 +43,12 @@ def _reconstruct_sparse(steps, fluxes):
 
 
 class NetModel:
-    def __init__(self, reactions, exchange_ids, forbidden_step_ids=()):
-        self.steps = orientations(reactions)
+    def __init__(self, reactions, exchange_ids, forbidden_step_ids=(), *, directed_steps=None, conserved_ids=()):
+        if directed_steps is not None and reactions:
+            raise ValueError('Supply reactions or explicit directed steps, not both')
+        self.steps = orientations(reactions) if directed_steps is None else list(directed_steps)
+        if len({s['id'] for s in self.steps}) != len(self.steps):
+            raise ValueError('Duplicate directed step identity')
         forbidden = set(forbidden_step_ids)
         if not forbidden <= {s['id'] for s in self.steps}:
             raise ValueError('Unknown forbidden directed step')
@@ -61,6 +65,10 @@ class NetModel:
                 if c in self.index and amount:
                     row.append(self.index[c]); col.append(j); values.append(-float(amount))
         self.matrix = coo_matrix((values, (row, col)), shape=(len(self.index), len(self.steps))).tocsr()
+        self.conserved_ids = set(conserved_ids)
+        if not self.conserved_ids <= self.index.keys():
+            raise ValueError('Conserved pools must be internal participants')
+        self.conservation_matrix = self.matrix[[self.index[c] for c in sorted(self.conserved_ids)]] if self.conserved_ids else None
 
     def solve(self, target, *, step_costs=None):
         costs = np.ones(len(self.steps)) if step_costs is None else np.asarray(step_costs, dtype=float)
@@ -72,13 +80,15 @@ class NetModel:
             return {'status': 'no-net-producing-candidate-equation'}
         bound = np.zeros(len(self.index)); bound[self.index[target]] = -1
         result = linprog(costs, A_ub=self.matrix, b_ub=bound,
+            A_eq=self.conservation_matrix,
+            b_eq=np.zeros(len(self.conserved_ids)) if self.conserved_ids else None,
             bounds=(0, None), method='highs', options={'time_limit': 30,
                 'primal_feasibility_tolerance': 1e-9, 'dual_feasibility_tolerance': 1e-9})
         record = {'solver_status': int(result.status), 'solver_message': result.message}
         if not result.success:
             return {**record, 'status': 'solver-reported-infeasible' if result.status == 2 else 'solver-incomplete-or-failed'}
         used, net = _reconstruct_sparse(self.steps, result.x)
-        if net.get(target, 0) < 1 or any(n < 0 for c, n in net.items() if c not in self.exchange_ids):
+        if net.get(target, 0) < 1 or any(n < 0 for c, n in net.items() if c not in self.exchange_ids) or any(net.get(c, 0) for c in self.conserved_ids):
             return {**record, 'status': 'numerical-solution-failed-exact-validation'}
         participants = {m['compound_id'] for s, _ in used for side in ('required_inputs', 'outputs') for m in s[side]}
         return {**record, 'status': 'exact-net-conversion-hypothesis',
