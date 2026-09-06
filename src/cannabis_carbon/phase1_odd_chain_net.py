@@ -5,13 +5,13 @@ from pathlib import Path
 from .phase1_lipid_acylation_net import build
 
 
-def run():
+def run(parent_name='alkane-net', hypothesis_name='odd-chain-elongation', output_name='odd-chain-net'):
     root = Path('data/reports')
     read = lambda p: json.loads(p.read_bytes())
-    parent_path = root / 'phase1-alkane-net.json'
+    parent_path = root / ('phase1-' + parent_name + '.json')
     parent = read(parent_path)
     paths = [root / 'phase1-full-balanced-network.json', root / 'phase1-marts-completions.json',
-             parent_path, root / 'phase1-odd-chain-elongation.json'] + [root / n for n in parent['baseline_certificate_reports']]
+             parent_path, root / ('phase1-' + hypothesis_name + '.json')] + [root / n for n in parent['baseline_certificate_reports']]
     docs = [read(p) for p in paths]
     for doc in docs:
         for p, sha in doc.get('source_sha256', {}).items():
@@ -26,14 +26,14 @@ def run():
               for doc in [*previous, parent] if 'added_reactions' in doc]
     report = build(docs[0], docs[1], original, parent, docs[3], prior_layers=layers,
                    extra_forward_types=('odd-chain-elongation',))
-    report.update({'schema': 'cannabis-carbon.phase1-odd-chain-net.v1',
+    report.update({'schema': 'cannabis-carbon.phase1-' + output_name + '.v1',
         'baseline_certificate_reports': parent['baseline_certificate_reports'] + [parent_path.name],
-        'lipid_evidence_report': 'phase1-odd-chain-elongation.json',
+        'lipid_evidence_report': 'phase1-' + hypothesis_name + '.json',
         'source_sha256': {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
         'claim_boundary': 'Odd-chain elongation substrate-scope sensitivity, not established Cannabis activity. '
             'New equations are proposed forward-only. Exact inherited identities, directions and permissive inorganic boundary retained. '
             'Positive exact net certificates allow regenerated pre-existing pools; nutrient uptake, growth, light, energetics and startup are not validated.'})
-    (root / 'phase1-odd-chain-net.json').write_text(json.dumps(report, separators=(',', ':')) + '\n')
+    (root / ('phase1-' + output_name + '.json')).write_text(json.dumps(report, separators=(',', ':')) + '\n')
     print(json.dumps(report['summary']), flush=True)
 
 

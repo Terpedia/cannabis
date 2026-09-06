@@ -21,11 +21,11 @@ BOUNDARY=('Odd-chain homolog sensitivity derived from a four-reaction C18-to-C20
  'This report alone establishes neither precursor supply nor a CO2 pathway. No coverage gain is claimed.')
 
 
-def build(current,network):
+def build(current,network,shifts=(-1,1)):
     compounds={c['id']:c for c in current['compounds']}; original=set(compounds)
     refs=[next(r for r in network['reactions'] if r['id']==rid) for rid in REFERENCES]
     reactions=[]; cycles=[]
-    for shift in (-1,1):
+    for shift in shifts:
         changed={}; transformations=[]
         for r in refs:
             for side in ('left','right'):
@@ -60,7 +60,7 @@ def build(current,network):
     used={p['compound_id'] for r in reactions for side in ('left','right') for p in r[side]}
     return {'schema':'cannabis-carbon.phase1-odd-chain-elongation.v1','cycles':cycles,'reactions':reactions,
         'reference_reactions':refs,'compounds':[compounds[c] for c in sorted(used)],'claim_boundary':BOUNDARY,
-        'summary':{'cycles':2,'balanced_equations':len(reactions),'new_compound_structures':len(used-original),'coverage_gain_claimed':0}}
+        'summary':{'cycles':len(cycles),'balanced_equations':len(reactions),'new_compound_structures':len(used-original),'coverage_gain_claimed':0}}
 
 
 def run():

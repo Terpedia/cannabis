@@ -4,21 +4,32 @@ import re
 from collections import defaultdict
 from fractions import Fraction
 from pathlib import Path
+import pytest
 
 from rdkit import Chem
 from cannabis_carbon.phase1_catalog import stable_id
 from cannabis_carbon.phase1_marts_completions import balanced
 from cannabis_carbon.phase1_odd_chain_elongation import build, REFERENCES
+from cannabis_carbon.phase1_c17_elongation import BOUNDARY as C17_BOUNDARY
 
 
-def test_exact_homolog_cycles_and_net_cofactor_bookkeeping():
+@pytest.mark.parametrize('parent_name,report_name,shifts,new_count', [
+    ('alkane-net', 'odd-chain-elongation', (-1, 1), 6),
+    ('odd-chain-net', 'c17-elongation', (-3,), 2)])
+def test_exact_homolog_cycles_and_net_cofactor_bookkeeping(parent_name,report_name,shifts,new_count):
     read = lambda n: json.loads(Path('data/reports/phase1-' + n + '.json').read_bytes())
-    parent, network, report = map(read, ('alkane-net', 'full-balanced-network', 'odd-chain-elongation'))
-    assert build(parent, network) == {k: v for k, v in report.items() if k != 'source_sha256'}
+    parent, network, report = map(read, (parent_name, 'full-balanced-network', report_name))
+    rebuilt = build(parent, network, shifts=shifts)
+    if report_name == 'c17-elongation':
+        rebuilt['schema'] = 'cannabis-carbon.phase1-c17-elongation.v1'
+        rebuilt['claim_boundary'] = C17_BOUNDARY
+        for r in rebuilt['reactions']:
+            r['claim_boundary'] = C17_BOUNDARY
+    assert rebuilt == {k: v for k, v in report.items() if k != 'source_sha256'}
     for path, sha in report['source_sha256'].items():
         assert hashlib.sha256(Path(path).read_bytes()).hexdigest() == sha
-    assert report['summary'] == {'cycles': 2, 'balanced_equations': 8,
-                                 'new_compound_structures': 6, 'coverage_gain_claimed': 0}
+    assert report['summary'] == {'cycles': len(shifts), 'balanced_equations': 4 * len(shifts),
+                                 'new_compound_structures': new_count, 'coverage_gain_claimed': 0}
     original = {c['id']: c for c in parent['compounds']}
     compounds = {c['id']: c for c in report['compounds']}
     reactions = {r['id']: r for r in report['reactions']}
@@ -63,4 +74,5 @@ def test_exact_homolog_cycles_and_net_cofactor_bookkeeping():
         cofactor_net = {c: v for c, v in net.items() if c not in mapping.values()}
         assert len(cofactor_net) == 7
         assert sorted(cofactor_net.values()) == [-3, -2, -1, 1, 1, 1, 2]
-    assert endpoints[0][1] == endpoints[1][0]
+    if len(endpoints) == 2:
+        assert endpoints[0][1] == endpoints[1][0]
