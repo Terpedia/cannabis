@@ -1,0 +1,25 @@
+{
+  "schema": "cannabis-carbon.citral-reductase-evidence.v1",
+  "source": {
+    "doi": "10.1093/plphys/kiad550",
+    "url": "https://academic.oup.com/plphys/article/194/2/1006/7311043",
+    "retrieved_from": "https://oup.silverchair-cdn.com/article-minimal/7311043",
+    "accessed": "2026-09-06",
+    "sections_reviewed": ["Citral reduction results and Figure 4", "Enantioselectivity results and Figure 7", "Recombinant protein enzymatic assay methods"]
+  },
+  "organism": "Pelargonium × hybridum",
+  "assay_substrate": {"name": "citral", "supplier_product": "Sigma W230316", "identity_scope": "geranial/neral mixture; individual isomer contribution unresolved by reviewed assays"},
+  "cofactors_tested": ["NADH", "NADPH"],
+  "NADH_product_distributions": [
+    {"enzyme": "PhCIR1a", "S_percent": 92, "R_percent_by_complement": 8},
+    {"enzyme": "PhCIR1b", "S_percent": 97, "R_percent_by_complement": 3},
+    {"enzyme": "PhCIR2", "S_percent": 56, "R_percent_by_complement": 44}
+  ],
+  "negative_substrate_result": "The three enzymes did not convert geraniol to citronellol or another tested pathway intermediate.",
+  "interpretation": "Direct in-vitro mixture-substrate evidence in another plant. R percentages are complements of reported S percentages, not independent measurements. NADH distributions must not be assigned to NADPH assays. Geranial/NADP+ structural modeling is not a substrate-specific activity assay.",
+  "single_isomer_reaction_supported_by_this_review": false,
+  "enantiopure_S_production_supported": false,
+  "Cannabis_activity_supported": false,
+  "reaction_added": false,
+  "next_checks": ["Resolve each citral isomer experimentally or with separately characterized source evidence.", "Retain mixed-product evidence without imposing its percentages as universal stoichiometry."]
+}
