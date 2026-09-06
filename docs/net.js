@@ -247,7 +247,7 @@ const selectedFolder = scenario === 'ketone' ? 'ketone-stereo-net-view' : scenar
       clear(); if (!bundle || !$('netTarget').value) return;
       current = project(bundle, $('netTarget').value, $('netReaction').value);
       $('netTitle').textContent = `${current.target.label} · ${current.target.cannabisdb_id}`;
-      $('netStatus').textContent = `Net result: ${current.target.net_status}. Zero-pool startup: ${current.target.startup_status}.`;
+      $('netStatus').textContent = `Historical projected-model result (carrier validation pending): ${current.target.net_status}. Zero-pool startup: ${current.target.startup_status}.`;
       if (!current.certificate) {$('netMessage').textContent = 'No net-conversion certificate for this record. This is a model/evidence gap, not proof of biological absence.'; return;}
       const cert = current.certificate;
       $('netMessage').textContent = bundle.view_boundary || 'Exact net balance; physiological pathway and startup remain unestablished.';
@@ -297,9 +297,9 @@ const selectedFolder = scenario === 'ketone' ? 'ketone-stereo-net-view' : scenar
       $('netTitle').textContent = 'Loading net-conversion evidence…'; $('netStatus').textContent = ''; $('netMessage').textContent = '';
       try {
         const loaded = await loader(); if (token !== generation) return; bundle = loaded;
-        if ($('netBoundary') && bundle.view_boundary) $('netBoundary').textContent = bundle.view_boundary + ' ' + bundle.claim_boundary;
+        if ($('netBoundary')) $('netBoundary').textContent = 'Historical carrier projections: coverage superseded; complete carrier balance and alternative routes require review. ' + (bundle.view_boundary || '') + ' ' + (bundle.claim_boundary || '');
         const evidenceLabel = bundle.view_scenario === 'pg-paired-identity' ? 'conditional identity-comparison certificates (no historical coverage gain)' : bundle.view_scenario === 'fnsii-route-sensitivity' ? 'conditional sensitivity certificates (assumed enzyme steps)' : ['full-catalog-chemistry-only', 'reaction-first-chemistry'].includes(bundle.view_scenario) ? 'chemistry-only net certificates (enzyme gaps included)' : 'candidate-linked net certificates';
-        $('netMetrics').textContent = `${bundle.summary.target_status_counts['exact-net-conversion-hypothesis'] ?? 0} / ${bundle.summary.target_records} target records have ${evidenceLabel} · not confirmed pathway completeness`;
+        $('netMetrics').textContent = `Historical projected-model count (coverage superseded): ${bundle.summary.target_status_counts['exact-net-conversion-hypothesis'] ?? 0} / ${bundle.summary.target_records} target records have ${evidenceLabel} · not carrier-validated pathway completeness`;
         if(bundle.evidence_summary) $('netMetrics').textContent += ` · ${bundle.evidence_summary.selected_certificate_targets_with_candidates_for_all_steps} selected target certificates have candidates for all steps · ${bundle.evidence_summary.remaining_missing_candidate_equations} reaction gaps remain`;
         const requested = new URLSearchParams(location.search).get('target');
         if (['fnsii-net-view', 'pg-named-net-view'].includes(selectedFolder) && !bundle.certificates.length) $('netScope').value = 'all';

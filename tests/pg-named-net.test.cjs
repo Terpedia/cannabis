@@ -76,7 +76,7 @@ for (const comparison of ['', 'original_result', 'alternative_baseline_result'])
       cytoscape:value=>{options=value;return cy;},fetch:fetcher(bundle)};
     vm.runInNewContext(script,ui); ui.NetView.mount(); await new Promise(setImmediate);
     const positive=!comparison;
-    assert.ok(field('netMetrics').textContent.startsWith((positive?'23':'0')+' / 23'));
+    assert.ok(field('netMetrics').textContent.startsWith('Historical projected-model count (coverage superseded): '+(positive?'23':'0')+' / 23'));
     assert.ok(field('netMetrics').textContent.includes('no historical coverage gain'));
     assert.equal(field('netRetry').hidden,true);
     assert.ok(field('netTitle').textContent.includes(positive?'Name-derived':comparison==='original_result'?'Original encoded':'Name-derived'));

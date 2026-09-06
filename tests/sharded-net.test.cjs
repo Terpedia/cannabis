@@ -96,5 +96,5 @@ test('target switches and empty searches cannot render a stale download',async()
   assert.ok(cy.items.length>0);assert.ok(field('netTitle').textContent.includes(first.cannabisdb_id));
   field('netSearch').value='no such exact search token';field('netSearch').input();
   assert.equal(cy.items.length,0);assert.equal(field('netTitle').textContent,'No matching target');
-  assert.ok(field('netMetrics').textContent.startsWith('2723 / 6220'));
+  assert.ok(field('netMetrics').textContent.startsWith('Historical projected-model count (coverage superseded): 2723 / 6220'));
 });

@@ -55,9 +55,24 @@ test('actual viewer mounts geranial target with arrows and readable assay warnin
   vm.runInNewContext(fs.readFileSync('docs/net.js','utf8'),ui);const app=ui.NetView.mount();await app.load();
   assert.ok(fetched.every(u=>u.startsWith('data/geranial-net-view/')));
   assert.equal(field('netTarget').value,'CDB000585');assert.match(field('netMetrics').textContent,/2740 \/ 6220/);
+  assert.match(field('netMetrics').textContent,/coverage superseded/);
+  assert.match(field('netBoundary').textContent,/Historical carrier projections/);
+  assert.match(field('netStatus').textContent,/carrier validation pending/);
   assert.equal(style.find(s=>s.selector==='edge').style['target-arrow-shape'],'triangle');
   const edge=cy.items.find(e=>e.data.certificate_direction_annotation?.evidence_class==='substrate-specific-cascade-biochemistry-outside-Cannabis');assert.ok(edge);
   field('netReaction').value=edge.data.step_id;field('netReaction').change();
   assert.match(JSON.stringify(field('netEquation').children),/Substrate-specific cascade evidence outside Cannabis/);
   assert.match(JSON.stringify(field('netEquation').children),/another organism, not Cannabis/);
+});
+test('entry pages expose carrier warning before collapsed historical counts',()=>{
+  for(const path of ['docs/index.html','docs/net.html']){
+    const html=fs.readFileSync(path,'utf8');
+    assert.ok(html.indexOf('class="carrier-warning"') < html.indexOf('2,740'));
+    assert.match(html,/<details class="historical-scenarios"><summary>Historical scenarios/);
+    assert.match(html,/2,660/);assert.match(html,/carrier-status.html/);
+  }
+  const audit=read('data/reports/phase1-carrier-certificate-replay.json');
+  assert.equal(audit.summary.certificate_status_counts['fixed-historical-flux-cannot-avoid-internal-depletion'],2660);
+  assert.equal(audit.summary.certificate_status_counts['carrier-choice-allocation-unresolved'],9);
+  assert.equal(audit.summary.certificate_status_counts['fixed-flux-net-accounting-survives-not-full-pathway-validation'],68);
 });
