@@ -1,0 +1,67 @@
+{
+  "retrievals": [
+    {
+      "name": "carrier-properties",
+      "endpoint": "https://sparql.rhea-db.org/sparql",
+      "query": "PREFIX rh: <http://rdf.rhea-db.org/> SELECT DISTINCT ?subject ?predicate ?object WHERE {\n      { ?subject rh:reactivePart ?part . ?subject ?predicate ?object }\n      UNION\n      { ?carrier rh:reactivePart ?subject . ?subject ?predicate ?object }\n    } ORDER BY ?subject ?predicate ?object",
+      "retrieved_at": "2026-09-06T21:37:51.264907+00:00",
+      "headers": {
+        "Date": "Sun, 06 Sep 2026 21:37:45 GMT",
+        "Server": "Apache",
+        "Strict-Transport-Security": "max-age=31536001; includeSubDomains",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "origin, x-requested-with, content-type, X-Release, queryid",
+        "Access-Control-Expose-Headers": "X-Total-Results, X-Release, queryid, content-type, user-agent, cache-control, etag, range",
+        "X-Release": "2026_03",
+        "X-Frame-Options": "SAMEORIGIN",
+        "X-Content-Type-Options": "nosniff",
+        "Vary": "Negotiate,Accept,Accept-Encoding,Content-Type",
+        "Cache-Control": "public",
+        "ETag": "W/\"2026_03\"",
+        "Expires": "Mon, 07 Sep 2026 23:37:45 GMT",
+        "queryid": "-404",
+        "Content-Disposition": "attachment; filename=\"sparql-A6DB66EBD97C09BF3531EEABEBABC5D2.srj\"",
+        "Content-Type": "application/sparql-results+json",
+        "X-Powered-By": "sib.swiss",
+        "Connection": "close",
+        "Transfer-Encoding": "chunked"
+      },
+      "path": "data/raw/rhea-carrier-snapshot-20260906/carrier-properties.json",
+      "bytes": 11864857,
+      "rows": 31003,
+      "sha256": "d6aa5437cbf3c2d477f950c84bb65d2771389ab5f4a0469441337e2a69a9fc88"
+    },
+    {
+      "name": "carrier-occurrences",
+      "endpoint": "https://sparql.rhea-db.org/sparql",
+      "query": "PREFIX rh: <http://rdf.rhea-db.org/> SELECT DISTINCT ?reaction ?sideRole ?side ?participant ?carrier ?coefficientPredicate WHERE {\n      VALUES ?sideRole { rh:substrates rh:products }\n      ?reaction ?sideRole ?side .\n      ?side rh:contains ?participant ; ?coefficientPredicate ?participant .\n      ?participant rh:compound ?carrier .\n      ?carrier rh:reactivePart ?part .\n      FILTER(?coefficientPredicate != rh:contains)\n    } ORDER BY ?reaction ?sideRole ?side ?participant ?carrier ?coefficientPredicate",
+      "retrieved_at": "2026-09-06T21:38:51.931787+00:00",
+      "headers": {
+        "Date": "Sun, 06 Sep 2026 21:38:47 GMT",
+        "Server": "Apache",
+        "Strict-Transport-Security": "max-age=31536001; includeSubDomains",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "origin, x-requested-with, content-type, X-Release, queryid",
+        "Access-Control-Expose-Headers": "X-Total-Results, X-Release, queryid, content-type, user-agent, cache-control, etag, range",
+        "X-Release": "2026_03",
+        "X-Frame-Options": "SAMEORIGIN",
+        "X-Content-Type-Options": "nosniff",
+        "Vary": "Negotiate,Accept,Accept-Encoding,Content-Type",
+        "Cache-Control": "public",
+        "ETag": "W/\"2026_03\"",
+        "Expires": "Mon, 07 Sep 2026 23:38:46 GMT",
+        "queryid": "-404",
+        "Content-Disposition": "attachment; filename=\"sparql-32B9F3DEE7FAFD7AC880F3E9CD23B9FA.srj\"",
+        "Content-Type": "application/sparql-results+json",
+        "X-Powered-By": "sib.swiss",
+        "Connection": "close",
+        "Transfer-Encoding": "chunked"
+      },
+      "path": "data/raw/rhea-carrier-snapshot-20260906/carrier-occurrences.json",
+      "bytes": 10309535,
+      "rows": 13974,
+      "sha256": "0d90e6bc1d4a95de97f711b9fdd2d567b18d29e0f514c708ecc810f9b81955bd"
+    }
+  ],
+  "claim_boundary": "Current endpoint snapshot of reactive-part carriers, not a complete polymer audit or a corrected metabolic model. Retain full source carrier URIs and reactive-part identities separately. Completeness must be checked against independent endpoint counts and the pinned historical reaction inventory before use."
+}
