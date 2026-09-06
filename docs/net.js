@@ -52,6 +52,11 @@
         id: `${step.step_id}:${i}:${j}`, source: a.compound_id, target: b.compound_id,
         kind: 'reaction-projection', step_id: step.step_id, reaction_id: step.reaction_id,
         direction_mode: step.direction_mode, extent: step.extent, required_inputs: inputs, outputs,
+        hypothesis_type: reaction.hypothesis_type || null,
+        source_reaction_id: reaction.source_reaction_id || null,
+        source_url: reaction.source_url || null,
+        direction_status: reaction.direction_status || null,
+        balance_status: reaction.balance_status || null,
         enzyme_evidence_ids: reaction.enzyme_evidence_ids, candidate_protein_ids: proteins,
         is_completion_sensitivity: !!reaction.is_completion_sensitivity,
         is_route_sensitivity: !!reaction.is_route_sensitivity,
@@ -79,7 +84,7 @@
     return targets.filter(t => (scope === 'all' || (t.certificate_compound_id && (scope !== 'enzyme-gaps' || t.missing_candidate_reaction_ids?.length))) && `${t.label} ${t.cannabisdb_id}`.toLowerCase().includes(q));
   }
   function createLoader(fetcher, folder = 'net-view', comparison = 'CHI-and-FNSII') {
-    if (!['phosphatidate-hydrolysis-net-view', 'triglyceride-symmetry-net-view', 'triglyceride-net-view', 'chemistry-net-view', 'fnsii-net-view', 'net-view', 'completion-net-view', 'catalog-net-view', 'expanded-net-view', 'purine-net-view', 'purine-restricted-net-view', 'thiolase-net-view', 'thiolase-restricted-net-view', 'remaining-net-view', 'remaining-restricted-net-view'].includes(folder)) throw new Error('Invalid scenario folder');
+    if (!['glycerolipid-precursors-net-view', 'phosphatidate-hydrolysis-net-view', 'triglyceride-symmetry-net-view', 'triglyceride-net-view', 'chemistry-net-view', 'fnsii-net-view', 'net-view', 'completion-net-view', 'catalog-net-view', 'expanded-net-view', 'purine-net-view', 'purine-restricted-net-view', 'thiolase-net-view', 'thiolase-restricted-net-view', 'remaining-net-view', 'remaining-restricted-net-view'].includes(folder)) throw new Error('Invalid scenario folder');
     if (folder === 'fnsii-net-view' && !['baseline', 'CHI-only', 'FNSII-only', 'CHI-and-FNSII'].includes(comparison)) throw new Error('Invalid sensitivity comparison');
     const sourceFolder = folder === 'remaining-restricted-net-view' ? 'remaining-net-view' : folder === 'thiolase-restricted-net-view' ? 'thiolase-net-view' : folder === 'purine-restricted-net-view' ? 'purine-net-view' : folder;
     return async function() {
@@ -120,7 +125,8 @@
   function mount() {
     const scenario = new URLSearchParams(location.search).get('scenario');
     const folder = scenario === 'hydrolysis' ? 'phosphatidate-hydrolysis-net-view' : scenario === 'symmetry' ? 'triglyceride-symmetry-net-view' : scenario === 'triglycerides' ? 'triglyceride-net-view' : scenario === 'chemistry' ? 'chemistry-net-view' : scenario === 'fnsii' ? 'fnsii-net-view' : scenario === 'remaining' ? 'remaining-net-view' : scenario === 'remaining-restricted' ? 'remaining-restricted-net-view' : scenario === 'thiolase' ? 'thiolase-net-view' : scenario === 'thiolase-restricted' ? 'thiolase-restricted-net-view' : scenario === 'purine' ? 'purine-net-view' : scenario === 'purine-restricted' ? 'purine-restricted-net-view' : scenario === 'expanded' ? 'expanded-net-view' : scenario === 'catalog' ? 'catalog-net-view' : scenario === 'completions' ? 'completion-net-view' : 'net-view';
-    const $ = id => document.getElementById(id), loader = createLoader((...args) => fetch(...args), folder, new URLSearchParams(location.search).get('comparison') || 'CHI-and-FNSII');
+    const selectedFolder = scenario === 'precursors' ? 'glycerolipid-precursors-net-view' : folder;
+    const $ = id => document.getElementById(id), loader = createLoader((...args) => fetch(...args), selectedFolder, new URLSearchParams(location.search).get('comparison') || 'CHI-and-FNSII');
     if (typeof cytoscape !== 'function') { $('netMessage').textContent = 'The graph library could not load. Reload the page or use the downloadable certificates below.'; return; }
     let bundle, current, generation = 0;
     const cy = cytoscape({container: $('netCy'), elements: [], layout: {name: 'preset'}, style: [

@@ -23,7 +23,9 @@ def canonical(rows):
     return Counter(json.dumps(r, sort_keys=True, separators=(',', ':')) for r in rows)
 
 
-def verify(names=NAMES, batch_suffix='20260905_v1'):
+def verify(names=NAMES, batch_suffix='20260905_v1', maximum_bytes_billed=33554432):
+    if not isinstance(maximum_bytes_billed, int) or not 1 <= maximum_bytes_billed <= 134217728:
+        raise ValueError('Verification byte budget must be positive and at most 128 MiB')
     tables = []
     for name in names:
         suffix = name.replace('-', '_') + '_' + batch_suffix
@@ -47,7 +49,7 @@ def verify(names=NAMES, batch_suffix='20260905_v1'):
         if len(rows) > 100000:
             raise ValueError('Export exceeds bounded verification row budget')
         remote = bq('query', '--use_legacy_sql=false', '--max_rows=' + str(max(20000, len(rows) + 1)),
-            '--maximum_bytes_billed=33554432', 'SELECT * FROM `' + PROJECT + '.' + DATASET + '.' + table + '`')
+            '--maximum_bytes_billed=' + str(maximum_bytes_billed), 'SELECT * FROM `' + PROJECT + '.' + DATASET + '.' + table + '`')
         if canonical(rows) != canonical(remote):
             raise ValueError('Full stored record multiset differs from local export')
         tables.append({'table': table, 'job_id': job_id, 'rows': len(rows), 'report_sha256': sha})

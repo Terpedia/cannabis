@@ -1,0 +1,17 @@
+{
+  "schema": "cannabis-carbon.gcp-batch-verification.v1",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "verified": true,
+  "maximum_bytes_billed": 67108864,
+  "verification": "All load jobs DONE without errors; exact service-account principal and destination checked. Full bounded SELECT readbacks match complete local NDJSON record multisets, report checksums and unique kind/id pairs.",
+  "tables": [
+    {
+      "table": "cannabis_phase1_glycerolipid_precursors_net_20260906_v1",
+      "job_id": "cannabis_sa_glycerolipid_precursors_net_20260906_v1",
+      "rows": 26991,
+      "report_sha256": "37479d2f89fea99dd854354b3005ee7e6b353cc386213fc4ad871b1c93d5f49d"
+    }
+  ]
+}

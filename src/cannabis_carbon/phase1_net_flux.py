@@ -27,6 +27,21 @@ def exact_net(steps, extents):
     return dict(net)
 
 
+def _reconstruct_sparse(steps, fluxes):
+    """Replay nonzero fluxes; NetModel has already validated every step coefficient."""
+    if len(steps) != len(fluxes):
+        raise ValueError('Every step needs an extent')
+    used = []
+    for step, flux in zip(steps, fluxes):
+        if flux == 0:
+            continue
+        amount = Fraction(float(flux)).limit_denominator(1000000)
+        if amount:
+            used.append((step, amount))
+    net = exact_net([s for s, _ in used], [n for _, n in used])
+    return used, net
+
+
 class NetModel:
     def __init__(self, reactions, exchange_ids, forbidden_step_ids=()):
         self.steps = orientations(reactions)
@@ -62,11 +77,9 @@ class NetModel:
         record = {'solver_status': int(result.status), 'solver_message': result.message}
         if not result.success:
             return {**record, 'status': 'solver-reported-infeasible' if result.status == 2 else 'solver-incomplete-or-failed'}
-        extents = [Fraction(float(x)).limit_denominator(1000000) for x in result.x]
-        net = exact_net(self.steps, extents)
+        used, net = _reconstruct_sparse(self.steps, result.x)
         if net.get(target, 0) < 1 or any(n < 0 for c, n in net.items() if c not in self.exchange_ids):
             return {**record, 'status': 'numerical-solution-failed-exact-validation'}
-        used = [(s, n) for s, n in zip(self.steps, extents) if n]
         participants = {m['compound_id'] for s, _ in used for side in ('required_inputs', 'outputs') for m in s[side]}
         return {**record, 'status': 'exact-net-conversion-hypothesis',
             'steps': [{'step_id': s['id'], 'reaction_id': s['reaction_id'], 'direction_mode': s['direction_mode'], 'extent': str(n)} for s, n in used],

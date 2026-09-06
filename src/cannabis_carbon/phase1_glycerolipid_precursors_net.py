@@ -6,7 +6,7 @@ from .phase1_lipid_acylation_net import build
 from .phase1_marts_completions import balanced
 
 
-def merge_hypotheses(*reports):
+def merge_hypotheses(*reports, allowed_types=('sn1-acylation', 'sn2-acylation', 'sn3-acylation')):
     compounds, reactions = {}, {}
     for report in reports:
         for c in report['compounds']:
@@ -14,7 +14,7 @@ def merge_hypotheses(*reports):
                 raise ValueError('Conflicting exact compound identity')
             compounds.setdefault(c['id'], c)
         for r in report['reactions']:
-            if r['hypothesis_type'] not in ('sn1-acylation', 'sn2-acylation', 'sn3-acylation'):
+            if r['hypothesis_type'] not in allowed_types:
                 raise ValueError('Unexpected precursor hypothesis type')
             if r['id'] in reactions and reactions[r['id']] != r:
                 raise ValueError('Conflicting reaction record')

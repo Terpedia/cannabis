@@ -23,6 +23,38 @@ const triglycerideBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../d
 const symmetryBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/triglyceride-symmetry-net-view/bundle.json')));
 const hydrolysisBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/phosphatidate-hydrolysis-net-view/bundle.json')));
 
+test('precursor scenario projects every new certificate with inherited direction bounds and exact inputs', async()=>{
+  const source=JSON.parse(fs.readFileSync(path.join(__dirname,'../data/reports/phase1-glycerolipid-precursors-net.json')));
+  const bytes=fs.readFileSync(path.join(__dirname,'../docs/data/glycerolipid-precursors-net-view/bundle.json'));
+  const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/glycerolipid-precursors-net-view/index.json')));
+  assert.equal(require('node:crypto').createHash('sha256').update(bytes).digest('hex'),manifest.sha256);
+  const calls=[];
+  const loaded=await createLoader(async url=>{calls.push(url);return {ok:true,json:async()=>url.endsWith('index.json')?manifest:JSON.parse(bytes)};},'glycerolipid-precursors-net-view')();
+  assert.equal(calls[0],'data/glycerolipid-precursors-net-view/index.json');
+  assert.equal(loaded.targets.length,6220);
+  assert.equal(loaded.summary.target_status_counts['exact-net-conversion-hypothesis'],2062);
+  assert.equal(loaded.certificates.length,2061);
+  const forbidden=new Set(source.forbidden_step_ids);
+  const targets=source.targets.filter(t=>t.new_certificate);
+  assert.equal(targets.length,1201);
+  for(const target of targets){
+    const graph=project(loaded,target.cannabisdb_id);
+    assert.ok(graph.certificate);
+    for(const step of graph.steps){
+      assert.ok(!forbidden.has(step.step_id));
+      const edges=graph.edges.filter(e=>e.data.step_id===step.step_id);
+      assert.equal(edges.length,step.required_inputs.length*step.outputs.length);
+      for(const edge of edges){
+        assert.deepEqual(edge.data.required_inputs,step.required_inputs);
+        assert.deepEqual(edge.data.outputs,step.outputs);
+        for(const field of ['hypothesis_type','source_reaction_id','source_url','direction_status','balance_status']){
+          assert.equal(edge.data[field],step.reaction[field] || null);
+        }
+      }
+    }
+  }
+});
+
 test('hydrolysis routes retain forward-only assumptions and complete projected equations', async()=>{
   const source=JSON.parse(fs.readFileSync(path.join(__dirname,'../data/reports/phase1-phosphatidate-hydrolysis-net.json')));
   const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/phosphatidate-hydrolysis-net-view/index.json')));
@@ -43,6 +75,11 @@ test('hydrolysis routes retain forward-only assumptions and complete projected e
     for(const s of graph.steps){
       assert.ok(!forbidden.has(s.step_id));
       assert.equal(graph.edges.filter(e=>e.data.step_id===s.step_id).length,s.required_inputs.length*s.outputs.length);
+      for(const edge of graph.edges.filter(e=>e.data.step_id===s.step_id)){
+        for(const field of ['hypothesis_type','source_reaction_id','source_url','direction_status','balance_status']){
+          assert.equal(edge.data[field],s.reaction[field] || null);
+        }
+      }
     }
   }
 });
