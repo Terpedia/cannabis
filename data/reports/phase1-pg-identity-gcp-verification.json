@@ -1,0 +1,28 @@
+{
+  "schema": "cannabis-carbon.gcp-batch-verification.v1",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "verified": true,
+  "verification": "All load jobs DONE without errors; exact service-account principal and destination checked. Full bounded SELECT readbacks match complete local NDJSON record multisets, report checksums and unique kind/id pairs.",
+  "tables": [
+    {
+      "table": "cannabis_phase1_glycerophospholipid_input_audit_20260906_v1",
+      "job_id": "cannabis_sa_glycerophospholipid_input_audit_20260906_v1",
+      "rows": 18598,
+      "report_sha256": "33dc38f3257b41f84c56ee6004bef1f47a99bd71d810436e8ceb6cd2db17f529"
+    },
+    {
+      "table": "cannabis_phase1_acyl_input_identity_review_20260906_v1",
+      "job_id": "cannabis_sa_acyl_input_identity_review_20260906_v1",
+      "rows": 6,
+      "report_sha256": "7e7c31d692038bbb66a0f511d807cf01328fc7a1aaf1f97b21339c3e89c57a1f"
+    },
+    {
+      "table": "cannabis_phase1_pg_source_identity_audit_20260906_v1",
+      "job_id": "cannabis_sa_pg_source_identity_audit_20260906_v1",
+      "rows": 24,
+      "report_sha256": "b545c943cbc56a377e2349aeb6edb1655f7354a765f283a6e42495a73f67c3eb"
+    }
+  ]
+}
