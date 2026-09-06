@@ -1,5 +1,11 @@
 # Defined-medium workstream
 
+## Superseding carrier-identity issue
+
+The completed selenium-parent restriction (`phase1-medium-boundary.json`) retains all 2,721 structural certificates / 2,724 covered records after blocking eight cluster/peroxide inputs (94 uptake species remain). Exact arithmetic replay passes, but this is a historical projected-model result, not evidence of source-faithful pathways or a usable medium. The later carrier-catalog audit flags 1,316 equations in the geranial model, with direct carrier-source hits in 2,669 certificates / 2,672 records and ten equations merging distinct carrier contexts. These results have different model scopes and must not be combined as one coverage metric.
+
+Full carrier identities and internal carrier-specific conservation must be restored before medium optimization can produce interpretable nutrient results. A zero-loss uptake restriction can reroute through invalid reactive-part substitutions; it cannot validate the remaining input set. Preserve existing snapshots for reproducibility and comparison, not as a corrected benchmark.
+
 User requirement: identify non-carbon inputs and establish a minimum defined medium for the cannabis metabolic model.
 
 ## Verified starting point
