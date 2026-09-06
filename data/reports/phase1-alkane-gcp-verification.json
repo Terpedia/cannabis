@@ -1,0 +1,13 @@
+{
+  "schema": "cannabis-carbon.gcp-batch-verification.v1",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "verified": true,
+  "verification": "All load jobs DONE without errors; exact service-account principal and destination checked. Full bounded SELECT readbacks match complete local NDJSON record multisets, report checksums and unique kind/id pairs.",
+  "tables": [
+    {"table":"cannabis_phase1_alkane_hypotheses_20260906_v1","job_id":"cannabis_sa_alkane_hypotheses_20260906_v1","rows":44,"report_sha256":"9867353bc005c513f1cbe3133b9d97f866ab774593472f62cf8ab27149ab1ddb"},
+    {"table":"cannabis_phase1_alkane_precursors_20260906_v1","job_id":"cannabis_sa_alkane_precursors_20260906_v1","rows":32,"report_sha256":"7628c89365fc6ef6917688422e16421a80e35914625549d319afbac7981298b8"},
+    {"table":"cannabis_phase1_alkane_net_20260906_v1","job_id":"cannabis_sa_alkane_net_20260906_v1","rows":24576,"report_sha256":"dd66f41b0175aba6d671e75a856ba2620fae8a11532f34653d58a8c70c0c58e4"}
+  ]
+}
