@@ -23,10 +23,10 @@ def canonical(rows):
     return Counter(json.dumps(r, sort_keys=True, separators=(',', ':')) for r in rows)
 
 
-def verify(names=NAMES):
+def verify(names=NAMES, batch_suffix='20260905_v1'):
     tables = []
     for name in names:
-        suffix = name.replace('-', '_') + '_20260905_v1'
+        suffix = name.replace('-', '_') + '_' + batch_suffix
         table = 'cannabis_phase1_' + suffix
         job_id = 'cannabis_sa_' + suffix
         path = Path('data/reports/phase1-' + name + '.json')
