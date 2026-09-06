@@ -44,6 +44,7 @@
       if (!['hypothetical-left-to-right', 'hypothetical-right-to-left'].includes(step.direction_mode)) throw new Error('Unknown direction mode');
       const forward = step.direction_mode === 'hypothetical-left-to-right';
       const inputs = reaction[forward ? 'left' : 'right'], outputs = reaction[forward ? 'right' : 'left'];
+      const directionAudit = reaction.certificate_direction_annotations?.[step.direction_mode] || null;
       const attached = reaction.enzyme_evidence_ids.map(id => {if (!evidence.has(id)) throw new Error('Missing evidence'); return evidence.get(id);});
       const proteins = [...new Set(attached.flatMap(e => [...(e.screened_proteins || []).map(p => p.accession), ...(e.enzyme_ids || []), ...(e.enzyme_evidence?.screened_homology_proteins || []), ...(e.enzyme_evidence?.direction_unresolved_family_proteins || [])]))];
       steps.push({...step, reaction, required_inputs: inputs, outputs, evidence: attached});
@@ -60,6 +61,7 @@
         direction_status: reaction.direction_status || null,
         balance_status: reaction.balance_status || null,
         light_requirement_annotation: reaction.light_requirement_annotation || null,
+        certificate_direction_annotation: directionAudit,
         enzyme_evidence_ids: reaction.enzyme_evidence_ids, candidate_protein_ids: proteins,
         is_completion_sensitivity: !!reaction.is_completion_sensitivity,
         is_route_sensitivity: !!reaction.is_route_sensitivity,
@@ -67,7 +69,7 @@
         missing_candidate_evidence: !!reaction.missing_candidate_evidence,
         is_new_catalog_candidate: !!reaction.is_new_catalog_candidate,
         has_unreviewed_reference: attached.some(e => e.evidence_class?.includes('unreviewed') || e.reference_matches?.some(r=>r.review_status==='unreviewed')),
-        direction_review_id: reaction.direction_review?.id || null,
+        direction_review_id: reaction.direction_review?.id || (directionAudit?.review_flags.length ? step.step_id : null),
         direction_review_warning: reaction.direction_review?.warning || null,
         claim_boundary: 'Every input is required. Projected arrows are not separate reactions, atom flow or a startup sequence.'
       }})));
@@ -140,7 +142,7 @@
     return state;
   }
   function createLoader(fetcher, folder = 'net-view', comparison = 'CHI-and-FNSII') {
-    if(['local-speciation-net-view','selenium-net-view','ketone-stereo-net-view'].includes(folder)) return async()=>{
+    if(['local-speciation-net-view','selenium-net-view','ketone-stereo-net-view','c17-net-view'].includes(folder)) return async()=>{
       const response=await fetcher(`data/${folder}/index.json`,{cache:'no-cache'});
       if(!response.ok) throw Error(`Manifest unavailable (HTTP ${response.status})`);
       const manifest=await response.json();
@@ -197,7 +199,7 @@ if (!['pg-named-net-view', 'glycerophospholipid-net-view', 'amino-phospholipid-n
     const scenario = new URLSearchParams(location.search).get('scenario');
     const folder = scenario === 'hydrolysis' ? 'phosphatidate-hydrolysis-net-view' : scenario === 'symmetry' ? 'triglyceride-symmetry-net-view' : scenario === 'triglycerides' ? 'triglyceride-net-view' : scenario === 'chemistry' ? 'chemistry-net-view' : scenario === 'fnsii' ? 'fnsii-net-view' : scenario === 'remaining' ? 'remaining-net-view' : scenario === 'remaining-restricted' ? 'remaining-restricted-net-view' : scenario === 'thiolase' ? 'thiolase-net-view' : scenario === 'thiolase-restricted' ? 'thiolase-restricted-net-view' : scenario === 'purine' ? 'purine-net-view' : scenario === 'purine-restricted' ? 'purine-restricted-net-view' : scenario === 'expanded' ? 'expanded-net-view' : scenario === 'catalog' ? 'catalog-net-view' : scenario === 'completions' ? 'completion-net-view' : 'net-view';
 const selectedFolder = scenario === 'ketone' ? 'ketone-stereo-net-view' : scenario === 'selenium' ? 'selenium-net-view' : scenario === 'speciation' ? 'local-speciation-net-view' : scenario === 'pg-named' ? 'pg-named-net-view' : scenario === 'glycerophospholipids' ? 'glycerophospholipid-net-view' : scenario === 'aminos' ? 'amino-phospholipid-net-view' : scenario === 'protonation' ? 'source-mapped-protonation-net-view' : scenario === 'cardiolipins' ? 'cardiolipin-net-view' : scenario === 'precursors' ? 'glycerolipid-precursors-net-view' : folder;
-    const $ = id => document.getElementById(id), loader = createLoader((...args) => fetch(...args), selectedFolder, new URLSearchParams(location.search).get('comparison') || (scenario === 'pg-named' ? 'alternative_extended_result' : 'CHI-and-FNSII'));
+    const $ = id => document.getElementById(id), loader = createLoader((...args) => fetch(...args), scenario === 'c17' ? 'c17-net-view' : selectedFolder, new URLSearchParams(location.search).get('comparison') || (scenario === 'pg-named' ? 'alternative_extended_result' : 'CHI-and-FNSII'));
     if (typeof cytoscape !== 'function') { $('netMessage').textContent = 'The graph library could not load. Reload the page or use the downloadable certificates below.'; return; }
     let bundle, current, generation = 0, selectionGeneration = 0;
     const cy = cytoscape({container: $('netCy'), elements: [], layout: {name: 'preset'}, style: [
@@ -219,6 +221,16 @@ const selectedFolder = scenario === 'ketone' ? 'ketone-stereo-net-view' : scenar
     function describe(step) {
       const equation = side => side.map(m => `${m.coefficient} × ${label(m.compound_id)}`).join(' + ');
       lines('netEquation', 'Full directed equation', [equation(step.required_inputs) + ' → ' + equation(step.outputs), `Relative extent: ${step.extent}`, 'Hypothetical direction; all listed inputs are required.', ...(step.reaction.hypothesis_assumptions || []), ...(step.reaction.direction_review ? [step.reaction.direction_review.warning, ...step.reaction.direction_review.discriminating_tests] : [])]);
+      const audit = step.reaction.certificate_direction_annotations?.[step.direction_mode];
+      if (audit) {
+        const warnings = {
+          'peroxide-consuming-oxygen-producing-direction-review': 'This direction consumes peroxide and produces oxygen. Review its redox and physiological feasibility; balance alone does not establish it.',
+          'co2-consuming-step-not-automatically-photosynthetic-fixation': 'This step consumes CO₂; that alone does not establish photosynthetic fixation.'
+        };
+        const p = document.createElement('p');
+        p.textContent = [audit.evidence_class === 'proposed-gap-filling-reaction' ? 'Proposed gap-filling chemistry.' : 'Catalog-linked chemistry; not proof of Cannabis activity.', ...audit.review_flags.map(f=>warnings[f] || f), 'This audit does not establish a Cannabis enzyme or physiological direction.'].join(' ');
+        $('netEquation').appendChild(p);
+      }
       $('netEvidence').textContent = JSON.stringify(step.evidence.length ? step.evidence : {
         status: 'No candidate enzyme evidence in this snapshot', reaction_id: step.reaction_id,
         claim_boundary: 'Chemistry-only step. Determine whether it is enzymatic, spontaneous or a catalog transformation; do not infer activity from connectivity.'

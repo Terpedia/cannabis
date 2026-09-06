@@ -7,8 +7,10 @@ from .phase1_sharded_net_view import write_view
 from .phase1_net_view import build as attach_evidence
 
 
-def run(*, ketone=False):
-    folder=Path('docs/data/selenium-net-view' if ketone else 'docs/data/local-speciation-net-view')
+def run(*, ketone=False, c17=False):
+    if ketone and c17:
+        raise ValueError('Select one scenario')
+    folder=Path('docs/data/ketone-stereo-net-view' if c17 else 'docs/data/selenium-net-view' if ketone else 'docs/data/local-speciation-net-view')
     read=lambda p:json.loads(p.read_bytes())
     manifest=read(folder/'index.json')
     def verified(ref):
@@ -18,31 +20,46 @@ def run(*, ketone=False):
         return json.loads(payload)
     base=verified(manifest); shared=verified(base['shared_chemistry'])
     certs=[verified(ref) for ref in base['certificate_files'].values()]
-    paths=[Path('data/reports/phase1-ketone-stereo-net.json' if ketone else 'data/reports/phase1-selenium-forward-net.json'),
+    paths=[Path('data/reports/phase1-c17-elongation-net.json' if c17 else 'data/reports/phase1-ketone-stereo-net.json' if ketone else 'data/reports/phase1-selenium-forward-net.json'),
            Path('data/reports/phase1-medium-inventory.json'),Path('data/curation/light-reaction-requirements.json'),
            folder/'index.json',folder/'bundle.json']+[Path('data/reports/'+n+'.json') for n in
            ('phase1-target-hypotheses','phase1-screened-enzyme-overlay','phase1-route-enzyme-overlay')]
     current,medium,light=[read(p) for p in paths[:3]]
+    extra_layers=[]
+    audit=None
+    if c17:
+        extra_paths=[Path('data/reports/phase1-alkane-net.json'),Path('data/reports/phase1-odd-chain-net.json'),
+                     Path('data/reports/phase1-c17-evidence-audit.json')]
+        extra_layers=[read(p) for p in extra_paths[:2]]
+        audit=read(extra_paths[2])
+        paths+=extra_paths
     completion_path=Path('data/reports/phase1-marts-completions.json')
     completion_report=read(completion_path)
     completions={c['id']:c for c in completion_report['completions']}
     variants={v['id']:v for v in completion_report['variants']}
-    for doc in (current,medium,base):
+    for doc in (current,medium,base,*extra_layers,*([audit] if audit else [])):
         for p,sha in doc.get('source_sha256',{}).items():
             if hashlib.sha256(Path(p).read_bytes()).hexdigest()!=sha:
                 raise ValueError('Stale source')
+    for layer in extra_layers:
+        certs+=layer['new_certificates']
     certs+=current['new_certificates']; bycert={c['compound_id']:c for c in certs}
     if len(bycert)!=len(certs):
         raise ValueError('Duplicate exact witness')
     reactions={r['id']:r for r in shared['reactions']}
-    for r in current['certificate_reactions']:
+    for r in [r for layer in [*extra_layers,current] for r in layer['certificate_reactions']]:
         if r['id'] in reactions:
             if any(r[s]!=reactions[r['id']][s] for s in ('left','right')):
                 raise ValueError('Changed prior reaction')
             continue
         sources=r.get('sources',[])
         if r.get('source_url'):
-            sources=sources+[{'source_urls':[r['source_url']],'evidence_type':r['source_evidence_type'],
+            source_type=r.get('source_evidence_type')
+            if source_type is None and r.get('hypothesis_type')=='source-mapped-protonation':
+                source_type='source-mapped-acid-base-hypothesis-not-curated-biochemical-reaction'
+            if source_type is None:
+                raise ValueError('Missing source evidence classification')
+            sources=sources+[{'source_urls':[r['source_url']],'evidence_type':source_type,
                               'claim_boundary':r['claim_boundary']}]
         if not sources and r.get('completion_ids'):
             records=[completions[cid] for cid in r['completion_ids']]
@@ -65,6 +82,20 @@ def run(*, ketone=False):
         rid=annotation['model_reaction_id']
         if rid in reactions:
             reactions[rid]={**reactions[rid],'light_requirement_annotation':annotation}
+    if audit:
+        for cert in audit['certificates']:
+            if cert['role']!='new-inventory-target-certificate':
+                continue
+            for s in cert['steps']:
+                rid=s['reaction_id']
+                if rid not in reactions:
+                    raise ValueError('Audited reaction missing from map')
+                note={k:s[k] for k in ('evidence_class','review_flags',
+                    'cannabis_physiological_direction_established_by_this_audit','enzyme_assignment_established_by_this_audit')}
+                notes=reactions[rid].setdefault('certificate_direction_annotations',{})
+                if s['direction_mode'] in notes and notes[s['direction_mode']]!=note:
+                    raise ValueError('Conflicting direction audit')
+                notes[s['direction_mode']]=note
     labels={c['id']:c.get('labels',[]) for c in shared['compounds']}
     for t in current['targets']:
         if t['label'] not in labels.setdefault(t['compound_id'],[]):
@@ -96,7 +127,7 @@ def run(*, ketone=False):
         'claim_boundary':current['claim_boundary'],
         'source_sha256':{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}}
     report['source_sha256'][str(completion_path)]=hashlib.sha256(completion_path.read_bytes()).hexdigest()
-    report=attach_evidence(report,[read(p) for p in paths[5:]])
+    report=attach_evidence(report,[read(p) for p in paths[5:8]])
     if ketone:
         report['schema']='cannabis-carbon.ketone-stereo-view.v1'
         report['view_boundary']=('Separate ketone-mediated redox hypothesis scenario. Newly added reactions are '
@@ -104,8 +135,17 @@ def run(*, ketone=False):
             'and consumer counts describe the earlier selenium-forward certificate set, not this scenario. '
             'The unchanged permissive exchange boundary is not a minimum defined medium.')
         report['medium_annotation_scope']='selenium-forward baseline; not recomputed for ketone hypotheses'
+    if c17:
+        report['schema']='cannabis-carbon.c17-view.v1'
+        report['view_boundary']=('Separate alkane and odd-chain elongation hypothesis scenario. '
+            'New steps are proposed forward-only chain-length analogies, not confirmed Cannabis activity. '
+            'Direction review flags describe the four newly audited target certificates, not a full-network physiology audit. '
+            'Medium annotations and consumer counts refer to the earlier selenium-forward certificate set. '
+            'The unchanged permissive 102-species boundary is not a minimum defined medium.')
+        report['medium_annotation_scope']='selenium-forward baseline; not recomputed for C17 hypotheses'
+        report['certificate_evidence_audit_summary']=audit['summary']
     Path('docs/data/light-reaction-requirements.json').write_bytes(paths[2].read_bytes())
-    print(json.dumps(write_view(report,'docs/data/ketone-stereo-net-view' if ketone else 'docs/data/selenium-net-view')),flush=True)
+    print(json.dumps(write_view(report,'docs/data/c17-net-view' if c17 else 'docs/data/ketone-stereo-net-view' if ketone else 'docs/data/selenium-net-view')),flush=True)
 
 
 if __name__=='__main__':
