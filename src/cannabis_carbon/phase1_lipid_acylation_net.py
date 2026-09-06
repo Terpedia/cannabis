@@ -12,7 +12,7 @@ def equation_key(r):
     return tuple(sorted(tuple(sorted((m['compound_id'], m['coefficient']) for m in r[s])) for s in ('left', 'right')))
 
 
-def build(network, completions, original_net, parent_net, lipid, *, prior_layers=()):
+def build(network, completions, original_net, parent_net, lipid, *, prior_layers=(), extra_forward_types=()):
     reactions, compounds, _ = assemble(network, completions)
     inherited_forbidden = set()
     for layer in prior_layers:
@@ -43,7 +43,7 @@ def build(network, completions, original_net, parent_net, lipid, *, prior_layers
         keys[key] = r['id']; reactions[r['id']] = r; added[r['id']] = r
         if r['hypothesis_type'] in ('sn1-acylation', 'sn2-acylation', 'sn3-acylation', 'phosphatidate-hydrolysis',
                                    'cardiolipin-synthesis', 'pgp-hydrolysis', 'pgp-synthesis', 'cdp-dag-synthesis',
-                                   'pe-synthesis', 'ps-synthesis', 'pe-first-methylation', 'pe-second-methylation'):
+                                   'pe-synthesis', 'ps-synthesis', 'pe-first-methylation', 'pe-second-methylation', *extra_forward_types):
             forbidden.append(r['id'] + ':hypothetical-right-to-left')
     if [(t['cannabisdb_id'], t['compound_id']) for t in network['targets']] != [(t['cannabisdb_id'], t['compound_id']) for t in parent_net['targets']]:
         raise ValueError('Target inventory mismatch')
