@@ -42,7 +42,8 @@ def build(network, completions, original_net, parent_net, lipid, *, prior_layers
             continue
         keys[key] = r['id']; reactions[r['id']] = r; added[r['id']] = r
         if r['hypothesis_type'] in ('sn1-acylation', 'sn2-acylation', 'sn3-acylation', 'phosphatidate-hydrolysis',
-                                   'cardiolipin-synthesis', 'pgp-hydrolysis', 'pgp-synthesis', 'cdp-dag-synthesis'):
+                                   'cardiolipin-synthesis', 'pgp-hydrolysis', 'pgp-synthesis', 'cdp-dag-synthesis',
+                                   'pe-synthesis', 'ps-synthesis', 'pe-first-methylation', 'pe-second-methylation'):
             forbidden.append(r['id'] + ':hypothetical-right-to-left')
     if [(t['cannabisdb_id'], t['compound_id']) for t in network['targets']] != [(t['cannabisdb_id'], t['compound_id']) for t in parent_net['targets']]:
         raise ValueError('Target inventory mismatch')

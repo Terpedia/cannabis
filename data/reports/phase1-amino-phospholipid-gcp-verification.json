@@ -1,0 +1,13 @@
+{
+  "schema": "cannabis-carbon.gcp-batch-verification.v1",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "verified": true,
+  "verification": "All load jobs DONE without errors; exact service-account principal and destination checked. Full bounded SELECT readbacks match complete local NDJSON record multisets, report checksums and unique kind/id pairs.",
+  "tables": [
+    {"table": "cannabis_phase1_amino_phospholipid_speciation_20260906_v1", "job_id": "cannabis_sa_amino_phospholipid_speciation_20260906_v1", "rows": 492, "report_sha256": "89f11241d2e8a6939b7b40748ee90b4c522ae5551236deb76beeb649b76b5923"},
+    {"table": "cannabis_phase1_amino_phospholipid_synthesis_20260906_v1", "job_id": "cannabis_sa_amino_phospholipid_synthesis_20260906_v1", "rows": 979, "report_sha256": "a83970f490b4363dc95d36d750464811ccd75d0ce40c1aeb5dfa50ffcff2ac41"},
+    {"table": "cannabis_phase1_amino_phospholipid_precursors_20260906_v1", "job_id": "cannabis_sa_amino_phospholipid_precursors_20260906_v1", "rows": 745, "report_sha256": "621e3853d546f9ddd0ef03452771b4ec8a6b14066ff7e3389af5719e2f2c17ae"}
+  ]
+}

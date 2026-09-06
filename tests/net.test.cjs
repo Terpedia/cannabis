@@ -23,7 +23,7 @@ const triglycerideBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../d
 const symmetryBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/triglyceride-symmetry-net-view/bundle.json')));
 const hydrolysisBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/phosphatidate-hydrolysis-net-view/bundle.json')));
 
-for(const [name,coverage,newCount,structures] of [['glycerolipid-precursors',2062,1201,2061],['cardiolipin',2154,92,2153],['source-mapped-protonation',2414,260,2412]])
+for(const [name,coverage,newCount,structures] of [['glycerolipid-precursors',2062,1201,2061],['cardiolipin',2154,92,2153],['source-mapped-protonation',2414,260,2412],['amino-phospholipid',2510,96,2508]])
 test(`${name} scenario projects every new certificate with inherited direction bounds and exact inputs`, async()=>{
   const folder=name+'-net-view';
   const source=JSON.parse(fs.readFileSync(path.join(__dirname,`../data/reports/phase1-${name}-net.json`)));
@@ -50,6 +50,7 @@ test(`${name} scenario projects every new certificate with inherited direction b
         assert.deepEqual(edge.data.required_inputs,step.required_inputs);
         assert.deepEqual(edge.data.outputs,step.outputs);
         assert.equal(JSON.stringify(edge.data.source_mapping_evidence),JSON.stringify(step.reaction.source_mapping_evidence || []));
+        assert.equal(edge.data.speciation_type,step.reaction.speciation_type || null);
         for(const field of ['hypothesis_type','source_reaction_id','source_url','direction_status','balance_status']){
           assert.equal(edge.data[field],step.reaction[field] || null);
         }
@@ -294,7 +295,7 @@ test('loader revalidates manifest, versions bundles, rejects external paths and 
   assert.deepEqual(sensitivityCalls,['data/completion-net-view/index.json','data/completion-net-view/bundle.json?v='+'b'.repeat(16)]);
 });
 
-for (const [bundle, scenario] of [[JSON.parse(fs.readFileSync(path.join(__dirname, "../docs/data/source-mapped-protonation-net-view/bundle.json"))), "?scenario=protonation&target=CDB006138"], [hydrolysisBundle, "?scenario=hydrolysis&target=CDB000866"], [symmetryBundle, "?scenario=symmetry&target=CDB001366"], [triglycerideBundle, "?scenario=triglycerides&target=CDB001321"], [JSON.parse(fs.readFileSync(path.join(__dirname, "../docs/data/chemistry-net-view/bundle.json"))), "?scenario=chemistry&target=CDB000806"], [fnsiiBundle, '?scenario=fnsii&target=CDB005072'], [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target=CDB006137'], [updatedCatalogBundle, '?scenario=catalog&target=CDB006137'], [expandedBundle, '?scenario=expanded'], [purineBundle, '?scenario=purine'], [restrictedPurineBundle, '?scenario=purine-restricted']]) {
+for (const [bundle, scenario] of [[JSON.parse(fs.readFileSync(path.join(__dirname, "../docs/data/amino-phospholipid-net-view/bundle.json"))), "?scenario=aminos&target=CDB000805"], [JSON.parse(fs.readFileSync(path.join(__dirname, "../docs/data/source-mapped-protonation-net-view/bundle.json"))), "?scenario=protonation&target=CDB006138"], [hydrolysisBundle, "?scenario=hydrolysis&target=CDB000866"], [symmetryBundle, "?scenario=symmetry&target=CDB001366"], [triglycerideBundle, "?scenario=triglycerides&target=CDB001321"], [JSON.parse(fs.readFileSync(path.join(__dirname, "../docs/data/chemistry-net-view/bundle.json"))), "?scenario=chemistry&target=CDB000806"], [fnsiiBundle, '?scenario=fnsii&target=CDB005072'], [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target=CDB006137'], [updatedCatalogBundle, '?scenario=catalog&target=CDB006137'], [expandedBundle, '?scenario=expanded'], [purineBundle, '?scenario=purine'], [restrictedPurineBundle, '?scenario=purine-restricted']]) {
 test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highlight without hiding, and recover from load errors`, async () => {
   class Field {
     constructor(){this.value='';this.textContent='';this.children=[];this.hidden=false;}
@@ -312,6 +313,19 @@ test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highl
   vm.runInNewContext(script,ui); const app=ui.NetView.mount(); await new Promise(setImmediate);
   assert.equal(fields.netRetry.hidden,false);
   await app.load(); assert.equal(fields.netRetry.hidden,true); assert.ok(cy.items.length>0);
+  if (scenario.includes('aminos')) {
+    assert.equal(fetched.at(-1),'data/amino-phospholipid-net-view/bundle.json?v='+'a'.repeat(16));
+    assert.equal(fields.netTarget.value,'CDB000805');
+    assert.match(fields.netMetrics.textContent,/2510 \/ 6220/);
+    assert.match(fields.netBoundary.textContent,/CO2 is the sole external carbon input/);
+    assert.equal(cyOptions.style.find(s=>s.selector==='edge').style['target-arrow-shape'],'triangle');
+    const speciation=cy.items.filter(e=>e.data.hypothesis_type==='amino-phospholipid-speciation');
+    assert.ok(speciation.length);
+    assert.ok(speciation.every(e=>e.data.speciation_type==='explicit-proton-exchange'));
+    const count=cy.items.length;
+    fields.poolHighlight.value='route-sensitivity';fields.poolHighlight.change();
+    assert.equal(cy.items.length,count);
+  }
   if (scenario.includes('protonation')) {
     assert.equal(fetched.at(-1),'data/source-mapped-protonation-net-view/bundle.json?v='+'a'.repeat(16));
     assert.equal(fields.netTarget.value,'CDB006138');

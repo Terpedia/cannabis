@@ -1,0 +1,11 @@
+{
+  "schema": "cannabis-carbon.gcp-batch-verification.v1",
+  "project": "terpedia-489015",
+  "dataset": "terpedia_core",
+  "principal": "cannabis-metabolome@terpedia-489015.iam.gserviceaccount.com",
+  "verified": true,
+  "verification": "All load jobs DONE without errors; exact service-account principal and destination checked. Full bounded SELECT readbacks match complete local NDJSON record multisets, report checksums and unique kind/id pairs.",
+  "tables": [
+    {"table": "cannabis_phase1_amino_phospholipid_net_20260906_v1", "job_id": "cannabis_sa_amino_phospholipid_net_20260906_v1", "rows": 25442, "report_sha256": "bce405bdffd54c6b147d80f29e987be12b3952dd7650593e2818a0fe1f0d1e27"}
+  ]
+}
