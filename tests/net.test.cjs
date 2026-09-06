@@ -20,6 +20,26 @@ const remainingBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs
 const restrictedRemainingBundle = {...remainingBundle,...remainingBundle.restricted_scenario,view_boundary:remainingBundle.restricted_boundary};
 const fnsiiBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/fnsii-net-view/bundle.json')));
 
+test('reaction-first view retains full inventory, balanced input groups and explicit lipid assumptions', async()=>{
+  const data=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/chemistry-net-view/bundle.json')));
+  const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/chemistry-net-view/index.json')));
+  const loaded=await createLoader(async url=>({ok:true,json:async()=>url.endsWith('index.json')?manifest:data}),'chemistry-net-view')();
+  assert.equal(loaded.targets.length,6220);
+  assert.equal(loaded.summary.target_status_counts['exact-net-conversion-hypothesis'],359);
+  assert.match(loaded.view_boundary,/No enzyme gate/);
+  for(const target of ['CDB000806','CDB000078']) {
+    const graph=project(loaded,target);
+    assert.ok(graph.certificate);
+    assert.ok(graph.edges.some(e=>e.data.is_route_sensitivity));
+    for(const step of graph.steps) {
+      assert.equal(graph.edges.filter(e=>e.data.step_id===step.step_id).length,step.required_inputs.length*step.outputs.length);
+      if(step.reaction.hypothesis_type==='sn2-acylation') assert.equal(step.direction_mode,'hypothetical-left-to-right');
+    }
+  }
+  const gap=loaded.targets.find(t=>t.net_status==='no-net-producing-equation');
+  assert.equal(project(loaded,gap.cannabisdb_id).certificate,null);
+});
+
 test('flavonoid scenarios preserve source certificates and never inherit the joint result', async()=>{
   const source = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/reports/phase1-fnsii-addition-sensitivity.json')));
   const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/fnsii-net-view/index.json')));
@@ -173,7 +193,7 @@ test('loader revalidates manifest, versions bundles, rejects external paths and 
   assert.deepEqual(sensitivityCalls,['data/completion-net-view/index.json','data/completion-net-view/bundle.json?v='+'b'.repeat(16)]);
 });
 
-for (const [bundle, scenario] of [[fnsiiBundle, '?scenario=fnsii&target=CDB005072'], [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target=CDB006137'], [updatedCatalogBundle, '?scenario=catalog&target=CDB006137'], [expandedBundle, '?scenario=expanded'], [purineBundle, '?scenario=purine'], [restrictedPurineBundle, '?scenario=purine-restricted']]) {
+for (const [bundle, scenario] of [[JSON.parse(fs.readFileSync(path.join(__dirname, "../docs/data/chemistry-net-view/bundle.json"))), "?scenario=chemistry&target=CDB000806"], [fnsiiBundle, '?scenario=fnsii&target=CDB005072'], [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target=CDB006137'], [updatedCatalogBundle, '?scenario=catalog&target=CDB006137'], [expandedBundle, '?scenario=expanded'], [purineBundle, '?scenario=purine'], [restrictedPurineBundle, '?scenario=purine-restricted']]) {
 test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highlight without hiding, and recover from load errors`, async () => {
   class Field {
     constructor(){this.value='';this.textContent='';this.children=[];this.hidden=false;}

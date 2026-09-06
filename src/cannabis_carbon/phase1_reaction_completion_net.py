@@ -138,15 +138,15 @@ def run():
     print(json.dumps(report['summary']), flush=True)
 
 
-def export_report():
-    path = Path('data/reports/phase1-reaction-completion-net.json')
+def export_report(name='reaction-completion-net'):
+    path = Path('data/reports/phase1-' + name + '.json')
     payload = path.read_bytes()
     report = json.loads(payload)
     digest = hashlib.sha256(payload).hexdigest()
-    Path('docs/data/reaction-completion-net.json').write_bytes(payload)
+    Path('docs/data/' + name + '.json').write_bytes(payload)
     rows = [{'record_kind': 'source_document', 'record_id': str(path),
              'record_json': json.dumps(report, separators=(',', ':')), 'report_sha256': digest}]
-    Path('data/derived/phase1-reaction-completion-net.ndjson').write_text(
+    Path('data/derived/phase1-' + name + '.ndjson').write_text(
         ''.join(json.dumps(r, separators=(',', ':')) + '\n' for r in rows))
 
 
