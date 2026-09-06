@@ -32,10 +32,10 @@ def query_for(template):
     return query.GetMol()
 
 
-def exact_scaffold_matches(mol, template):
+def exact_scaffold_matches(mol, template, *, uniquify=True):
     """Only R groups may extend outside the source scaffold; no headgroup drift."""
     result = []
-    for match in mol.GetSubstructMatches(query_for(template), useChirality=True):
+    for match in mol.GetSubstructMatches(query_for(template), useChirality=True, uniquify=uniquify):
         if any(a.GetDegree() != mol.GetAtomWithIdx(match[a.GetIdx()]).GetDegree()
                or a.GetFormalCharge() != mol.GetAtomWithIdx(match[a.GetIdx()]).GetFormalCharge()
                or a.GetIsotope() != mol.GetAtomWithIdx(match[a.GetIdx()]).GetIsotope()
