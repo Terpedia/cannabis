@@ -1,0 +1,27 @@
+{
+  "schema":"cannabis-carbon.medium-curation-evidence.v1",
+  "status":"reference-constraints-not-an-implemented-medium",
+  "references":[{
+    "url":"https://extension.umd.edu/resource/garden-fertilizer-basics",
+    "publisher":"University of Maryland Extension",
+    "title":"Garden Fertilizer Basics",
+    "source_updated":"2025-05-21",
+    "accessed":"2026-09-06",
+    "section":"Plant or soil nutrients",
+    "claims":{
+      "nonmineral_essential_elements":["C","H","O"],
+      "mineral_macronutrients":["N","P","K","Ca","Mg","S"],
+      "mineral_micronutrients":["B","Cu","Cl","Fe","Mn","Mo","Ni","Zn"],
+      "nitrogen_uptake_forms_named":["ammonium","nitrate"]
+    },
+    "evidence_boundary":"General plant nutrition guidance, not an experimentally established Cannabis minimal medium, exact structure mapping, stoichiometric uptake requirement or concentration prescription."
+  }],
+  "model_implications":[
+    "Do not infer that a mineral is dispensable merely because the present metabolite certificates show zero net consumption.",
+    "Account separately for catalytic, structural and growth-related mineral requirements.",
+    "An atmospheric N2-consuming catalog route is not evidence that Cannabis directly assimilates N2; require explicit organism and reaction support.",
+    "The selenium-containing inventory needs selenium input for elemental balance, but that is distinct from selenium being an essential nutrient for ordinary plant growth.",
+    "Keep CO2, water, gas exchange, proton balance and light/energy separately typed from mineral nutrient ingredients.",
+    "Resolve exact uptake forms, counterions and assimilation reactions before a numerical minimum-medium test; do not map nutrient element names directly onto arbitrary compounds containing that element."
+  ]
+}
