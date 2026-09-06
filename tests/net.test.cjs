@@ -18,6 +18,40 @@ const thiolaseBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/
 const restrictedThiolaseBundle = {...thiolaseBundle,...thiolaseBundle.restricted_scenario,view_boundary:thiolaseBundle.restricted_boundary};
 const remainingBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/remaining-net-view/bundle.json')));
 const restrictedRemainingBundle = {...remainingBundle,...remainingBundle.restricted_scenario,view_boundary:remainingBundle.restricted_boundary};
+const fnsiiBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/fnsii-net-view/bundle.json')));
+
+test('flavonoid scenarios preserve source certificates and never inherit the joint result', async()=>{
+  const source = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/reports/phase1-fnsii-addition-sensitivity.json')));
+  const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/fnsii-net-view/index.json')));
+  const before = JSON.stringify(fnsiiBundle);
+  for (const original of source.scenarios) {
+    const loaded = await createLoader(async url=>({ok:true,json:async()=>url.endsWith('index.json')?manifest:fnsiiBundle}), 'fnsii-net-view', original.id)();
+    assert.deepEqual(loaded.forbidden_step_ids, original.forbidden_step_ids);
+    assert.equal(loaded.targets.length, 2);
+    assert.equal(loaded.summary.target_status_counts['exact-net-conversion-hypothesis'], original.id==='CHI-and-FNSII'?2:0);
+    for (const row of original.rows) {
+      const graph = project(loaded, row.cannabisdb_id);
+      if (original.id !== 'CHI-and-FNSII') {assert.equal(graph.certificate, null);assert.equal(graph.nodes.length,0);continue;}
+      assert.deepEqual(graph.certificate, row);
+      const additions = graph.steps.filter(s=>s.reaction.is_route_sensitivity);
+      assert.equal(additions.length, 2);
+      for (const step of graph.steps) {
+        const sourceReaction = source.reactions.find(r=>r.id===step.reaction_id);
+        const forward = step.direction_mode==='hypothetical-left-to-right';
+        assert.deepEqual(step.required_inputs,sourceReaction[forward?'left':'right']);
+        assert.deepEqual(step.outputs,sourceReaction[forward?'right':'left']);
+        assert.ok(!loaded.forbidden_step_ids.includes(step.step_id));
+        assert.equal(step.evidence.length>0,!step.reaction.is_route_sensitivity);
+      }
+      assert.ok(additions.every(s=>s.reaction.hypothesis_assumptions.length && !s.evidence.length));
+      assert.equal(graph.nodes.length,new Set(graph.steps.flatMap(s=>[...s.required_inputs,...s.outputs].map(p=>p.compound_id))).size);
+      assert.ok(graph.edges.filter(e=>e.data.is_route_sensitivity).every(e=>e.data.missing_candidate_evidence && e.data.hypothesis_assumptions.length));
+    }
+  }
+  assert.equal(JSON.stringify(fnsiiBundle),before);
+  assert.throws(()=>createLoader(()=>{},'fnsii-net-view','invented'),/Invalid sensitivity/);
+  await assert.rejects(createLoader(async url=>({ok:true,json:async()=>url.endsWith('index.json')?manifest:{...fnsiiBundle,scenario_options:[]}}),'fnsii-net-view','baseline')(),/Invalid sensitivity/);
+});
 
 test('remaining model loads restricted certificates and rejects missing restriction', async()=>{
   const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/remaining-net-view/index.json')));
@@ -139,7 +173,7 @@ test('loader revalidates manifest, versions bundles, rejects external paths and 
   assert.deepEqual(sensitivityCalls,['data/completion-net-view/index.json','data/completion-net-view/bundle.json?v='+'b'.repeat(16)]);
 });
 
-for (const [bundle, scenario] of [[JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target=CDB006137'], [updatedCatalogBundle, '?scenario=catalog&target=CDB006137'], [expandedBundle, '?scenario=expanded'], [purineBundle, '?scenario=purine'], [restrictedPurineBundle, '?scenario=purine-restricted']]) {
+for (const [bundle, scenario] of [[fnsiiBundle, '?scenario=fnsii&target=CDB005072'], [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target=CDB006137'], [updatedCatalogBundle, '?scenario=catalog&target=CDB006137'], [expandedBundle, '?scenario=expanded'], [purineBundle, '?scenario=purine'], [restrictedPurineBundle, '?scenario=purine-restricted']]) {
 test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highlight without hiding, and recover from load errors`, async () => {
   class Field {
     constructor(){this.value='';this.textContent='';this.children=[];this.hidden=false;}
@@ -157,6 +191,20 @@ test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highl
   vm.runInNewContext(script,ui); const app=ui.NetView.mount(); await new Promise(setImmediate);
   assert.equal(fields.netRetry.hidden,false);
   await app.load(); assert.equal(fields.netRetry.hidden,true); assert.ok(cy.items.length>0);
+  if (scenario.includes('fnsii')) {
+    assert.equal(fields.netTarget.value,'CDB005072');
+    assert.match(fields.netMetrics.textContent,/2 \/ 2.*conditional sensitivity/);
+    assert.match(fields.netBoundary.textContent,/Carrier partnership/);
+    const count=cy.items.length;
+    fields.poolHighlight.value='route-sensitivity';fields.poolHighlight.change();
+    assert.equal(cy.items.length,count);
+    assert.equal(cy.muted.length,cy.items.filter(e=>e.data.source&&!e.data.is_route_sensitivity).length);
+    fields.netReaction.value=project(bundle,'CDB005072').steps.find(s=>s.reaction.id.startsWith('hypothesis:exact-naringenin')).step_id;
+    fields.netReaction.change();
+    assert.match(JSON.stringify(fields.netEquation.children),/carrier|Carrier/);
+    assert.match(fields.netEvidence.textContent,/No candidate enzyme evidence/);
+    fields.netReaction.value='';fields.netReaction.change();
+  }
   if (scenario.includes('completions')) {
     assert.equal(fields.netTarget.value,'CDB006149');
     assert.match(fields.netBoundary.textContent,/Completion sensitivity/);
@@ -221,8 +269,11 @@ test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highl
   fields.netReaction.value=project(bundle,fields.netTarget.value).steps.find(s=>s.evidence.length).step_id;fields.netReaction.change();
   assert.match(fields.netCounts.textContent,/1 directed reactions shown/);
   assert.ok(fields.netBalance.children.length);assert.match(fields.netEvidence.textContent,/"id"/);
-  fields.netScope.value='all';fields.netSearch.value=bundle.targets.find(t=>!t.certificate_compound_id).cannabisdb_id;fields.netSearch.input();
-  assert.equal(cy.items.length,0);assert.match(fields.netMessage.textContent,/No net-conversion certificate/);
+  const gapTarget=bundle.targets.find(t=>!t.certificate_compound_id);
+  if(gapTarget) {
+    fields.netScope.value='all';fields.netSearch.value=gapTarget.cannabisdb_id;fields.netSearch.input();
+    assert.equal(cy.items.length,0);assert.match(fields.netMessage.textContent,/No net-conversion certificate/);
+  }
   fields.netSearch.value='no such compound xyz';fields.netSearch.input();assert.equal(cy.items.length,0);assert.equal(fields.netTarget.disabled,true);
 });
 }

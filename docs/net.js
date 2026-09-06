@@ -54,6 +54,8 @@
         direction_mode: step.direction_mode, extent: step.extent, required_inputs: inputs, outputs,
         enzyme_evidence_ids: reaction.enzyme_evidence_ids, candidate_protein_ids: proteins,
         is_completion_sensitivity: !!reaction.is_completion_sensitivity,
+        is_route_sensitivity: !!reaction.is_route_sensitivity,
+        hypothesis_assumptions: reaction.hypothesis_assumptions || [],
         missing_candidate_evidence: !!reaction.missing_candidate_evidence,
         is_new_catalog_candidate: !!reaction.is_new_catalog_candidate,
         has_unreviewed_reference: attached.some(e => e.evidence_class?.includes('unreviewed') || e.reference_matches?.some(r=>r.review_status==='unreviewed')),
@@ -76,8 +78,9 @@
     const q = query.trim().toLowerCase();
     return targets.filter(t => (scope === 'all' || (t.certificate_compound_id && (scope !== 'enzyme-gaps' || t.missing_candidate_reaction_ids?.length))) && `${t.label} ${t.cannabisdb_id}`.toLowerCase().includes(q));
   }
-  function createLoader(fetcher, folder = 'net-view') {
-    if (!['net-view', 'completion-net-view', 'catalog-net-view', 'expanded-net-view', 'purine-net-view', 'purine-restricted-net-view', 'thiolase-net-view', 'thiolase-restricted-net-view', 'remaining-net-view', 'remaining-restricted-net-view'].includes(folder)) throw new Error('Invalid scenario folder');
+  function createLoader(fetcher, folder = 'net-view', comparison = 'CHI-and-FNSII') {
+    if (!['fnsii-net-view', 'net-view', 'completion-net-view', 'catalog-net-view', 'expanded-net-view', 'purine-net-view', 'purine-restricted-net-view', 'thiolase-net-view', 'thiolase-restricted-net-view', 'remaining-net-view', 'remaining-restricted-net-view'].includes(folder)) throw new Error('Invalid scenario folder');
+    if (folder === 'fnsii-net-view' && !['baseline', 'CHI-only', 'FNSII-only', 'CHI-and-FNSII'].includes(comparison)) throw new Error('Invalid sensitivity comparison');
     const sourceFolder = folder === 'remaining-restricted-net-view' ? 'remaining-net-view' : folder === 'thiolase-restricted-net-view' ? 'thiolase-net-view' : folder === 'purine-restricted-net-view' ? 'purine-net-view' : folder;
     return async function() {
       const response = await fetcher(`data/${sourceFolder}/index.json`, {cache: 'no-cache'});
@@ -87,6 +90,11 @@
       const data = await fetcher(`data/${sourceFolder}/bundle.json?v=${manifest.sha256.slice(0, 16)}`);
       if (!data.ok) throw new Error(`Net-conversion data unavailable (HTTP ${data.status})`);
       const base = await data.json();
+      if (folder === 'fnsii-net-view') {
+        const selected = base.scenario_options?.find(s => s.id === comparison);
+        if (base.view_scenario !== 'fnsii-route-sensitivity' || base.model_eligible !== false || !selected || !Array.isArray(selected.certificates) || !Array.isArray(selected.targets)) throw Error('Invalid sensitivity scenario');
+        return {...base, ...selected, view_boundary: `${comparison}: ${base.view_boundary}`};
+      }
       if (folder === 'remaining-restricted-net-view') {
         if(base.view_scenario !== 'remaining-candidates' || base.restricted_scenario?.id !== 'eight-reverse-steps-forbidden') throw Error('Invalid restricted scenario');
         return {...base, ...base.restricted_scenario, view_boundary:base.restricted_boundary};
@@ -111,8 +119,8 @@
   }
   function mount() {
     const scenario = new URLSearchParams(location.search).get('scenario');
-    const folder = scenario === 'remaining' ? 'remaining-net-view' : scenario === 'remaining-restricted' ? 'remaining-restricted-net-view' : scenario === 'thiolase' ? 'thiolase-net-view' : scenario === 'thiolase-restricted' ? 'thiolase-restricted-net-view' : scenario === 'purine' ? 'purine-net-view' : scenario === 'purine-restricted' ? 'purine-restricted-net-view' : scenario === 'expanded' ? 'expanded-net-view' : scenario === 'catalog' ? 'catalog-net-view' : scenario === 'completions' ? 'completion-net-view' : 'net-view';
-    const $ = id => document.getElementById(id), loader = createLoader((...args) => fetch(...args), folder);
+    const folder = scenario === 'fnsii' ? 'fnsii-net-view' : scenario === 'remaining' ? 'remaining-net-view' : scenario === 'remaining-restricted' ? 'remaining-restricted-net-view' : scenario === 'thiolase' ? 'thiolase-net-view' : scenario === 'thiolase-restricted' ? 'thiolase-restricted-net-view' : scenario === 'purine' ? 'purine-net-view' : scenario === 'purine-restricted' ? 'purine-restricted-net-view' : scenario === 'expanded' ? 'expanded-net-view' : scenario === 'catalog' ? 'catalog-net-view' : scenario === 'completions' ? 'completion-net-view' : 'net-view';
+    const $ = id => document.getElementById(id), loader = createLoader((...args) => fetch(...args), folder, new URLSearchParams(location.search).get('comparison') || 'CHI-and-FNSII');
     if (typeof cytoscape !== 'function') { $('netMessage').textContent = 'The graph library could not load. Reload the page or use the downloadable certificates below.'; return; }
     let bundle, current, generation = 0;
     const cy = cytoscape({container: $('netCy'), elements: [], layout: {name: 'preset'}, style: [
@@ -133,7 +141,7 @@
     function label(cid) {const c = bundle.compounds.find(c => c.id === cid); return c?.labels?.[0] || `${c?.formula || ''} (${cid})`;}
     function describe(step) {
       const equation = side => side.map(m => `${m.coefficient} × ${label(m.compound_id)}`).join(' + ');
-      lines('netEquation', 'Full directed equation', [equation(step.required_inputs) + ' → ' + equation(step.outputs), `Relative extent: ${step.extent}`, 'Hypothetical direction; all listed inputs are required.', ...(step.reaction.direction_review ? [step.reaction.direction_review.warning, ...step.reaction.direction_review.discriminating_tests] : [])]);
+      lines('netEquation', 'Full directed equation', [equation(step.required_inputs) + ' → ' + equation(step.outputs), `Relative extent: ${step.extent}`, 'Hypothetical direction; all listed inputs are required.', ...(step.reaction.hypothesis_assumptions || []), ...(step.reaction.direction_review ? [step.reaction.direction_review.warning, ...step.reaction.direction_review.discriminating_tests] : [])]);
       $('netEvidence').textContent = JSON.stringify(step.evidence.length ? step.evidence : {
         status: 'No candidate enzyme evidence in this snapshot', reaction_id: step.reaction_id,
         claim_boundary: 'Chemistry-only step. Determine whether it is enzymatic, spontaneous or a catalog transformation; do not infer activity from connectivity.'
@@ -144,7 +152,7 @@
         const p = document.createElement('p'), a = document.createElement('a'); a.href = url; a.textContent = url; a.target = '_blank'; a.rel = 'noopener noreferrer'; p.appendChild(a); $('netSources').appendChild(p);
       }
     }
-    function highlight() {cy.elements().removeClass('muted'); if ($('poolHighlight').value === 'pools') cy.nodes().filter(n => !n.data('is_pool')).addClass('muted'); else if ($('poolHighlight').value === 'enzyme-gaps') cy.edges().filter(e => !e.data('missing_candidate_evidence')).addClass('muted'); else if ($('poolHighlight').value === 'direction-review') cy.edges().filter(e => !e.data('direction_review_id')).addClass('muted'); else if ($('poolHighlight').value === 'unreviewed-references') cy.edges().filter(e => !e.data('has_unreviewed_reference')).addClass('muted');}
+    function highlight() {cy.elements().removeClass('muted'); if ($('poolHighlight').value === 'pools') cy.nodes().filter(n => !n.data('is_pool')).addClass('muted'); else if ($('poolHighlight').value === 'route-sensitivity') cy.edges().filter(e => !e.data('is_route_sensitivity')).addClass('muted'); else if ($('poolHighlight').value === 'enzyme-gaps') cy.edges().filter(e => !e.data('missing_candidate_evidence')).addClass('muted'); else if ($('poolHighlight').value === 'direction-review') cy.edges().filter(e => !e.data('direction_review_id')).addClass('muted'); else if ($('poolHighlight').value === 'unreviewed-references') cy.edges().filter(e => !e.data('has_unreviewed_reference')).addClass('muted');}
     function draw() {
       clear(); if (!bundle || !$('netTarget').value) return;
       current = project(bundle, $('netTarget').value, $('netReaction').value);
@@ -183,10 +191,11 @@
       try {
         const loaded = await loader(); if (token !== generation) return; bundle = loaded;
         if ($('netBoundary') && bundle.view_boundary) $('netBoundary').textContent = bundle.view_boundary + ' ' + bundle.claim_boundary;
-        const evidenceLabel = bundle.view_scenario === 'full-catalog-chemistry-only' ? 'chemistry-only net certificates (enzyme gaps included)' : 'candidate-linked net certificates';
+        const evidenceLabel = bundle.view_scenario === 'fnsii-route-sensitivity' ? 'conditional sensitivity certificates (assumed enzyme steps)' : bundle.view_scenario === 'full-catalog-chemistry-only' ? 'chemistry-only net certificates (enzyme gaps included)' : 'candidate-linked net certificates';
         $('netMetrics').textContent = `${bundle.summary.target_status_counts['exact-net-conversion-hypothesis']} / ${bundle.summary.target_records} target records have ${evidenceLabel} · not confirmed pathway completeness`;
         if(bundle.evidence_summary) $('netMetrics').textContent += ` · ${bundle.evidence_summary.selected_certificate_targets_with_candidates_for_all_steps} selected target certificates have candidates for all steps · ${bundle.evidence_summary.remaining_missing_candidate_equations} reaction gaps remain`;
         const requested = new URLSearchParams(location.search).get('target');
+        if (folder === 'fnsii-net-view' && !bundle.certificates.length) $('netScope').value = 'all';
         if (requested) {
           $('netScope').value = 'all';
           if (!bundle.targets.some(t => t.cannabisdb_id === requested)) $('netSearch').value = requested;

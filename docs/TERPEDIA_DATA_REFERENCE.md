@@ -2942,3 +2942,19 @@ All three records (two documents plus metadata) matched the complete local
 export, with service-account principal and destination verified.
 Receipt: `data/reports/phase1-fnsii-route-sensitivity-gcp-verification.json`.
 Bundle SHA-256: `f74ecab42f57f4c973548c6e53921c1ccf76d5b8d47b7d11a42a0757e9d56849`.
+
+The Cytoscape route viewer at `net.html?scenario=fnsii` displays both preserved
+certificates. The `comparison` parameter accepts `baseline`, `CHI-only`,
+`FNSII-only`, and `CHI-and-FNSII` (default). Each comparison selects its own
+targets and certificates from the archived sensitivity results. All four views
+cover exactly two selected targets, so their denominator is two.
+
+`docs/data/fnsii-net-view/bundle.json` contains the union of 41 used reactions,
+59 required compounds and 40 existing candidate evidence records. The two
+added hypotheses retain empty enzyme-evidence lists and explicit assumptions.
+Arrows retain all reaction inputs, products, coefficients and certificate
+extents; the highlight control dims other arrows without removing participants.
+Selecting an assumed reaction shows its activity/carrier requirements. The
+manifest pins the view and its source documents. This is a display projection
+of the GCP-verified sensitivity batch; it creates no new reaction evidence or
+certificate.
