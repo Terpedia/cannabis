@@ -21,6 +21,31 @@ const restrictedRemainingBundle = {...remainingBundle,...remainingBundle.restric
 const fnsiiBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/fnsii-net-view/bundle.json')));
 const triglycerideBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/triglyceride-net-view/bundle.json')));
 const symmetryBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/triglyceride-symmetry-net-view/bundle.json')));
+const hydrolysisBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/phosphatidate-hydrolysis-net-view/bundle.json')));
+
+test('hydrolysis routes retain forward-only assumptions and complete projected equations', async()=>{
+  const source=JSON.parse(fs.readFileSync(path.join(__dirname,'../data/reports/phase1-phosphatidate-hydrolysis-net.json')));
+  const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/phosphatidate-hydrolysis-net-view/index.json')));
+  const loaded=await createLoader(async url=>({ok:true,json:async()=>url.endsWith('index.json')?manifest:hydrolysisBundle}),'phosphatidate-hydrolysis-net-view')();
+  assert.equal(loaded.targets.length,6220);
+  assert.equal(loaded.summary.target_status_counts['exact-net-conversion-hypothesis'],861);
+  const forbidden=new Set(source.forbidden_step_ids);
+  for(const target of source.targets.filter(t=>t.new_certificate)){
+    const graph=project(loaded,target.cannabisdb_id);
+    assert.ok(graph.certificate);
+    const added=graph.steps.filter(s=>s.reaction.hypothesis_type==='phosphatidate-hydrolysis');
+    assert.ok(added.length);
+    for(const s of added){
+      assert.equal(s.direction_mode,'hypothetical-left-to-right');
+      assert.ok(s.reaction.is_route_sensitivity);
+      assert.ok(s.reaction.hypothesis_assumptions.length);
+    }
+    for(const s of graph.steps){
+      assert.ok(!forbidden.has(s.step_id));
+      assert.equal(graph.edges.filter(e=>e.data.step_id===s.step_id).length,s.required_inputs.length*s.outputs.length);
+    }
+  }
+});
 
 test('symmetric target routes preserve exact source products and forward-only assumptions',async()=>{
   const source=JSON.parse(fs.readFileSync(path.join(__dirname,'../data/reports/phase1-triglyceride-symmetry-net.json')));
@@ -229,7 +254,7 @@ test('loader revalidates manifest, versions bundles, rejects external paths and 
   assert.deepEqual(sensitivityCalls,['data/completion-net-view/index.json','data/completion-net-view/bundle.json?v='+'b'.repeat(16)]);
 });
 
-for (const [bundle, scenario] of [[symmetryBundle, "?scenario=symmetry&target=CDB001366"], [triglycerideBundle, "?scenario=triglycerides&target=CDB001321"], [JSON.parse(fs.readFileSync(path.join(__dirname, "../docs/data/chemistry-net-view/bundle.json"))), "?scenario=chemistry&target=CDB000806"], [fnsiiBundle, '?scenario=fnsii&target=CDB005072'], [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target=CDB006137'], [updatedCatalogBundle, '?scenario=catalog&target=CDB006137'], [expandedBundle, '?scenario=expanded'], [purineBundle, '?scenario=purine'], [restrictedPurineBundle, '?scenario=purine-restricted']]) {
+for (const [bundle, scenario] of [[hydrolysisBundle, "?scenario=hydrolysis&target=CDB000866"], [symmetryBundle, "?scenario=symmetry&target=CDB001366"], [triglycerideBundle, "?scenario=triglycerides&target=CDB001321"], [JSON.parse(fs.readFileSync(path.join(__dirname, "../docs/data/chemistry-net-view/bundle.json"))), "?scenario=chemistry&target=CDB000806"], [fnsiiBundle, '?scenario=fnsii&target=CDB005072'], [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target=CDB006137'], [updatedCatalogBundle, '?scenario=catalog&target=CDB006137'], [expandedBundle, '?scenario=expanded'], [purineBundle, '?scenario=purine'], [restrictedPurineBundle, '?scenario=purine-restricted']]) {
 test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highlight without hiding, and recover from load errors`, async () => {
   class Field {
     constructor(){this.value='';this.textContent='';this.children=[];this.hidden=false;}

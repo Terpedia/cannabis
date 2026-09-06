@@ -10,19 +10,24 @@ SOURCES = ('phase1-lipid-acylation-net', 'phase1-reaction-completion-net',
     'phase1-target-hypotheses', 'phase1-screened-enzyme-overlay', 'phase1-route-enzyme-overlay')
 
 
-def run(triglycerides=False, symmetry=False):
+def run(triglycerides=False, symmetry=False, hydrolysis=False):
     paths = [Path('data/reports', n + '.json') for n in SOURCES]
     current, parent, baseline, network, lipid, *evidence = [json.loads(p.read_text()) for p in paths]
     previous = current
     layers = [parent, previous]
     extras = []
-    if triglycerides or symmetry:
+    if triglycerides or symmetry or hydrolysis:
         extra_paths = [Path('data/reports', n + '.json') for n in ('phase1-triglyceride-net', 'phase1-triglyceride-acylation')]
         current, extra = [json.loads(p.read_text()) for p in extra_paths]
         paths.extend(extra_paths)
         layers.append(current); extras.append(extra)
-    if symmetry:
+    if symmetry or hydrolysis:
         extra_paths = [Path('data/reports', n + '.json') for n in ('phase1-triglyceride-symmetry-net', 'phase1-triglyceride-symmetry')]
+        current, extra = [json.loads(p.read_text()) for p in extra_paths]
+        paths.extend(extra_paths)
+        layers.append(current); extras.append(extra)
+    if hydrolysis:
+        extra_paths = [Path('data/reports', n + '.json') for n in ('phase1-phosphatidate-hydrolysis-net', 'phase1-phosphatidate-hydrolysis')]
         current, extra = [json.loads(p.read_text()) for p in extra_paths]
         paths.extend(extra_paths)
         layers.append(current); extras.append(extra)
@@ -65,7 +70,7 @@ def run(triglycerides=False, symmetry=False):
         'view_boundary': 'Reaction-first scenario across all 6,220 CannabisDB records. No enzyme gate. Added completion and lipid hypotheses are highlighted as assumptions; every input and coproduct remains in each full equation.',
         'claim_boundary': current['claim_boundary'], 'source_sha256': hashes}
     bundle = attach_evidence(report, evidence)
-    folder = Path('docs/data/triglyceride-symmetry-net-view' if symmetry else 'docs/data/triglyceride-net-view' if triglycerides else 'docs/data/chemistry-net-view'); folder.mkdir(parents=True, exist_ok=True)
+    folder = Path('docs/data/phosphatidate-hydrolysis-net-view' if hydrolysis else 'docs/data/triglyceride-symmetry-net-view' if symmetry else 'docs/data/triglyceride-net-view' if triglycerides else 'docs/data/chemistry-net-view'); folder.mkdir(parents=True, exist_ok=True)
     payload = json.dumps(bundle, separators=(',', ':')) + '\n'
     (folder / 'bundle.json').write_text(payload)
     manifest = {'schema': report['schema'], 'file': 'bundle.json', 'bytes': len(payload.encode()),
@@ -79,5 +84,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--triglycerides', action='store_true')
     parser.add_argument('--symmetry', action='store_true')
+    parser.add_argument('--hydrolysis', action='store_true')
     args = parser.parse_args()
-    run(triglycerides=args.triglycerides, symmetry=args.symmetry)
+    run(triglycerides=args.triglycerides, symmetry=args.symmetry, hydrolysis=args.hydrolysis)
