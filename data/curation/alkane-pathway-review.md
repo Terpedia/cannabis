@@ -16,3 +16,12 @@ Summary: 18,203 balanced equations; 3,219 participating records; 2,732 condition
 Next work: resolve odd-chain acyl-CoA supply and source-specific substrate scope; separate plant alkane chemistry from cyanobacterial deformylation; test the paired routes with curated input and energy constraints. Current IUBMB EC 1.2.1.50 describes an acyl-protein complex and separately notes acyl-CoA acceptance. It must not be used to merge protein/ACP carriers with CoA or to assign a Cannabis protein merely from an EC label.
 
 Sources are retained in `phase1-alkane-hypotheses.json` and `phase1-alkane-precursors.json`; full target results, inherited constraints and exact certificates are in `phase1-alkane-net.json`. These results extend the ketone scenario and are separate from the in-progress medium restriction on the earlier selenium-forward model.
+
+## Exact obstruction proofs
+
+`phase1-alkane-obstructions.json` strengthens the two failed-route diagnoses. Nonnegative internal-compound weights were found numerically, then replayed using exact fractions against **all 33,524 allowed directions** in the 18,203-equation model. No allowed step increases the weighted sum, and each blocked target has positive weight. Thus positive target export with no net depletion of another internal pool is impossible under this exact model boundary.
+
+- **Octadecane:** five unit-weight compounds comprise the C18 target, C19 aldehyde, C19 acyl-CoA, C19 carboxylate, and one phosphatidate bearing a C19 acyl chain. Six directed steps touch this set. Lipid transfer and activation reactions redistribute this material but do not establish its net supply. Seek an independently balanced source of the exact C19 precursor family; presence of the fatty acid or acyl-CoA is insufficient.
+- **Eicosane:** three unit-weight compounds comprise the C20 target, C21 aldehyde and C21 acyl-CoA. Only the two new forward reactions touch this set. The missing C21 acyl-CoA supply is explicit.
+
+These proofs allow regenerated pre-existing pools. They do not establish biological absence, minimality of the obstruction support, unique missing enzymes, or impossibility after adding independently justified chemistry. External inputs have zero weight, and the exchange permissions and reaction directions are pinned to the alkane scenario. The separate minimum-medium work is unaffected.
