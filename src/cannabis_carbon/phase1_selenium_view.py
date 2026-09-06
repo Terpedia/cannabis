@@ -7,8 +7,8 @@ from .phase1_sharded_net_view import write_view
 from .phase1_net_view import build as attach_evidence
 
 
-def run():
-    folder=Path('docs/data/local-speciation-net-view')
+def run(*, ketone=False):
+    folder=Path('docs/data/selenium-net-view' if ketone else 'docs/data/local-speciation-net-view')
     read=lambda p:json.loads(p.read_bytes())
     manifest=read(folder/'index.json')
     def verified(ref):
@@ -18,11 +18,15 @@ def run():
         return json.loads(payload)
     base=verified(manifest); shared=verified(base['shared_chemistry'])
     certs=[verified(ref) for ref in base['certificate_files'].values()]
-    paths=[Path('data/reports/phase1-selenium-forward-net.json'),
+    paths=[Path('data/reports/phase1-ketone-stereo-net.json' if ketone else 'data/reports/phase1-selenium-forward-net.json'),
            Path('data/reports/phase1-medium-inventory.json'),Path('data/curation/light-reaction-requirements.json'),
            folder/'index.json',folder/'bundle.json']+[Path('data/reports/'+n+'.json') for n in
            ('phase1-target-hypotheses','phase1-screened-enzyme-overlay','phase1-route-enzyme-overlay')]
     current,medium,light=[read(p) for p in paths[:3]]
+    completion_path=Path('data/reports/phase1-marts-completions.json')
+    completion_report=read(completion_path)
+    completions={c['id']:c for c in completion_report['completions']}
+    variants={v['id']:v for v in completion_report['variants']}
     for doc in (current,medium,base):
         for p,sha in doc.get('source_sha256',{}).items():
             if hashlib.sha256(Path(p).read_bytes()).hexdigest()!=sha:
@@ -40,6 +44,16 @@ def run():
         if r.get('source_url'):
             sources=sources+[{'source_urls':[r['source_url']],'evidence_type':r['source_evidence_type'],
                               'claim_boundary':r['claim_boundary']}]
+        if not sources and r.get('completion_ids'):
+            records=[completions[cid] for cid in r['completion_ids']]
+            for record in records:
+                if record['balanced_equation_id']!=r['id'] or any(record[s]!=r[s] for s in ('left','right')):
+                    raise ValueError('Completion provenance equation mismatch')
+            sources=[{'evidence_type':'inferred-stoichiometric-completion',
+                      'completion':record,'source_variant':variants[record['variant_id']],
+                      'claim_boundary':record['claim_boundary']} for record in records]
+            r={**r,'hypothesis_type':'inferred-stoichiometric-completion',
+               'claim_boundary':completion_report['claim_boundary']}
         if not sources:
             raise ValueError('Missing new reaction provenance')
         reactions[r['id']]={**r,'enzyme_evidence_ids':r.get('enzyme_evidence_ids',[]),
@@ -81,9 +95,17 @@ def run():
         'view_boundary':'Selenium incorporation is source-forward only. Node details annotate external-input dependencies; edge details retain source light requirements where reviewed. Those light annotations are not enforced energy constraints. The permissive 102-species boundary is not a minimum defined medium.',
         'claim_boundary':current['claim_boundary'],
         'source_sha256':{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}}
+    report['source_sha256'][str(completion_path)]=hashlib.sha256(completion_path.read_bytes()).hexdigest()
     report=attach_evidence(report,[read(p) for p in paths[5:]])
+    if ketone:
+        report['schema']='cannabis-carbon.ketone-stereo-view.v1'
+        report['view_boundary']=('Separate ketone-mediated redox hypothesis scenario. Newly added reactions are '
+            'forward-only reaction-class analogies, not target-specific enzyme evidence. Medium annotations '
+            'and consumer counts describe the earlier selenium-forward certificate set, not this scenario. '
+            'The unchanged permissive exchange boundary is not a minimum defined medium.')
+        report['medium_annotation_scope']='selenium-forward baseline; not recomputed for ketone hypotheses'
     Path('docs/data/light-reaction-requirements.json').write_bytes(paths[2].read_bytes())
-    print(json.dumps(write_view(report,'docs/data/selenium-net-view')),flush=True)
+    print(json.dumps(write_view(report,'docs/data/ketone-stereo-net-view' if ketone else 'docs/data/selenium-net-view')),flush=True)
 
 
 if __name__=='__main__':
