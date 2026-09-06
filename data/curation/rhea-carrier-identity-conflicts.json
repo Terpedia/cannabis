@@ -1,0 +1,25 @@
+{
+  "schema": "cannabis-carbon.rhea-carrier-identity-conflicts.v1",
+  "reviewed": "2026-09-06",
+  "conflicts": [
+    {
+      "reaction_id": "balanced-equation:0ffc68d2b54f8493a70515f930b488163173d3c0157ea958123cb68612942cba",
+      "source_url": "https://www.rhea-db.org/rhea/56273",
+      "source_reaction_ids": ["RHEA:56273", "RHEA:56274"],
+      "source_carriers": [
+        {"id": "RHEA-COMP:12863", "label": "Fe(III)-[cytochrome cL]", "reactive_part_chebi": "CHEBI:29034", "incorrect_model_smiles": "[Fe+3]"},
+        {"id": "RHEA-COMP:12864", "label": "Fe(II)-[cytochrome cL]", "reactive_part_chebi": "CHEBI:29033", "incorrect_model_smiles": "[Fe+2]"}
+      ]
+    },
+    {
+      "reaction_id": "balanced-equation:962ff637431b2aef02fd82f32fe7840def6987a090b8cbe42c540d55f907a1f7",
+      "source_url": "https://www.rhea-db.org/rhea/79541",
+      "source_reaction_ids": ["RHEA:79540", "RHEA:79541"],
+      "source_carriers": [
+        {"id": "RHEA-COMP:14399", "label": "Fe(III)-[cytochrome c]", "reactive_part_chebi": "CHEBI:29034", "incorrect_model_smiles": "[Fe+3]"},
+        {"id": "RHEA-COMP:10350", "label": "Fe(II)-[cytochrome c]", "reactive_part_chebi": "CHEBI:29033", "incorrect_model_smiles": "[Fe+2]"}
+      ]
+    }
+  ],
+  "claim_boundary": "Source participant identities include a macromolecular carrier; their reactive-part ChEBI structures cannot be substituted as free inorganic nutrient ions. These are two confirmed source/model identity conflicts, not an exhaustive carrier audit. Balance of the reduced representation does not establish full identity fidelity. Neither reversing nor retaining the source direction repairs the carrier substitution. Preserve historical reports but do not promote affected certificates as source-faithful pathways. Unaffected by these two conflicts does not mean validated against all carrier identities."
+}
