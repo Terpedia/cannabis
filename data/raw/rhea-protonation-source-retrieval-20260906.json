@@ -1,0 +1,25 @@
+{
+  "retrieved_date": "2026-09-06",
+  "documentation_url": "https://www.rhea-db.org/help/download",
+  "files": [
+    {
+      "path": "data/raw/rhea-chebi-ph73-mapping-20260906.tsv",
+      "url": "https://ftp.expasy.org/databases/rhea/tsv/chebi_pH7_3_mapping.tsv",
+      "bytes": 3099222,
+      "sha256": "7076e992933d94e81b66e55d4977c4634b11ad5d9146052c0a25ebc72b5067b2",
+      "header": ["CHEBI", "CHEBI_PH7_3", "ORIGIN"],
+      "data_rows": 122732,
+      "origin_counts": {"computation": 121834, "curation": 898}
+    },
+    {
+      "path": "data/raw/rhea-chebi-smiles-20260906.tsv",
+      "url": "https://ftp.expasy.org/databases/rhea/tsv/rhea-chebi-smiles.tsv",
+      "bytes": 1320973,
+      "sha256": "567034c7dfdb0619697964bb6dd8180579e47cc3e6d994526d39fd92c5794f50",
+      "header": null,
+      "columns": ["chebi_id", "canonical_smiles"],
+      "data_rows": 14318
+    }
+  ],
+  "claim_boundary": "Rhea source snapshots, not Cannabis-specific activity or pH evidence. Mapping origin remains explicit. No exact identity join or new pathway certificate is asserted by retrieval alone."
+}

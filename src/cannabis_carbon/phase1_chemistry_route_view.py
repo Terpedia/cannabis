@@ -10,39 +10,62 @@ SOURCES = ('phase1-lipid-acylation-net', 'phase1-reaction-completion-net',
     'phase1-target-hypotheses', 'phase1-screened-enzyme-overlay', 'phase1-route-enzyme-overlay')
 
 
-def run(triglycerides=False, symmetry=False, hydrolysis=False, precursors=False, cardiolipins=False):
+def reaction_sources(reaction, source_by_id):
+    """Keep the source of an assumption distinct from biochemical reaction evidence."""
+    if reaction.get('hypothesis_type') == 'source-mapped-protonation':
+        if not reaction.get('source_mapping_evidence'):
+            raise ValueError('Missing exact protonation mapping evidence')
+        return reaction.get('sources', []) + [{
+            'source_urls': [reaction['source_url']],
+            'evidence_type': 'exact-endpoint-protonation-mapping-not-curated-reaction',
+            'mapping_evidence': reaction['source_mapping_evidence'],
+            'claim_boundary': reaction['claim_boundary']}]
+    return reaction.get('sources', []) + [{'source_urls':
+        [source_by_id[reaction['source_reaction_id']]['source_url']]
+        if reaction.get('source_reaction_id') in source_by_id else
+        ['https://terpedia.github.io/cannabis/data/reaction-completion-net.json']}]
+
+
+def run(triglycerides=False, symmetry=False, hydrolysis=False, precursors=False, cardiolipins=False,
+        protonation=False):
     paths = [Path('data/reports', n + '.json') for n in SOURCES]
     current, parent, baseline, network, lipid, *evidence = [json.loads(p.read_text()) for p in paths]
     previous = current
     layers = [parent, previous]
     extras = []
-    if triglycerides or symmetry or hydrolysis or precursors or cardiolipins:
+    if triglycerides or symmetry or hydrolysis or precursors or cardiolipins or protonation:
         extra_paths = [Path('data/reports', n + '.json') for n in ('phase1-triglyceride-net', 'phase1-triglyceride-acylation')]
         current, extra = [json.loads(p.read_text()) for p in extra_paths]
         paths.extend(extra_paths)
         layers.append(current); extras.append(extra)
-    if symmetry or hydrolysis or precursors or cardiolipins:
+    if symmetry or hydrolysis or precursors or cardiolipins or protonation:
         extra_paths = [Path('data/reports', n + '.json') for n in ('phase1-triglyceride-symmetry-net', 'phase1-triglyceride-symmetry')]
         current, extra = [json.loads(p.read_text()) for p in extra_paths]
         paths.extend(extra_paths)
         layers.append(current); extras.append(extra)
-    if hydrolysis or precursors or cardiolipins:
+    if hydrolysis or precursors or cardiolipins or protonation:
         extra_paths = [Path('data/reports', n + '.json') for n in ('phase1-phosphatidate-hydrolysis-net', 'phase1-phosphatidate-hydrolysis')]
         current, extra = [json.loads(p.read_text()) for p in extra_paths]
         paths.extend(extra_paths)
         layers.append(current); extras.append(extra)
-    if precursors or cardiolipins:
+    if precursors or cardiolipins or protonation:
         extra_paths = [Path('data/reports', n + '.json') for n in ('phase1-glycerolipid-precursors-net',
             'phase1-glycerolipid-precursors', 'phase1-triglyceride-inventory-supplement')]
         current, *hypotheses = [json.loads(p.read_text()) for p in extra_paths]
         paths.extend(extra_paths)
         layers.append(current); extras.extend(hypotheses)
-    if cardiolipins:
+    if cardiolipins or protonation:
         extra_paths = [Path('data/reports', n + '.json') for n in ('phase1-cardiolipin-net',
             'phase1-cardiolipin-synthesis', 'phase1-cardiolipin-precursors')]
         current, *hypotheses = [json.loads(p.read_text()) for p in extra_paths]
         paths.extend(extra_paths)
         layers.append(current); extras.extend(hypotheses)
+    if protonation:
+        extra_paths = [Path('data/reports', n + '.json') for n in
+                       ('phase1-source-mapped-protonation-net', 'phase1-source-mapped-protonation')]
+        current, extra = [json.loads(p.read_text()) for p in extra_paths]
+        paths.extend(extra_paths)
+        layers.append(current); extras.append(extra)
     hashes = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     for doc in (*layers, baseline, lipid, *extras):
         for p, sha in doc['source_sha256'].items():
@@ -57,6 +80,11 @@ def run(triglycerides=False, symmetry=False, hydrolysis=False, precursors=False,
     additions = {r['id'] for r in added_reactions}
     source_by_id = {r['rule_id']: r for r in lipid['source_records']}
     for extra in extras:
+        if extra.get('schema') == 'cannabis-carbon.phase1-source-mapped-protonation.v1':
+            # These are endpoint mappings, not Rhea reaction template snapshots.
+            for reaction in extra['reactions']:
+                reaction_sources(reaction, source_by_id)
+            continue
         records = extra['source_records'] if 'source_records' in extra else [extra['source_record']]
         for record in records:
             if record['rule_id'] in source_by_id and record != source_by_id[record['rule_id']]:
@@ -70,8 +98,7 @@ def run(triglycerides=False, symmetry=False, hydrolysis=False, precursors=False,
                 'is_route_sensitivity': rid in additions}
         if rid in additions:
             item['hypothesis_assumptions'] = [r.get('claim_boundary', parent['claim_boundary'])]
-            item['sources'] = r.get('sources', []) + [{'source_urls': [source_by_id[r['source_reaction_id']]['source_url']]
-                if r.get('source_reaction_id') in source_by_id else ['https://terpedia.github.io/cannabis/data/reaction-completion-net.json']}]
+            item['sources'] = reaction_sources(r, source_by_id)
         selected.append(item)
     cert_by_id = {c['compound_id']: c for c in certificates}
     targets = [{**t, 'certificate_compound_id': t['compound_id'] if t['compound_id'] in cert_by_id else None,
@@ -83,10 +110,10 @@ def run(triglycerides=False, symmetry=False, hydrolysis=False, precursors=False,
         'targets': targets, 'certificates': certificates, 'reactions': selected,
         'compounds': [c for c in current['compounds'] if c['id'] in required],
         'summary': {'target_records': len(targets), 'target_status_counts': dict(Counter(t['net_status'] for t in targets))},
-        'view_boundary': 'Reaction-first scenario across all 6,220 CannabisDB records. No enzyme gate. Added completion and lipid hypotheses are highlighted as assumptions; every input and coproduct remains in each full equation.',
+        'view_boundary': 'Reaction-first scenario across all 6,220 CannabisDB records. No enzyme gate. Added completion, lipid and acid-base hypotheses are highlighted as assumptions; every input and coproduct remains in each full equation.',
         'claim_boundary': current['claim_boundary'], 'source_sha256': hashes}
     bundle = attach_evidence(report, evidence)
-    folder = Path('docs/data/cardiolipin-net-view' if cardiolipins else 'docs/data/glycerolipid-precursors-net-view' if precursors else 'docs/data/phosphatidate-hydrolysis-net-view' if hydrolysis else 'docs/data/triglyceride-symmetry-net-view' if symmetry else 'docs/data/triglyceride-net-view' if triglycerides else 'docs/data/chemistry-net-view'); folder.mkdir(parents=True, exist_ok=True)
+    folder = Path('docs/data/source-mapped-protonation-net-view' if protonation else 'docs/data/cardiolipin-net-view' if cardiolipins else 'docs/data/glycerolipid-precursors-net-view' if precursors else 'docs/data/phosphatidate-hydrolysis-net-view' if hydrolysis else 'docs/data/triglyceride-symmetry-net-view' if symmetry else 'docs/data/triglyceride-net-view' if triglycerides else 'docs/data/chemistry-net-view'); folder.mkdir(parents=True, exist_ok=True)
     payload = json.dumps(bundle, separators=(',', ':')) + '\n'
     (folder / 'bundle.json').write_text(payload)
     manifest = {'schema': report['schema'], 'file': 'bundle.json', 'bytes': len(payload.encode()),
@@ -103,6 +130,7 @@ if __name__ == '__main__':
     parser.add_argument('--hydrolysis', action='store_true')
     parser.add_argument('--precursors', action='store_true')
     parser.add_argument('--cardiolipins', action='store_true')
+    parser.add_argument('--protonation', action='store_true')
     args = parser.parse_args()
     run(triglycerides=args.triglycerides, symmetry=args.symmetry, hydrolysis=args.hydrolysis,
-        precursors=args.precursors, cardiolipins=args.cardiolipins)
+        precursors=args.precursors, cardiolipins=args.cardiolipins, protonation=args.protonation)
