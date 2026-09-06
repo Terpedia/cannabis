@@ -1,0 +1,13 @@
+{
+  "schema": "cannabis-carbon.pages-release-verification.v1",
+  "revision": "8bbc56ea47cc22251fdda44e0449d3b951cd5128",
+  "workflow_run_id": 34051077097,
+  "workflow_conclusion": "success",
+  "base_url": "https://terpedia.github.io/cannabis/",
+  "verified_files": 2730,
+  "certificate_files": 2720,
+  "verified_bytes": 121173444,
+  "status": "all-live-file-checksums-match",
+  "verification": "Fetched every certificate referenced by the release's committed sharded index and checked its full SHA-256 and byte length. Also fetched index.html, net.html, net.js, local-speciation-review.md, the current-reaction-gaps, local-speciation-hypotheses and local-speciation-net reports, and the sharded manifest, target index and chemistry file; each matched the exact committed release bytes. No browser was opened.",
+  "claim_boundary": "Publication integrity only. This does not establish biological pathway completeness, Cannabis activity, startup, energetics or compartments."
+}

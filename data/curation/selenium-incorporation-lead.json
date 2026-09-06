@@ -1,0 +1,20 @@
+{
+  "schema": "cannabis-carbon.reaction-source-lead.v1",
+  "id": "selenium-incorporation:KEGG-R03601",
+  "source_url": "https://www.kegg.jp/entry/R03601",
+  "retrieved_date": "2026-09-06",
+  "source_database": "KEGG REACTION",
+  "source_reaction_id": "R03601",
+  "source_compound_equation": "C00979 + C01528 <=> C05688 + C00033",
+  "source_ec": "2.5.1.47",
+  "interpretation": "The reaction definition describes O-acetyl-L-serine and hydrogen selenide yielding L-selenocysteine and acetate. This is a candidate source for the missing connection from external selenium to seleno-amino-acid chemistry.",
+  "source_internal_warning": "The entry name mentions hydrogen sulfide, whereas its definition and compound equation specify selenium chemistry. Preserve this discrepancy and use explicit compound structures for validation, not the title alone.",
+  "required_before_model_inclusion": [
+    "Retrieve and pin exact source compound structures, including encoded stereochemistry.",
+    "Resolve the source structures against Terpedia exact identities; retain proton-state alternatives separately.",
+    "Construct and independently verify the full element, isotope and charge balance with any H+ adjustment explicit.",
+    "Keep any source-forward model direction as a sensitivity assumption, distinct from the source reversible notation.",
+    "Test all precursor supply and replay an exact CO2 net certificate under unchanged external exchanges."
+  ],
+  "claim_boundary": "Source-discovery lead only. No reaction has been added, no Cannabis enzyme assigned and no pathway coverage gained. A registry reaction and EC annotation are not evidence of Cannabis activity."
+}
