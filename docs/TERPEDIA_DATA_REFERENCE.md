@@ -2896,3 +2896,49 @@ All six records (five documents plus metadata) matched the complete local
 export, with service-account principal and destination verified.
 Receipt: `data/reports/phase1-cpr-gcp-verification.json`.
 Bundle SHA-256: `57f2bc9af8cf9ffe527e7058a1fa67c89e9f5c505e23010d90ce52779a69fa56`.
+
+## Exact FNS-II redox and factorial route sensitivity
+
+`docs/data/fnsii-route-sensitivity-bundle.json` preserves two complete source
+documents: an RDKit-audited exact small-molecule redox hypothesis and a
+four-scenario CO2-only net-conversion sensitivity analysis.
+
+The exact structures already present in the network produce the balanced net
+hypothesis `(2S)-naringenin + NADPH(4-) + O2 -> apigenin(1-) + NADP(3-) +
+2 H2O`. The apigenin monoanion requires two protons in the proposed bound-
+carrier oxidation step, rather than the one proton in generic RHEA:57681; the
+two protons cancel in the explicitly assumed carrier-regeneration step. RDKit
+element and formal-charge audits pass for both proposed steps and their net.
+NADPH and NADP retain all 21 carbon atoms on opposite sides of the equation.
+
+The derivation cancels only identical RHEA-COMP:11964/11965 identifiers across
+the two assumed steps. It does not cancel them against the distinct P450-heme
+states RHEA-COMP:14627/14628, substitute free flavin, or treat an entire
+protein as a structure-audited small molecule. The regeneration step remains
+a lumped mechanistic assumption, not a Rhea reaction or measured Cannabis
+carrier cycle.
+
+The route sensitivity reconstructs all 1,609 baseline candidate equations and
+retains the eight direction exclusions and the existing external exchanges.
+CO2 is the sole carbon-containing external input. Four forward-only scenarios
+were evaluated for CDB005071 (salvigenin) and CDB005072 (apigenin
+7,4'-dimethyl ether): baseline, CHI only, FNS-II only, and CHI plus FNS-II.
+Both targets remain solver-infeasible in the first three scenarios. Only the
+joint CHI/FNS-II scenario yields exact net-conversion certificates: 41 steps
+and 18 CO2 for salvigenin, and 37 steps and 17 CO2 for apigenin 7,4'-dimethyl
+ether. Full participants, coefficients, rational extents, internal zero-net
+pools, exports and direction labels are retained in the source document.
+
+These are conditional net certificates, not startup pathways: internal pools
+may pre-exist, and endogenous cofactor synthesis, thermodynamics, compartments,
+protein partnerships, expression, native activity and atom-wise carbon lineage
+remain unproven. The added equations are model-ineligible and have no enzyme
+evidence IDs. Confirmed completeness and the published candidate model remain
+unchanged.
+
+Immutable GCP table:
+`terpedia-489015.terpedia_core.cannabis_phase1_fnsii_route_sensitivity_bundle_20260905_v1`.
+All three records (two documents plus metadata) matched the complete local
+export, with service-account principal and destination verified.
+Receipt: `data/reports/phase1-fnsii-route-sensitivity-gcp-verification.json`.
+Bundle SHA-256: `f74ecab42f57f4c973548c6e53921c1ccf76d5b8d47b7d11a42a0757e9d56849`.
