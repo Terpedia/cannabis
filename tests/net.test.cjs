@@ -23,20 +23,22 @@ const triglycerideBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../d
 const symmetryBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/triglyceride-symmetry-net-view/bundle.json')));
 const hydrolysisBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/phosphatidate-hydrolysis-net-view/bundle.json')));
 
-test('precursor scenario projects every new certificate with inherited direction bounds and exact inputs', async()=>{
-  const source=JSON.parse(fs.readFileSync(path.join(__dirname,'../data/reports/phase1-glycerolipid-precursors-net.json')));
-  const bytes=fs.readFileSync(path.join(__dirname,'../docs/data/glycerolipid-precursors-net-view/bundle.json'));
-  const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/glycerolipid-precursors-net-view/index.json')));
+for(const [name,coverage,newCount] of [['glycerolipid-precursors',2062,1201],['cardiolipin',2154,92]])
+test(`${name} scenario projects every new certificate with inherited direction bounds and exact inputs`, async()=>{
+  const folder=name+'-net-view';
+  const source=JSON.parse(fs.readFileSync(path.join(__dirname,`../data/reports/phase1-${name}-net.json`)));
+  const bytes=fs.readFileSync(path.join(__dirname,`../docs/data/${folder}/bundle.json`));
+  const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,`../docs/data/${folder}/index.json`)));
   assert.equal(require('node:crypto').createHash('sha256').update(bytes).digest('hex'),manifest.sha256);
   const calls=[];
-  const loaded=await createLoader(async url=>{calls.push(url);return {ok:true,json:async()=>url.endsWith('index.json')?manifest:JSON.parse(bytes)};},'glycerolipid-precursors-net-view')();
-  assert.equal(calls[0],'data/glycerolipid-precursors-net-view/index.json');
+  const loaded=await createLoader(async url=>{calls.push(url);return {ok:true,json:async()=>url.endsWith('index.json')?manifest:JSON.parse(bytes)};},folder)();
+  assert.equal(calls[0],`data/${folder}/index.json`);
   assert.equal(loaded.targets.length,6220);
-  assert.equal(loaded.summary.target_status_counts['exact-net-conversion-hypothesis'],2062);
-  assert.equal(loaded.certificates.length,2061);
+  assert.equal(loaded.summary.target_status_counts['exact-net-conversion-hypothesis'],coverage);
+  assert.equal(loaded.certificates.length,coverage-1);
   const forbidden=new Set(source.forbidden_step_ids);
   const targets=source.targets.filter(t=>t.new_certificate);
-  assert.equal(targets.length,1201);
+  assert.equal(targets.length,newCount);
   for(const target of targets){
     const graph=project(loaded,target.cannabisdb_id);
     assert.ok(graph.certificate);
