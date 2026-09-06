@@ -1,5 +1,6 @@
 import hashlib
 import json
+import pytest
 from collections import Counter
 from pathlib import Path
 from cannabis_carbon.phase1_glycerophospholipid_input_audit import assemble_current
@@ -8,18 +9,25 @@ from cannabis_carbon.phase1_reaction_completion_net import validate_certificate
 from cannabis_carbon.phase1_net_obstruction import validate as validate_obstruction
 
 
-def test_current_model_four_target_restriction_and_exact_proofs():
+@pytest.mark.parametrize('name', ['recent-gains-medium', 'recent-gains-no-gases'])
+def test_current_model_four_target_restriction_and_exact_proofs(name):
     root = Path('data/reports')
     read = lambda n: json.loads((root / ('phase1-' + n + '.json')).read_bytes())
-    report = read('recent-gains-medium'); current = read('geranial-reduction-net')
+    report = read(name); current = read('geranial-reduction-net')
     for p, sha in report['source_sha256'].items():
         assert hashlib.sha256(Path(p).read_bytes()).hexdigest() == sha
     layers = [json.loads((root / n).read_bytes()) for n in current['baseline_certificate_reports']]
     reactions, compounds, _ = assemble_current(read('full-balanced-network'), read('marts-completions'), current, layers)
     exchange = set(current['external_exchange_compound_ids'])
     blocked = blocked_species(compounds, exchange)
+    if name == 'recent-gains-no-gases':
+        blocked += [{'compound_id': c, 'smiles': compounds[c]['smiles'],
+                     'reason': 'nitrogen-or-hydrogen-gas-uptake-diagnostic'}
+                    for c in sorted(exchange) if compounds[c]['smiles'] in ('N#N', '[H][H]')]
     assert report['blocked_inputs'] == blocked
     uptake = exchange - {r['compound_id'] for r in blocked}
+    if name == 'recent-gains-no-gases':
+        assert not {compounds[c]['smiles'] for c in uptake} & {'N#N', '[H][H]'}
     assert set(report['allowed_uptake_compound_ids']) == uptake
     assert set(report['allowed_external_output_compound_ids']) == exchange
     assert report['forbidden_step_ids'] == current['forbidden_step_ids']

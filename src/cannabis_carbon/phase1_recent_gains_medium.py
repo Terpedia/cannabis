@@ -9,7 +9,7 @@ from .phase1_reaction_completion_net import validate_certificate
 from .phase1_net_obstruction import solve as obstruction
 
 
-def run():
+def run(*, no_reductant_gases=False):
     root = Path('data/reports')
     current_path = root / 'phase1-geranial-reduction-net.json'
     current = json.loads(current_path.read_bytes())
@@ -23,6 +23,12 @@ def run():
     reactions, compounds, _ = assemble_current(docs[1], docs[2], current, docs[4:])
     exchange = set(current['external_exchange_compound_ids'])
     blocked = blocked_species(compounds, exchange)
+    if no_reductant_gases:
+        gases = [(c, compounds[c]['smiles']) for c in sorted(exchange)
+                 if compounds[c]['smiles'] in ('N#N', '[H][H]')]
+        if {s for _, s in gases} != {'N#N', '[H][H]'}:
+            raise ValueError('Expected exact N2/H2 external identities')
+        blocked += [{'compound_id': c, 'smiles': s, 'reason': 'nitrogen-or-hydrogen-gas-uptake-diagnostic'} for c, s in gases]
     uptake = exchange - {c['compound_id'] for c in blocked}
     model = UptakeLimitedModel(list(reactions.values()), exchange, uptake, current['forbidden_step_ids'])
     steps = {s['id']: s for s in model.steps}
@@ -64,7 +70,13 @@ def run():
             'alternative net conversion under these restrictions, not physiological nutrient uptake, growth or a minimum medium. '
             'An exact obstruction applies only to this pinned model; solver failure alone is not an impossibility proof.',
         'source_sha256': {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}}
-    (root / 'phase1-recent-gains-medium.json').write_text(json.dumps(report, separators=(',', ':')) + '\n')
+    name = 'recent-gains-medium'
+    if no_reductant_gases:
+        name = 'recent-gains-no-gases'
+        report['schema'] = 'cannabis-carbon.phase1-recent-gains-no-gases.v1'
+        report['claim_boundary'] += (' Additionally blocks exact N2 and H2 net uptake, while allowing their production and disposal. '
+            'This isolates reliance on gaseous reductant/nitrogen inputs; it does not establish the remaining forms as plant nutrients.')
+    (root / ('phase1-' + name + '.json')).write_text(json.dumps(report, separators=(',', ':')) + '\n')
     print(json.dumps(report['summary']), flush=True)
 
 

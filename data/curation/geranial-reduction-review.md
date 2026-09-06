@@ -26,3 +26,11 @@ Next discriminating tasks are to test the new routes under curated uptake restri
 `phase1-recent-gains-medium.json` applies the no-cluster/no-peroxide net-uptake restriction to the full 18,222-equation geranial model, solving only the four gains since the C17 release. This is separate from the ongoing full-inventory selenium-parent restriction. All four have independently validated alternative certificates: CDB000110 (30 steps), CDB000695 (30), CDB000081 (26), and CDB000585 (27). Their respective net CO₂ requirements are 12, 6, 10 and 12 per target.
 
 Thus the imported clusters in the previously selected witnesses are not indispensable to these targets in this model. This does not establish physiological cluster assembly: the alternative certificates still consume Fe(II), H₂ and sulfide, with ammonium or—for CDB000695—N₂ among other inputs. The N₂ dependency is not evidence of Cannabis nitrogen fixation. Uptake forms, energetics, physiological reaction direction and minimality remain unresolved. These four results must not be extrapolated to all 6,220 targets or added to permissive coverage as new gains.
+
+## Additional H₂/N₂ restriction
+
+`phase1-recent-gains-no-gases.json` blocks H₂ and N₂ uptake as well as cluster and peroxide uptake, without changing reactions, directions or disposal permissions. All four targets retain exact certificates: CDB000110 (28 steps), CDB000695 (26), CDB000081 (27), CDB000585 (28). No new coverage is claimed.
+
+Each certificate consumes Fe(II) and exports an equal amount of Fe(III): respectively 21, 6, 18 and 21 per unit target. This exact net iron oxidation exposes an alternative redox input; it is not evidence of photosynthetic carbon fixation or a normal nutrient requirement. Remaining net inputs include sulfide and protons, with ammonium/hydrogen phosphate for three targets and water for isobutyl acetate. Zero net nitrogen uptake for that carbon-only target does not establish nitrogen-free growth: recycled pre-existing nitrogen-containing pools are permitted.
+
+Neither the previous gas inputs nor imported clusters are proven essential. Next review must address net mineral-redox exchange and light/energy coupling, not relabel this surviving input set as a minimum defined medium.
