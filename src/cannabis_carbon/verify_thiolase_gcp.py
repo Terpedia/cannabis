@@ -44,7 +44,9 @@ def verify(names=NAMES, batch_suffix='20260905_v1'):
         if job['user_email'] != PRINCIPAL or destination != {
                 'projectId': PROJECT, 'datasetId': DATASET, 'tableId': table}:
             raise ValueError('Unexpected principal or destination')
-        remote = bq('query', '--use_legacy_sql=false', '--max_rows=20000',
+        if len(rows) > 100000:
+            raise ValueError('Export exceeds bounded verification row budget')
+        remote = bq('query', '--use_legacy_sql=false', '--max_rows=' + str(max(20000, len(rows) + 1)),
             '--maximum_bytes_billed=33554432', 'SELECT * FROM `' + PROJECT + '.' + DATASET + '.' + table + '`')
         if canonical(rows) != canonical(remote):
             raise ValueError('Full stored record multiset differs from local export')

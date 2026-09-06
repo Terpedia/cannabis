@@ -12,14 +12,27 @@ def equation_key(r):
     return tuple(sorted(tuple(sorted((m['compound_id'], m['coefficient']) for m in r[s])) for s in ('left', 'right')))
 
 
-def build(network, completions, original_net, parent_net, lipid):
+def build(network, completions, original_net, parent_net, lipid, *, prior_layers=()):
     reactions, compounds, _ = assemble(network, completions)
+    inherited_forbidden = set()
+    for layer in prior_layers:
+        for c in layer['compounds']:
+            if c['id'] in compounds and compounds[c['id']]['smiles'] != c['smiles']:
+                raise ValueError('Prior layer compound conflict')
+            compounds.setdefault(c['id'], c)
+        for r in layer['added_reactions']:
+            if r['id'] in reactions and equation_key(r) != equation_key(reactions[r['id']]):
+                raise ValueError('Prior layer equation conflict')
+            if not balanced([r['left'], r['right']], compounds):
+                raise ValueError('Prior layer balance failed')
+            reactions.setdefault(r['id'], r)
+        inherited_forbidden.update(layer['forbidden_step_ids'])
     keys = {equation_key(r): r['id'] for r in reactions.values()}
     for c in lipid['compounds']:
         if c['id'] in compounds and compounds[c['id']]['smiles'] != c['smiles']:
             raise ValueError('Lipid compound identity conflict')
         compounds.setdefault(c['id'], c)
-    added, joins, forbidden = {}, [], []
+    added, joins, forbidden = {}, [], sorted(inherited_forbidden)
     for r in lipid['reactions']:
         if not balanced([r['left'], r['right']], compounds):
             raise ValueError('Lipid equation failed independent balance')
@@ -28,7 +41,7 @@ def build(network, completions, original_net, parent_net, lipid):
             joins.append({'hypothesis_id': r['id'], 'existing_reaction_id': keys[key]})
             continue
         keys[key] = r['id']; reactions[r['id']] = r; added[r['id']] = r
-        if r['hypothesis_type'] == 'sn2-acylation':
+        if r['hypothesis_type'] in ('sn2-acylation', 'sn3-acylation'):
             forbidden.append(r['id'] + ':hypothetical-right-to-left')
     if [(t['cannabisdb_id'], t['compound_id']) for t in network['targets']] != [(t['cannabisdb_id'], t['compound_id']) for t in parent_net['targets']]:
         raise ValueError('Target inventory mismatch')

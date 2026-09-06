@@ -19,6 +19,23 @@ const restrictedThiolaseBundle = {...thiolaseBundle,...thiolaseBundle.restricted
 const remainingBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/remaining-net-view/bundle.json')));
 const restrictedRemainingBundle = {...remainingBundle,...remainingBundle.restricted_scenario,view_boundary:remainingBundle.restricted_boundary};
 const fnsiiBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/fnsii-net-view/bundle.json')));
+const triglycerideBundle = JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/triglyceride-net-view/bundle.json')));
+
+test('triglyceride certificates preserve inherited and new direction exclusions', async()=>{
+  const source=JSON.parse(fs.readFileSync(path.join(__dirname,'../data/reports/phase1-triglyceride-net.json')));
+  const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/triglyceride-net-view/index.json')));
+  const loaded=await createLoader(async url=>({ok:true,json:async()=>url.endsWith('index.json')?manifest:triglycerideBundle}),'triglyceride-net-view')();
+  assert.equal(loaded.targets.length,6220);
+  assert.equal(loaded.summary.target_status_counts['exact-net-conversion-hypothesis'],470);
+  const forbidden=new Set(source.forbidden_step_ids);
+  for(const t of source.targets.filter(t=>t.new_certificate)) {
+    const graph=project(loaded,t.cannabisdb_id);
+    assert.ok(graph.certificate);
+    assert.ok(graph.steps.some(s=>s.reaction.hypothesis_type==='sn3-acylation'));
+    assert.ok(graph.steps.every(s=>!forbidden.has(s.step_id)));
+    for(const step of graph.steps)assert.equal(graph.edges.filter(e=>e.data.step_id===step.step_id).length,step.required_inputs.length*step.outputs.length);
+  }
+});
 
 test('reaction-first view retains full inventory, balanced input groups and explicit lipid assumptions', async()=>{
   const data=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/chemistry-net-view/bundle.json')));
@@ -193,7 +210,7 @@ test('loader revalidates manifest, versions bundles, rejects external paths and 
   assert.deepEqual(sensitivityCalls,['data/completion-net-view/index.json','data/completion-net-view/bundle.json?v='+'b'.repeat(16)]);
 });
 
-for (const [bundle, scenario] of [[JSON.parse(fs.readFileSync(path.join(__dirname, "../docs/data/chemistry-net-view/bundle.json"))), "?scenario=chemistry&target=CDB000806"], [fnsiiBundle, '?scenario=fnsii&target=CDB005072'], [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target=CDB006137'], [updatedCatalogBundle, '?scenario=catalog&target=CDB006137'], [expandedBundle, '?scenario=expanded'], [purineBundle, '?scenario=purine'], [restrictedPurineBundle, '?scenario=purine-restricted']]) {
+for (const [bundle, scenario] of [[triglycerideBundle, "?scenario=triglycerides&target=CDB001321"], [JSON.parse(fs.readFileSync(path.join(__dirname, "../docs/data/chemistry-net-view/bundle.json"))), "?scenario=chemistry&target=CDB000806"], [fnsiiBundle, '?scenario=fnsii&target=CDB005072'], [JSON.parse(fs.readFileSync(path.join(__dirname, '../docs/data/net-view/bundle.json'))), ''], [sensitivityBundle, '?scenario=completions&target=CDB006149'], [catalogBundle, '?scenario=catalog&target=CDB006137'], [updatedCatalogBundle, '?scenario=catalog&target=CDB006137'], [expandedBundle, '?scenario=expanded'], [purineBundle, '?scenario=purine'], [restrictedPurineBundle, '?scenario=purine-restricted']]) {
 test(`controls ${scenario || 'baseline'} retain full balances, clear gaps, highlight without hiding, and recover from load errors`, async () => {
   class Field {
     constructor(){this.value='';this.textContent='';this.children=[];this.hidden=false;}
